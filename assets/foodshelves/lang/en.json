@@ -5,6 +5,7 @@
 
   "item-cutice": "Cut ice",
 
+  "block-shelfshort-*": "Short Shelf",
   "block-pieshelf-*": "Pie/Cheese Shelf",
   "block-breadshelf-*": "Bread Shelf",
   "block-barshelf-*": "Bar Shelf",
@@ -50,8 +51,9 @@
   "blockdesc-liquidystuff-text": "  -Resin, beeswax, animal fat<br>  -All dehydrated/dry fruits from Expanded Foods.",
   "blockdesc-pumpkincase-text": "  -Pumpkins.",
   "blockdesc-fooduniversal-text": "  -Pies, Cheese, all bread types<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread",
-  "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -Pacoca<br>  -Halva<br>  -Marzipam",
+  "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -Pacoca<br>  -Halva<br>  -Marzipam",
 
+  "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this Barrel rack stay fresh for 50% longer and cure 20% slower.",
   "helddesc-barrelrackbig": "Liquids stored in this Big barrel rack stay fresh for 60% longer and cure 25% slower.",
   "helddesc-ceilingjar": "Dehydrated fruit placed in the Ceiling Jar dries or melts 2.5x faster, and stays fresh for 25% longer.",

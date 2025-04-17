@@ -14,6 +14,7 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
@@ -150,7 +151,7 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
+        DisplayPerishMultiplier(container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier, sb);
         DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.ByBlockMerged, slotCount);
     }
 }

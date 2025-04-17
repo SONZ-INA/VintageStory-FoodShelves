@@ -4,6 +4,7 @@
     "op": "replace",
     "path": "/enabled",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
@@ -11,6 +12,7 @@
     "op": "addmerge",
     "path": "/0/enabled",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
@@ -18,6 +20,7 @@
     "op": "addmerge",
     "path": "/1/enabled",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
@@ -25,6 +28,7 @@
     "op": "addmerge",
     "path": "/2/enabled",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
@@ -32,6 +36,7 @@
     "op": "addmerge",
     "path": "/enabled",
     "value": false,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods", "invert": true } ]
   },
   {
@@ -39,6 +44,7 @@
     "op": "addmerge",
     "path": "/0/enabled",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
@@ -46,6 +52,7 @@
     "op": "addmerge",
     "path": "/13/enabled",
     "value": true,
+    "side": "server",
     "condition": { "when": "FoodShelves.ExpandedFoodsVariants", "isValue": "true" }
   }
 ]

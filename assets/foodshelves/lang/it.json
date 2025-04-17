@@ -49,6 +49,7 @@
   "blockdesc-fooduniversal-text": "  - Torte, formaggi, tutti i tipi di pane<br>Alimenti aggiuntivi:<br>  - Muffin<br>  - Gnocchi.",
   "blockdesc-holderuniversal-text": "  -Torte, formaggi, tutti i tipi di pane, pentole e vasi<br>Alimenti Espansi:<br>  -Muffin<br>  -Ravioli<br>Wildcraft: Frutta e Noci:<br>  -Paçoca<br>  -Halva<br>  -Marzapane",
 
+  "helddesc-breadshelf": "Il pane posizionato su questo scaffale rimane fresco per il doppio del tempo.",
   "helddesc-barrelrack": "I liquidi conservati in questo portabarili rimangono freschi il 50% più a lungo e stagionano il 20% più lentamente.",
   "helddesc-barrelrackbig": "I liquidi conservati in questo grande portabarili rimangono freschi il 60% più a lungo e stagionano il 25% più lentamente.",
   "helddesc-ceilingjar": "La frutta disidratata posta nel Barattolo da Soffitto si asciuga o si scioglie 2,5 volte più velocemente e rimane fresca il 25% più a lungo.",
@@ -84,7 +85,7 @@
   "Will melt in {0} days": "Si scioglierà in {0} giorni",
   "Will melt in {0} hours": "Si scioglierà in {0} ore",
   "Will not melt": "Non si scioglierà",
-  
+
   "Average perish rate {0} years": "Tasso di deterioramento medio: {0} anni",
   "Average perish rate {0} days": "Tasso di deterioramento medio: {0} giorni",
   "Average perish rate {0} hours": "Tasso di deterioramento medio: {0} ore",

@@ -8,7 +8,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
     public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
 
     private int CapacityLitres { get; set; } = 10;
-    static readonly int slotCount = 8;
+    private static readonly int slotCount = 8;
     private readonly InfoDisplayOptions displaySelection = InfoDisplayOptions.ByBlock; // inline this after
 
     public BlockEntityFirkinRack() {
@@ -19,8 +19,9 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
     }
 
     public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockFirkinRack;
+
+        base.Initialize(api);
 
         if (block?.Attributes?["capacityLitres"].Exists == true) {
             CapacityLitres = block.Attributes["capacityLitres"].AsInt(10);

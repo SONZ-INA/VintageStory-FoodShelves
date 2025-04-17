@@ -28,7 +28,7 @@
   "block-glassfoodcase-*": "玻璃食物盒",
   "block-glassjar-*": "玻璃罐",
   "block-ceilingjar-*": "天花板罐",
-  "block-coolingcabinet-*": "冷却柜",
+  "block-coolingcabinet-*": "冷柜",
 
   "blockdesc-canhold-title": "可以容纳：",
   "blockdesc-canbeplacedin-title": "可以放置在：",
@@ -47,15 +47,16 @@
   "blockdesc-liquidystuff-text": "  -可容纳树脂、蜂蜡、动物脂肪和所有来自食品扩展的脱水/干燥水果。",
   "blockdesc-pumpkincase-text": "  -只能装南瓜。",
   "blockdesc-fooduniversal-text": "  -馅饼、奶酪、所有面包类型<br>扩展食品：<br>-松饼<br>-饺子",
-  "blockdesc-holderuniversal-text": "  -派、奶酪、所有类型的面包、陶罐和锅<br>扩展食物：<br>  -松饼<br>  -饺子<br>野生食物：水果和坚果：<br>  -巴西花生糖<br>  -哈尔瓦<br>  -杏仁糖",
+  "blockdesc-holderuniversal-text": "-馅饼、奶酪、各种面包、陶罐和壶<br>食品扩展<br>-松饼<br>-饺子<br>野生工艺：水果和坚果<br>-坚果糖<br>-酥糖<br>-杏仁蛋白软糖",
 
-  "helddesc-barrelrack": "存放在这个桶架中的液体会保持新鲜时间延长50%，并且熟化速度减慢20%。",
-  "helddesc-barrelrackbig": "存放在这个大桶架中的液体会保持新鲜时间延长60%，并且熟化速度减慢25%。",
-  "helddesc-ceilingjar": "放在天花板罐中的脱水水果会干燥或融化的速度加快2.5倍，并且保持新鲜时间延长25%。",
-  "helddesc-glassfoodcase": "放在这个玻璃食品柜中的食物会保持新鲜时间延长25%。",
-  "helddesc-coolingcabinet": "存放在这个冷却柜中的食物会保持新鲜时间延长25%，如果加入冰块，则可以延长至60%。<br>请确保保持柜门关闭！",
+  "helddesc-breadshelf": "放在这个架子上的面包能保持新鲜时间延长100%。",
+  "helddesc-barrelrack": "储存在这种桶架中的液体保鲜时间延长 50%，固化速度降低 20%。",
+  "helddesc-barrelrackbig": "储存在这种大桶架中的液体保鲜时间延长 60%，固化速度降低 25%。",
+  "helddesc-ceilingjar": "放在天花板罐中的脱水水果的干燥或融化速度是原来的 2.5 倍，保鲜时间延长 25%。",
+  "helddesc-glassfoodcase": "放在这个箱子里的食物保鲜期可延长 25%。",
+  "helddesc-coolingcabinet": "储存在这个橱柜中的食物保鲜时间可延长 25%，加冰后保鲜时间可延长 60%！",
 
-  "This item cannot be placed in this container.": "此物品无法放入此容器中。",
+  "This item cannot be placed in this container.": "此物品不能放入此容器中。",
   "Only pies or cheese can be placed on this shelf.": "这个架子上只能放馅饼或奶酪.",
   "Only bread, muffins, dumplings, pacoca, halva or marzipam can be placed on this shelf.": "这个架子上只能放面包、松饼、饺子、花生酥、炸蔬菜丸子或杏仁膏。",
   "Only food bars can be placed on this shelf.": "这个架子上只能放食品棒。",
@@ -72,7 +73,7 @@
   "The barrel must be emptied before it can be picked up.": "在捡拾之前，必须先将桶中的水倒掉.",
   "Missing barrel.": "<font color=\"orange\">缺少桶</font>",
 
-  "placefailure-requireceilingattachable": "无法在此处放置此方块。它必须附着在未雕刻方块的天花板上。",
+  "placefailure-requireceilingattachable": "不能将此块放在这里。它必须连接到一个未凿开的块的天花板上。",
 
   "Contents": "<font color=\"orange\">内容： </font>",
   "Soonest": "最快:",
@@ -81,8 +82,8 @@
   "Very Short": "非常短",
 
   "Will melt in {0} years": "将在{0}年后融化",
-  "Will melt in {0} days": "将在{0}天后融化",
-  "Will melt in {0} hours": "将在{0}小时后融化",
+  "Will melt in {0} days": "将在{0}天内融化",
+  "Will melt in {0} hours": "将在{0}小时内融化",
   "Will not melt": "不会融化",
 
   "Average perish rate {0} years": "平均腐烂速度：{0}年",

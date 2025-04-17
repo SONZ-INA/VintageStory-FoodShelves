@@ -4,6 +4,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "aged", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart" ],
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -11,6 +12,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "aged", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart" ],
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -18,6 +20,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "aged", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart", "top", "topaged", "topbirch", "topoak", "topmaple", "toppine", "topacacia", "topkapok", "topbaldcypress", "toplarch", "topredwood", "topebony", "topwalnut", "toppurpleheart" ],
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -25,6 +28,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "aged", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart" ],
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -39,6 +43,7 @@
         "rope": { "base": "game:item/resource/rope" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -51,6 +56,7 @@
       "surface": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] },
       "rope": { "base": "game:item/resource/rope" }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -65,6 +71,7 @@
         "surface": { "base": "game:block/wood/shelf/surface" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -77,6 +84,7 @@
       "smoky": { "base": "game:block/glass/smoky" },
       "surface": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -100,6 +108,7 @@
       "*-topwalnut": { "surface": { "base": "game:block/wood/debarked/walnut", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] } },
       "*-toppurpleheart": { "surface": { "base": "game:block/wood/debarked/purpleheart", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] } }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -111,6 +120,7 @@
       "smoky": { "base": "game:block/glass/smoky" },
       "surface": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -128,6 +138,7 @@
         "water": { "base": "game:block/liquid/waterportion" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -143,6 +154,7 @@
       "ice": { "base": "game:block/liquid/ice/packedglacier1" },
       "water": { "base": "game:block/liquid/waterportion" }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   }
 ]

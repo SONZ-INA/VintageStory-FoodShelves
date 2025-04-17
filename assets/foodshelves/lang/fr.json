@@ -4,7 +4,7 @@
   "foodshelvesserver": "FoodShelves Serveur",
 
   "item-cutice": "Couper la glace",
-  
+
   "block-pieshelf-*": "Étagère à tartes / fromages",
   "block-breadshelf-*": "Étagère à pains",
   "block-barshelf-normal-*": "Étagère à barres énergétiques",
@@ -34,7 +34,7 @@
 
   "blockdesc-canhold-title": "Peut contenir :",
   "blockdesc-canbeplacedin-title": "Peut être placé dans :",
-  
+
   "blockdesc-breadshelf-text": "  - Tous les types de pain<br>Expanded Food :<br>  - Muffins<br>  - Boulettes<br>Wildcraft: Fruits and Nuts:<br>  - Pacoca<br>  - Halva<br>  - Massepain",
   "blockdesc-eggshelf-text": "  - Œufs crus ou durs",
   "blockdesc-sushishelf-text": "Expanded Foods : <br>  - Tout sushi",
@@ -49,15 +49,16 @@
   "blockdesc-horizontalbarrelbig-text": "  - Ce tonneau ne peut être placé que sur un chevalet pour grand tonneau.",
   "blockdesc-liquidystuff-text": "  - Résine, cire d'abeille, graisse animale<br>-Tous les fruits déshydratés/secs d'Expanded Foods.",
   "blockdesc-pumpkincase-text": "  - Citrouilles.",
-  "blockdesc-fooduniversal-text": "  - Tartes, fromages, tous types de pain<br>Expanded Foods :<br> - Muffins<br> - Boulettes<br> - Pain de mie",
-  "blockdesc-holderuniversal-text": "  - Tartes, fromage, tous types de pain, pots et marmites<br>Expanded Foods :<br> - Muffins<br> - Boulettes<br> - Pain de mie<br>Wildcraft : Fruits and Nuts :<br> -Pacoca<br> -Halva<br> - Massepain",
+  "blockdesc-fooduniversal-text": "  - Tartes, fromages, tous types de pain<br>Expanded Foods :<br> - Muffins<br> - Boulettes<br> - Pain de mie",
+  "blockdesc-holderuniversal-text": "  - Tartes, fromage, tous types de pain, pots et marmites<br>Expanded Foods :<br> - Muffins<br> - Boulettes<br> - Pain de mie<br>Wildcraft : Fruits and Nuts :<br> -Pacoca<br> -Halva<br> - Massepain",
 
+  "helddesc-breadshelf": "Le pain placé sur cette étagère reste frais 100 % plus longtemps.",
   "helddesc-barrelrack": "Les liquides stockés dans ce chevalet à tonneau restent frais 50 % plus longtemps et se transforment 20 % plus lentement.",
   "helddesc-barrelrackbig": "Les liquides stockés dans ce chevalet à grand tonneau restent frais 60 % plus longtemps et se transforment 25 % plus lentement.",
   "helddesc-ceilingjar": "Les fruits déshydratés placés dans le bocal suspendu sèchent ou fondent 2,5 fois plus vite et restent frais 25 % plus longtemps.",
   "helddesc-glassfoodcase": "Les aliments placés dans cette vitrine restent frais 25 % plus longtemps.",
-  "helddesc-coolingcabinet": "Les aliments conservés dans cette armoire restent frais 25 % plus longtemps, ou jusqu'à 60 % plus longtemps si de la glace est ajoutée.<br>Assurez-vous de la garder fermée !",
-  
+  "helddesc-coolingcabinet": "Les aliments conservés dans cette armoire restent frais 25 % plus longtemps, ou jusqu'à 60 % plus longtemps si de la glace est ajoutée.<br>Assurez-vous de la garder fermée !",
+
   "This item cannot be placed in this container.": "Cet objet ne peut pas être placé dans ce contenant.",
   "Only pies or cheese can be placed on this shelf.": "Seuls des tartes ou du fromage peuvent être placés sur cette étagère.",
   "Only bread, muffins, dumplings, pacoca, halva or marzipam can be placed on this shelf.": "Seuls du pain, des muffins, des boulettes, du pacoca, du halva ou du massepain peuvent être placés sur cette étagère.",
@@ -76,7 +77,7 @@
   "Missing barrel.": "<font color=\"orange\">Tonneau manquant.</font>",
 
   "placefailure-requireceilingattachable": "Impossible de placer ce bloc ici. Il doit être fixé au plafond sur un bloc non ciselé.",
-  
+
   "Contents: ": "<font color=\"orange\">Contient : </font>",
   "Soonest: ": "Bientôt : ",
   "Empty.": "Vide.",
@@ -87,7 +88,7 @@
   "Will melt in {0} days": "Va fondre dans {0} jours",
   "Will melt in {0} hours": "Va fondre dans {0} heures",
   "Will not melt": "Ne va pas fondre",
-  
+
   "Average perish rate: {0} years": "Taux de décomposition moyen : {0} ans",
   "Average perish rate: {0} days": "Taux de décomposition moyen : {0} jours",
   "Average perish rate: {0} hours": "Taux de décomposition moyen : {0} heures",

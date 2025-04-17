@@ -15,9 +15,9 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     private const int segmentsPerShelf = 3;
     private const int itemsPerSegment = 4;
     private const int bonusSlots = 1;
-    static readonly int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment + bonusSlots;
+    private const int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment + bonusSlots;
     private float perishMultiplier = 0.75f;
-    
+
     public bool CabinetOpen { get; set; }
     public bool DrawerOpen { get; set; } 
 
@@ -35,15 +35,16 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
-        base.Initialize(api);
         
+        base.Initialize(api);
+
         if (!DrawerOpen && !inv[36].Empty && WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) perishMultiplier = 0.4f;
         if (CabinetOpen) perishMultiplier = 1f;
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * perishMultiplier; // Slower perish rate
+        return container.GetPerishRate() * perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -55,12 +56,12 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
         }
 
         if (transType == EnumTransitionType.Dry) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-        if (transType == EnumTransitionType.Perish) return perishMultiplier;
+        if (transType == EnumTransitionType.Perish) return perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier;
 
         if (Api == null) return 0;
 
         if (transType == EnumTransitionType.Ripen) {
-            return GameMath.Clamp((1 - GetPerishRate() - 0.5f) * 3, 0, 1);
+            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
         if (transType == EnumTransitionType.Melt) {
@@ -68,7 +69,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
             return (float)((float)1 / inv[36].Itemstack?.StackSize ?? 1) * 4; // A stack would last about 32 days which is 8 ice blocks
         }
 
-        return perishMultiplier;
+        return perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
@@ -135,6 +136,8 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
         if (!inv[startIndex].Empty && (IsLargeItem(slot.Itemstack) || IsLargeItem(inv[startIndex].Itemstack))) return false;
 
         for (int i = 0; i < itemsPerSegment; i++) {
+            // if (i == 4 && !IsSmallItem(slot.Itemstack)) break;
+
             int currentIndex = startIndex + i;
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
@@ -517,32 +520,24 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
                 for (int item = 0; item < itemsPerSegment; item++) {
                     int index = shelf * (segmentsPerShelf * itemsPerSegment) + segment * itemsPerSegment + item;
 
-                    float y = shelf * 0.4921875f;
+                    float x, y = shelf * 0.4921875f, z;
 
                     if ((index < itemsPerSegment && IsLargeItem(inv[index].Itemstack)) || (index >= itemsPerSegment && IsLargeItem(inv[index].Itemstack))) {
-                        float x = segment * 0.65f;
-                        float z = item * 0.65f;
-
-                        tfMatrices[index] =
-                            new Matrixf()
-                            .Translate(0.5f, 0, 0.5f)
-                            .RotateYDeg(block.Shape.rotateY)
-                            .Scale(0.95f, 0.95f, 0.95f)
-                            .Translate(x - 0.625f, y + 0.66f, z - 0.5325f)
-                            .Values;
+                        x = segment * 0.65f;
+                        z = item * 0.65f;
                     }
                     else {
-                        float x = segment * 0.65f + (index % (itemsPerSegment / 2) == 0 ? -0.16f : 0.16f);
-                        float z = (index / (itemsPerSegment / 2)) % 2 == 0 ? -0.18f : 0.18f;
-
-                        tfMatrices[index] =
-                            new Matrixf()
-                            .Translate(0.5f, 0, 0.5f)
-                            .RotateYDeg(block.Shape.rotateY)
-                            .Scale(0.95f, 0.95f, 0.95f)
-                            .Translate(x - 0.625f, y + 0.66f, z - 0.5325f)
-                            .Values;
+                        x = segment * 0.65f + (index % (itemsPerSegment / 2) == 0 ? -0.16f : 0.16f);
+                        z = (index / (itemsPerSegment / 2)) % 2 == 0 ? -0.18f : 0.18f;
                     }
+
+                    tfMatrices[index] =
+                        new Matrixf()
+                        .Translate(0.5f, 0, 0.5f)
+                        .RotateYDeg(block.Shape.rotateY)
+                        .Scale(0.95f, 0.95f, 0.95f)
+                        .Translate(x - 0.625f, y + 0.66f, z - 0.5325f)
+                        .Values;
                 }
             }
         }
@@ -588,7 +583,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         DisplayPerishMultiplier(GetPerishRate(), sb);
 
-        float ripenRate = GameMath.Clamp((1 - GetPerishRate() - 0.5f) * 3, 0, 1);
+        float ripenRate = GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         if (ripenRate > 0) sb.Append(Lang.Get("Suitable spot for food ripening."));
 
         DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, slotCount, segmentsPerShelf, itemsPerSegment, true, new[] { 36 });

@@ -4,10 +4,12 @@ public class ConfigServer : IModConfig {
     public const string ConfigServerName = "FoodShelvesServer.json";
 
     public bool EnableVariants { get; set; } = false;
+    public float GlobalPerishMultiplier { get; set; } = 1f;
 
-    public ConfigServer(ICoreAPI api, ConfigServer previousConifg = null) {
-        if (previousConifg == null) return;
+    public ConfigServer(ICoreAPI api, ConfigServer previousConfig = null) {
+        if (previousConfig == null) return;
 
-        EnableVariants = previousConifg.EnableVariants;
+        EnableVariants = previousConfig.EnableVariants;
+        GlobalPerishMultiplier = previousConfig.GlobalPerishMultiplier;
     }
 }

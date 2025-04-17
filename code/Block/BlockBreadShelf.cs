@@ -13,8 +13,15 @@ public class BlockBreadShelf : Block {
     public override string GetHeldItemName(ItemStack itemStack) {
         string variantType = "";
         if (this.Code.SecondCodePart().StartsWith("short"))
-            variantType = Lang.Get("skinpart-hairbase-short") + " ";
+            variantType = Lang.Get("foodshelves:Short") + " ";
 
         return variantType + base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
+    }
+
+    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
+        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+        dsc.AppendLine("");
+        dsc.AppendLine(Lang.Get("foodshelves:helddesc-breadshelf"));
     }
 }

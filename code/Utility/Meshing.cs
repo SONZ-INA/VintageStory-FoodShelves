@@ -60,8 +60,19 @@ public static class Meshing {
         for (int i = 0; i < contents.Length; i++) {
             if (contents[i] == null || contents[i].Item == null) continue;
 
-            Shape shape = capi.TesselatorManager.GetCachedShape(contents[i].Item.Shape.Base).Clone();
-            if (shape == null) return null;
+            string shapeLocation = contents[i].Item.Shape?.Base;
+            if (shapeLocation == null) continue;
+
+            Shape shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
+            //string shapeLocation = contents[i].Item.Shape?.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json").ToString();
+            //Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
+            if (shape == null) continue;
+
+            if (shape.Textures.Count == 0) {
+                foreach (var texture in contents[i].Item.Textures) {
+                    shape.Textures.Add(texture.Key, texture.Value.Base);
+                }
+            }
 
             UniversalShapeTextureSource texSource = new(capi, targetAtlas, shape, "inContainerTexSource");
 

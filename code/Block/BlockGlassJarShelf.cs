@@ -13,7 +13,7 @@ public class BlockGlassJarShelf : Block {
     public override string GetHeldItemName(ItemStack itemStack) {
         string variantType = "";
         if (this.Code.SecondCodePart().StartsWith("short"))
-            variantType = Lang.Get("skinpart-hairbase-short") + " ";
+            variantType = Lang.Get("foodshelves:Short") + " ";
 
         return variantType + base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
     }

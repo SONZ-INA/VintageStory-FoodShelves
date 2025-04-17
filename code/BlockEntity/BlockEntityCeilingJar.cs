@@ -14,13 +14,14 @@ public class BlockEntityCeilingJar : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * 0.75f; // Slower perish rate
+        return container.GetPerishRate() * 0.75f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -28,11 +29,10 @@ public class BlockEntityCeilingJar : BlockEntityDisplay {
         if (Api == null) return 0;
 
         if (transType == EnumTransitionType.Ripen) {
-            float perishRate = GetPerishRate();
-            return GameMath.Clamp((1 - perishRate - 0.5f) * 3, 0, 1);
+            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1;
+        return 0.75f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     internal bool OnInteract(IPlayer byPlayer) {

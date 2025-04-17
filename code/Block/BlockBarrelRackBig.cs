@@ -103,7 +103,7 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
 
         BlockEntityBarrelRackBig be = GetBlockEntity<BlockEntityBarrelRackBig>(pos);
         if (be != null && be.Inventory.Empty) dsc.Append(Lang.Get("foodshelves:Missing barrel."));
-        else  dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
+        else dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
         return dsc.ToString();
     }

@@ -4,6 +4,7 @@
     "op": "addmerge",
     "path": "/CollectibleTypes/-",
     "value": "vanvar:BlockBarrel",
+    "side": "server",
     "dependsOn": [ { "modid": "vanvar" } ]
   }
 ]

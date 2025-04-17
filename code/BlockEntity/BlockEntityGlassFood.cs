@@ -22,6 +22,8 @@ public class BlockEntityGlassFood : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        
+        base.Initialize(api);
 
         if (block.Code.SecondCodePart().Contains("top")) {
             shelfCount = 1;
@@ -40,13 +42,11 @@ public class BlockEntityGlassFood : BlockEntityDisplay {
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
 
-        base.Initialize(api);
-
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * perishMultiplier; // Slower perish rate
+        return container.GetPerishRate() * perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -54,10 +54,10 @@ public class BlockEntityGlassFood : BlockEntityDisplay {
         if (Api == null) return 0;
 
         if (transType == EnumTransitionType.Ripen) {
-            return GameMath.Clamp((1 - GetPerishRate() - 0.5f) * 3, 0, 1);
+            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return perishMultiplier;
+        return perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
@@ -106,7 +106,7 @@ public class BlockEntityGlassFood : BlockEntityDisplay {
         }
 
         // Top Slot
-        if (block?.Code.SecondCodePart().Contains("normal") == true && index == (int)SlotNumber.TopSlot) {
+        if (block?.Code.SecondCodePart().Contains("top") != true && index == (int)SlotNumber.TopSlot) {
             if (inv[itemsPerSegment].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[itemsPerSegment]);
                 MarkDirty();

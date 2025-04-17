@@ -4,6 +4,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "normalaged", "normalbirch", "normaloak", "normalmaple", "normalpine", "normalacacia", "normalkapok", "normalbaldcypress", "normallarch", "normalredwood", "normalebony", "normalwalnut", "normalpurpleheart", "top", "topaged", "topbirch", "topoak", "topmaple", "toppine", "topacacia", "topkapok", "topbaldcypress", "toplarch", "topredwood", "topebony", "topwalnut", "toppurpleheart" ],
+    "side": "server",
 	  "condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -57,6 +58,7 @@
         "surface": { "base": "game:block/wood/debarked/purpleheart", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] }
       }
     },
+    "side": "server",
 	  "condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   }
 ]

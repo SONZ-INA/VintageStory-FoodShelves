@@ -4,6 +4,7 @@
     "op": "addmerge",
     "path": "/attributes/eggbasketcheck",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "detailedanimals" } ]
   },
   {
@@ -11,6 +12,7 @@
     "op": "addmerge",
     "path": "/attributes/eggbasketcheck",
     "value": true,
+    "side": "server",
     "dependsOn": [ { "modid": "detailedanimals" } ]
   }
 ]

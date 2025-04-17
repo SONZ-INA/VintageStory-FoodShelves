@@ -4,6 +4,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart" ],
+    "side": "server",
     "condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -18,6 +19,7 @@
         "aged": { "base": "game:block/wood/debarked/aged" }
       }
     },
+    "side": "server",
     "condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -30,6 +32,7 @@
       "blackbronze4": { "base": "game:block/metal/sheet/blackbronze4" },
       "aged": { "base": "game:block/wood/debarked/{type}" }
     },
+    "side": "server",
     "condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   }
 ]

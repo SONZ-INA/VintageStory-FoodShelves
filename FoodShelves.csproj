@@ -70,6 +70,7 @@
   <None Remove="assets\foodshelves\blocktypes\seedshelf.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\glassjarshelf.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\pieshelfattr.json" />
+  <None Remove="assets\foodshelves\blocktypes\shelves\shelfshort.json" />
   <None Remove="assets\foodshelves\blocktypes\vegetablebasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\barrelrack.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\barrelrackbig.json" />
@@ -96,11 +97,11 @@
   <None Remove="assets\foodshelves\config\transformations\shelves\barshelf.json" />
   <None Remove="assets\foodshelves\config\transformations\shelves\breadshelf.json" />
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
+  <None Remove="assets\foodshelves\lang\fr.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
-  <None Remove="assets\foodshelves\patches\laverace.json" />
-  <None Remove="assets\foodshelves\patches\moreanimals.json" />
+  <None Remove="assets\foodshelves\patches\longtermfood.json" />
   <None Remove="assets\foodshelves\patches\pewter.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
   <None Remove="assets\foodshelves\patches\variants\glassware.json" />
@@ -137,6 +138,7 @@
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
+  <None Remove="assets\foodshelves\recipes\grid\shelves\shelfshort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\barrelrackbig.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\barrelracktopbig.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkin.json" />
@@ -163,6 +165,7 @@
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\PumpkinShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SeedShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SeedShelfVeryShort.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\shelves\ShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SushiShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\TableWShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\VegetableBasket.json" />

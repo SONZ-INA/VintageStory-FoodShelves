@@ -8,7 +8,7 @@ public class BlockEntityBarrelRack : BlockEntityContainer {
     public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
 
     private int CapacityLitres { get; set; } = 50;
-    static readonly int slotCount = 2;
+    private const int slotCount = 2;
 
     public BlockEntityBarrelRack() {
         inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (id, inv) => {
@@ -18,8 +18,9 @@ public class BlockEntityBarrelRack : BlockEntityContainer {
     }
 
     public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockBarrelRack;
+        
+        base.Initialize(api);
 
         if (block?.Attributes?["capacityLitres"].Exists == true) {
             CapacityLitres = block.Attributes["capacityLitres"].AsInt(50);
@@ -29,8 +30,12 @@ public class BlockEntityBarrelRack : BlockEntityContainer {
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
+    private float GetPerishRate() {
+        return container.GetPerishRate() * 0.5f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
+    }
+
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        if (transType == EnumTransitionType.Perish) return 0.5f;
+        if (transType == EnumTransitionType.Perish) return 0.5f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
         else return baseMul * 0.8f; // Expanded foods compatibility
     }
 

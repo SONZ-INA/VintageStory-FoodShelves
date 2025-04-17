@@ -68,7 +68,7 @@ public static class Restrictions
     public const string HolderUniversal = "holderuniversalcheck";
     public static bool HolderUniversalCheck(this CollectibleObject obj) => obj?.Attributes?[HolderUniversal].AsBool() == true;
     public static bool HolderUniversalCheck(this ItemSlot slot) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[HolderUniversal].AsBool() == false) return false;
+        if (slot?.Itemstack?.Collectible?.Attributes?[HolderUniversal].AsBool() != true) return false;
         if (slot?.Inventory?.ClassName == "hopper") return false;
         return true;
     }

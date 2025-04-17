@@ -1,0 +1,22 @@
+[
+  {
+    "ingredientPattern": "__,_S",
+    "ingredients": {
+      "S": { "type": "block", "code": "game:shelf-normal-east" }
+    },
+    "width": 2,
+    "height": 2,
+    "recipeGroup": 1,
+    "output": { "type": "block", "code": "shelfshort-normal-east", "quantity": 2 }
+  },
+  {
+    "ingredientPattern": "__,_S",
+    "ingredients": {
+      "S": { "type": "block", "code": "foodshelves:shelfshort-normal-east", "quantity": 2 }
+    },
+    "width": 2,
+    "height": 2,
+    "recipeGroup": 2,
+    "output": { "type": "block", "code": "game:shelf-normal-east" }
+  }
+]

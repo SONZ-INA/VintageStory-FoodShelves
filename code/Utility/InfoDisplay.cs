@@ -40,7 +40,6 @@ public static class InfoDisplay {
 
         if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1) return;
 
-        string[] crockCheck = { "game:crock-burned*", "pewter:crock-*" };
         int start = 0, end = slotCount;
 
         switch (displaySelection) {
@@ -71,7 +70,7 @@ public static class InfoDisplay {
             if (stack.Collectible.TransitionableProps != null && stack.Collectible.TransitionableProps.Length > 0) {
                 sb.Append(PerishableInfoCompact(world, inv[i], ripenRate));
             }
-            else if (WildcardUtil.Match(crockCheck, stack.Collectible.Code.ToString())) {
+            else if (stack.Collectible is BlockCrock) {
                 sb.Append(CrockInfoCompact(inv, world, inv[i]));
             }
             else {
@@ -128,7 +127,6 @@ public static class InfoDisplay {
         bool nowSpoiling = false;
 
         if (transitionStates != null) {
-            bool appendLine = false;
             for (int i = 0; i < transitionStates.Length; i++) {
                 TransitionState state = transitionStates[i];
                 TransitionableProperties prop = state.Props;
@@ -141,8 +139,6 @@ public static class InfoDisplay {
 
                 switch (prop.Type) {
                     case EnumTransitionType.Perish:
-                        appendLine = true;
-
                         if (transitionLevel > 0) {
                             nowSpoiling = true;
                             dsc.Append(", " + Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100)));
@@ -164,8 +160,6 @@ public static class InfoDisplay {
                     case EnumTransitionType.Ripen:
                         if (nowSpoiling) break;
 
-                        appendLine = true;
-
                         if (transitionLevel > 0) {
                             dsc.Append(", " + Lang.Get("{1:0.#} days left to ripen ({0}%)", (int)Math.Round(transitionLevel * 100), (state.TransitionHours - state.TransitionedHours) / world.Calendar.HoursPerDay / ripenRate));
                         }
@@ -186,7 +180,7 @@ public static class InfoDisplay {
                 }
             }
 
-            if (appendLine) dsc.AppendLine();
+            dsc.AppendLine();
         }
 
         return dsc.ToString();

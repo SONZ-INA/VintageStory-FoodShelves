@@ -328,5 +328,11 @@ public static class Extensions {
         return false;
     }
 
+    public static bool IsSmallItem(ItemStack stack) {
+        if (stack?.Collectible.Code == "wildcraftfruit:nut-hazelbar") return true;
+
+        return false;
+    }
+
     #endregion
 }

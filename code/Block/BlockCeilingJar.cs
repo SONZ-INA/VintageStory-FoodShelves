@@ -15,6 +15,23 @@ public class BlockCeilingJar : BlockContainer, IContainedMeshSource {
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
+    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
+        // Prevent duplicating of items inside
+        if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Survival) {
+            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityCeilingJar becj) {
+                ItemStack emptyCeilingJar = new(this);
+                world.SpawnItemEntity(emptyCeilingJar, pos.ToVec3d().Add(0.5, 0.5, 0.5));
+
+                ItemStack[] contents = becj.GetContentStacks();
+                for (int i = 0; i < contents.Length; i++) {
+                    world.SpawnItemEntity(contents[i], pos.ToVec3d().Add(0.5, 0.5, 0.5));
+                }
+            }
+        }
+
+        world.BlockAccessor.SetBlock(0, pos);
+    }
+
     public override string GetHeldItemName(ItemStack itemStack) {
         string variantName = itemStack.GetMaterialNameLocalized();
         return base.GetHeldItemName(itemStack) + " " + variantName;

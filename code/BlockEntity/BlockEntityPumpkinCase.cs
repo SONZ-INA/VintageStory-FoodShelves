@@ -11,15 +11,20 @@ public class BlockEntityPumpkinCase : BlockEntityDisplay {
     private const int shelfCount = 1;
     private const int segmentsPerShelf = 1;
     private const int itemsPerSegment = 1;
-    static readonly int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment;
+    private const int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment;
 
     public BlockEntityPumpkinCase() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotPumpkinCase(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+    }
+
+    private float GetPerishRate() {
+        return container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier;
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -27,11 +32,10 @@ public class BlockEntityPumpkinCase : BlockEntityDisplay {
         if (Api == null) return 0;
 
         if (transType == EnumTransitionType.Ripen) {
-            float perishRate = container.GetPerishRate();
-            return GameMath.Clamp((1 - perishRate - 0.5f) * 3, 0, 1);
+            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1;
+        return 1 * Core.ConfigServer.GlobalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
@@ -106,7 +110,7 @@ public class BlockEntityPumpkinCase : BlockEntityDisplay {
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
+        DisplayPerishMultiplier(GetPerishRate(), sb);
         DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.ByBlock, slotCount, segmentsPerShelf, itemsPerSegment);
     }
 }

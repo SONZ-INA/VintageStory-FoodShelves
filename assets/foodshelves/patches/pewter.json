@@ -7,6 +7,7 @@
       "pewter:bowl-*",
       "pewter:crock-*"
     ],
+    "side": "server",
     "dependsOn": [ { "modid": "pewter" } ]
   }
 ]

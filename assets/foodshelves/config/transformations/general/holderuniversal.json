@@ -16,5 +16,9 @@
   
   "*halva": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "rotation": { "x": 0, "y": 35, "z": 0 }, "scale": 0.7 },
   "*pacoca": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "rotation": { "x": 0, "y": -45, "z": 0 }, "scale": 0.65 },
-  "*marzipan": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "scalexyz": { "x": 0.7, "y": 0.7, "z": 0.58 } }
+  "*marzipan": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "scalexyz": { "x": 0.7, "y": 0.7, "z": 0.58 } },
+
+  "pemmican:pemmican-pack": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0.25, "y": 0, "z": 0.025 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.71 },
+  "pemmican:pemmican-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.74 },
+  "pemmican:mushroompatebar": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.74 }
 }

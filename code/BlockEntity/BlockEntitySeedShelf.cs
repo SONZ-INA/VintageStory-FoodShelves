@@ -17,6 +17,8 @@ public class BlockEntitySeedShelf : BlockEntityDisplay {
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
 
+        base.Initialize(api);
+
         if (block.Code.SecondCodePart().StartsWith("short") || block.Code.SecondCodePart().StartsWith("veryshort")) {
             if (block.Code.SecondCodePart().StartsWith("short")) itemsPerSegment /= 2;
             else itemsPerSegment /= 4;
@@ -35,8 +37,6 @@ public class BlockEntitySeedShelf : BlockEntityDisplay {
 
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
-
-        base.Initialize(api);
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {

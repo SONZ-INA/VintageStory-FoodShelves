@@ -4,6 +4,7 @@
     "op": "replace",
     "path": "/variantgroups/0/states",
     "value": [ "normal", "aged", "birch", "oak", "maple", "pine", "acacia", "kapok", "baldcypress", "larch", "redwood", "ebony", "walnut", "purpleheart" ],
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -16,6 +17,7 @@
         "top": { "base": "foodshelves:block/wood/fruitbasket/top" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -26,6 +28,7 @@
       "sides": { "base": "game:block/wood/debarked/{type}" },
       "top": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/baskets/fruittop" }] }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -38,6 +41,7 @@
         "top": { "base": "foodshelves:block/wood/vegetablebasket/top" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -48,6 +52,7 @@
       "sides": { "base": "game:block/wood/debarked/{type}" },
       "top": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/baskets/vegetabletop" }] }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -60,6 +65,7 @@
         "top": { "base": "game:block/wood/table/normal/top" }
       }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   },
   {
@@ -70,6 +76,7 @@
       "sides": { "base": "game:block/wood/debarked/{type}" },
       "top": { "base": "game:block/wood/debarked/{type}", "blendedOverlays": [{ "base": "foodshelves:variants/shelves/surface" }] }
     },
+    "side": "server",
 		"condition": { "when": "FoodShelves.EnableVariants", "isValue": "true" }
   }
 ]

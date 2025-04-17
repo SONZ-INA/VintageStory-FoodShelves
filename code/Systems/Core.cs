@@ -1,5 +1,4 @@
-﻿using Vintagestory.Client.NoObf;
-using static FoodShelves.Patches;
+﻿using static FoodShelves.Patches;
 
 [assembly: ModInfo(name: "Food Shelves", modID: "foodshelves")]
 
@@ -7,18 +6,25 @@ namespace FoodShelves;
 
 public class Core : ModSystem {
     public static ConfigServer ConfigServer { get; set; }
+    // public static ConfigClient ConfigClient { get; set; }
 
     public override void StartPre(ICoreAPI api) {
-        if (api.Side.IsServer()) {
-            ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
-            api.World.Config.SetBool("FoodShelves.EnableVariants", ConfigServer.EnableVariants);
+        switch (api.Side) {
+            case EnumAppSide.Server:
+                ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
+                api.World.Config.SetBool("FoodShelves.EnableVariants", ConfigServer.EnableVariants);
 
-            bool ExpandedFoodsVariants = api.ModLoader.IsModEnabled("expandedfoods") && ConfigServer.EnableVariants;
-            bool WildcraftFruitsNutsVariants = api.ModLoader.IsModEnabled("wildcraftfruit") && ConfigServer.EnableVariants;
+                bool ExpandedFoodsVariants = api.ModLoader.IsModEnabled("expandedfoods") && ConfigServer.EnableVariants;
+                bool WildcraftFruitsNutsVariants = api.ModLoader.IsModEnabled("wildcraftfruit") && ConfigServer.EnableVariants;
+                bool LongTermFoodVariants = api.ModLoader.IsModEnabled("long-term_food") && ConfigServer.EnableVariants; // Can't bother to change variable names and shit.
 
-            api.World.Config.SetBool("FoodShelves.ExpandedFoodsVariants", ExpandedFoodsVariants);
-            api.World.Config.SetBool("FoodShelves.WildcraftFruitsNutsVariants", WildcraftFruitsNutsVariants);
-            api.World.Config.SetBool("FoodShelves.EForWFNVariants", ExpandedFoodsVariants || WildcraftFruitsNutsVariants);
+                api.World.Config.SetBool("FoodShelves.ExpandedFoodsVariants", ExpandedFoodsVariants);
+                api.World.Config.SetBool("FoodShelves.WildcraftFruitsNutsVariants", WildcraftFruitsNutsVariants);
+                api.World.Config.SetBool("FoodShelves.EForWFNVariants", ExpandedFoodsVariants || WildcraftFruitsNutsVariants || LongTermFoodVariants);
+                break;
+            //case EnumAppSide.Client:
+            //    ConfigClient = ModConfig.ReadConfig<ConfigClient>(api, ConfigClient.ConfigClientName);
+            //    break;
         }
 
         if (api.ModLoader.IsModEnabled("configlib")) {
@@ -32,6 +38,8 @@ public class Core : ModSystem {
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
 
+        api.RegisterBlockClass("FoodShelves.BlockShelfShort", typeof(BlockShelfShort));
+        api.RegisterBlockEntityClass("FoodShelves.BlockEntityShelfShort", typeof(BlockEntityShelfShort));
         api.RegisterBlockClass("FoodShelves.BlockPieShelf", typeof(BlockPieShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityPieShelf", typeof(BlockEntityPieShelf));
         api.RegisterBlockClass("FoodShelves.BlockBreadShelf", typeof(BlockBreadShelf));
@@ -80,16 +88,6 @@ public class Core : ModSystem {
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityCoolingCabinet", typeof(BlockEntityCoolingCabinet));
-    }
-
-    public override void StartClientSide(ICoreClientAPI api) {
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onPieShelfTransform, AttributeName = onPieShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onBreadShelfTransform, AttributeName = onBreadShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onBarShelfTransform, AttributeName = onBreadShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onEggShelfTransform, AttributeName = onEggShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onSeedShelfTransform, AttributeName = onSeedShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onSushiShelfTransform, AttributeName = onSushiShelfTransform });
-        GuiDialogTransformEditor.extraTransforms.Add(new TransformConfig() { Title = onGlassFoodBlockTransform, AttributeName = onGlassFoodBlockTransform });
     }
 
     public override void AssetsLoaded(ICoreAPI api) {

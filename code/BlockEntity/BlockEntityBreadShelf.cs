@@ -17,6 +17,8 @@ public class BlockEntityBreadShelf : BlockEntityDisplay {
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
 
+        base.Initialize(api);
+
         if (block.Code.SecondCodePart().StartsWith("short")) {
             itemsPerSegment /= 2;
 
@@ -35,9 +37,11 @@ public class BlockEntityBreadShelf : BlockEntityDisplay {
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
 
-        base.Initialize(api);
-
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+    }
+
+    private float GetPerishRate() {
+        return container.GetPerishRate() * 0.5f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -45,11 +49,10 @@ public class BlockEntityBreadShelf : BlockEntityDisplay {
         if (Api == null) return 0;
 
         if (transType == EnumTransitionType.Ripen) {
-            float perishRate = container.GetPerishRate();
-            return GameMath.Clamp((1 - perishRate - 0.5f) * 3, 0, 1);
+            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1;
+        return 0.5f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
@@ -146,7 +149,7 @@ public class BlockEntityBreadShelf : BlockEntityDisplay {
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
+        DisplayPerishMultiplier(GetPerishRate(), sb);
         DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.ByShelf, shelfCount * segmentsPerShelf * itemsPerSegment, segmentsPerShelf, itemsPerSegment);
     }
 }
