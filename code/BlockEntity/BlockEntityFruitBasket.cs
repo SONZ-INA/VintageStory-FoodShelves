@@ -12,19 +12,21 @@ public class BlockEntityFruitBasket : BlockEntityDisplay {
     public bool IsCeilingAttached { get; set; }
 
     private static readonly int slotCount = 22;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityFruitBasket() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFruitBasket(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockFruitBasket;
-    
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier;
+        return container.GetPerishRate() * globalPerishMultiplier;
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -35,7 +37,7 @@ public class BlockEntityFruitBasket : BlockEntityDisplay {
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1 * Core.ConfigServer.GlobalPerishMultiplier;
+        return 1 * globalPerishMultiplier;
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {

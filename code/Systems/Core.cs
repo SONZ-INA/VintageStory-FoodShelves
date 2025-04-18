@@ -13,6 +13,7 @@ public class Core : ModSystem {
             case EnumAppSide.Server:
                 ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
                 api.World.Config.SetBool("FoodShelves.EnableVariants", ConfigServer.EnableVariants);
+                api.World.Config.SetFloat("FoodShelves.GlobalPerishMultiplier", ConfigServer.GlobalPerishMultiplier);
 
                 bool ExpandedFoodsVariants = api.ModLoader.IsModEnabled("expandedfoods") && ConfigServer.EnableVariants;
                 bool WildcraftFruitsNutsVariants = api.ModLoader.IsModEnabled("wildcraftfruit") && ConfigServer.EnableVariants;

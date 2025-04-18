@@ -9,19 +9,21 @@ public class BlockEntityCeilingJar : BlockEntityDisplay {
     public override string AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
 
     private const int slotCount = 12;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityCeilingJar() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotLiquidyStuff(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
-        
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * 0.75f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
+        return container.GetPerishRate() * 0.75f * globalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -32,7 +34,7 @@ public class BlockEntityCeilingJar : BlockEntityDisplay {
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 0.75f * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
+        return 0.75f * globalPerishMultiplier; // Slower perish rate
     }
 
     internal bool OnInteract(IPlayer byPlayer) {

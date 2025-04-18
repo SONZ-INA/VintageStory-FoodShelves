@@ -11,19 +11,21 @@ public class BlockEntityEggBasket : BlockEntityDisplay {
     public float MeshAngle { get; set; }
 
     private const int slotCount = 10;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityEggBasket() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotEggBasket(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockEggBasket;
-        
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+
         base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier;
+        return container.GetPerishRate() * globalPerishMultiplier;
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -34,7 +36,7 @@ public class BlockEntityEggBasket : BlockEntityDisplay {
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1 * Core.ConfigServer.GlobalPerishMultiplier;
+        return 1 * globalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer) {

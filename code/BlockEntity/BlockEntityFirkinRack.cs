@@ -9,6 +9,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
 
     private int CapacityLitres { get; set; } = 10;
     private static readonly int slotCount = 8;
+    private float globalPerishMultiplier = 1f;
     private readonly InfoDisplayOptions displaySelection = InfoDisplayOptions.ByBlock; // inline this after
 
     public BlockEntityFirkinRack() {
@@ -20,6 +21,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockFirkinRack;
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
 

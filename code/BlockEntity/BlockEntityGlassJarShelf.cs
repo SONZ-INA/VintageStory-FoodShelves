@@ -11,11 +11,13 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
     private int shelfCount = 4;
     private const int segmentsPerShelf = 1;
     private const int itemsPerSegment = 1;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityGlassJarShelf() { inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotGlassJarShelf(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
 
@@ -42,7 +44,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             return baseMul * perishRate;
         }
 
-        return 1 * Core.ConfigServer.GlobalPerishMultiplier;
+        return 1 * globalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
@@ -129,7 +131,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        DisplayPerishMultiplier(container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier, sb);
+        DisplayPerishMultiplier(container.GetPerishRate() * globalPerishMultiplier, sb);
 
         float ripenRate = GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         if (ripenRate > 0) sb.Append(Lang.Get("Suitable spot for food ripening."));

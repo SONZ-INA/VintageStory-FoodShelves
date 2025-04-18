@@ -14,11 +14,13 @@ public class BlockEntityTableWShelf : BlockEntityDisplay {
     public override string AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
 
     private const int slotCount = 2;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityTableWShelf() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotTableWShelf(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
 
@@ -26,7 +28,7 @@ public class BlockEntityTableWShelf : BlockEntityDisplay {
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier;
+        return container.GetPerishRate() * globalPerishMultiplier;
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -37,7 +39,7 @@ public class BlockEntityTableWShelf : BlockEntityDisplay {
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return 1 * Core.ConfigServer.GlobalPerishMultiplier;
+        return 1 * globalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {

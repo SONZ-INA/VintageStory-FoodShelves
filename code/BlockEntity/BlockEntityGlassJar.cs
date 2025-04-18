@@ -9,11 +9,13 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
     public override string AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
 
     private const int slotCount = 2;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntityGlassJar() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotLiquidyStuff(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
 
@@ -151,7 +153,7 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        DisplayPerishMultiplier(container.GetPerishRate() * Core.ConfigServer.GlobalPerishMultiplier, sb);
+        DisplayPerishMultiplier(container.GetPerishRate() * globalPerishMultiplier, sb);
         DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.ByBlockMerged, slotCount);
     }
 }

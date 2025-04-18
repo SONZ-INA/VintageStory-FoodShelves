@@ -11,6 +11,7 @@ public class BlockEntitySeedShelf : BlockEntityDisplay {
     private const int shelfCount = 3;
     private const int segmentsPerShelf = 3;
     private int itemsPerSegment = 4;
+    private float globalPerishMultiplier = 1f;
 
     public BlockEntitySeedShelf() { inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotSeedShelf(inv)); }
 

@@ -17,6 +17,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     private const int bonusSlots = 1;
     private const int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment + bonusSlots;
     private float perishMultiplier = 0.75f;
+    private float globalPerishMultiplier = 1f;
 
     public bool CabinetOpen { get; set; }
     public bool DrawerOpen { get; set; } 
@@ -35,7 +36,8 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
-        
+        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+
         base.Initialize(api);
 
         if (!DrawerOpen && !inv[36].Empty && WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) perishMultiplier = 0.4f;
@@ -44,7 +46,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     }
 
     private float GetPerishRate() {
-        return container.GetPerishRate() * perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier; // Slower perish rate
+        return container.GetPerishRate() * perishMultiplier * globalPerishMultiplier; // Slower perish rate
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -56,7 +58,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
         }
 
         if (transType == EnumTransitionType.Dry) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-        if (transType == EnumTransitionType.Perish) return perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier;
+        if (transType == EnumTransitionType.Perish) return perishMultiplier * globalPerishMultiplier;
 
         if (Api == null) return 0;
 
@@ -69,7 +71,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
             return (float)((float)1 / inv[36].Itemstack?.StackSize ?? 1) * 4; // A stack would last about 32 days which is 8 ice blocks
         }
 
-        return perishMultiplier * Core.ConfigServer.GlobalPerishMultiplier;
+        return perishMultiplier * globalPerishMultiplier;
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
