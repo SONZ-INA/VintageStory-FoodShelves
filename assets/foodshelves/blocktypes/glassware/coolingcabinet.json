@@ -50,6 +50,7 @@
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
   "lightAbsorption": 0,
+  "maxStackSize": 8,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolidByType": {

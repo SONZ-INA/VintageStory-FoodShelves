@@ -19,8 +19,7 @@ public class BlockEntityBarShelf : BlockEntityDisplay {
         block = api.World.BlockAccessor.GetBlock(Pos);
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
-        base.Initialize(api);
-
+        // Must be before initialize
         if (block.Code.SecondCodePart().StartsWith("short")) {
             itemsPerSegment /= 2;
 
@@ -38,6 +37,8 @@ public class BlockEntityBarShelf : BlockEntityDisplay {
 
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
+
+        base.Initialize(api);
 
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }

@@ -99,10 +99,12 @@
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
   <None Remove="assets\foodshelves\lang\fr.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
+  <None Remove="assets\foodshelves\patches\clayworks.json" />
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
   <None Remove="assets\foodshelves\patches\longtermfood.json" />
   <None Remove="assets\foodshelves\patches\pewter.json" />
+  <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
   <None Remove="assets\foodshelves\patches\variants\glassware.json" />
   <None Remove="assets\foodshelves\patches\variants\pumpkincase.json" />

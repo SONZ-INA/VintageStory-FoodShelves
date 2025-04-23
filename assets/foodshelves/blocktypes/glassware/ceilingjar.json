@@ -36,7 +36,7 @@
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
   "lightAbsorption": 1,
-  "maxStackSize": 4,
+  "maxStackSize": 16,
   "faceCullMode": "NeverCull",
   "drawtype": "json",
   "emitSideAo": { "all": false },

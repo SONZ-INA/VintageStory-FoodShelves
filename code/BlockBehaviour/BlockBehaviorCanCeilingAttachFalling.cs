@@ -68,7 +68,7 @@ public class BlockBehaviorCanCeilingAttachFalling : BlockBehavior {
         Block attachingBlock = world.BlockAccessor.GetBlock(attachingBlockPos);
         
         if (blockSel.Face == BlockFacing.DOWN) {
-            if (attachingBlock.SideIsSolid(blockSel.Position, BlockFacing.UP.Index)) {
+            if (attachingBlock.SideSolid[BlockFacing.DOWN.Index]) {
                 block.DoPlaceBlock(world, byPlayer, blockSel, itemstack);
                 return true;
             }

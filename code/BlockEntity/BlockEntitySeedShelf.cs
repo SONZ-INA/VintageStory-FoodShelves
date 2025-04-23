@@ -11,15 +11,13 @@ public class BlockEntitySeedShelf : BlockEntityDisplay {
     private const int shelfCount = 3;
     private const int segmentsPerShelf = 3;
     private int itemsPerSegment = 4;
-    private float globalPerishMultiplier = 1f;
 
     public BlockEntitySeedShelf() { inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotSeedShelf(inv)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
 
-        base.Initialize(api);
-
+        // Must be before initialize
         if (block.Code.SecondCodePart().StartsWith("short") || block.Code.SecondCodePart().StartsWith("veryshort")) {
             if (block.Code.SecondCodePart().StartsWith("short")) itemsPerSegment /= 2;
             else itemsPerSegment /= 4;
@@ -38,6 +36,8 @@ public class BlockEntitySeedShelf : BlockEntityDisplay {
 
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
+
+        base.Initialize(api);
     }
 
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
