@@ -19,10 +19,17 @@ public class BlockBehaviorCeilingAttachable : BlockBehavior {
     private bool TryAttachTo(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack itemstack, ref string failureCode) {
         BlockPos attachingBlockPos = blockSel.Position.AddCopy(blockSel.Face.Opposite);
         Block attachingBlock = world.BlockAccessor.GetBlock(attachingBlockPos);
+
         if (attachingBlock is BlockChisel) return false;
 
-        block.DoPlaceBlock(world, byPlayer, blockSel, itemstack);
-        return true;
+        if (blockSel.Face == BlockFacing.DOWN) {
+            if (attachingBlock.SideSolid[BlockFacing.DOWN.Index]) {
+                block.DoPlaceBlock(world, byPlayer, blockSel, itemstack);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos, ref EnumHandling handled) {
