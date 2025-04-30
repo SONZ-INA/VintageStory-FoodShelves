@@ -1,7 +1,7 @@
 {
   "code": "pieshelf",
-  "class": "FoodShelves.BlockPieShelf",
-  "entityclass": "FoodShelves.BlockEntityPieShelf",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.FSContainer",
   "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
   "variantgroups": [
     { "code": "type", "states": ["normal"] },

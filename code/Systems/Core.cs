@@ -36,6 +36,11 @@ public class Core : ModSystem {
     public override void Start(ICoreAPI api) {
         base.Start(api);
 
+        // Coded Variants-------
+        api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BlockFSContainer));
+        api.RegisterBlockEntityClass("FoodShelves.FSContainer", typeof(BlockEntityPieShelfATTR));
+        // ---------------------
+
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
 

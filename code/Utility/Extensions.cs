@@ -124,6 +124,17 @@ public static class Extensions {
         }
     }
 
+    public static Dictionary<string, MultiTextureMeshRef> GetCacheDictionary(ICoreClientAPI capi, string meshCacheKey) {
+        if (capi.ObjectCache.TryGetValue(meshCacheKey, out object obj)) {
+            return obj as Dictionary<string, MultiTextureMeshRef>;
+        }
+        else {
+            var dict = new Dictionary<string, MultiTextureMeshRef>();
+            capi.ObjectCache[meshCacheKey] = dict;
+            return dict;
+        }
+    }
+
     #endregion
 
     #region GeneralBlockExtensions

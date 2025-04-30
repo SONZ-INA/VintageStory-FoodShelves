@@ -1,8 +1,8 @@
 ﻿namespace FoodShelves;
 
-public class BlockEntityPieShelf : BlockEntityDisplay {
+public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer {
     private readonly InventoryGeneric inv;
-    private Block block;
+    private BlockFSContainer block;
     
     public override InventoryBase Inventory => inv;
     public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
@@ -14,12 +14,12 @@ public class BlockEntityPieShelf : BlockEntityDisplay {
     private const int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment;
     private float globalPerishMultiplier = 1f;
 
-    public string type, material;
+    public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
 
-    public BlockEntityPieShelf() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotPieShelf(inv)); }
+    public BlockEntityPieShelfATTR() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotPieShelf(inv)); }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos);
+        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
@@ -29,9 +29,7 @@ public class BlockEntityPieShelf : BlockEntityDisplay {
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
         base.OnBlockPlaced(byItemStack);
-
-        type ??= byItemStack?.Attributes.GetString("type");
-        material ??= byItemStack?.Attributes.GetString("material");
+        if (byItemStack?.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
     }
 
     private float GetPerishRate() {
@@ -121,20 +119,23 @@ public class BlockEntityPieShelf : BlockEntityDisplay {
         return tfMatrices;
     }
 
+    // TODO: Change this to not be IAttribute, but string instead?
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
-
-        type = tree.GetString("type", "normal");
-        material = tree.GetString("material", "normal");
+        
+        if (tree[BlockFSContainer.FSAttributes] is ITreeAttribute fsTree) {
+            VariantAttributes = fsTree.Clone();
+        }
+        else {
+            VariantAttributes = new TreeAttribute();
+        }
 
         RedrawAfterReceivingTreeAttributes(worldForResolving);
     }
 
     public override void ToTreeAttributes(ITreeAttribute tree) {
         base.ToTreeAttributes(tree);
-
-        tree.SetString("type", type);
-        tree.SetString("material", material);
+        tree[BlockFSContainer.FSAttributes] = VariantAttributes.Clone();
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
