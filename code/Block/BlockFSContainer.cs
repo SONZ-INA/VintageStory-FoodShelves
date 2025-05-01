@@ -27,7 +27,9 @@ public class BlockFSContainer : Block, IContainedMeshSource {
                 attrTree.SetAttribute(attr.Key, attr.Value);
             }
 
-            stack.Attributes[FSAttributes] = attrTree;
+            if (attrTree.Count != 0) {
+                stack.Attributes[FSAttributes] = attrTree;
+            }
         }
 
         return stack;
@@ -51,35 +53,7 @@ public class BlockFSContainer : Block, IContainedMeshSource {
 
     // TODO: Handle this properly
     public MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        if (api is not ICoreClientAPI capi) return null;
-
-        Shape shape = capi.Assets.TryGet(new AssetLocation("foodshelves:shapes/block/wood/shelves/pieshelf.json"))?.ToObject<Shape>().Clone();
-        if (shape == null) return null;
-
-        var stexSource = new ShapeTextureSource(capi, shape, "pungas");
-
-        if (itemstack.Attributes[FSAttributes] is ITreeAttribute tree) {
-            foreach (var pair in shape.Textures) {
-                var texPath = pair.Value.ToString();
-
-                foreach (var attr in tree) {
-                    string key = attr.Key;
-                    string value = attr.Value.ToString();
-
-                    if (texPath.Contains($"{{{key}}}")) {
-                        var ctex = new CompositeTexture(pair.Value);
-
-                        ctex.Base.Path = ctex.Base.Path.Replace($"{{{key}}}", value);
-                        ctex.Bake(capi.Assets);
-                        stexSource.textures[pair.Key] = ctex;
-                        break;
-                    }
-                }
-            }
-        }
-
-        capi.Tesselator.TesselateShape("FoodShelves", shape, out MeshData mesh, stexSource);
-        return mesh;
+        return GenBlockVariantMesh(api, this, itemstack);
     }
 
     public string GetMeshCacheKey(ItemStack itemstack) {

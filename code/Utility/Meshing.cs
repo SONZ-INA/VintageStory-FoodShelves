@@ -3,6 +3,46 @@
 namespace FoodShelves;
 
 public static class Meshing {
+    public static MeshData GenBlockVariantMesh(ICoreAPI api, BlockFSContainer block, ItemStack stack) {
+        if (api is not ICoreClientAPI capi) return null;
+
+        string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
+        Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
+        if (shape == null) return null;
+
+        var stexSource = new ShapeTextureSource(capi, shape, "FSC-GenMesh");
+
+        if (stack.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) {
+            foreach (var pair in shape.Textures) {
+                string texPath = pair.Value;
+
+                foreach (var attr in tree) {
+                    string key = attr.Key;
+                    string value = attr.Value.ToString();
+
+                    if (texPath.Contains($"{{{key}}}")) {
+                        var ctex = new CompositeTexture(pair.Value);
+
+                        ctex.Base.Path = ctex.Base.Path.Replace($"{{{key}}}", value);
+                        ctex.Bake(capi.Assets);
+                        stexSource.textures[pair.Key] = ctex;
+                    }
+                }
+            }
+        }
+        else {
+            var defaultTextures = block.Attributes["defaultTextures"]?.AsObject<Dictionary<string, string>>() ?? new();
+            foreach (var texture in defaultTextures) {
+                var ctex = new CompositeTexture(texture.Value);
+                ctex.Bake(capi.Assets);
+                stexSource.textures[texture.Key] = ctex;
+            }
+        }
+
+        capi.Tesselator.TesselateShape("FSC-ShapeMesh", shape, out MeshData blockMesh, stexSource);
+        return blockMesh;
+    }
+
     public static MeshData SubstituteBlockShape(ICoreAPI Api, ITesselatorAPI tesselator, string shapePath, Block texturesFromBlock) {
         AssetLocation shapeLocation = new(shapePath);
         ITexPositionSource texSource = tesselator.GetTextureSource(texturesFromBlock);
@@ -161,7 +201,7 @@ public static class Meshing {
 
         // Re-sizing the textures
         if (itemPath == "beeswax") { // Hardcoded stuff for beeswax
-            if (pathToFillShape == ShapeReferences.CeilingJarUtil) {
+            if (pathToFillShape == ShapeReferences.utilCeilingJar) {
                 for (int i = 0; i < 6; i++) {
                     shapeClone.Elements[0].FacesResolved[i].Uv[0] = 6f;
                 }
@@ -176,7 +216,7 @@ public static class Meshing {
 
         for (int i = 0; i < 4; i++) {
             float offset = 0; // Another hardcode for beeswax texture height
-            if (pathToFillShape == ShapeReferences.GlassJarUtil && contents[0].Collectible.Code.Path == "beeswax") {
+            if (pathToFillShape == ShapeReferences.utilGlassJar && contents[0].Collectible.Code.Path == "beeswax") {
                 offset = -1.5f;
             }
 

@@ -50,7 +50,7 @@ public class BlockCeilingJar : BlockContainer, IContainedMeshSource {
         capi.Tesselator.TesselateBlock(this, out MeshData basketMesh);
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.CeilingJarUtil);
+        MeshData contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.utilCeilingJar);
 
         if (contentMesh != null) {
             basketMesh.AddMeshData(contentMesh);

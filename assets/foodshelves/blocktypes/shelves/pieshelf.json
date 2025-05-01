@@ -8,6 +8,10 @@
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
+    "defaultTextures": {
+      "wood": "game:block/wood/shelf/wood",
+      "surface":"game:block/wood/shelf/surface"
+    },
     "handbook": {
       "groupBy": [ "pieshelf-*" ],
       "extraSections": [
@@ -26,10 +30,6 @@
   "shape": {
     "base": "block/wood/shelves/pieshelf",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
-  },
-  "textures": {
-	  "wood": { "base": "game:block/wood/shelf/wood" },
-	  "surface": { "base": "game:block/wood/shelf/surface" }
   },
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",

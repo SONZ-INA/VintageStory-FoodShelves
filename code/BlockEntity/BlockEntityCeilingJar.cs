@@ -115,7 +115,7 @@ public class BlockEntityCeilingJar : BlockEntityDisplay {
         tesselator.TesselateBlock(block, out MeshData blockMesh);
         if (blockMesh == null) return false;
 
-        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.CeilingJarUtil);
+        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar);
         if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
 
         mesher.AddMeshData(blockMesh);

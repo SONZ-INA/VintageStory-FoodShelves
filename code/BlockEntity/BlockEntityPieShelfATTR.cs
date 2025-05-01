@@ -104,6 +104,22 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
         return false;
     }
 
+    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        bool skipmesh = base.OnTesselation(mesher, tesselator);
+
+        if (!skipmesh) {
+            var stack = new ItemStack(block);
+            if (VariantAttributes.Count != 0) {
+                stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
+            }
+
+            MeshData blockmesh = block.GenMesh(stack, capi.BlockTextureAtlas, Pos);
+            mesher.AddMeshData(blockmesh.Clone().BlockYRotation(this));
+        }
+
+        return true;
+    }
+
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[slotCount][];
 
@@ -119,12 +135,11 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
         return tfMatrices;
     }
 
-    // TODO: Change this to not be IAttribute, but string instead?
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
         
         if (tree[BlockFSContainer.FSAttributes] is ITreeAttribute fsTree) {
-            VariantAttributes = fsTree.Clone();
+            VariantAttributes = fsTree;
         }
         else {
             VariantAttributes = new TreeAttribute();
@@ -135,7 +150,9 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
 
     public override void ToTreeAttributes(ITreeAttribute tree) {
         base.ToTreeAttributes(tree);
-        tree[BlockFSContainer.FSAttributes] = VariantAttributes.Clone();
+        if (VariantAttributes.Count != 0) {
+            tree[BlockFSContainer.FSAttributes] = VariantAttributes;
+        }
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
