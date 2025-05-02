@@ -3,18 +3,18 @@
 namespace FoodShelves;
 
 public static class Meshing {
-    public static MeshData GenBlockVariantMesh(ICoreAPI api, BlockFSContainer block, ItemStack stack) {
+    public static MeshData GenBlockVariantMesh(ICoreAPI api, Block block, ItemStack stack) {
         if (api is not ICoreClientAPI capi) return null;
 
         string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
         Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
         if (shape == null) return null;
 
-        var stexSource = new ShapeTextureSource(capi, shape, "FSC-GenMesh");
+        var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
         if (stack.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) {
-            foreach (var pair in block.Attributes["textures"].AsObject<Dictionary<string, string>>()) {
+            foreach (var pair in block.Attributes["variantTextures"].AsObject<OrderedDictionary<string, string>>()) {
                 string texPath = pair.Value;
 
                 foreach (var attr in tree) {
@@ -25,6 +25,14 @@ public static class Meshing {
                         shape.Textures[key] = pair.Value.Replace($"{{{key}}}", value);
 
                         var ctex = new CompositeTexture(pair.Value.ToString().Replace($"{{{key}}}", value));
+
+                        //BlendedOverlayTexture overlay = new() {
+                        //    Base = new AssetLocation("foodshelves:variants/shelves/wood")
+                        //};
+
+                        //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();
+                        //ctex.BlendedOverlays.Append(overlay);
+
                         ctex.Bake(capi.Assets);
                         stexSource.textures[pair.Key] = ctex;
                     }
@@ -32,8 +40,8 @@ public static class Meshing {
             }
         }
 
-        capi.Tesselator.TesselateShape("FSC-ShapeMesh", shape, out MeshData blockMesh, stexSource);
-        return blockMesh;
+        capi.Tesselator.TesselateShape("FS-TesselateShape", shape, out MeshData blockMesh, stexSource);
+        return blockMesh.BlockYRotation(block);
     }
 
     public static MeshData SubstituteBlockShape(ICoreAPI Api, ITesselatorAPI tesselator, string shapePath, Block texturesFromBlock) {
@@ -82,7 +90,7 @@ public static class Meshing {
 
         shapeClone.Elements = RemoveElements(shapeClone.Elements);
 
-        capi.Tesselator.TesselateShape("erasedelementsshape", shapeClone, out MeshData mesh, texSource);
+        capi.Tesselator.TesselateShape("FS-ShapeErased", shapeClone, out MeshData mesh, texSource);
         return mesh;
     }
 
@@ -107,7 +115,7 @@ public static class Meshing {
                 }
             }
 
-            UniversalShapeTextureSource texSource = new(capi, targetAtlas, shape, "inContainerTexSource");
+            UniversalShapeTextureSource texSource = new(capi, targetAtlas, shape, "FS-ContentTextureSource");
 
             foreach (var textureDict in shape.Textures) {
                 CompositeTexture cTex = new(textureDict.Value);
@@ -115,7 +123,7 @@ public static class Meshing {
                 texSource.textures[textureDict.Key] = cTex;
             }
 
-            capi.Tesselator.TesselateShape("InContainerTesselate", shape, out MeshData collectibleMesh, texSource);
+            capi.Tesselator.TesselateShape("FS-TesselateContent", shape, out MeshData collectibleMesh, texSource);
 
             int offset = transformationMatrix.GetLength(1);
             if (i < offset) {
@@ -167,7 +175,7 @@ public static class Meshing {
             shapeClone.Textures.Clear();
             shapeClone.Textures.Add("surface", textureRerouteLocation);
 
-            texSource = new ShapeTextureSource(capi, shapeClone, "jarcontentshape");
+            texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
         }
         else {
             // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
@@ -216,7 +224,7 @@ public static class Meshing {
             shapeClone.Elements[0].FacesResolved[i].Uv[3] = (float)shapeHeight + textureOffset + offset;
         }
 
-        capi.Tesselator.TesselateShape("liquidymesh", shapeClone, out MeshData contentMesh, texSource);
+        capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shapeClone, out MeshData contentMesh, texSource);
         return contentMesh;
     }
 

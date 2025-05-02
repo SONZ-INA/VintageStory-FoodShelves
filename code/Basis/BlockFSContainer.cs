@@ -1,7 +1,57 @@
-﻿namespace FoodShelves;
+﻿using Vintagestory.ServerMods;
+
+namespace FoodShelves;
 
 public class BlockFSContainer : Block, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
+
+    public override void OnLoaded(ICoreAPI api) {
+        base.OnLoaded(api);
+        LoadVariantsCreative();
+    }
+
+    private void LoadVariantsCreative() {
+        if (!Code.Path.EndsWith("-east")) return;
+
+        var materials = Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
+        string material = "";
+        StandardWorldProperty props = null;
+
+        if (materials.LoadFromProperties != null) {
+            material = materials.LoadFromProperties.ToString().Split('/')[1];
+            props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
+        }
+
+        if (props == null) return;
+
+        var stacks = new List<JsonItemStack>();
+
+        var defaultBlock = new JsonItemStack() { // Default block
+            Code = Code,
+            Type = EnumItemClass.Block,
+            Attributes = new JsonObject(JToken.Parse("{}"))
+        };
+        defaultBlock.Resolve(api.World, Code);
+        stacks.Add(defaultBlock);
+
+        foreach (var prop in props.Variants) {
+            string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
+            string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
+
+            var jstack = new JsonItemStack() {
+                Code = Code,
+                Type = EnumItemClass.Block,
+                Attributes = new JsonObject(JToken.Parse(attributesJson))
+            };
+
+            jstack.Resolve(api.World, Code);
+            stacks.Add(jstack);
+        }
+
+        CreativeInventoryStacks = new CreativeTabAndStackList[] {
+            new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
+        };
+    }
 
     public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
         return true;

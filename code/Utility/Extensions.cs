@@ -48,9 +48,7 @@ public static class Extensions {
 
     #region MeshExtensions
 
-    // Change to use block instead of blockentity?
-    public static MeshData BlockYRotation(this MeshData mesh, BlockEntity BE) {
-        Block block = BE.Api.World.BlockAccessor.GetBlock(BE.Pos);
+    public static MeshData BlockYRotation(this MeshData mesh, Block block) {
         return mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
     }
 

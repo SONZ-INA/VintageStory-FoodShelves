@@ -123,7 +123,7 @@ public class BlockEntityBarrelRackBig : BlockEntityContainer {
             ItemStack[] stack = GetContentStacks();
             if (stack[0] != null && stack[0].Block != null) {
                 tesselator.TesselateBlock(stack[0].Block, out MeshData barrel);
-                if (barrel != null) blockMesh.AddMeshData(barrel.BlockYRotation(this));
+                if (barrel != null) blockMesh.AddMeshData(barrel.BlockYRotation(block));
             }
 
             mesher.AddMeshData(blockMesh.Clone());

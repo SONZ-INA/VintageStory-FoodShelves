@@ -2,13 +2,13 @@
   "code": "pieshelf",
   "class": "FoodShelves.BlockFSContainer",
   "entityclass": "FoodShelves.FSContainer",
-  "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
   "variantgroups": [
     { "code": "type", "states": ["normal"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
-    "textures": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
       "surface": "foodshelves:variants/variants/{wood}",
       "wood": "game:block/wood/debarked/{wood}"
     },
@@ -33,13 +33,13 @@
   },
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",
-  "lightAbsorption": 0,
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "combustibleProps": {
     "burnTemperature": 700,
     "burnDuration": 36

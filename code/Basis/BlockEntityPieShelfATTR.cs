@@ -36,7 +36,7 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
             stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
         }
 
-        mesh = GenBlockVariantMesh(Api, block, stack)?.BlockYRotation(this);
+        mesh = GenBlockVariantMesh(Api, block, stack);
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {

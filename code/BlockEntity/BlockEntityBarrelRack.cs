@@ -118,7 +118,7 @@ public class BlockEntityBarrelRack : BlockEntityContainer {
             ItemStack[] stack = GetContentStacks();
             if (stack[0] != null && stack[0].Block != null) {
                 MeshData substituteBarrelShape = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
-                blockMesh.AddMeshData(substituteBarrelShape.BlockYRotation(this));
+                blockMesh.AddMeshData(substituteBarrelShape.BlockYRotation(block));
             }
 
             mesher.AddMeshData(blockMesh.Clone());

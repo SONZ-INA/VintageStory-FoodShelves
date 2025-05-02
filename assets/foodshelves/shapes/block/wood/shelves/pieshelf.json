@@ -5,8 +5,7 @@
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textureSizes": {
-	},
+	"textureSizes": { },
 	"textures": {
 		"surface": "game:block/wood/shelf/surface",
 		"wood": "game:block/wood/shelf/wood"
