@@ -8,9 +8,9 @@
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
-    "defaultTextures": {
-      "wood": "game:block/wood/shelf/wood",
-      "surface":"game:block/wood/shelf/surface"
+    "textures": {
+      "surface": "foodshelves:variants/variants/{wood}",
+      "wood": "game:block/wood/debarked/{wood}"
     },
     "handbook": {
       "groupBy": [ "pieshelf-*" ],

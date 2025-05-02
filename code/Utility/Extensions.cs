@@ -49,9 +49,9 @@ public static class Extensions {
     #region MeshExtensions
 
     // Change to use block instead of blockentity?
-    public static MeshData BlockYRotation(this MeshData obj, BlockEntity BE) {
+    public static MeshData BlockYRotation(this MeshData mesh, BlockEntity BE) {
         Block block = BE.Api.World.BlockAccessor.GetBlock(BE.Pos);
-        return obj.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
+        return mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
     }
 
     public static float GetBlockMeshAngle(IPlayer byPlayer, BlockSelection blockSel, bool val) {
@@ -157,8 +157,21 @@ public static class Extensions {
         foreach (KeyValuePair<string, ModelTransform> transformation in transformations) {
             if (WildcardUtil.Match(transformation.Key, obj.Code.ToString())) return transformation.Value;
         }
-
         return null;
+    }
+
+    public static string GetMaterialName(this ItemStack itemStack, bool includeParenthesis = true) {
+        if (itemStack.Attributes["FSAttributes"] is not ITreeAttribute tree)
+            return "";
+
+        foreach (var pair in tree) {
+            if (pair.Key == "wood") {
+                string toReturn = Lang.Get("game:material-" + pair.Value);
+                return (includeParenthesis ? "(" : "") + toReturn + (includeParenthesis ? ")" : "");
+            }
+        }
+
+        return "";
     }
 
     public static string GetMaterialNameLocalized(this ItemStack itemStack, string[] variantKeys = null, string[] toExclude = null, bool includeParenthesis = true) {

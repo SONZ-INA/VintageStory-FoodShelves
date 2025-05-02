@@ -14,6 +14,8 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
     private const int slotCount = shelfCount * segmentsPerShelf * itemsPerSegment;
     private float globalPerishMultiplier = 1f;
 
+    MeshData mesh;
+
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
 
     public BlockEntityPieShelfATTR() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotPieShelf(inv)); }
@@ -24,12 +26,23 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
 
         base.Initialize(api);
 
+        if (mesh == null) InitMesh();
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+    }
+
+    private void InitMesh() {
+        var stack = new ItemStack(block);
+        if (VariantAttributes.Count != 0) {
+            stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
+        }
+
+        mesh = GenBlockVariantMesh(Api, block, stack)?.BlockYRotation(this);
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
         base.OnBlockPlaced(byItemStack);
         if (byItemStack?.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
+        InitMesh();
     }
 
     private float GetPerishRate() {
@@ -105,18 +118,8 @@ public class BlockEntityPieShelfATTR : BlockEntityDisplay, IFoodShelvesContainer
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = base.OnTesselation(mesher, tesselator);
-
-        if (!skipmesh) {
-            var stack = new ItemStack(block);
-            if (VariantAttributes.Count != 0) {
-                stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
-            }
-
-            MeshData blockmesh = block.GenMesh(stack, capi.BlockTextureAtlas, Pos);
-            mesher.AddMeshData(blockmesh.Clone().BlockYRotation(this));
-        }
-
+        mesher.AddMeshData(mesh);
+        base.OnTesselation(mesher, tesselator);
         return true;
     }
 

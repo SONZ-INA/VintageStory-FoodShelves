@@ -12,8 +12,9 @@ public static class Meshing {
 
         var stexSource = new ShapeTextureSource(capi, shape, "FSC-GenMesh");
 
+        // Custom Textures
         if (stack.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) {
-            foreach (var pair in shape.Textures) {
+            foreach (var pair in block.Attributes["textures"].AsObject<Dictionary<string, string>>()) {
                 string texPath = pair.Value;
 
                 foreach (var attr in tree) {
@@ -21,21 +22,13 @@ public static class Meshing {
                     string value = attr.Value.ToString();
 
                     if (texPath.Contains($"{{{key}}}")) {
-                        var ctex = new CompositeTexture(pair.Value);
+                        shape.Textures[key] = pair.Value.Replace($"{{{key}}}", value);
 
-                        ctex.Base.Path = ctex.Base.Path.Replace($"{{{key}}}", value);
+                        var ctex = new CompositeTexture(pair.Value.ToString().Replace($"{{{key}}}", value));
                         ctex.Bake(capi.Assets);
                         stexSource.textures[pair.Key] = ctex;
                     }
                 }
-            }
-        }
-        else {
-            var defaultTextures = block.Attributes["defaultTextures"]?.AsObject<Dictionary<string, string>>() ?? new();
-            foreach (var texture in defaultTextures) {
-                var ctex = new CompositeTexture(texture.Value);
-                ctex.Bake(capi.Assets);
-                stexSource.textures[texture.Key] = ctex;
             }
         }
 
@@ -177,7 +170,7 @@ public static class Meshing {
             texSource = new ShapeTextureSource(capi, shapeClone, "jarcontentshape");
         }
         else {
-            // For some reason, ITexPositionSource is throwing a null error when simply getting it with a simple fucking method, so this is needed
+            // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
             var textures = contents[0].Item.Textures;
             texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
         }

@@ -184,6 +184,19 @@
   <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\bottom.png" />
   <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\top.png" />
   <None Remove="assets\foodshelves\textures\block\wood\vegetablebasket\top.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\acacia.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\aged.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\baldcypress.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\birch.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\ebonywood.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\kapok.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\larch.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\maple.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\oak.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\pine.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\purpleheart.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\redwood.png" />
+  <None Remove="assets\foodshelves\textures\variants\variants\walnut.png" />
   <Content Include="modinfo.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>

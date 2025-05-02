@@ -12,7 +12,6 @@
       "code": "pieshelf-normal-east",
       "attributes": {
         "FSAttributes": {
-          "surface": "{wood}",
           "wood": "{wood}"
         }
       }

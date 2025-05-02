@@ -8,8 +8,8 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"surface": "game:block/wood/debarked/{surface}",
-		"wood": "game:block/wood/debarked/{wood}"
+		"surface": "game:block/wood/shelf/surface",
+		"wood": "game:block/wood/shelf/wood"
 	},
 	"elements": [
 		{

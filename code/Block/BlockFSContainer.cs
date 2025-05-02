@@ -13,7 +13,7 @@ public class BlockFSContainer : Block, IContainedMeshSource {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalized(); // TODO: Change method logic to support coded variants instead.
+        string variantName = itemStack.GetMaterialName(); // TODO: Change method logic to support coded variants instead.
         return base.GetHeldItemName(itemStack) + " " + variantName;
     }
 
@@ -21,7 +21,6 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         var stack = base.OnPickBlock(world, pos);
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            
             var attrTree = new TreeAttribute();
             foreach (var attr in fscontainer.VariantAttributes) {
                 attrTree.SetAttribute(attr.Key, attr.Value);
@@ -51,7 +50,6 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         renderinfo.ModelRef = meshRef;
     }
 
-    // TODO: Handle this properly
     public MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
         return GenBlockVariantMesh(api, this, itemstack);
     }
