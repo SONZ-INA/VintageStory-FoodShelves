@@ -89,7 +89,7 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BlockEntityCoolingCabinet becc) {
             if (becc.DrawerOpen) {
-                if (becc.Inventory?[36].Empty == true || WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, becc.Inventory?[36].Itemstack.Collectible.Code)) {
+                if (becc.Inventory?[36].Empty == true || becc.Inventory?[36].CoolingOnlyCheck() == true) {
                     return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                 }
                 else {

@@ -7,10 +7,11 @@ public class BlockFSContainer : Block, IContainedMeshSource {
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
+        PlacedPriorityInteract = true;
         LoadVariantsCreative();
     }
 
-    private void LoadVariantsCreative() {
+    protected void LoadVariantsCreative() {
         if (!Code.Path.EndsWith("-east")) return;
 
         var materials = Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
@@ -64,8 +65,30 @@ public class BlockFSContainer : Block, IContainedMeshSource {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialName(); // TODO: Change method logic to support coded variants instead.
-        return base.GetHeldItemName(itemStack) + " " + variantName;
+        string itemName = base.GetHeldItemName(itemStack);
+
+        string blockType = Code.SecondCodePart();
+
+        if (blockType != "normal") {
+            string entry = "foodshelves:" + blockType;
+            string typeName = Lang.Get(entry);
+            if (typeName != entry) {
+                itemName = typeName + " " + itemName;
+            }
+        }
+
+        return itemName + " " + itemStack.GetMaterialName(); // TODO: Change method logic to support coded variants instead.
+    }
+
+    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
+        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+        string entry = "foodshelves:helddesc-" + Code.FirstCodePart();
+        string desc = Lang.Get(entry);
+        if (desc != entry) {
+            dsc.AppendLine();
+            dsc.AppendLine(desc);
+        }
     }
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos) {
@@ -101,11 +124,11 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         renderinfo.ModelRef = meshRef;
     }
 
-    public MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
+    public virtual MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
         return GenBlockVariantMesh(api, this, itemstack);
     }
 
-    public string GetMeshCacheKey(ItemStack itemstack) {
+    public virtual string GetMeshCacheKey(ItemStack itemstack) {
         if (itemstack.Attributes[FSAttributes] is not ITreeAttribute tree) return Code;
 
         List<string> parts = new();

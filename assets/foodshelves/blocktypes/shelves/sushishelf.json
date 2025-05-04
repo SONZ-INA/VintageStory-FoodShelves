@@ -1,13 +1,17 @@
 {
   "code": "sushishelf",
-  "class": "FoodShelves.BlockSushiShelf",
-  "entityclass": "FoodShelves.BlockEntitySushiShelf",
-  "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BESushiShelf",
   "variantgroups": [
     { "code": "type", "states": ["normal", "short"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/variants/{wood}",
+      "wood": "game:block/wood/debarked/{wood}"
+    },
     "handbook": {
       "groupBy": [ "sushishelf-*" ],
       "extraSections": [
@@ -16,9 +20,7 @@
           "text": "foodshelves:blockdesc-sushishelf-text"
         }
       ]
-    },
-    "inventoryClassName": "sushishelf",
-    "attributeTransformCode": "onSushiShelfTransform"
+    }
   },
   "behaviors": [
     { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
@@ -40,12 +42,13 @@
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",
   "lightAbsorption": 0,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "combustiblePropsByType": {
     "*-short*": {
       "burnTemperature": 700,
@@ -66,7 +69,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionboxByType": {
     "*-short*": { "x1": 0.5, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
     "*": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }

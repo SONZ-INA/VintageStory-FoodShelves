@@ -1,7 +1,7 @@
 {
   "code": "pieshelf",
   "class": "FoodShelves.BlockFSContainer",
-  "entityclass": "FoodShelves.FSContainer",
+  "entityclass": "FoodShelves.BEPieShelf",
   "variantgroups": [
     { "code": "type", "states": ["normal"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
@@ -20,9 +20,7 @@
           "text": "foodshelves:blockdesc-pieshelf-text"
         }
       ]
-    },
-    "inventoryClassName": "pieshelf",
-    "attributeTransformCode": "onPieShelfTransform"
+    }
   },
   "behaviors": [
     { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
@@ -36,6 +34,7 @@
   "lightAbsorption": 1,
   "replaceable": 900,
   "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": { "all": false },
@@ -54,7 +53,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionbox": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
   "selectionBoxes": [
 	  { "x1": 0.125, "y1": 0, "z1": 0.0625, "x2": 0.9375, "y2": 0.3125, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },

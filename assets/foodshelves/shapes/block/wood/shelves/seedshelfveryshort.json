@@ -9,8 +9,8 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"surface": "block/wood/shelf/surface",
-		"wood": "block/wood/shelf/wood"
+    "surface": "game:block/wood/shelf/surface",
+    "wood": "game:block/wood/shelf/wood"
 	},
 	"elements": [
 		{

@@ -78,8 +78,8 @@
   "Contents": "<font color=\"orange\">Conteúdo: </font>",
   "Soonest": "Em breve:",
   "Empty.": "Vazio.",
-  "Short": "Curto",
-  "Very Short": "Muito Curto",
+  "short": "Curto",
+  "veryshort": "Muito Curto",
 
   "Will melt in {0} years": "Derreterá em {0} anos",
   "Will melt in {0} days": "Derreterá em {0} dias",

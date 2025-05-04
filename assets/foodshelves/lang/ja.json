@@ -78,8 +78,8 @@
   "Contents": "<font color=\"orange\">内容：</font>",
   "Soonest": "最速：",
   "Empty.": "空っぽ。",
-  "Short": "短い",
-  "Very Short": "とても短い",
+  "short": "短い",
+  "veryshort": "とても短い",
 
   "Will melt in {0} years": "{0}年後に溶けます",
   "Will melt in {0} days": "{0}日後に溶けます",

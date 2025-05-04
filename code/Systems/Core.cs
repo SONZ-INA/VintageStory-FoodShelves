@@ -5,6 +5,10 @@
 namespace FoodShelves;
 
 public class Core : ModSystem {
+    private readonly Dictionary<string, RestrictionData> restrictions = new();
+    private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
+    // private readonly Dictionary<string, string[2]> connections = new();
+
     public static ConfigServer ConfigServer { get; set; }
     // public static ConfigClient ConfigClient { get; set; }
 
@@ -38,26 +42,20 @@ public class Core : ModSystem {
 
         // Coded Variants-------
         api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BlockFSContainer));
-        api.RegisterBlockEntityClass("FoodShelves.FSContainer", typeof(BlockEntityPieShelfATTR));
         // ---------------------
 
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
 
+        api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BESushiShelf", typeof(BESushiShelf));
+
         api.RegisterBlockClass("FoodShelves.BlockShelfShort", typeof(BlockShelfShort));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityShelfShort", typeof(BlockEntityShelfShort));
-        api.RegisterBlockClass("FoodShelves.BlockPieShelf", typeof(BlockPieShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityPieShelf", typeof(BlockEntityPieShelf));
-        api.RegisterBlockClass("FoodShelves.BlockBreadShelf", typeof(BlockBreadShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityBreadShelf", typeof(BlockEntityBreadShelf));
-        api.RegisterBlockClass("FoodShelves.BlockBarShelf", typeof(BlockBarShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityBarShelf", typeof(BlockEntityBarShelf));
-        api.RegisterBlockClass("FoodShelves.BlockSushiShelf", typeof(BlockSushiShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntitySushiShelf", typeof(BlockEntitySushiShelf));
-        api.RegisterBlockClass("FoodShelves.BlockEggShelf", typeof(BlockEggShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityEggShelf", typeof(BlockEntityEggShelf));
-        api.RegisterBlockClass("FoodShelves.BlockSeedShelf", typeof(BlockSeedShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntitySeedShelf", typeof(BlockEntitySeedShelf));
         api.RegisterBlockClass("FoodShelves.BlockGlassJarShelf", typeof(BlockGlassJarShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassJarShelf", typeof(BlockEntityGlassJarShelf));
 
@@ -99,63 +97,36 @@ public class Core : ModSystem {
     public override void AssetsLoaded(ICoreAPI api) {
         base.AssetsLoaded(api);
 
-        FoodUniversalData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/general/fooduniversal.json");
-        FoodUniversalTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/general/fooduniversal.json");
-        HolderUniversalData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/general/holderuniversal.json");
-        HolderUniversalTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/general/holderuniversal.json");
-        LiquidyStuffData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/general/liquidystuff.json");
-        CoolingOnlyData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/general/coolingonly.json");
+        Dictionary<string, string[]> restrictionGroups = new() {
+            ["barrels"] = new[] { "barrelrack", "barrelrackbig" },
+            ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
+            ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
+            ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
+            [""] = new[] { "pumpkincase" }
+        };
 
-        PieShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/pieshelf.json");
-        PieShelfTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/shelves/pieshelf.json");
-        BreadShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/breadshelf.json");
-        BreadShelfTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/shelves/breadshelf.json");
-        BarShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/barshelf.json");
-        BarShelfTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/shelves/barshelf.json");
-        SushiShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/sushishelf.json");
-        EggShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/eggshelf.json");
-        SeedShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/seedshelf.json");
-        GlassJarShelfData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/shelves/glassjarshelf.json");
+        foreach (var (category, names) in restrictionGroups) {
+            foreach (var name in names) {
+                string restrictionPath = $"foodshelves:config/restrictions/{category}/{name}.json".Replace("//", "/");
+                string transformationPath = $"foodshelves:config/transformations/{category}/{name}.json".Replace("//", "/");
 
-        FruitBasketData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/baskets/fruitbasket.json");
-        FruitBasketTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/baskets/fruitbasket.json");
-        VegetableBasketData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/baskets/vegetablebasket.json");
-        VegetableBasketTransformations = api.LoadAsset<Dictionary<string, ModelTransform>>("foodshelves:config/transformations/baskets/vegetablebasket.json");
-        EggBasketData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/baskets/eggbasket.json");
+                restrictions[name] = api.LoadAsset<RestrictionData>(restrictionPath);
 
-        BarrelRackData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/barrels/barrelrack.json");
-        BarrelRackBigData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/barrels/barrelrackbig.json");
-        //FirkinRackData = api.LoadAsset<RestrictionData.FirkinRackData>("foodshelves:config/restrictions/barrels/firkinrack.json");
-
-        PumpkinCaseData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/pumpkincase.json");
+                if (api.Assets.Exists(transformationPath)) {
+                    transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
+                }
+            }
+        }
     }
 
     public override void AssetsFinalize(ICoreAPI api) {
         base.AssetsFinalize(api);
 
         foreach (CollectibleObject obj in api.World.Collectibles) {
-            PatchFoodUniversal(obj, FoodUniversalData);
-            PatchHolderUniversal(obj, HolderUniversalData);
-            PatchLiquidyStuff(obj, LiquidyStuffData);
-            PatchCoolingOnly(obj, CoolingOnlyData);
-
-            PatchPieShelf(obj, PieShelfData);
-            PatchBreadShelf(obj, BreadShelfData);
-            PatchBarShelf(obj, BarShelfData);
-            PatchSushiShelf(obj, SushiShelfData);
-            PatchEggShelf(obj, EggShelfData);
-            PatchSeedShelf(obj, SeedShelfData);
-            PatchGlassJarShelf(obj, GlassJarShelfData);
-
-            PatchFruitBasket(obj, FruitBasketData);
-            PatchVegetableBasket(obj, VegetableBasketData);
-            PatchEggBasket(obj, EggBasketData);
-
-            PatchBarrelRack(obj, BarrelRackData);
-            PatchBarrelRackBig(obj, BarrelRackBigData);
-            //PatchFirkinRack(obj, FirkinRackData);
-
-            PatchPumpkinCase(obj, PumpkinCaseData);
+            foreach (var restriction in restrictions) {
+                transformations.TryGetValue(restriction.Key, out var transformation);
+                PatchCollectibleWhitelist(obj, restriction, transformation);
+            }
         }
     }
 }

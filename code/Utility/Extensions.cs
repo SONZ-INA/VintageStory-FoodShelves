@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Vintagestory.API.Common;
 
 namespace FoodShelves; 
 
@@ -250,6 +251,29 @@ public static class Extensions {
     #endregion
 
     #region BlockInventoryExtensions
+
+    // Must be called before initialize
+    public static int ShortenInventory(this BEFSContainer be, ICoreAPI api, Dictionary<string, int> values, int maxSlotStackSize = 1) {
+        var modifier = values.FirstOrDefault(pair => be.Block.Code.SecondCodePart().StartsWith(pair.Key));
+
+        if (modifier.Key != null) {
+            be.ItemsPerSegment /= modifier.Value;
+
+            // Need to save items and transfer it over to new inventory, they disappear otherwise
+            ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
+
+            be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
+
+            for (int i = 0; i < be.SlotCount; i++) {
+                if (i >= stack.Length) break;
+                be.inv[i].Itemstack = stack[i];
+            }
+
+            be.inv.LateInitialize(be.inv.InventoryID, api);
+        }
+
+        return be.ItemsPerSegment;
+    }
 
     public static ItemStack[] GetContents(IWorldAccessor world, ItemStack itemstack) {
         ITreeAttribute treeAttr = itemstack?.Attributes?.GetTreeAttribute("contents");

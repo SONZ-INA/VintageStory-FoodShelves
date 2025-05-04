@@ -13,7 +13,7 @@ global using Vintagestory.GameContent;
 
 global using static FoodShelves.Extensions;
 global using static FoodShelves.Restrictions;
-global using static FoodShelves.RestrictionsCollection;
+// global using static FoodShelves.RestrictionsCollection;
 global using static FoodShelves.TransformationsCollection;
 global using static FoodShelves.InfoDisplay;
 global using static FoodShelves.Meshing;

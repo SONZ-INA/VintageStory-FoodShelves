@@ -3,22 +3,22 @@
 namespace FoodShelves;
 
 public class BlockVegetableBasket : BlockContainer, IContainedMeshSource {
-    WorldInteraction[] interactions;
+    private WorldInteraction[] interactions;
+    private static RestrictionData VegetableBasketData;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
 
+        VegetableBasketData = api.LoadAsset<RestrictionData>("foodshelves:config/restrictions/baskets/vegetablebasket.json");
+
         interactions = ObjectCacheUtil.GetOrCreate(api, "vegetableBasketBlockInteractions", () => {
             List<ItemStack> vegetableStackList = new();
-            var allGroupedCodes = VegetableBasketData.GroupingCodes
-                .SelectMany(g => g.Value)
-                .ToArray();
 
             foreach(Item item in api.World.Items) {
                 if (item.Code == null) continue;
 
-                if (WildcardUtil.Match(allGroupedCodes, item.Code)) {
+                if (item.VegetableBasketCheck()) {
                     vegetableStackList.Add(new ItemStack(item));
                 }
             }

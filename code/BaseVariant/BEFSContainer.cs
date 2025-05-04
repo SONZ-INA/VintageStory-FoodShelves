@@ -1,35 +1,37 @@
 ﻿namespace FoodShelves;
 
 public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
-    private float globalPerishMultiplier = 1f;
+    protected float globalPerishMultiplier = 1f;
     
-    protected InventoryGeneric inv;
+    public InventoryGeneric inv;
     protected BlockFSContainer block;
     protected MeshData mesh;
 
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
-    public override string AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
+    public override string InventoryClassName => Block?.Code.FirstCodePart();
+    public override string AttributeTransformCode => "on" + Block?.Code.FirstCodePart() + "Transform";
 
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
-    protected abstract string AttributeCheck { get; }
+    public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
     protected virtual string CantPlaceMessage => "";
+    protected abstract InfoDisplayOptions InfoDisplay { get; }
     protected virtual bool RipeningSpot => false;
 
     protected virtual float PerishMultiplier => 1;
     protected virtual float CuringMultiplier => 1;
     protected virtual float DryingMultiplier => 1;
 
-    protected virtual int ShelfCount => 1;
-    protected virtual int SegmentsPerShelf => 1;
-    protected virtual int ItemsPerSegment => 1;
-    protected virtual int AdditionalSlots => 0;
-    protected virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
+    public virtual int ShelfCount { get; set; } = 1;
+    public virtual int SegmentsPerShelf { get; set; } = 1;
+    public virtual int ItemsPerSegment { get; set; } = 1;
+    public virtual int AdditionalSlots { get; set; } = 0;
+    public virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
         base.Initialize(api);
+        inv.LateInitialize(inv.InventoryID, api);
 
         if (mesh == null) InitMesh();
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
@@ -82,27 +84,37 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
             if (slot.CanStoreInSlot(AttributeCheck)) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
-                if (TryPut(slot, blockSel)) {
+                if (TryPut(byPlayer, slot, blockSel)) {
                     Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
                     MarkDirty();
                     return true;
                 }
             }
 
-            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+            if (CantPlaceMessage != "") {
+                (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+            }
+
             return false;
         }
     }
 
-    protected virtual bool TryPut(ItemSlot slot, BlockSelection blockSel) {
+    protected virtual bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return moved > 0;
+            ItemStack currentStack = inv[currentIndex].Itemstack;
+            if (inv[currentIndex].Empty || (currentStack.Collectible.Equals(slot.Itemstack.Collectible) && currentStack.StackSize < currentStack.Collectible.MaxStackSize)) {
+                int moved = byPlayer.Entity.Controls.ShiftKey
+                    ? slot.TryPutInto(Api.World, inv[currentIndex], inv[currentIndex].MaxSlotStackSize - inv[currentIndex].Itemstack?.StackSize ?? 64)
+                    : slot.TryPutInto(Api.World, inv[currentIndex]);
+
+                if (moved > 0) {
+                    MarkDirty();
+                    (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                    return true;
+                }
             }
         }
 
@@ -115,7 +127,10 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
         for (int i = ItemsPerSegment - 1; i >= 0; i--) {
             int currentIndex = startIndex + i;
             if (!inv[currentIndex].Empty) {
-                ItemStack stack = inv[currentIndex].TakeOut(1);
+                ItemStack stack = byPlayer.Entity.Controls.ShiftKey
+                    ? inv[currentIndex].TakeOutWhole()
+                    : inv[currentIndex].TakeOut(1);
+
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
                     AssetLocation sound = stack.Block?.Sounds?.Place;
                     Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
@@ -170,6 +185,6 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
             if (ripenRate > 0) sb.Append(Lang.Get("Suitable spot for food ripening."));
         }
 
-        DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.ByBlock, SlotCount, SegmentsPerShelf, ItemsPerSegment, true, SlotCount - AdditionalSlots);
+        DisplayInfo(forPlayer, sb, inv, InfoDisplay, SlotCount, SegmentsPerShelf, ItemsPerSegment, true, SlotCount - AdditionalSlots);
     }
 }

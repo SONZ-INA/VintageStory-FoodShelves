@@ -1,13 +1,13 @@
 ﻿namespace FoodShelves;
 
-public class BlockEntityPieShelfATTR : BEFSContainer {
-    protected override string AttributeCheck => "cPieShelf";
+public class BEPieShelf : BEFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only pies or cheese can be placed on this shelf.";
+    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     protected override bool RipeningSpot => true;
 
-    protected override int ShelfCount => 3;
+    public override int ShelfCount => 3;
 
-    public BlockEntityPieShelfATTR() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
+    public BEPieShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];

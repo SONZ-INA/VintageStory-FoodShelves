@@ -74,8 +74,8 @@
   "Contents": "<font color=\"orange\">Садржи: </font>",
   "Soonest": "Најскорије:",
   "Empty.": "Празно.",
-  "Short": "Кратка",
-  "Very Short": "Врло кратка",
+  "short": "Кратка",
+  "veryshort": "Врло кратка",
 
   "Will melt in {0} years": "Истопиће се за {0} година",
   "Will melt in {0} days": "Истопиће се за {0} дана",

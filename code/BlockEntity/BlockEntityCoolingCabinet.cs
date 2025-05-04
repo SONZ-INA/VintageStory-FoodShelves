@@ -40,7 +40,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
         base.Initialize(api);
 
-        if (!DrawerOpen && !inv[36].Empty && WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) perishMultiplier = 0.4f;
+        if (!DrawerOpen && !inv[36].Empty && inv[36].CoolingOnlyCheck()) perishMultiplier = 0.4f;
         if (CabinetOpen) perishMultiplier = 1f;
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
@@ -50,7 +50,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        if (!inv[36].Empty && perishMultiplier < 0.75f && !WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+        if (!inv[36].Empty && perishMultiplier < 0.75f && !inv[36].CoolingOnlyCheck()) {
             if (CabinetOpen) perishMultiplier = 1f;
             else perishMultiplier = 0.75f;
             WaterHeightUp();
@@ -157,10 +157,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
         if (slot.Empty) return false;
         ItemStack stack = inv[36].Itemstack;
 
-        if (inv[36].Empty 
-            || (stack.StackSize < stack.Collectible.MaxStackSize
-            && WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, stack.Collectible.Code))
-        ) {
+        if (inv[36].Empty || (stack.StackSize < stack.Collectible.MaxStackSize && stack.Collectible.CoolingOnlyCheck())) {
             int quantity = byPlayer.Entity.Controls.CtrlKey ? slot.Itemstack.StackSize : 1;
             int moved = slot.TryPutInto(Api.World, inv[36], quantity);
 
@@ -213,7 +210,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
     private bool TryTakeIce(IPlayer byPlayer) {
         if (!inv[36].Empty) {
-            if (!WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) return false;
+            if (!inv[36].CoolingOnlyCheck()) return false;
 
             ItemStack stack = inv[36].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
@@ -277,7 +274,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
             else CloseDrawer();
 
             if (!inv[36].Empty) {
-                if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+                if (inv[36].CoolingOnlyCheck()) {
                     if (inv[36].Itemstack?.StackSize < 20) IceHeight1Up();
                     else if (inv[36].Itemstack?.StackSize < 40) IceHeight2Up();
                     else if (inv[36].Itemstack?.StackSize >= 40) IceHeight3Up();
@@ -294,7 +291,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     }
 
     private void OpenCabinet(IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+        if (!inv[36].Empty && !inv[36].CoolingOnlyCheck()) {
             WaterHeightUp(); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -314,7 +311,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     }
 
     private void CloseCabinet(IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+        if (!inv[36].Empty && !inv[36].CoolingOnlyCheck()) {
             WaterHeightUp(); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -325,16 +322,15 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
         perishMultiplier = 0.75f;
 
-        if (!DrawerOpen && !inv[36].Empty) {
-            if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) 
-                perishMultiplier = 0.4f;
+        if (!DrawerOpen && !inv[36].Empty && inv[36].CoolingOnlyCheck()) {
+            perishMultiplier = 0.4f;
         }
 
         CabinetOpen = false;
     }
 
     private void OpenDrawer(IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+        if (!inv[36].Empty && !inv[36].CoolingOnlyCheck()) {
             WaterHeightUp(); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -354,7 +350,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
     }
 
     private void CloseDrawer(IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+        if (!inv[36].Empty && !inv[36].CoolingOnlyCheck()) {
             WaterHeightUp(); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -363,9 +359,8 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
             animUtil?.StopAnimation("draweropen");
         }
 
-        if (!CabinetOpen && !inv[36].Empty) {
-            if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) 
-                perishMultiplier = 0.4f;
+        if (!CabinetOpen && !inv[36].Empty && inv[36].CoolingOnlyCheck()) {
+            perishMultiplier = 0.4f;
         }
 
         DrawerOpen = false;
@@ -592,7 +587,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
 
         // For ice & water
         if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[36].Empty) {
-            if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, inv[36].Itemstack.Collectible.Code)) {
+            if (inv[36].CoolingOnlyCheck()) {
                 sb.AppendLine(GetNameAndStackSize(inv[36].Itemstack) + " - " + GetUntilMelted(inv[36]));
             }
             else {

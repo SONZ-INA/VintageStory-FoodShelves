@@ -13,7 +13,7 @@ public class BlockEggBasket : BlockContainer, IContainedMeshSource {
             foreach(Item item in api.World.Items) {
                 if (item.Code == null) continue;
 
-                if (WildcardUtil.Match(EggBasketData.CollectibleCodes, item.Code)) {
+                if (item.EggBasketCheck()) {
                     eggStackList.Add(new ItemStack(item));
                 }
             }
