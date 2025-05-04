@@ -49,7 +49,7 @@ public static class Patches {
     public static void PatchPieShelf(CollectibleObject obj, RestrictionData data) {
         if (obj.CheckTypedRestriction(data) || WildcardUtil.Match(data.CollectibleCodes, obj.Code.ToString())) {
             obj.EnsureAttributesNotNull();
-            obj.Attributes.Token[PieShelf] = JToken.FromObject(true);
+            obj.Attributes.Token["cPieShelf"] = JToken.FromObject(true);
 
             ModelTransform transformation = obj.GetTransformation(PieShelfTransformations);
             if (transformation != null) {

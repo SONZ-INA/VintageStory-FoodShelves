@@ -588,7 +588,7 @@ public class BlockEntityCoolingCabinet : BlockEntityDisplay {
         float ripenRate = GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         if (ripenRate > 0) sb.Append(Lang.Get("Suitable spot for food ripening."));
 
-        DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, slotCount, segmentsPerShelf, itemsPerSegment, true, new[] { 36 });
+        DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, slotCount, segmentsPerShelf, itemsPerSegment, true, 36);
 
         // For ice & water
         if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[36].Empty) {

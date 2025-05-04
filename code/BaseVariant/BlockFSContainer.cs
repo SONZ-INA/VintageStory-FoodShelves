@@ -23,10 +23,11 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         }
 
         if (props == null) return;
+        if (material == "") return;
 
         var stacks = new List<JsonItemStack>();
 
-        var defaultBlock = new JsonItemStack() { // Default block
+        var defaultBlock = new JsonItemStack() {
             Code = Code,
             Type = EnumItemClass.Block,
             Attributes = new JsonObject(JToken.Parse("{}"))

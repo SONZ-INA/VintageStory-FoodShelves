@@ -341,6 +341,12 @@ public static class Extensions {
     public static bool CheckTypedRestriction(this CollectibleObject obj, RestrictionData data) => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
     public static bool IsFull(this ItemSlot slot) => slot.StackSize == slot.MaxSlotStackSize;
 
+    public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist) {
+        if (slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == false) return false;
+        if (slot?.Inventory?.ClassName == "hopper") return false;
+        return true;
+    }
+
     public static bool IsLargeItem(ItemStack stack) {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
         if (stack?.Collectible?.GetType().Name == "ItemCheese") return true;
