@@ -18,9 +18,9 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     protected abstract InfoDisplayOptions InfoDisplay { get; }
     protected virtual bool RipeningSpot => false;
 
-    protected virtual float PerishMultiplier => 1;
-    protected virtual float CuringMultiplier => 1;
-    protected virtual float DryingMultiplier => 1;
+    protected virtual float PerishMultiplier { get; set; } = 1;
+    protected virtual float CuringMultiplier { get; set; } = 1;
+    protected virtual float DryingMultiplier { get; set; } = 1;
 
     public virtual int ShelfCount { get; set; } = 1;
     public virtual int SegmentsPerShelf { get; set; } = 1;
@@ -29,7 +29,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
+        block ??= api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
@@ -156,6 +156,10 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
         mesher.AddMeshData(mesh);
         base.OnTesselation(mesher, tesselator);
         return true;
+    }
+
+    protected virtual bool BaseRenderContents(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        return base.OnTesselation(mesher, tesselator);
     }
 
     protected abstract override float[][] genTransformationMatrices();

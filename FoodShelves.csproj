@@ -62,7 +62,7 @@
   <None Remove="assets\foodshelves\blocktypes\fruitbasket.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\ceilingjar.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplayblock.json" />
-  <None Remove="assets\foodshelves\blocktypes\glassware\glassfoodcase.json" />
+  <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\glassjar.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelbig.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrack.json" />
@@ -106,8 +106,6 @@
   <None Remove="assets\foodshelves\patches\pewter.json" />
   <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
-  <None Remove="assets\foodshelves\patches\variants\glassware.json" />
-  <None Remove="assets\foodshelves\patches\variants\pumpkincase.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\barrels\barrelbig.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\barrels\barrelrack.json" />
@@ -118,11 +116,6 @@
   <None Remove="assets\foodshelves\patches\variants\recipes\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\breadshelf.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\eggshelf.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\glassware\ceilingjar.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\glassware\coolingcabinet.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\glassware\glassfoodblock.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\glassware\glassfoodcase.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\pumpkincase.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\seedshelf.json" />
   <None Remove="assets\foodshelves\patches\variants\recipes\sushishelf.json" />
   <None Remove="assets\foodshelves\patches\wildcraft-fruits-and-nuts.json" />
@@ -221,7 +214,7 @@
 </ItemGroup>
 
 <ItemGroup>
-  <Content Update="assets\foodshelves\blocktypes\glassware\glassfoodcase.json">
+  <Content Update="assets\foodshelves\blocktypes\glassware\fooddisplaycase.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
 </ItemGroup>

@@ -38,6 +38,8 @@ public class Core : ModSystem {
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
 
+        api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
+
         api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
@@ -49,6 +51,7 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
+        api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
 
@@ -79,9 +82,6 @@ public class Core : ModSystem {
 
         //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
         //api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassJar", typeof(BlockEntityGlassJar));
-
-        api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityCoolingCabinet", typeof(BlockEntityCoolingCabinet));
     }
 
     public override void AssetsLoaded(ICoreAPI api) {

@@ -66,6 +66,27 @@ public static class Extensions {
         return 0;
     }
 
+    public static void ApplyVariantTextures(this Shape shape, BEFSContainer fscontainer) {
+        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string>>();
+        if (variantTextures == null) return;
+
+        if (fscontainer.VariantAttributes == null) return;
+
+        foreach (var texture in variantTextures) {
+            string textureValue = texture.Value;
+
+            foreach (var attr in fscontainer.VariantAttributes) {
+                string paramPlaceholder = "{" + attr.Key + "}";
+                string paramValue = attr.Value.ToString();
+
+                textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+            }
+
+            if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
+            shape.Textures[texture.Key] = textureValue;
+        }
+    }
+
     public static void ChangeShapeTextureKey(Shape shape, string key) {
         foreach (var face in shape.Elements[0].FacesResolved) {
             face.Texture = key;
@@ -362,6 +383,10 @@ public static class Extensions {
         return true;
     }
 
+    public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) {
+        return obj?.Attributes?[attributeWhitelist].AsBool() == true;
+    }
+
     public static bool IsLargeItem(ItemStack stack) {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
         if (stack?.Collectible?.GetType().Name == "ItemCheese") return true;
@@ -380,3 +405,81 @@ public static class Extensions {
 
     #endregion
 }
+
+#region SyncResolver
+
+// Unused code
+
+//public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data) {
+//    base.OnReceivedClientPacket(fromPlayer, packetid, data);
+
+//    if (packetid == (int)CoolingCabinetPacket.CabinetOpen) {
+//        data = SerializerUtil.Serialize(true);
+//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.CabinetOpenOthers, data, (IServerPlayer)fromPlayer);
+//    }
+
+//    if (packetid == (int)CoolingCabinetPacket.CabinetClose) {
+//        data = SerializerUtil.Serialize(false);
+//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.CabinetOpenOthers, data, (IServerPlayer)fromPlayer);
+//    }
+
+//    if (packetid == (int)CoolingCabinetPacket.DrawerOpen) {
+//        data = SerializerUtil.Serialize(true);
+//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerOpenOthers, data, (IServerPlayer)fromPlayer);
+//    }
+
+//    if (packetid == (int)CoolingCabinetPacket.DrawerClose) {
+//        data = SerializerUtil.Serialize(false);
+//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerOpenOthers, data, (IServerPlayer)fromPlayer);
+//    }
+
+//    if (packetid == (int)CoolingCabinetPacket.DrawerInteracted) {
+//        data = SerializerUtil.Serialize(new Dictionary<string, int>() {
+//            { inv[36].Itemstack?.Collectible.Code ?? "", inv[36].Itemstack?.StackSize ?? 0 } 
+//        });
+//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerInteractedOthers, data, (IServerPlayer)fromPlayer);
+//    }
+//}
+
+//public override void OnReceivedServerPacket(int packetid, byte[] data) {
+
+//    if (this is BlockEntityCoolingCabinet becc) {
+//        if (packetid == (int)CoolingCabinetPacket.CabinetOpenOthers) {
+//            bool containerOpened = SerializerUtil.Deserialize<bool>(data);
+//            if (containerOpened) becc.OpenCabinet(null);
+//            else becc.CloseCabinet(null);
+//        }
+
+//        if (packetid == (int)CoolingCabinetPacket.DrawerOpenOthers) {
+//            bool containerOpened = SerializerUtil.Deserialize<bool>(data);
+//            if (containerOpened) becc.OpenDrawer(null);
+//            else becc.CloseDrawer(null);
+//        }
+
+//        if (packetid == (int)CoolingCabinetPacket.DrawerInteractedOthers) {
+//            var drawerProps = SerializerUtil.Deserialize<Dictionary<string, int>>(data);
+
+
+//            string collectibleCode = drawerProps.Keys.FirstOrDefault();
+//            int stackSize = drawerProps.Values.FirstOrDefault();
+//            Api.Logger.Debug($"Got: {drawerProps} - {collectibleCode} - {stackSize}.");
+
+//            if (collectibleCode == "") {
+//                IceHeightAllDown();
+//                WaterHeightDown();
+//            }
+//            else {
+//                if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, collectibleCode)) {
+//                    if (stackSize < 20) IceHeight1Up();
+//                    else if (stackSize < 40) IceHeight2Up();
+//                    else if (stackSize >= 40) IceHeight3Up();
+//                }
+//                else {
+//                    WaterHeightUp();
+//                }
+//            }
+//        }
+//    }
+//}
+
+#endregion

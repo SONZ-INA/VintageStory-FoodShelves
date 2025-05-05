@@ -1,13 +1,19 @@
 {
   "code": "coolingcabinet",
   "class": "FoodShelves.BlockCoolingCabinet",
-  "entityclass": "FoodShelves.BlockEntityCoolingCabinet",
-  "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
+  "entityclass": "FoodShelves.BECoolingCabinet",
   "variantgroups": [
     { "code": "type", "states": ["normal"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/variants/{wood}",
+      "surface_long": "game:block/wood/debarked/{wood}",
+      "glass": "game:block/glass/{glass}",
+      "rock": "game:block/stone/polishedrock/{rock}"
+    },
     "handbook": {
       "groupBy": [ "coolingcabinet-*" ],
       "extraSections": [
@@ -16,9 +22,7 @@
           "text": "foodshelves:blockdesc-holderuniversal-text"
         }
       ]
-    },
-    "inventoryClassName": "foodshelvescoolingcabinet",
-    "attributeTransformCode": "onCoolingCabinetTransform"
+    }
   },
   "behaviors": [
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },
@@ -36,21 +40,15 @@
     "base": "block/wood/glassware/coolingcabinet",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
-  "textures": {
-    "surface_long": { "base": "foodshelves:block/wood/coolingcabinet/surface_long" },
-    "frame-slab": { "base": "game:block/glass/frame-slab" },
-    "plain": { "base": "game:block/glass/plain" },
-    "chalk": { "base": "game:block/stone/polishedrock/chalk" },
-    "surface": { "base": "game:block/wood/shelf/surface" },
-    "ice": { "base": "game:block/liquid/ice/packedglacier1" },
-    "water": { "base": "game:block/liquid/waterportion" }
-  },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
-  "lightAbsorption": 0,
+  "lightAbsorption": 2,
   "maxStackSize": 8,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolidByType": {
@@ -60,8 +58,6 @@
     "*-south": { "verticals": true, "south": true, "horizontals": false }
   },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "guiTransform": {
 		"origin": { "x": 0.1, "y": 1.2, "z": 0.5 },
 		"scale": 0.55
@@ -76,7 +72,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
   "selectionBoxes": [
     { "x1": 0.0625, "y1": 0.5625, "z1": 0.125, "x2": 0.6875, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },

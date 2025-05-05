@@ -2,11 +2,16 @@
 
 namespace FoodShelves;
 
-public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
+public class BlockCoolingCabinet : BlockFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[] itemSlottableInteractions;
     private WorldInteraction[] cabinetInteractions;
     private WorldInteraction[] drawerInteractions;
     private WorldInteraction[] bucketInteractions;
+
+    public readonly AssetLocation soundCabinetOpen = new(SoundReferences.CoolingCabinetOpen);
+    public readonly AssetLocation soundCabinetClose = new(SoundReferences.CoolingCabinetClose);
+    public readonly AssetLocation soundDrawerOpen = new(SoundReferences.IceDrawerOpen);
+    public readonly AssetLocation soundDrawerClose = new(SoundReferences.IceDrawerClose);
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -15,7 +20,7 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
             List<ItemStack> holderUniversalStackList = new();
 
             foreach (var obj in api.World.Collectibles) {
-                if (obj.HolderUniversalCheck()) {
+                if (obj.CanStoreInSlot("fsHolderUniversal")) {
                     holderUniversalStackList.Add(new ItemStack(obj));
                 }
             }
@@ -47,7 +52,7 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
             List<ItemStack> coolingOnlyStackList = new();
 
             foreach (var obj in api.World.Collectibles) {
-                if (obj.CoolingOnlyCheck()) {
+                if (obj.CanStoreInSlot("fsCoolingOnly")) {
                     coolingOnlyStackList.Add(new ItemStack(obj));
                 }
             }
@@ -87,9 +92,9 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
     }
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BlockEntityCoolingCabinet becc) {
+        if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
             if (becc.DrawerOpen) {
-                if (becc.Inventory?[36].Empty == true || becc.Inventory?[36].CoolingOnlyCheck() == true) {
+                if (becc.Inventory?[36].Empty == true || becc.Inventory?[36].CanStoreInSlot("fsCoolingOnly") == true) {
                     return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                 }
                 else {
@@ -97,40 +102,15 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
                 }
             }
         }
-        
+
         if (selection.SelectionBoxIndex > 8) return cabinetInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
         else return cabinetInteractions.Append(itemSlottableInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
     }
 
-    public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type) {
-        return 0; // To prevent the block reducing the cellar rating
-    }
-
-    public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
-        return true;
-    }
-
-    public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityCoolingCabinet becb) return becb.OnInteract(byPlayer, blockSel);
-        return base.OnBlockInteractStart(world, byPlayer, blockSel);
-    }
-
-    public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalized();
-        return base.GetHeldItemName(itemStack) + " " + variantName;
-    }
-
-    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
-        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
-
-        dsc.AppendLine("");
-        dsc.AppendLine(Lang.Get("foodshelves:helddesc-coolingcabinet"));
-    }
-
     // Selection box for master block
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
-        BlockEntityCoolingCabinet be = blockAccessor.GetBlockEntityExt<BlockEntityCoolingCabinet>(pos);
-        
+        BECoolingCabinet be = blockAccessor.GetBlockEntityExt<BECoolingCabinet>(pos);
+
         Cuboidf drawerSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(9).Clone();
         Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
         Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (1-8-shelves 9-drawer 10-cabinet)
@@ -139,9 +119,9 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
             if (be.DrawerOpen) {
                 int rotAngle = GetRotationAngle(this);
 
-                switch(rotAngle) {
-                    case 0:   drawerSelBox.Z2 += .3125f; break;
-                    case 90:  drawerSelBox.X2 += .3125f; break;
+                switch (rotAngle) {
+                    case 0: drawerSelBox.Z2 += .3125f; break;
+                    case 90: drawerSelBox.X2 += .3125f; break;
                     case 180: drawerSelBox.Z1 -= .3125f; break;
                     case 270: drawerSelBox.X1 -= .3125f; break;
                 }
@@ -168,13 +148,13 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
         // Middle - 3 4 5
         // Bottom - 0 1 2
 
-        BlockEntityCoolingCabinet be = blockAccessor.GetBlockEntityExt<BlockEntityCoolingCabinet>(pos);
+        BECoolingCabinet be = blockAccessor.GetBlockEntityExt<BECoolingCabinet>(pos);
         if (be != null) {
             Cuboidf drawerSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(9).Clone();
             Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (1-8-shelves 9-drawer 10-cabinet)
-            
+
             drawerSelBox.MBNormalizeSelectionBox(offset);
-            
+
             if (be.DrawerOpen) {
                 int rotAngle = GetRotationAngle(this);
 
@@ -190,7 +170,7 @@ public class BlockCoolingCabinet : Block, IMultiBlockColSelBoxes {
                 Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
                 cabinetSelBox.MBNormalizeSelectionBox(offset);
 
-                return new Cuboidf[] { skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox};
+                return new Cuboidf[] { skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox };
             }
             else {
                 List<Cuboidf> sBs = new();

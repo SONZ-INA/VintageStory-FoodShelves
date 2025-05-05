@@ -8,37 +8,11 @@ public class RestrictionData {
 
 public static class Restrictions
 {
-    #region General
-
     #region Shelveable
 
     public const string Shelvable = "shelvable";
     public static bool ShelvableCheck(this CollectibleObject obj) => obj?.Attributes?[Shelvable].AsBool() == true;
     public static bool ShelvableCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[Shelvable].AsBool() == true;
-
-    #endregion
-
-    #region FoodUniversal
-
-    public const string FoodUniversal = "fooduniversalcheck";
-    public static bool FoodUniversalCheck(this CollectibleObject obj) => obj?.Attributes?[FoodUniversal].AsBool() == true;
-    public static bool FoodUniversalCheck(this ItemSlot slot) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[FoodUniversal].AsBool() == false) return false;
-        if (slot?.Inventory?.ClassName == "hopper") return false;
-        return true;
-    }
-
-    #endregion
-
-    #region HolderUniversal
-
-    public const string HolderUniversal = "holderuniversalcheck";
-    public static bool HolderUniversalCheck(this CollectibleObject obj) => obj?.Attributes?[HolderUniversal].AsBool() == true;
-    public static bool HolderUniversalCheck(this ItemSlot slot) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[HolderUniversal].AsBool() != true) return false;
-        if (slot?.Inventory?.ClassName == "hopper") return false;
-        return true;
-    }
 
     #endregion
 
@@ -50,85 +24,11 @@ public static class Restrictions
 
     #endregion
 
-    #region CoolingOnly
-
-    public const string CoolingOnly = "coolingonlycheck";
-    public static bool CoolingOnlyCheck(this CollectibleObject obj) => obj?.Attributes?[CoolingOnly].AsBool() == true;
-    public static bool CoolingOnlyCheck(this ItemSlot slot) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[CoolingOnly].AsBool() == false) return false;
-        if (slot?.Inventory?.ClassName == "hopper") return false;
-        return true;
-    }
-
-    #endregion
-
-    #endregion
-
-    #region Shelves
-
-    #region PieShelf
-
-    public const string PieShelf = "pieshelfcheck";
-    public static bool PieShelfCheck(this CollectibleObject obj) => obj?.Attributes?[PieShelf].AsBool() == true;
-    public static bool PieShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[PieShelf].AsBool() == true;
-
-    #endregion
-
-    #region BreadShelf
-
-    public const string BreadShelf = "breadshelfcheck";
-    public static bool BreadShelfCheck(this CollectibleObject obj) => obj?.Attributes?[BreadShelf].AsBool() == true;
-    public static bool BreadShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[BreadShelf].AsBool() == true;
-
-    #endregion
-
-    #region BarShelf
-
-    public const string BarShelf = "barshelfcheck";
-    public static bool BarShelfCheck(this CollectibleObject obj) => obj?.Attributes[BarShelf].AsBool() == true;
-    public static bool BarShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[BarShelf].AsBool() == true;
-
-    #endregion
-
-    #region SushiShelf
-
-    public const string SushiShelf = "sushishelfcheck";
-    public static bool SushiShelfCheck(this CollectibleObject obj) => obj?.Attributes?[SushiShelf].AsBool() == true;
-    public static bool SushiShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[SushiShelf].AsBool() == true;
-
-    #endregion
-
-    #region SeedShelf
-
-    public const string SeedShelf = "seedshelfcheck";
-    public static bool SeedShelfCheck(this CollectibleObject obj) => obj?.Attributes?[SeedShelf].AsBool() == true;
-    public static bool SeedShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[SeedShelf].AsBool() == true;
-
-    #endregion
-
-    #region EggShelf
-
-    public const string EggShelf = "eggshelfcheck";
-    public static bool EggShelfCheck(this CollectibleObject obj) => obj?.Attributes?[EggShelf].AsBool() == true;
-    public static bool EggShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[EggShelf].AsBool() == true;
-
-    #endregion
-
     #region GlassJarShelf
 
     public const string GlassJarShelf = "glassjarshelfcheck";
     public static bool GlassJarShelfCheck(this CollectibleObject obj) => obj?.Attributes?[GlassJarShelf].AsBool() == true;
     public static bool GlassJarShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[GlassJarShelf].AsBool() == true;
-
-    #endregion
-
-    #region TableWShelf
-
-    public const string TableWShelf = "tablewshelfcheck";
-    public static bool TableWShelfCheck(this CollectibleObject obj) => obj?.Attributes?[TableWShelf].AsBool() == true;
-    public static bool TableWShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[TableWShelf].AsBool() == true;
-
-    #endregion
 
     #endregion
 
@@ -189,15 +89,6 @@ public static class Restrictions
     public static bool FirkinRackCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[FirkinRack].AsBool() == true;
 
     #endregion
-
-    #endregion
-
-
-    #region PumpkinCase
-
-    public const string PumpkinCase = "pumpkincasecheck";
-    public static bool PumpkinCaseCheck(this CollectibleObject obj) => obj?.Attributes?[PumpkinCase].AsBool() == true;
-    public static bool PumpkinCaseCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[PumpkinCase].AsBool() == true;
 
     #endregion
 }
