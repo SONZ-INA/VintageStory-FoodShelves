@@ -12,8 +12,16 @@ public class BESeedShelf : BEFSContainer {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
-        this.ShortenInventory(api, new Dictionary<string, int> { ["short"] = 2, ["veryshort"] = 4 }, 64);
+        switch (Block.Variant["type"]) {
+            case "short":
+                ItemsPerSegment /= 2;
+                this.RebuildInventory(api);
+                break;
+            case "veryshort":
+                ItemsPerSegment /= 4;
+                this.RebuildInventory(api);
+                break;
+        }
 
         base.Initialize(api);
     }

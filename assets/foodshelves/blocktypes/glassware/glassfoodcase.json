@@ -1,52 +1,49 @@
 {
-  "code": "glassfoodcase",
-  "class": "FoodShelves.BlockGlassFoodCase",
-  "entityclass": "FoodShelves.BlockEntityGlassFoodCase",
-  "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
+  "code": "fooddisplaycase",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BEFoodDisplayCase",
   "variantgroups": [
     { "code": "type", "states": ["normal"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/variants/{wood}",
+      "glass": "game:block/glass/{glass}"
+    },
     "handbook": {
-      "groupBy": [ "glassfoodcase-*" ],
+      "groupBy": [ "fooddisplaycase-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canhold-title",
           "text": "foodshelves:blockdesc-fooduniversal-text"
         }
       ]
-    },
-    "inventoryClassName": "glassfoodcase",
-    "attributeTransformCode": "onGlassFoodCaseTransform"
+    }
   },
   "behaviors": [
     { "name": "UnstableFalling" },
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
-    "base": "block/wood/glassware/glassfoodcase",
+    "base": "block/wood/glassware/fooddisplaycase",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
-  },
-  "textures": {
-    "frame": { "base": "game:block/glass/frame" },
-    "frame-slab": { "base": "game:block/glass/frame-slab" },
-    "smoky": { "base": "game:block/glass/smoky" },
-    "surface": { "base": "game:block/wood/shelf/surface" }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
   "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "drawtype": "json",
   "emitSideAo": { "all": false },
   "sideao": { "all": true },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "tpHandTransform": {
 	  "translation": { "x": -1.23, "y": -0.91, "z": -0.8 },
 	  "rotation": { "x": -2, "y": 25, "z": -78 },
@@ -57,7 +54,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
   "selectionBoxes": [
 	  { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.4685, "z2": 1 },

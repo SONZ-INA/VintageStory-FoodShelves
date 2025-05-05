@@ -61,7 +61,7 @@
   <None Remove="assets\foodshelves\blocktypes\eggshelf.json" />
   <None Remove="assets\foodshelves\blocktypes\fruitbasket.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\ceilingjar.json" />
-  <None Remove="assets\foodshelves\blocktypes\glassware\glassfoodblock.json" />
+  <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\glassfoodcase.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\glassjar.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelbig.json" />
@@ -155,9 +155,9 @@
   <None Remove="assets\foodshelves\shapes\block\wood\Fridge.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\fruitbasket.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\glassware\CeilingJar.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\glassware\glassfoodblock.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\glassware\glassfoodblocktop.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\glassware\glassfoodcase.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\glassware\fooddisplayblock.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\glassware\fooddisplayblocktop.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\glassware\GlassJar.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\BarShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\BreadShelfShort.json" />
@@ -167,7 +167,7 @@
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\PumpkinShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SeedShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SeedShelfVeryShort.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\shelves\ShelfShort.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\shelves\shortshelf.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\shelves\SushiShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\TableWShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\VegetableBasket.json" />
@@ -242,6 +242,11 @@
   <Content Update="assets\foodshelves\patches\detailedanimals.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
+</ItemGroup>
+
+<ItemGroup>
+  <Folder Include="code\BlockEntity\Barrels\" />
+  <Folder Include="code\BlockEntity\Baskets\" />
 </ItemGroup>
 
 </Project>

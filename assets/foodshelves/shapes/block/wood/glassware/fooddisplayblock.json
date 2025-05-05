@@ -9,9 +9,9 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"frame": "block/glass/frame",
-		"smoky": "block/glass/smoky",
-		"surface": "block/wood/shelf/surface"
+    "surface": "game:block/wood/shelf/surface",
+    "frame": "game:block/glass/frame",
+    "glass": "game:block/glass/smoky"
 	},
 	"elements": [
 		{
@@ -214,10 +214,10 @@
 							"renderPass": 3,
 							"rotationOrigin": [ 6.0, -5.0, 7.0 ],
 							"faces": {
-								"north": { "texture": "#smoky", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
-								"east": { "texture": "#smoky", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
-								"south": { "texture": "#smoky", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
-								"west": { "texture": "#smoky", "uv": [ 0.0, 0.0, 15.0, 11.0 ] }
+								"north": { "texture": "#glass", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
+								"east": { "texture": "#glass", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
+								"south": { "texture": "#glass", "uv": [ 0.0, 0.0, 15.0, 11.0 ], "windMode": [-1,-1,-1,-1] },
+								"west": { "texture": "#glass", "uv": [ 0.0, 0.0, 15.0, 11.0 ] }
 							}
 						}
 					]

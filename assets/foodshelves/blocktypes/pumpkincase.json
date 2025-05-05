@@ -1,12 +1,15 @@
 {
   "code": "pumpkincase",
-  "class": "FoodShelves.BlockPumpkinCase",
-  "entityclass": "FoodShelves.BlockEntityPumpkinCase",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BEPumpkinCase",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/variants/{wood}"
+    },
     "handbook": {
       "groupBy": [ "pumpkincase-*" ],
       "extraSections": [
@@ -15,9 +18,7 @@
           "text": "foodshelves:blockdesc-pumpkincase-text"
         }
       ]
-    },
-    "inventoryClassName": "pumpkincase",
-    "attributeTransformCode": "onPumpkinCaseTransform"
+    }
   },
   "behaviors": [
     { "name": "UnstableFalling" }
@@ -25,15 +26,14 @@
   "shape": {
     "base": "block/wood/pumpkincase"
   },
-  "textures": {
-	  "wood": { "base": "game:block/wood/shelf/wood" },
-	  "surface": { "base": "game:block/wood/shelf/surface" }
-  },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
-  "lightAbsorption": 0,
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": {
@@ -44,8 +44,6 @@
     "down": true,
     "all": false
   },
-  "replaceable": 999,
-  "resistance": 1.5,
   "combustibleProps": {
     "burnTemperature": 700,
     "burnDuration": 24
@@ -60,7 +58,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [ 
     { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
   ]

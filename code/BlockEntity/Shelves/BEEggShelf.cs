@@ -1,23 +1,23 @@
 ﻿namespace FoodShelves;
 
-public class BEBarShelf : BEFSContainer {
-    protected override string CantPlaceMessage => "foodshelves:Only food bars can be placed on this shelf.";
+public class BEEggShelf : BEFSContainer {
+    protected override string CantPlaceMessage => "foodshelves:Only eggs can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
 
-    public BEBarShelf() {
+    public BEEggShelf() {
         ShelfCount = 4;
-        SegmentsPerShelf = 3;
-        ItemsPerSegment = 6;
+        SegmentsPerShelf = 5;
+        ItemsPerSegment = 4;
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck));
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
-        globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
-        this.ShortenInventory(api, new Dictionary<string, int> { ["short"] = 2 });
+        if (Block.Variant["type"] == "short") {
+            ItemsPerSegment /= 2;
+            this.RebuildInventory(api);
+        }
 
         base.Initialize(api);
-
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
@@ -29,19 +29,15 @@ public class BEBarShelf : BEFSContainer {
                 for (int item = 0; item < ItemsPerSegment; item++) {
                     int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
 
-                    float x = segment * 0.28f;
+                    float x = segment * 0.172f;
                     float y = shelf * 0.25f;
-                    float z = item * 0.125f;
+                    float z = item * 0.1875f;
 
                     tfMatrices[index] =
                         new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
                         .RotateYDeg(block.Shape.rotateY)
-                        .Translate(x - 0.58f, y + 0.41f, z - 0.425f)
-                        .RotateZDeg(-90f)
-                        .RotateXDeg(-90f)
-                        .RotateZDeg(-22.5f)
-                        .Scale(0.605f, 0.605f, 0.605f)
+                        .Translate(x - 0.84375f, y + 0.06f, z - 0.8125f)
                         .Values;
                 }
             }

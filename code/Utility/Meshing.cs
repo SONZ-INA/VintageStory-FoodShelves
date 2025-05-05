@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Vintagestory.API.Common;
 
 namespace FoodShelves;
 
@@ -177,6 +178,10 @@ public static class Meshing {
 
             texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
         }
+        else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) {
+            var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
+            texSource = new ContainerTextureSource(capi, contents[0], texture);
+        }
         else {
             // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
             var textures = contents[0].Item.Textures;
@@ -201,27 +206,8 @@ public static class Meshing {
         }
 
         // Re-sizing the textures
-        if (itemPath == "beeswax") { // Hardcoded stuff for beeswax
-            if (pathToFillShape == ShapeReferences.utilCeilingJar) {
-                for (int i = 0; i < 6; i++) {
-                    shapeClone.Elements[0].FacesResolved[i].Uv[0] = 6f;
-                }
-            }
-        }
-
-        float textureOffset = 0;
-        if (itemPath == "fat") { // Hardcoded stuff for animal fat
-            textureOffset = -1.8f;
-            shapeClone.Elements[0].FacesResolved[5].Uv[3] = 8f;
-        }
-
         for (int i = 0; i < 4; i++) {
-            float offset = 0; // Another hardcode for beeswax texture height
-            if (pathToFillShape == ShapeReferences.utilGlassJar && contents[0].Collectible.Code.Path == "beeswax") {
-                offset = -1.5f;
-            }
-
-            shapeClone.Elements[0].FacesResolved[i].Uv[3] = (float)shapeHeight + textureOffset + offset;
+            shapeClone.Elements[0].FacesResolved[i].Uv[3] = (float)shapeHeight;
         }
 
         capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shapeClone, out MeshData contentMesh, texSource);

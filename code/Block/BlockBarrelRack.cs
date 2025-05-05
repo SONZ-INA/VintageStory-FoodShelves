@@ -40,18 +40,6 @@ public class BlockBarrelRack : BlockLiquidContainerBase {
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        // First, check for behaviors preventing default, for example Reinforcement system
-        bool preventDefault = false;
-        foreach (BlockBehavior behavior in BlockBehaviors) {
-            EnumHandling handled = EnumHandling.PassThrough;
-
-            behavior.OnBlockBroken(world, pos, byPlayer, ref handled);
-            if (handled == EnumHandling.PreventDefault) preventDefault = true;
-            if (handled == EnumHandling.PreventSubsequent) return;
-        }
-
-        if (preventDefault) return;
-
         // Drop barrel
         BlockEntityBarrelRack be = GetBlockEntity<BlockEntityBarrelRack>(pos);
         be?.Inventory.DropAll(pos.ToVec3d());

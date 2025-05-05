@@ -119,7 +119,6 @@ public class BlockEntityShelfShort : BlockEntityDisplay {
         return tfMatrices;
     }
 
-
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
         RedrawAfterReceivingTreeAttributes(worldForResolving);

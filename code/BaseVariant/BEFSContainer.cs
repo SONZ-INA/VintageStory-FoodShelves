@@ -13,6 +13,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
 
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
     public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
+
     protected virtual string CantPlaceMessage => "";
     protected abstract InfoDisplayOptions InfoDisplay { get; }
     protected virtual bool RipeningSpot => false;
@@ -30,14 +31,13 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+
         base.Initialize(api);
-        inv.LateInitialize(inv.InventoryID, api);
 
         if (mesh == null) InitMesh();
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
-    public virtual void InitMesh() {
+    protected virtual void InitMesh() {
         var stack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
             stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
@@ -101,10 +101,12 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
 
     protected virtual bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
+        if (startIndex >= inv.Count) return false;
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
             ItemStack currentStack = inv[currentIndex].Itemstack;
+
             if (inv[currentIndex].Empty || (currentStack.Collectible.Equals(slot.Itemstack.Collectible) && currentStack.StackSize < currentStack.Collectible.MaxStackSize)) {
                 int moved = byPlayer.Entity.Controls.ShiftKey
                     ? slot.TryPutInto(Api.World, inv[currentIndex], inv[currentIndex].MaxSlotStackSize - inv[currentIndex].Itemstack?.StackSize ?? 64)
@@ -123,6 +125,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
 
     protected virtual bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
+        if (startIndex >= inv.Count) return false;
 
         for (int i = ItemsPerSegment - 1; i >= 0; i--) {
             int currentIndex = startIndex + i;

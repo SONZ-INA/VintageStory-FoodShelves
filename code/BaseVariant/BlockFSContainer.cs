@@ -1,24 +1,34 @@
-﻿using Vintagestory.ServerMods;
+﻿using System.Linq;
+using Vintagestory.ServerMods;
 
 namespace FoodShelves;
 
 public class BlockFSContainer : Block, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
+    private string heldDescEntry;
+    private bool preventDuplication = false;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
-        PlacedPriorityInteract = true;
+        
+        PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
+        preventDuplication = Attributes["preventDuplication"].AsBool(false);
+        heldDescEntry = Attributes["helddescentry"].AsString(Code.FirstCodePart());
+
         LoadVariantsCreative();
     }
 
     protected void LoadVariantsCreative() {
-        if (!Code.Path.EndsWith("-east")) return;
+        string[] directions = new[] { "-east", "-west", "-north", "-south" };
+        bool hasDirection = directions.Any(Code.Path.EndsWith);
+
+        if (hasDirection && !Code.Path.EndsWith("-east")) return;
 
         var materials = Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
         string material = "";
         StandardWorldProperty props = null;
 
-        if (materials.LoadFromProperties != null) {
+        if (materials?.LoadFromProperties != null) {
             material = materials.LoadFromProperties.ToString().Split('/')[1];
             props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
         }
@@ -59,6 +69,10 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         return true;
     }
 
+    public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type) {
+        return 0; // To prevent the block reducing the cellar rating
+    }
+
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
         if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fscontainer) return fscontainer.OnInteract(byPlayer, blockSel);
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
@@ -67,7 +81,7 @@ public class BlockFSContainer : Block, IContainedMeshSource {
     public override string GetHeldItemName(ItemStack itemStack) {
         string itemName = base.GetHeldItemName(itemStack);
 
-        string blockType = Code.SecondCodePart();
+        string blockType = Variant["type"];
 
         if (blockType != "normal") {
             string entry = "foodshelves:" + blockType;
@@ -83,11 +97,33 @@ public class BlockFSContainer : Block, IContainedMeshSource {
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
-        string entry = "foodshelves:helddesc-" + Code.FirstCodePart();
+        string entry = "foodshelves:helddesc-" + heldDescEntry;
         string desc = Lang.Get(entry);
         if (desc != entry) {
             dsc.AppendLine();
             dsc.AppendLine(desc);
+        }
+    }
+
+    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
+        if (preventDuplication) {
+            if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Survival) {
+                if (world.BlockAccessor.GetBlockEntity(pos) is BEFSContainer befs) {
+                    ItemStack emptyCeilingJar = new(this);
+                    emptyCeilingJar.Attributes["FSAttributes"] = befs.VariantAttributes;
+                    world.SpawnItemEntity(emptyCeilingJar, pos.ToVec3d().Add(0.5, 0.5, 0.5));
+
+                    ItemStack[] contents = befs.GetContentStacks();
+                    for (int i = 0; i < contents.Length; i++) {
+                        world.SpawnItemEntity(contents[i], pos.ToVec3d().Add(0.5, 0.5, 0.5));
+                    }
+                }
+            }
+
+            world.BlockAccessor.SetBlock(0, pos);
+        }
+        else {
+            base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
         }
     }
 

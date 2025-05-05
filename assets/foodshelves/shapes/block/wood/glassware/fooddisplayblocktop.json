@@ -8,9 +8,9 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"frame": "block/glass/frame",
-		"smoky": "block/glass/smoky",
-		"surface": "block/wood/shelf/surface"
+    "surface": "game:block/wood/shelf/surface",
+    "frame": "game:block/glass/frame",
+    "smoky": "game:block/glass/smoky"
 	},
 	"elements": [
 		{

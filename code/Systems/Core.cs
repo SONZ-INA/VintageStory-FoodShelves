@@ -16,16 +16,7 @@ public class Core : ModSystem {
         switch (api.Side) {
             case EnumAppSide.Server:
                 ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
-                api.World.Config.SetBool("FoodShelves.EnableVariants", ConfigServer.EnableVariants);
                 api.World.Config.SetFloat("FoodShelves.GlobalPerishMultiplier", ConfigServer.GlobalPerishMultiplier);
-
-                bool ExpandedFoodsVariants = api.ModLoader.IsModEnabled("expandedfoods") && ConfigServer.EnableVariants;
-                bool WildcraftFruitsNutsVariants = api.ModLoader.IsModEnabled("wildcraftfruit") && ConfigServer.EnableVariants;
-                bool LongTermFoodVariants = api.ModLoader.IsModEnabled("long-term_food") && ConfigServer.EnableVariants; // Can't bother to change variable names and shit.
-
-                api.World.Config.SetBool("FoodShelves.ExpandedFoodsVariants", ExpandedFoodsVariants);
-                api.World.Config.SetBool("FoodShelves.WildcraftFruitsNutsVariants", WildcraftFruitsNutsVariants);
-                api.World.Config.SetBool("FoodShelves.EForWFNVariants", ExpandedFoodsVariants || WildcraftFruitsNutsVariants || LongTermFoodVariants);
                 break;
             //case EnumAppSide.Client:
             //    ConfigClient = ModConfig.ReadConfig<ConfigClient>(api, ConfigClient.ConfigClientName);
@@ -53,11 +44,19 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESushiShelf", typeof(BESushiShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf)); // Placeholder
+
+        api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
+        api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
+        api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
+
+        api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
 
         api.RegisterBlockClass("FoodShelves.BlockShelfShort", typeof(BlockShelfShort));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityShelfShort", typeof(BlockEntityShelfShort));
-        api.RegisterBlockClass("FoodShelves.BlockGlassJarShelf", typeof(BlockGlassJarShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassJarShelf", typeof(BlockEntityGlassJarShelf));
+        
+        //api.RegisterBlockClass("FoodShelves.BlockGlassJarShelf", typeof(BlockGlassJarShelf));
+        //api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassJarShelf", typeof(BlockEntityGlassJarShelf));
 
         api.RegisterBlockClass("FoodShelves.BlockTableWShelf", typeof(BlockTableWShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityTableWShelf", typeof(BlockEntityTableWShelf));
@@ -78,17 +77,8 @@ public class Core : ModSystem {
 
         api.RegisterBlockClass("FoodShelves.BlockHorizontalBarrelBig", typeof(BlockHorizontalBarrelBig));
 
-        api.RegisterBlockClass("FoodShelves.BlockPumpkinCase", typeof(BlockPumpkinCase));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityPumpkinCase", typeof(BlockEntityPumpkinCase));
-
-        api.RegisterBlockClass("FoodShelves.BlockGlassFood", typeof(BlockGlassFood));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassFood", typeof(BlockEntityGlassFood));
-        api.RegisterBlockClass("FoodShelves.BlockGlassFoodCase", typeof(BlockGlassFoodCase));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassFoodCase", typeof(BlockEntityGlassFoodCase));
         //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
         //api.RegisterBlockEntityClass("FoodShelves.BlockEntityGlassJar", typeof(BlockEntityGlassJar));
-        api.RegisterBlockClass("FoodShelves.BlockCeilingJar", typeof(BlockCeilingJar));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityCeilingJar", typeof(BlockEntityCeilingJar));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityCoolingCabinet", typeof(BlockEntityCoolingCabinet));
