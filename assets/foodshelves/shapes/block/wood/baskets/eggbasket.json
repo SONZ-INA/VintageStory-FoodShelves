@@ -5,11 +5,11 @@
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textureSizes": {
-	},
+	"textureSizes": {},
 	"textures": {
-		"sides": "sides",
-		"top": "top"
+		"sides": "game:block/wood/table/normal/sides",
+		"top": "game:block/wood/table/normal/top",
+		"rope": "game:item/resource/rope"
 	},
 	"elements": [
 		{

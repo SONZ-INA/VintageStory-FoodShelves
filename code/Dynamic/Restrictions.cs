@@ -16,32 +16,6 @@ public static class Restrictions
 
     #endregion
 
-    #region Baskets
-
-    #region VegetableBasket
-
-    public const string VegetableBasket = "vegetablebasketcheck";
-    public static bool VegetableBasketCheck(this CollectibleObject obj) => obj?.Attributes?[VegetableBasket].AsBool() == true;
-    public static bool VegetableBasketCheck(this ItemSlot slot) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[VegetableBasket].AsBool() == false) return false;
-        if (slot?.Inventory?.ClassName == "hopper") return false;
-        return true;
-    }
-
-    #endregion
-
-    #region EggBasket
-
-    public const string EggBasket = "eggbasketcheck";
-    public static bool EggBasketCheck(this CollectibleObject obj) => obj?.Attributes?[EggBasket].AsBool() == true;
-    public static bool EggBasketCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[EggBasket].AsBool() == true;
-
-    #endregion
-
-    #endregion
-
-    #region Barrels
-
     #region BarrelRack
 
     public const string BarrelRack = "barrelrackcheck";
@@ -63,8 +37,6 @@ public static class Restrictions
     public const string FirkinRack = "firkinrackcheck";
     public static bool FirkinRackCheck(this CollectibleObject obj) => obj?.Attributes?[FirkinRack].AsBool() == true;
     public static bool FirkinRackCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[FirkinRack].AsBool() == true;
-
-    #endregion
 
     #endregion
 }

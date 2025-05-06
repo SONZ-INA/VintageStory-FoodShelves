@@ -40,11 +40,13 @@ public class Core : ModSystem {
 
         api.RegisterBlockClass("FoodShelves.BlockFruitBasket", typeof(BlockFruitBasket));
         api.RegisterBlockClass("FoodShelves.BlockVegetableBasket", typeof(BlockVegetableBasket));
+        api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
 
         api.RegisterBlockEntityClass("FoodShelves.BEFruitBasket", typeof(BEFruitBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEVegetableBasket", typeof(BEVegetableBasket));
+        api.RegisterBlockEntityClass("FoodShelves.BEEggBasket", typeof(BEEggBasket));
 
         api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
@@ -69,8 +71,6 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockTableWShelf", typeof(BlockTableWShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityTableWShelf", typeof(BlockEntityTableWShelf));
 
-        api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityEggBasket", typeof(BlockEntityEggBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockBarrelRack", typeof(BlockBarrelRack));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityBarrelRack", typeof(BlockEntityBarrelRack));
@@ -87,7 +87,7 @@ public class Core : ModSystem {
                 ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
                 ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
-                [""] = new[] { "pumpkincase" }
+                ["other"] = new[] { "pumpkincase" }
             };
 
             foreach (var (category, names) in restrictionGroups) {

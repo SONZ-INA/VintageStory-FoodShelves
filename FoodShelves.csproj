@@ -99,6 +99,7 @@
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
   <None Remove="assets\foodshelves\lang\fr.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
+  <None Remove="assets\foodshelves\patches\carryon.json" />
   <None Remove="assets\foodshelves\patches\clayworks.json" />
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
@@ -106,18 +107,6 @@
   <None Remove="assets\foodshelves\patches\pewter.json" />
   <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\barrels\barrelbig.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\barrels\barrelrack.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\barrels\barrelrackbig.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\barshelf.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\baskets\eggbasket.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\baskets\fruitbasket.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\baskets\vegetablebasket.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\breadshelf.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\eggshelf.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\seedshelf.json" />
-  <None Remove="assets\foodshelves\patches\variants\recipes\sushishelf.json" />
   <None Remove="assets\foodshelves\patches\wildcraft-fruits-and-nuts.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelbig.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrack.json" />
@@ -167,6 +156,7 @@
   <None Remove="assets\foodshelves\shapes\block\wood\wshelf.json" />
   <None Remove="assets\foodshelves\shapes\item\CutIce.json" />
   <None Remove="assets\foodshelves\shapes\util\CeilingJarContentCube.json" />
+  <None Remove="assets\foodshelves\shapes\util\eggbasketrope.json" />
   <None Remove="assets\foodshelves\shapes\util\GlassJarContentCube.json" />
   <None Remove="assets\foodshelves\sounds\block\glasscabinetclose.ogg" />
   <None Remove="assets\foodshelves\sounds\block\glassCabinetOpen.ogg" />
@@ -202,12 +192,6 @@
 
 <ItemGroup>
   <Content Update="assets\foodshelves\config\transformations\baskets\vegetablebasket.json">
-    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </Content>
-</ItemGroup>
-
-<ItemGroup>
-  <Content Update="assets\foodshelves\patches\variants\recipes\barrels\barrelrackbig.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
 </ItemGroup>

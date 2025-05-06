@@ -1,6 +1,6 @@
 [
   {
-    "file": "foodshelves:config/restrictions/pumpkincase.json",
+    "file": "foodshelves:config/restrictions/other/pumpkincase.json",
     "op": "addmerge",
     "path": "/CollectibleCodes",
     "value": [

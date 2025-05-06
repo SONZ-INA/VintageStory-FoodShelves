@@ -1,6 +1,4 @@
-﻿using Vintagestory.API.Common;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public abstract class BaseFSBasket : BaseFSContainer {
     private WorldInteraction[] interactions;
@@ -11,7 +9,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
 
-        Transformations = api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
+        Transformations ??= api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
 
         interactions = ObjectCacheUtil.GetOrCreate(api, InteractionsName + "BlockInteractions", () => {
             List<ItemStack> stackList = new();
