@@ -13,7 +13,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
     private const int itemsPerSegment = 1;
     private float globalPerishMultiplier = 1f;
 
-    public BlockEntityGlassJarShelf() { inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotGlassJarShelf(inv)); }
+    public BlockEntityGlassJarShelf() { inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsGlassJarShelf")); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
@@ -23,7 +23,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
 
         if (block.Code.SecondCodePart().StartsWith("short")) {
             shelfCount = 2;
-            inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotGlassJarShelf(inv));
+            inv = new InventoryGeneric(shelfCount * segmentsPerShelf * itemsPerSegment, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsGlassJarShelf"));
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
 
@@ -54,7 +54,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             return TryTake(byPlayer, blockSel);
         }
         else {
-            if (slot.GlassJarShelfCheck()) {
+            if (slot.CanStoreInSlot("fsGlassJarShelf")) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                 if (TryPut(slot, blockSel)) {

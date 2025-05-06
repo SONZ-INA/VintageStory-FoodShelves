@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockGlassJar : BlockContainer {
     public override void OnLoaded(ICoreAPI api) {
@@ -45,7 +43,7 @@ public class BlockGlassJar : BlockContainer {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalized();
+        string variantName = itemStack.GetMaterialNameLocalizedOLD();
         return base.GetHeldItemName(itemStack) + " " + variantName;
     }
 

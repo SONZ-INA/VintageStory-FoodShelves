@@ -1,29 +1,29 @@
 {
-  "code": "horizontalbarrelbig",
-  "class": "FoodShelves.BlockHorizontalBarrelBig",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "code": "tun",
+  "class": "FoodShelves.BlockFSContainer",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "wood": "game:block/wood/debarked/{wood}",
+      "bottom": "foodshelves:variants/tun/bottom{wood}",
+      "top": "foodshelves:variants/tun/top{wood}"
+    },
     "handbook": {
-      "groupBy": [ "horizontalbarrelbig-*" ],
+      "groupBy": [ "tun-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canbeplacedin-title",
-          "text": "foodshelves:blockdesc-horizontalbarrelbig-text"
+          "text": "foodshelves:blockdesc-tun-text"
         }
       ]
-    }
+    },
+    "preventPlacing": true
   },
   "shape": {
-    "base": "block/wood/barrel/horizontalbarrelbig"
-  },
-  "textures": {
-    "bottom": { "base": "block/wood/horizontalbarrelbig/bottom" },
-    "top": { "base": "block/wood/horizontalbarrelbig/top" },
-    "blackbronze4": { "base": "game:block/metal/sheet/blackbronze4" },
-    "aged": { "base": "game:block/wood/debarked/aged" }
+    "base": "block/wood/barrel/tun"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
@@ -31,12 +31,13 @@
   "blockmaterial": "Wood",
   "lightAbsorption": 2,
   "maxStackSize": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": { "up": true },	
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "guiTransform": {
     "origin": { "x": 1, "y": 1, "z": 0 },
     "scale": 0.5
@@ -51,7 +52,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [ 
     { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
   ]

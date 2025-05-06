@@ -1,11 +1,10 @@
 ﻿namespace FoodShelves;
 
-public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
+public class BlockFruitBasket : BlockFSContainer {
     WorldInteraction[] interactions;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
-        PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
 
         interactions = ObjectCacheUtil.GetOrCreate(api, "fruitBasketBlockInteractions", () => {
             List<ItemStack> fruitStackList = new();
@@ -13,7 +12,7 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
             foreach(Item item in api.World.Items) {
                 if (item.Code == null) continue;
 
-                if (item.FruitBasketCheck()) {
+                if (item.CanStoreInSlot("fsFruitBasket")) {
                     fruitStackList.Add(new ItemStack(item));
                 }
             }
@@ -38,25 +37,8 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
         return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));      
     }
 
-    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        // Prevent duplicating of items inside
-        if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Survival) {
-            if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityFruitBasket frbasket) {
-                ItemStack emptyFruitBasket = new(this);
-                world.SpawnItemEntity(emptyFruitBasket, pos.ToVec3d().Add(0.5, 0.5, 0.5));
-                
-                ItemStack[] contents = frbasket.GetContentStacks();
-                for (int i = 0; i < contents.Length; i++) {
-                    world.SpawnItemEntity(contents[i], pos.ToVec3d().Add(0.5, 0.5, 0.5));
-                }
-            }
-        }
-
-        world.BlockAccessor.SetBlock(0, pos);
-    }
-
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
-        BlockEntityFruitBasket be = GetBlockEntity<BlockEntityFruitBasket>(pos);
+        BEFruitBasket be = GetBlockEntity<BEFruitBasket>(pos);
         if (be != null) {
             BlockBehaviorCanCeilingAttachFalling beh = GetBehavior<BlockBehaviorCanCeilingAttachFalling>();
             beh.CanBlockStay(world, pos, out bool isCeilingAttached);
@@ -67,15 +49,10 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
         base.OnNeighbourBlockChange(world, pos, neibpos);
     }
 
-    public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalized();
-        return base.GetHeldItemName(itemStack) + " " + variantName;
-    }
-
     // Rotation logic
     public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack) {
         bool val = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
-        BlockEntityFruitBasket block = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BlockEntityFruitBasket;
+        BEFruitBasket block = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEFruitBasket;
         block.MeshAngle = GetBlockMeshAngle(byPlayer, blockSel, val);
 
         return val;
@@ -83,11 +60,11 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
         if (byPlayer.Entity.Controls.ShiftKey) {
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityFruitBasket frbasket) 
-                return frbasket.OnInteract(byPlayer);
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BEFruitBasket frbasket) 
+                return frbasket.OnInteract(byPlayer, blockSel);
         }
 
-        return base.OnBlockInteractStart(world, byPlayer, blockSel);
+        return BaseOnBlockInteractStart(world, byPlayer, blockSel);
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
@@ -104,29 +81,6 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
         PerishableInfoAverageAndSoonest(contents.ToDummySlots(), dsc, world);
     }
 
-    public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
-        Dictionary<int, MultiTextureMeshRef> meshrefs;
-
-        string meshCacheKey = GetMeshCacheKey(itemstack);
-
-        if (capi.ObjectCache.TryGetValue(meshCacheKey, out object obj)) {
-            meshrefs = obj as Dictionary<int, MultiTextureMeshRef>;
-        }
-        else {
-            capi.ObjectCache[meshCacheKey] = meshrefs = new Dictionary<int, MultiTextureMeshRef>();
-        }
-
-        ItemStack[] contents = GetContents(api.World, itemstack);
-        int hashcode = GetStackCacheHashCodeFNV(contents);
-
-        if (!meshrefs.TryGetValue(hashcode, out MultiTextureMeshRef meshRef)) {
-            MeshData mesh = GenMesh(itemstack, capi.BlockTextureAtlas, null);
-            if (mesh != null) meshrefs[hashcode] = meshRef = capi.Render.UploadMultiTextureMesh(mesh);
-        }
-
-        renderinfo.ModelRef = meshRef;
-    }
-
     public static float[,] GetTransformationMatrix() {
         float[] x = { .65f, .3f, .3f,  .3f,  .6f, .35f,  .5f, .65f, .35f, .1f,  .6f, .58f, .3f,   .2f, -.1f,  .1f, .1f, .25f,  .2f, .55f,   .6f, .3f };
         float[] y = {    0,   0,   0, .25f,    0, .35f,  .2f, -.3f,  .3f, .2f,  .4f,  .4f, .4f,   .5f, .57f, .05f, .3f, .52f, .55f, .45f, -.65f, .5f };
@@ -139,13 +93,11 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
 
-    public MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        ICoreClientAPI capi = api as ICoreClientAPI;
-
-        capi.Tesselator.TesselateBlock(this, out MeshData basketMesh);
+    public override MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
+        MeshData basketMesh = base.GenMesh(itemstack, targetAtlas, atBlockPos);
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(capi, targetAtlas, contents, GetTransformationMatrix(), 0.5f, FruitBasketTransformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 0.5f, FruitBasketTransformations);
 
         if (contentMesh != null) {
             contentMesh.Translate(0, 0.02f, 0);
@@ -155,10 +107,12 @@ public class BlockFruitBasket : BlockContainer, IContainedMeshSource {
         return basketMesh;
     }
 
-    public string GetMeshCacheKey(ItemStack itemstack) {
+    public override string GetMeshCacheKey(ItemStack itemstack) {
+        string blockKey = base.GetMeshCacheKey(itemstack);
+
         ItemStack[] contents = GetContents(api.World, itemstack);
         int hashcode = GetStackCacheHashCodeFNV(contents);
 
-        return $"{itemstack.Collectible.Code}-{hashcode}";
+        return $"{blockKey}-{hashcode}";
     }
 }

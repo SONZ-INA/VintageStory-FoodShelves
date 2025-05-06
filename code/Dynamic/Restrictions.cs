@@ -16,31 +16,7 @@ public static class Restrictions
 
     #endregion
 
-    #region LiquidyStuff
-
-    public const string LiquidyStuff = "liquidystuffcheck";
-    public static bool LiquidyStuffCheck(this CollectibleObject obj) => obj?.Attributes?[LiquidyStuff].AsBool() == true;
-    public static bool LiquidyStuffCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[LiquidyStuff].AsBool() == true;
-
-    #endregion
-
-    #region GlassJarShelf
-
-    public const string GlassJarShelf = "glassjarshelfcheck";
-    public static bool GlassJarShelfCheck(this CollectibleObject obj) => obj?.Attributes?[GlassJarShelf].AsBool() == true;
-    public static bool GlassJarShelfCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[GlassJarShelf].AsBool() == true;
-
-    #endregion
-
     #region Baskets
-
-    #region FruitBasket
-
-    public const string FruitBasket = "fruitbasketcheck";
-    public static bool FruitBasketCheck(this CollectibleObject obj) => obj?.Attributes?[FruitBasket].AsBool() == true;
-    public static bool FruitBasketCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[FruitBasket].AsBool() == true;
-
-    #endregion
 
     #region VegetableBasket
 

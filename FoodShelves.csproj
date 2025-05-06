@@ -139,7 +139,7 @@
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkin.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkinrack.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkinracktop.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\barrel\HorizontalBarrelBig.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\barrel\tun.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\FruitBasketHanged.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\VegetableBasketHanged.json" />
@@ -239,7 +239,6 @@
 
 <ItemGroup>
   <Folder Include="code\BlockEntity\Barrels\" />
-  <Folder Include="code\BlockEntity\Baskets\" />
 </ItemGroup>
 
 </Project>

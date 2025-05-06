@@ -179,7 +179,7 @@ public static class Extensions {
         return null;
     }
 
-    public static string GetMaterialName(this ItemStack itemStack, bool includeParenthesis = true) {
+    public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
         if (itemStack.Attributes["FSAttributes"] is not ITreeAttribute tree)
             return "";
 
@@ -193,7 +193,7 @@ public static class Extensions {
         return "";
     }
 
-    public static string GetMaterialNameLocalized(this ItemStack itemStack, string[] variantKeys = null, string[] toExclude = null, bool includeParenthesis = true) {
+    public static string GetMaterialNameLocalizedOLD(this ItemStack itemStack, string[] variantKeys = null, string[] toExclude = null, bool includeParenthesis = true) {
         string material = "";
         string[] materialCheck = { "material-", "rock-", "ore-" };
 

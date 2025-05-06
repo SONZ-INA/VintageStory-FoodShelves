@@ -48,6 +48,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
         base.OnBlockPlaced(byItemStack);
+
         if (byItemStack?.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
         InitMesh();
     }

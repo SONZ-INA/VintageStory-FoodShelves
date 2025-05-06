@@ -55,7 +55,7 @@ public class BlockEggBasket : BlockContainer, IContainedMeshSource {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalized();
+        string variantName = itemStack.GetMaterialNameLocalizedOLD();
         return base.GetHeldItemName(itemStack) + " " + variantName;
     }
 

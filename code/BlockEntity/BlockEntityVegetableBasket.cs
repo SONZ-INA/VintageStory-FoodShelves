@@ -15,7 +15,7 @@ public class BlockEntityVegetableBasket : BlockEntityDisplay {
     private float globalPerishMultiplier = 1f;
 
     public BlockEntityVegetableBasket() { 
-        inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotVegetableBasket(inv)); 
+        inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsVegetableBasket")); 
     }
 
     public override void Initialize(ICoreAPI api) {
@@ -56,7 +56,7 @@ public class BlockEntityVegetableBasket : BlockEntityDisplay {
             return TryTake(byPlayer);
         }
         else {
-            if (slot.VegetableBasketCheck()) {
+            if (slot.CanStoreInSlot("fsVegetableBasket")) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                 if (TryPut(slot, byPlayer)) {

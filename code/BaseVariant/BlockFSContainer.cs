@@ -1,18 +1,18 @@
 ﻿using System.Linq;
 using Vintagestory.ServerMods;
-
 namespace FoodShelves;
 
-public class BlockFSContainer : Block, IContainedMeshSource {
+public class BlockFSContainer : BlockContainer, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
+
     private string heldDescEntry;
-    private bool preventDuplication = false;
+    private bool preventPlacing = false;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
         
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
-        preventDuplication = Attributes["preventDuplication"].AsBool(false);
+        preventPlacing = Attributes["preventPlacing"].AsBool(false);
         heldDescEntry = Attributes["helddescentry"].AsString(Code.FirstCodePart());
 
         LoadVariantsCreative();
@@ -78,6 +78,10 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
+    public bool BaseOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
+        return base.OnBlockInteractStart(world, byPlayer, blockSel);
+    }
+
     public override string GetHeldItemName(ItemStack itemStack) {
         string itemName = base.GetHeldItemName(itemStack);
 
@@ -91,7 +95,7 @@ public class BlockFSContainer : Block, IContainedMeshSource {
             }
         }
 
-        return itemName + " " + itemStack.GetMaterialName(); // TODO: Change method logic to support coded variants instead.
+        return itemName + " " + itemStack.GetMaterialNameLocalized();
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
@@ -105,39 +109,42 @@ public class BlockFSContainer : Block, IContainedMeshSource {
         }
     }
 
-    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        if (preventDuplication) {
-            if (byPlayer.WorldData.CurrentGameMode == EnumGameMode.Survival) {
-                if (world.BlockAccessor.GetBlockEntity(pos) is BEFSContainer befs) {
-                    ItemStack emptyCeilingJar = new(this);
-                    emptyCeilingJar.Attributes["FSAttributes"] = befs.VariantAttributes;
-                    world.SpawnItemEntity(emptyCeilingJar, pos.ToVec3d().Add(0.5, 0.5, 0.5));
-
-                    ItemStack[] contents = befs.GetContentStacks();
-                    for (int i = 0; i < contents.Length; i++) {
-                        world.SpawnItemEntity(contents[i], pos.ToVec3d().Add(0.5, 0.5, 0.5));
-                    }
-                }
-            }
-
-            world.BlockAccessor.SetBlock(0, pos);
+    public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
+        if (preventPlacing) {
+            (api as ICoreClientAPI).TriggerIngameError(this, "cantplace", Lang.Get("This barrel needs to be placed in a barrel rack."));
+            failureCode = "__ignore__";
+            return false;
         }
         else {
-            base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
+            return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
         }
+    }
+
+    public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
+        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
+            var stacks = bec.GetContentStacks();
+            foreach (var stack in stacks) {
+                world.SpawnItemEntity(stack, pos);
+            }
+
+            bec.Inventory.Clear();
+        }
+
+        base.OnBlockBroken(world, pos, byPlayer, dropQuantityMultiplier);
     }
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos) {
         var stack = base.OnPickBlock(world, pos);
 
-        if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            var attrTree = new TreeAttribute();
-            foreach (var attr in fscontainer.VariantAttributes) {
-                attrTree.SetAttribute(attr.Key, attr.Value);
+        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
+            if (bec.Inventory.Empty) {
+                stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
             }
+        }
 
-            if (attrTree.Count != 0) {
-                stack.Attributes[FSAttributes] = attrTree;
+        if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
+            if (fscontainer?.VariantAttributes.Count != 0) {
+                stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Vintagestory.API.Common;
 
 namespace FoodShelves;
 
@@ -42,6 +41,10 @@ public static class Meshing {
         }
 
         capi.Tesselator.TesselateShape("FS-TesselateShape", shape, out MeshData blockMesh, stexSource);
+
+        float scale = block.Shape.Scale;
+        if (scale != 1) blockMesh.Scale(new Vec3f(.5f, 0, .5f), scale, scale, scale);
+
         return blockMesh.BlockYRotation(block);
     }
 

@@ -11,7 +11,7 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
     private const int slotCount = 2;
     private float globalPerishMultiplier = 1f;
 
-    public BlockEntityGlassJar() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotLiquidyStuff(inv)); }
+    public BlockEntityGlassJar() { inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsLiquidyStuff")); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos);
@@ -29,7 +29,7 @@ public class BlockEntityGlassJar : BlockEntityDisplay {
             return TryTake(byPlayer);
         }
         else {
-            if (slot.LiquidyStuffCheck()) {
+            if (slot.CanStoreInSlot("fsLiquidyStuff")) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                 if (TryPut(byPlayer, slot)) {
