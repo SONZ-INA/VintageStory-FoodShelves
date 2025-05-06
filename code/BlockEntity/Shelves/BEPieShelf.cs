@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEPieShelf : BEFSContainer {
+public class BEPieShelf : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only pies or cheese can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     protected override bool RipeningSpot => true;

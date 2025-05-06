@@ -6,11 +6,11 @@
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textureSizes": {
-	},
+	"textureSizes": {},
 	"textures": {
-		"top": "top",
-		"sides": "sides"
+		"sides": "game:block/wood/table/normal/sides",
+		"top": "foodshelves:block/wood/vegetablebasket/top",
+		"rope": "game:item/resource/rope"
 	},
 	"elements": [
 		{
@@ -23,8 +23,8 @@
 				"east": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] },
 				"south": { "texture": "#sides", "uv": [ 0.0, 0.0, 13.0, 1.0 ] },
 				"west": { "texture": "#sides", "uv": [ 0.0, 0.0, 10.0, 1.0 ] },
-				"up": { "texture": "#top", "uv": [ 0.0, 3.0, 13.0, 13.0 ], "rotation": 180 },
-				"down": { "texture": "#top", "uv": [ 0.0, 3.0, 13.0, 13.0 ] }
+				"up": { "texture": "#top", "uv": [ 1.5, 3.0, 14.5, 13.0 ], "rotation": 180 },
+				"down": { "texture": "#top", "uv": [ 1.5, 3.0, 14.5, 13.0 ] }
 			},
 			"children": [
 				{

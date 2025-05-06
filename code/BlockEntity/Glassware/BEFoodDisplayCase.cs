@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEFoodDisplayCase : BEFSContainer {
+public class BEFoodDisplayCase : BEBaseFSContainer {
     public override string AttributeTransformCode => "onFoodUniversalTransform";
 
     public override string AttributeCheck => "fsFoodUniversal";

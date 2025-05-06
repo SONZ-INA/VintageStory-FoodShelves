@@ -1,12 +1,16 @@
 {
   "code": "vegetablebasket",
   "class": "FoodShelves.BlockVegetableBasket",
-  "entityclass": "FoodShelves.BlockEntityVegetableBasket",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "entityclass": "FoodShelves.BEVegetableBasket",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "sides": "game:block/wood/debarked/{wood}",
+      "top": "foodshelves:variants/variants/{wood}"
+    },
     "handbook": {
       "groupBy": [ "vegetablebasket-*" ],
       "extraSections": [
@@ -15,9 +19,7 @@
           "text": "foodshelves:blockdesc-vegetablebasket-text"
         }
       ]
-    },
-    "inventoryClassName": "vegetablebasket",
-    "attributeTransformCode": "onVegetableBasketTransform"
+    }
   },
   "behaviors": [
     { "name": "RightClickPickup" },
@@ -27,21 +29,17 @@
     "base": "block/wood/baskets/vegetablebasket",
     "scale": 0.8
   },
-  "textures": {
-    "sides": { "base": "game:block/wood/table/normal/sides" },
-    "top": { "base": "foodshelves:block/wood/vegetablebasket/top" },
-    "rope": { "base": "game:item/resource/rope" }
-  },
   "heldRightReadyAnimation": "helditemreadybucket", 
   "blockmaterial": "Wood",
   "lightAbsorption": 0,
   "maxStackSize": 4,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "guiTransform": {
     "origin": { "x": 0.5, "y": 0.3, "z": 0.5 },
     "scale": 1.5
@@ -56,7 +54,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [
     { "x1": 0.15, "y1": 0, "z1": 0.15, "x2": 0.85, "y2": 0.35, "z2": 0.85 }
   ]

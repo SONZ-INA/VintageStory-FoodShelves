@@ -2,7 +2,7 @@
 using Vintagestory.ServerMods;
 namespace FoodShelves;
 
-public class BlockFSContainer : BlockContainer, IContainedMeshSource {
+public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
 
     private string heldDescEntry;

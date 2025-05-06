@@ -1,10 +1,10 @@
 ﻿namespace FoodShelves;
 
-public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
+public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
     protected float globalPerishMultiplier = 1f;
     
     public InventoryGeneric inv;
-    protected BlockFSContainer block;
+    protected BaseFSContainer block;
     protected MeshData mesh;
 
     public override InventoryBase Inventory => inv;
@@ -29,7 +29,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
 
     public override void Initialize(ICoreAPI api) {
-        block ??= api.World.BlockAccessor.GetBlock(Pos) as BlockFSContainer;
+        block ??= api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
@@ -40,7 +40,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     protected virtual void InitMesh() {
         var stack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
-            stack.Attributes[BlockFSContainer.FSAttributes] = VariantAttributes;
+            stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
         }
 
         mesh = GenBlockVariantMesh(Api, block, stack);
@@ -49,7 +49,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
         base.OnBlockPlaced(byItemStack);
 
-        if (byItemStack?.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
+        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
         InitMesh();
     }
 
@@ -168,7 +168,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
 
-        if (tree[BlockFSContainer.FSAttributes] is ITreeAttribute fsTree) {
+        if (tree[BaseFSContainer.FSAttributes] is ITreeAttribute fsTree) {
             VariantAttributes = fsTree;
         }
         else {
@@ -181,7 +181,7 @@ public abstract class BEFSContainer : BlockEntityDisplay, IFoodShelvesContainer 
     public override void ToTreeAttributes(ITreeAttribute tree) {
         base.ToTreeAttributes(tree);
         if (VariantAttributes.Count != 0) {
-            tree[BlockFSContainer.FSAttributes] = VariantAttributes;
+            tree[BaseFSContainer.FSAttributes] = VariantAttributes;
         }
     }
 

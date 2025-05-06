@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BESushiShelf : BEFSContainer {
+public class BESushiShelf : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only sushi can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
 

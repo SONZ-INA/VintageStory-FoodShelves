@@ -32,17 +32,19 @@ public class Core : ModSystem {
         base.Start(api);
 
         // Coded Variants-------
-        api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BlockFSContainer));
+        api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BaseFSContainer));
         // ---------------------
 
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
 
         api.RegisterBlockClass("FoodShelves.BlockFruitBasket", typeof(BlockFruitBasket));
+        api.RegisterBlockClass("FoodShelves.BlockVegetableBasket", typeof(BlockVegetableBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
 
         api.RegisterBlockEntityClass("FoodShelves.BEFruitBasket", typeof(BEFruitBasket));
+        api.RegisterBlockEntityClass("FoodShelves.BEVegetableBasket", typeof(BEVegetableBasket));
 
         api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
@@ -67,8 +69,6 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockTableWShelf", typeof(BlockTableWShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityTableWShelf", typeof(BlockEntityTableWShelf));
 
-        api.RegisterBlockClass("FoodShelves.BlockVegetableBasket", typeof(BlockVegetableBasket));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityVegetableBasket", typeof(BlockEntityVegetableBasket));
         api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityEggBasket", typeof(BlockEntityEggBasket));
 
@@ -81,25 +81,29 @@ public class Core : ModSystem {
     public override void AssetsLoaded(ICoreAPI api) {
         base.AssetsLoaded(api);
 
-        Dictionary<string, string[]> restrictionGroups = new() {
-            ["barrels"] = new[] { "barrelrack", "barrelrackbig" },
-            ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
-            ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
-            ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
-            [""] = new[] { "pumpkincase" }
-        };
+        if (api.Side == EnumAppSide.Server) {
+            Dictionary<string, string[]> restrictionGroups = new() {
+                ["barrels"] = new[] { "barrelrack", "barrelrackbig" },
+                ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
+                ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
+                ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
+                [""] = new[] { "pumpkincase" }
+            };
 
-        foreach (var (category, names) in restrictionGroups) {
-            foreach (var name in names) {
-                string restrictionPath = $"foodshelves:config/restrictions/{category}/{name}.json".Replace("//", "/");
-                string transformationPath = $"foodshelves:config/transformations/{category}/{name}.json".Replace("//", "/");
+            foreach (var (category, names) in restrictionGroups) {
+                foreach (var name in names) {
+                    string restrictionPath = $"foodshelves:config/restrictions/{category}/{name}.json".Replace("//", "/");
+                    string transformationPath = $"foodshelves:config/transformations/{category}/{name}.json".Replace("//", "/");
 
-                restrictions[name] = api.LoadAsset<RestrictionData>(restrictionPath);
+                    restrictions[name] = api.LoadAsset<RestrictionData>(restrictionPath);
 
-                if (api.Assets.Exists(transformationPath)) {
-                    transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
+                    if (api.Assets.Exists(transformationPath)) {
+                        transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
+                    }
                 }
             }
+
+            BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
         }
     }
 

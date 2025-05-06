@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEBreadShelf : BEFSContainer {
+public class BEBreadShelf : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only bread, muffins, dumplings, pacoca, halva or marzipam can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByShelf;
     protected override float PerishMultiplier => 0.5f;

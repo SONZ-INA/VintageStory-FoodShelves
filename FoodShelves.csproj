@@ -142,7 +142,7 @@
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\tun.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\FruitBasketHanged.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\baskets\VegetableBasketHanged.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\baskets\vegetablebasketrope.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\vegetablestoragebasket.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\bigfloursack.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\Fridge.json" />
@@ -178,7 +178,6 @@
   <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\top.png" />
   <None Remove="assets\foodshelves\textures\block\wood\vegetablebasket\top.png" />
   <None Remove="assets\foodshelves\textures\variants\variants\acacia.png" />
-  <None Remove="assets\foodshelves\textures\variants\variants\aged.png" />
   <None Remove="assets\foodshelves\textures\variants\variants\baldcypress.png" />
   <None Remove="assets\foodshelves\textures\variants\variants\birch.png" />
   <None Remove="assets\foodshelves\textures\variants\variants\ebonywood.png" />

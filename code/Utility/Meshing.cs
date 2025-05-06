@@ -13,7 +13,7 @@ public static class Meshing {
         var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
-        if (stack.Attributes[BlockFSContainer.FSAttributes] is ITreeAttribute tree) {
+        if (stack.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
             foreach (var pair in block.Attributes["variantTextures"].AsObject<OrderedDictionary<string, string>>()) {
                 string texPath = pair.Value;
 

@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BESeedShelf : BEFSContainer {
+public class BESeedShelf : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only seeds can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
 

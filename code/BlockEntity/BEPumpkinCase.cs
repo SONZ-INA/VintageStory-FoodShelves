@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEPumpkinCase : BEFSContainer {
+public class BEPumpkinCase : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only pumpkins can be placed in this case.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 

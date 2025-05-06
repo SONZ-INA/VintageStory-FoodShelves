@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEBarShelf : BEFSContainer {
+public class BEBarShelf : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only food bars can be placed on this shelf.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
 

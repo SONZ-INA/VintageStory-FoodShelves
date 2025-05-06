@@ -4,7 +4,7 @@ using static Vintagestory.GameContent.BlockLiquidContainerBase;
 
 namespace FoodShelves;
 
-public class BECoolingCabinet : BEFSContainer {
+public class BECoolingCabinet : BEBaseFSContainer {
     protected new BlockCoolingCabinet block;
 
     public override string AttributeTransformCode => "onHolderUniversalTransform";

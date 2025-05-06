@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BECeilingJar : BEFSContainer {
+public class BECeilingJar : BEBaseFSContainer {
     public override string AttributeCheck => "fsLiquidyStuff";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
 

@@ -66,7 +66,7 @@ public static class Extensions {
         return 0;
     }
 
-    public static void ApplyVariantTextures(this Shape shape, BEFSContainer fscontainer) {
+    public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
         var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string>>();
         if (variantTextures == null) return;
 
@@ -273,7 +273,7 @@ public static class Extensions {
     #region BlockInventoryExtensions
 
     // Must be called before initialize
-    public static void RebuildInventory(this BEFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
+    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
         // Need to save items and transfer it over to new inventory, they disappear otherwise
         ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
 

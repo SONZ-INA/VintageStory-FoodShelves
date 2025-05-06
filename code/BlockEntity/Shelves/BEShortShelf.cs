@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BEShortShelf : BEFSContainer {
+public class BEShortShelf : BEBaseFSContainer {
     public override string InventoryClassName => "shelf";
     public override string AttributeTransformCode => "onshelfTransform";
 
