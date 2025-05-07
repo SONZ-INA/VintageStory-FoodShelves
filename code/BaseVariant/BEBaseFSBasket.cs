@@ -82,12 +82,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
         bool skipmesh = base.BaseRenderContents(mesher, tesselator);
 
         if (!skipmesh) {
-            var stack = new ItemStack(block);
-            if (VariantAttributes.Count != 0) {
-                stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
-            }
-
-            MeshData blockMesh = GenBlockVariantMesh(Api, block, stack);
+            InitMesh();
 
             if (IsCeilingAttached) {
                 Shape basketRope = Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>();
@@ -100,8 +95,6 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
                     blockMesh.AddMeshData(ropeMesh);
                 }
             }
-
-            if (blockMesh == null) return false;
 
             mesher.AddMeshData(blockMesh.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
         }

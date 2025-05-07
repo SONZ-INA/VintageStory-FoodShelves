@@ -73,8 +73,8 @@
   <None Remove="assets\foodshelves\blocktypes\shelves\shelfshort.json" />
   <None Remove="assets\foodshelves\blocktypes\vegetablebasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\barrelrack.json" />
-  <None Remove="assets\foodshelves\config\restrictions\barrels\barrelrackbig.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\firkinrack.json" />
+  <None Remove="assets\foodshelves\config\restrictions\barrels\tunrack.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\fruitbasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\vegetablebasket.json" />
@@ -123,12 +123,12 @@
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
   <None Remove="assets\foodshelves\recipes\grid\shelves\shelfshort.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\barrel\barrelrackbig.json" />
-  <None Remove="assets\foodshelves\shapes\block\wood\barrel\barrelracktopbig.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkin.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkinrack.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\firkinracktop.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\barrel\tun.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\barrel\tunrack.json" />
+  <None Remove="assets\foodshelves\shapes\block\wood\barrel\tunracktop.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\FruitBasketHanged.json" />
   <None Remove="assets\foodshelves\shapes\block\wood\baskets\vegetablebasketrope.json" />
@@ -218,10 +218,6 @@
   <Content Update="assets\foodshelves\patches\detailedanimals.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
-</ItemGroup>
-
-<ItemGroup>
-  <Folder Include="code\BlockEntity\Barrels\" />
 </ItemGroup>
 
 </Project>

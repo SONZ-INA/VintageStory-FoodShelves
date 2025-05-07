@@ -1,68 +1,21 @@
-﻿using System.Linq;
-using Vintagestory.ServerMods;
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
 
     private string heldDescEntry;
     private bool preventPlacing = false;
+    private string placingMessage = "";
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
         
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
         preventPlacing = Attributes["preventPlacing"].AsBool(false);
+        placingMessage = Attributes["placingMessage"].AsString("");
         heldDescEntry = Attributes["helddescentry"].AsString(Code.FirstCodePart());
 
-        LoadVariantsCreative();
-    }
-
-    protected void LoadVariantsCreative() {
-        string[] directions = new[] { "-east", "-west", "-north", "-south" };
-        bool hasDirection = directions.Any(Code.Path.EndsWith);
-
-        if (hasDirection && !Code.Path.EndsWith("-east")) return;
-
-        var materials = Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
-        string material = "";
-        StandardWorldProperty props = null;
-
-        if (materials?.LoadFromProperties != null) {
-            material = materials.LoadFromProperties.ToString().Split('/')[1];
-            props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
-        }
-
-        if (props == null) return;
-        if (material == "") return;
-
-        var stacks = new List<JsonItemStack>();
-
-        var defaultBlock = new JsonItemStack() {
-            Code = Code,
-            Type = EnumItemClass.Block,
-            Attributes = new JsonObject(JToken.Parse("{}"))
-        };
-        defaultBlock.Resolve(api.World, Code);
-        stacks.Add(defaultBlock);
-
-        foreach (var prop in props.Variants) {
-            string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
-            string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
-
-            var jstack = new JsonItemStack() {
-                Code = Code,
-                Type = EnumItemClass.Block,
-                Attributes = new JsonObject(JToken.Parse(attributesJson))
-            };
-
-            jstack.Resolve(api.World, Code);
-            stacks.Add(jstack);
-        }
-
-        CreativeInventoryStacks = new CreativeTabAndStackList[] {
-            new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
-        };
+        LoadVariantsCreative(api, this);
     }
 
     public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
@@ -84,18 +37,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
     public override string GetHeldItemName(ItemStack itemStack) {
         string itemName = base.GetHeldItemName(itemStack);
-
-        string blockType = Variant["type"];
-
-        if (blockType != "normal") {
-            string entry = "foodshelves:" + blockType;
-            string typeName = Lang.Get(entry);
-            if (typeName != entry) {
-                itemName = typeName + " " + itemName;
-            }
-        }
-
-        return itemName + " " + itemStack.GetMaterialNameLocalized();
+        return GetBlockTypeLocalized(this) + itemName + " " + itemStack.GetMaterialNameLocalized();
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
@@ -111,7 +53,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
         if (preventPlacing) {
-            (api as ICoreClientAPI).TriggerIngameError(this, "cantplace", Lang.Get("This barrel needs to be placed in a barrel rack."));
+            (api as ICoreClientAPI).TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
             failureCode = "__ignore__";
             return false;
         }
@@ -143,7 +85,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         }
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            if (fscontainer?.VariantAttributes.Count != 0) {
+            if (fscontainer?.VariantAttributes?.Count != 0) {
                 stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
             }
         }
@@ -168,7 +110,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public virtual MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        return GenBlockVariantMesh(api, this, itemstack);
+        return GenBlockVariantMesh(api, itemstack);
     }
 
     public virtual string GetMeshCacheKey(ItemStack itemstack) {

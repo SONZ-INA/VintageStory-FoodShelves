@@ -31,18 +31,27 @@ public class Core : ModSystem {
     public override void Start(ICoreAPI api) {
         base.Start(api);
 
-        // Coded Variants-------
+        // Coded Variants----------
         api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BaseFSContainer));
-        // ---------------------
+        // ------------------------
 
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
+
+        // Block Classes----------
+        api.RegisterBlockClass("FoodShelves.BlockBarrelRack", typeof(BlockBarrelRack));
+        api.RegisterBlockClass("FoodShelves.BlockTunRack", typeof(BlockTunRack));
 
         api.RegisterBlockClass("FoodShelves.BlockFruitBasket", typeof(BlockFruitBasket));
         api.RegisterBlockClass("FoodShelves.BlockVegetableBasket", typeof(BlockVegetableBasket));
         api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
+        // ------------------------
+
+        // Block Entity Classes----
+        api.RegisterBlockEntityClass("FoodShelves.BEBarrelRack", typeof(BEBarrelRack));
+        api.RegisterBlockEntityClass("FoodShelves.BETunRack", typeof(BETunRack));
 
         api.RegisterBlockEntityClass("FoodShelves.BEFruitBasket", typeof(BEFruitBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEVegetableBasket", typeof(BEVegetableBasket));
@@ -62,20 +71,12 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf)); // Placeholder
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
-
-        // ---------------------
-
+        // ------------------------
         api.RegisterBlockClass("FoodShelves.BlockShelfShort", typeof(BlockShelfShort));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityShelfShort", typeof(BlockEntityShelfShort));
-
         api.RegisterBlockClass("FoodShelves.BlockTableWShelf", typeof(BlockTableWShelf));
         api.RegisterBlockEntityClass("FoodShelves.BlockEntityTableWShelf", typeof(BlockEntityTableWShelf));
 
-
-        api.RegisterBlockClass("FoodShelves.BlockBarrelRack", typeof(BlockBarrelRack));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityBarrelRack", typeof(BlockEntityBarrelRack));
-        api.RegisterBlockClass("FoodShelves.BlockBarrelRackBig", typeof(BlockBarrelRackBig));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityBarrelRackBig", typeof(BlockEntityBarrelRackBig));
     }
 
     public override void AssetsLoaded(ICoreAPI api) {
@@ -83,7 +84,7 @@ public class Core : ModSystem {
 
         if (api.Side == EnumAppSide.Server) {
             Dictionary<string, string[]> restrictionGroups = new() {
-                ["barrels"] = new[] { "barrelrack", "barrelrackbig" },
+                ["barrels"] = new[] { "barrelrack", "tunrack" },
                 ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
                 ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },

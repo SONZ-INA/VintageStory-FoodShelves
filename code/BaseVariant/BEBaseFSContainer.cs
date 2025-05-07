@@ -5,7 +5,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     
     public InventoryGeneric inv;
     protected BaseFSContainer block;
-    protected MeshData mesh;
+    protected MeshData blockMesh;
 
     public override InventoryBase Inventory => inv;
     public override string InventoryClassName => Block?.Code.FirstCodePart();
@@ -34,7 +34,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
         base.Initialize(api);
 
-        if (mesh == null) InitMesh();
+        if (blockMesh == null) InitMesh();
     }
 
     protected virtual void InitMesh() {
@@ -43,13 +43,16 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
         }
 
-        mesh = GenBlockVariantMesh(Api, block, stack);
+        blockMesh = GenBlockVariantMesh(Api, stack);
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
         base.OnBlockPlaced(byItemStack);
 
-        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) VariantAttributes = tree;
+        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
+            if (VariantAttributes.Count == 0) VariantAttributes = tree;
+        }
+        
         InitMesh();
     }
 
@@ -154,7 +157,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        mesher.AddMeshData(mesh);
+        InitMesh();
+
+        mesher.AddMeshData(blockMesh);
         base.OnTesselation(mesher, tesselator);
         return true;
     }
@@ -168,12 +173,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
 
-        if (tree[BaseFSContainer.FSAttributes] is ITreeAttribute fsTree) {
-            VariantAttributes = fsTree;
-        }
-        else {
-            VariantAttributes = new TreeAttribute();
-        }
+        VariantAttributes = tree[BaseFSContainer.FSAttributes] is ITreeAttribute fsTree 
+            ? fsTree 
+            : new TreeAttribute();
 
         RedrawAfterReceivingTreeAttributes(worldForResolving);
     }

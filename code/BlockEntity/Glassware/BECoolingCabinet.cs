@@ -599,12 +599,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
         itemStack.StackSize = quantityItem;
         itemstack.StackSize -= quantityItem;
 
-        if (itemstack.StackSize <= 0) {
-            inv[36].Itemstack = null;
-        }
-        else {
-            inv[36].Itemstack = itemstack;
-        }
+        inv[36].Itemstack = itemstack.StackSize <= 0 ? null : itemstack;
 
         inv[36].MarkDirty();
         MarkDirty(true);

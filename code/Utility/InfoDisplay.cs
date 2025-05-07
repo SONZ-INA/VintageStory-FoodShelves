@@ -187,6 +187,39 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
+    public static string CuringInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float curingRate = 1.0f) {
+        if (contentSlot.Empty) return "";
+
+        TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
+        if (transitionStates == null) return "";
+
+        string text = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: ";
+
+        foreach (TransitionState state in transitionStates) {
+            TransitionableProperties prop = state.Props;
+
+            if (prop.Type != EnumTransitionType.Cure) continue;
+
+            float curingRateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, prop.Type);
+            if (curingRateMul <= 0) continue;
+
+            float hoursLeft = state.FreshHoursLeft / curingRateMul;
+            double daysLeft = hoursLeft / world.Calendar.HoursPerDay;
+
+            if (daysLeft >= world.Calendar.DaysPerYear) {
+                text += Lang.Get("foodshelves:Will cure in {0} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
+            }
+            else if (hoursLeft > world.Calendar.HoursPerDay) {
+                text += Lang.Get("foodshelves:Will cure in {0} days", Math.Round(daysLeft, 1));
+            }
+            else {
+                text += Lang.Get("foodshelves:Will cure in {0} hours", Math.Round(hoursLeft, 1));
+            }
+        }
+
+        return text;
+    }
+
     public static string CrockInfoCompact(InventoryGeneric inv, IWorldAccessor world, ItemSlot inSlot) {
         BlockMeal mealblock = world.GetBlock(new AssetLocation("bowl-meal")) as BlockMeal;
         BlockCrock crock = inSlot.Itemstack.Collectible as BlockCrock;

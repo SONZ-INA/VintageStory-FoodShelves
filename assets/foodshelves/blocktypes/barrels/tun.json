@@ -20,7 +20,8 @@
         }
       ]
     },
-    "preventPlacing": true
+    "preventPlacing": true,
+    "placingMessage": "foodshelves:This tun needs to be placed in a tun rack."
   },
   "shape": {
     "base": "block/wood/barrel/tun"

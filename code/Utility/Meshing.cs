@@ -3,8 +3,10 @@
 namespace FoodShelves;
 
 public static class Meshing {
-    public static MeshData GenBlockVariantMesh(ICoreAPI api, Block block, ItemStack stack) {
+    public static MeshData GenBlockVariantMesh(ICoreAPI api, ItemStack stackWithAttributes) {
         if (api is not ICoreClientAPI capi) return null;
+
+        Block block = stackWithAttributes.Block;
 
         string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
         Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
@@ -13,7 +15,7 @@ public static class Meshing {
         var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
-        if (stack.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
+        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
             foreach (var pair in block.Attributes["variantTextures"].AsObject<OrderedDictionary<string, string>>()) {
                 string texPath = pair.Value;
 

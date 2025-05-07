@@ -26,7 +26,7 @@ public class BECeilingJar : BEBaseFSContainer {
         if (capi == null) return;
 
         MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar);
-        if (contentMesh != null) mesh.AddMeshData(contentMesh);
+        if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
     }
 
     private void Inventory_SlotModified(int slotId) {
@@ -91,7 +91,7 @@ public class BECeilingJar : BEBaseFSContainer {
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        mesher.AddMeshData(mesh);
+        mesher.AddMeshData(blockMesh);
         return true;
     }
 

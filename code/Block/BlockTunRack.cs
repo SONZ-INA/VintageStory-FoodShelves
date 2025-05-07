@@ -2,7 +2,7 @@
 
 namespace FoodShelves;
 
-public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
+public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     public override bool AllowHeldLiquidTransfer => false;
     public override int GetContainerSlotId(BlockPos pos) => 1;
     public override int GetContainerSlotId(ItemStack containerStack) => 1;
@@ -10,6 +10,8 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
+
+        LoadVariantsCreative(api, this);
     }
 
     public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type) {
@@ -17,7 +19,7 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityBarrelRackBig hbrb) return hbrb.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BETunRack tr) return tr.OnInteract(byPlayer, blockSel);
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
@@ -26,20 +28,20 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
     }
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BlockEntityBarrelRackBig be && be.Inventory.Empty) return null;
+        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BETunRack tr && tr.Inventory.Empty) return null;
         else return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalizedOLD(new[] { "type" }, new[] { "normal", "top" });
-        return base.GetHeldItemName(itemStack) + " " + variantName;
+        string itemName = base.GetHeldItemName(itemStack);
+        return itemName + " " + itemStack.GetMaterialNameLocalized();
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
         dsc.AppendLine("");
-        dsc.AppendLine(Lang.Get("foodshelves:helddesc-barrelrackbig"));
+        dsc.AppendLine(Lang.Get("foodshelves:helddesc-tunrack"));
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
@@ -56,7 +58,7 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
         if (preventDefault) return;
 
         // Drop barrel
-        BlockEntityBarrelRackBig be = GetBlockEntity<BlockEntityBarrelRackBig>(pos);
+        BETunRack be = GetBlockEntity<BETunRack>(pos);
         be?.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
@@ -79,7 +81,7 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
 
     // Selection boxes for multiblock parts
     public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
-        BlockEntityBarrelRackBig be = blockAccessor.GetBlockEntityExt<BlockEntityBarrelRackBig>(pos);
+        BETunRack be = blockAccessor.GetBlockEntityExt<BETunRack>(pos);
         if (be != null) {
             Cuboidf currentSelBox = base.GetSelectionBoxes(blockAccessor, pos).FirstOrDefault().Clone();
             currentSelBox.MBNormalizeSelectionBox(offset);
@@ -101,10 +103,65 @@ public class BlockBarrelRackBig : BlockLiquidContainerBase, IMultiBlockColSelBox
     public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer) {
         StringBuilder dsc = new();
 
-        BlockEntityBarrelRackBig be = GetBlockEntity<BlockEntityBarrelRackBig>(pos);
-        if (be != null && be.Inventory.Empty) dsc.Append(Lang.Get("foodshelves:Missing barrel."));
-        else dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
+        BETunRack be = GetBlockEntity<BETunRack>(pos);
+        if (be?.Inventory.Empty == true) dsc.Append(Lang.Get("foodshelves:Missing tun."));
+        else {
+            dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
+
+            if (!be?.inv[1].Empty == true) {
+                dsc.Append(CuringInfoCompact(world, be.inv[1]));
+            }
+        }
 
         return dsc.ToString();
+    }
+
+    public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos) {
+        var stack = base.OnPickBlock(world, pos);
+
+        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
+            if (bec.Inventory.Empty) {
+                stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
+            }
+        }
+
+        if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
+            if (fscontainer?.VariantAttributes?.Count != 0) {
+                stack.Attributes[BaseFSContainer.FSAttributes] = fscontainer.VariantAttributes;
+            }
+        }
+
+        return stack;
+    }
+
+    public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
+        return new ItemStack[] { OnPickBlock(world, pos) };
+    }
+
+    public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
+        string meshCacheKey = GetMeshCacheKey(itemstack);
+        var meshrefs = GetCacheDictionary(capi, meshCacheKey);
+
+        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef meshRef)) {
+            MeshData mesh = GenMesh(itemstack, capi.BlockTextureAtlas, null);
+            meshrefs[meshCacheKey] = meshRef = capi.Render.UploadMultiTextureMesh(mesh);
+        }
+
+        renderinfo.ModelRef = meshRef;
+    }
+
+    public virtual MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
+        return GenBlockVariantMesh(api, itemstack);
+    }
+
+    public virtual string GetMeshCacheKey(ItemStack itemstack) {
+        if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree) return Code;
+
+        List<string> parts = new();
+        foreach (var pair in tree) {
+            parts.Add($"{pair.Key}-{pair.Value}");
+        }
+
+        return $"{Code}-{string.Join("-", parts)}";
     }
 }

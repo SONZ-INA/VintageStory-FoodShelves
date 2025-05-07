@@ -16,22 +16,6 @@ public static class Restrictions
 
     #endregion
 
-    #region BarrelRack
-
-    public const string BarrelRack = "barrelrackcheck";
-    public static bool BarrelRackCheck(this CollectibleObject obj) => obj?.Attributes?[BarrelRack].AsBool() == true;
-    public static bool BarrelRackCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[BarrelRack].AsBool() == true;
-
-    #endregion
-
-    #region BarrelRackBig
-
-    public const string BarrelRackBig = "barrelrackbigcheck";
-    public static bool BarrelRackBigCheck(this CollectibleObject obj) => obj?.Attributes?[BarrelRackBig].AsBool() == true;
-    public static bool BarrelRackBigCheck(this ItemSlot slot) => slot?.Itemstack?.Collectible?.Attributes?[BarrelRackBig].AsBool() == true;
-
-    #endregion
-
     #region FirkinRack
 
     public const string FirkinRack = "firkinrackcheck";

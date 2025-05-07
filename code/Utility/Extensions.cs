@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Text.Json;
+using Vintagestory.ServerMods;
 
 namespace FoodShelves; 
 
@@ -49,7 +51,7 @@ public static class Extensions {
     #region MeshExtensions
 
     public static MeshData BlockYRotation(this MeshData mesh, Block block) {
-        return mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
+        return mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
     }
 
     public static float GetBlockMeshAngle(IPlayer byPlayer, BlockSelection blockSel, bool val) {
@@ -177,6 +179,78 @@ public static class Extensions {
             if (WildcardUtil.Match(transformation.Key, obj.Code.ToString())) return transformation.Value;
         }
         return null;
+    }
+
+    public static void LoadVariantsCreative(ICoreAPI api, Block block) {
+        string blockSide = block.Variant["side"];
+        string dropSide = "east";
+
+        string properties = block.GetBehavior<BlockBehaviorHorizontalOrientable>()?.propertiesAtString;
+        if (properties != null) {
+            JsonDocument jsonDoc = JsonDocument.Parse(properties);
+            dropSide = jsonDoc.RootElement.GetProperty("dropBlockFace").GetString() ?? "east";
+        }
+
+        if (blockSide != null && blockSide != dropSide) return;
+
+        //string[] directions = new[] { "-east", "-west", "-north", "-south" };
+        //bool hasDirection = directions.Any(block.Code.Path.EndsWith);
+
+        //if (hasDirection && !block.Code.Path.EndsWith("-east")) return;
+
+        var materials = block.Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
+        string material = "";
+        StandardWorldProperty props = null;
+
+        if (materials?.LoadFromProperties != null) {
+            material = materials.LoadFromProperties.ToString().Split('/')[1];
+            props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
+        }
+
+        if (props == null) return;
+        if (material == "") return;
+
+        var stacks = new List<JsonItemStack>();
+
+        var defaultBlock = new JsonItemStack() {
+            Code = block.Code,
+            Type = EnumItemClass.Block,
+            Attributes = new JsonObject(JToken.Parse("{}"))
+        };
+        defaultBlock.Resolve(api.World, block.Code);
+        stacks.Add(defaultBlock);
+
+        foreach (var prop in props.Variants) {
+            string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
+            string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
+
+            var jstack = new JsonItemStack() {
+                Code = block.Code,
+                Type = EnumItemClass.Block,
+                Attributes = new JsonObject(JToken.Parse(attributesJson))
+            };
+
+            jstack.Resolve(api.World, block.Code);
+            stacks.Add(jstack);
+        }
+
+        block.CreativeInventoryStacks = new CreativeTabAndStackList[] {
+            new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
+        };
+    }
+
+    public static string GetBlockTypeLocalized(Block block) {
+        string blockType = block.Variant["type"];
+
+        if (blockType != "normal") {
+            string entry = "foodshelves:" + blockType;
+            string typeName = Lang.Get(entry);
+            if (typeName != entry) {
+                return typeName + " ";
+            }
+        }
+
+        return "";
     }
 
     public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {

@@ -23,7 +23,7 @@
   "block-tablewshelf-greenmarble-*": "Green marble-topped table with a shelf",
   "block-barrelrack-*": "Barrel rack",
   "block-tun-*": "Tun",
-  "block-barrelrackbig-*": "Big barrel rack",
+  "block-tunrack-*": "Tun rack",
   "block-firkinrack-*": "Firkin rack",
   "block-firkin*": "Firkin",
   "block-pumpkincase-*": "Pumpkin Case",
@@ -46,7 +46,7 @@
   "blockdesc-fruitbasket-text": "  -All types of fruit",
   "blockdesc-vegetablebasket-text": "  -Most vegetables",
   "blockdesc-barrelrack-text": "  -Barrels. These barrels can only hold liquids.",
-  "blockdesc-barrelrackbig-text": "  -Big horizontal barrels. These barrels can only hold liquids.",
+  "blockdesc-tunrack-text": "  -Tuns. These tuns can only hold liquids.",
   "blockdesc-tun-text": "  -This tun can only be placed inside a tun rack.",
   "blockdesc-liquidystuff-text": "  -Grain, resin, beeswax, animal fat<br>  -All dehydrated/dry fruits from Expanded Foods.",
   "blockdesc-pumpkincase-text": "  -Pumpkins.",
@@ -54,8 +54,8 @@
   "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -Pacoca<br>  -Halva<br>  -Marzipam",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
-  "helddesc-barrelrack": "Liquids stored in this Barrel rack stay fresh for 50% longer and cure 20% slower.",
-  "helddesc-barrelrackbig": "Liquids stored in this Big barrel rack stay fresh for 60% longer and cure 25% slower.",
+  "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
+  "helddesc-tunrack": "Liquids stored in this tun rack stay fresh for 60% longer and cure 25% slower.",
   "helddesc-ceilingjar": "Dehydrated fruit placed in the Ceiling Jar dries or melts 2.5x faster, and stays fresh for 25% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
   "helddesc-fooddisplaycase": "Food placed in this case stays fresh for 25% longer.",
   "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 25% longer, or up to 60% longer when ice is added.<br>Make sure to keep it closed!",
@@ -72,10 +72,13 @@
   "Only vegetables can be placed in this basket.": "Only vegetables can be placed in this basket.",
   "Only eggs can be placed in this basket.": "Only eggs can be placed in this basket.",
   "Only barrels can be placed on this rack.": "Only barrels can be placed on this rack.",
+  "Only tuns can be placed on this rack.": "Only tuns can be placed on this rack.",
 
-  "This barrel needs to be placed in a barrel rack.": "This barrel needs to be placed in a barrel rack.",
+  "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",
+  "The tun must be emptied before it can be picked up.": "The tun must be emptied before it can be picked up.",
   "Missing barrel.": "<font color=\"orange\">Missing barrel.</font>",
+  "Missing tun.": "<font color=\"orange\">Missing tun.</font>",
 
   "placefailure-requireceilingattachable": "Cannot place this block here. It has to be attached to the ceiling of an unchiseled block.",
 
@@ -90,6 +93,10 @@
   "Will melt in {0} days": "Will melt in {0} days",
   "Will melt in {0} hours": "Will melt in {0} hours",
   "Will not melt": "Will not melt",
+
+  "Will cure in {0} years": "Will cure in {0} years",
+  "Will cure in {0} days": "Will cure in {0} days",
+  "Will cure in {0} hours": "Will cure in {0} hours",
 
   "Average perish rate {0} years": "Average perish rate: {0} years",
   "Average perish rate {0} days": "Average perish rate: {0} days",
