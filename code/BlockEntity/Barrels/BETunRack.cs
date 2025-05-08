@@ -123,10 +123,5 @@ public class BETunRack : BEBaseFSContainer {
         return false;
     }
 
-    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        mesher.AddMeshData(blockMesh);
-        return true;
-    }
-
     protected override float[][] genTransformationMatrices() { return null; } // Unneeded
 }

@@ -51,7 +51,7 @@
   "blockdesc-liquidystuff-text": "  -Grain, resin, beeswax, animal fat<br>  -All dehydrated/dry fruits from Expanded Foods.",
   "blockdesc-pumpkincase-text": "  -Pumpkins.",
   "blockdesc-fooduniversal-text": "  -Pies, Cheese, all bread types<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread",
-  "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -Pacoca<br>  -Halva<br>  -Marzipam",
+  "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Fruit bars<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -All nut bars<br>  -Pacoca<br>  -Halva<br>  -Marzipam<br>Long-term food:<br>  -All pemmicans<br>  -Packed pemmican<br>  -Mushroom pate",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
@@ -98,9 +98,9 @@
   "Will cure in {0} days": "Will cure in {0} days",
   "Will cure in {0} hours": "Will cure in {0} hours",
 
-  "Average perish rate {0} years": "Average perish rate: {0} years",
-  "Average perish rate {0} days": "Average perish rate: {0} days",
-  "Average perish rate {0} hours": "Average perish rate: {0} hours",
+  "Average freshness {0} years": "Average freshness: {0} years",
+  "Average freshness {0} days": "Average freshness: {0} days",
+  "Average freshness {0} hours": "Average freshness: {0} hours",
   "will perish in {0} years": "will perish in {0} years",
   "will perish in {0} days": "will perish in {0} days",
   "will perish in {0} hours": "will perish in {0} hours",

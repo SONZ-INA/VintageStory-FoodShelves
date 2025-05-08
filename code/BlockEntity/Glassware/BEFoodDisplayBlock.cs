@@ -72,6 +72,11 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
         return false;
     }
 
+    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        InitMesh(); // Re-meshing the falling block
+        return base.OnTesselation(mesher, tesselator);
+    }
+
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 

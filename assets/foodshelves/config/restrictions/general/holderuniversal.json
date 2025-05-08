@@ -21,7 +21,9 @@
     "expandedfoods:breadedball-*",
     "expandedfoods:dumpling-*",
     "expandedfoods:plaindoughball-*",
+    "expandedfoods:fruitbar-*",
 
+    "wildcraftfruit:nut-*bar",
     "wildcraftfruit:nut-halva",
     "wildcraftfruit:nut-pacoca",
     "wildcraftfruit:nut-marzipan"

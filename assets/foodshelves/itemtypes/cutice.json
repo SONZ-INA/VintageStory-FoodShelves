@@ -2,7 +2,6 @@
 	"code": "cutice",
 	"creativeinventory": { "general": [ "*" ], "foodshelves": [ "*" ] },
 	"shape": { "base": "item/cutice" },
-	"textures": { "ice": { "base": "game:block/liquid/ice/packedglacier1" } },
 	"maxStackSize": 64,
 	"transitionableProps": [
 		{
@@ -11,9 +10,9 @@
 			"transitionHours": { "avg": 12 },
 			"transitionedStack": {
 				"type": "item",
-				"code": "game:waterportion"
+				"code": "game:slush"
 			},
-			"transitionRatio": 10
+			"transitionRatio": 1
 		}
 	],
 	"guiTransform": {

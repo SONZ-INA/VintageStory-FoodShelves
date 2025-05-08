@@ -157,8 +157,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        InitMesh();
-
         mesher.AddMeshData(blockMesh);
         base.OnTesselation(mesher, tesselator);
         return true;

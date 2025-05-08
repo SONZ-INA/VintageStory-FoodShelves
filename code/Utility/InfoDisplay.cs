@@ -1,4 +1,6 @@
-﻿namespace FoodShelves;
+﻿using System.Linq;
+
+namespace FoodShelves;
 
 public static class InfoDisplay {
     public enum InfoDisplayOptions {
@@ -69,6 +71,11 @@ public static class InfoDisplay {
             float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
 
             if (stack.Collectible.TransitionableProps != null && stack.Collectible.TransitionableProps.Length > 0) {
+                if (IsSmallItem(stack)) {
+                    sb.Append(PerishableInfoGrouped(inv, world, i, end));
+                    return;
+                }
+
                 sb.Append(PerishableInfoCompact(world, inv[i], ripenRate));
             }
             else if (stack.Collectible is BlockCrock) {
@@ -187,12 +194,109 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
+    public static string PerishableInfoGrouped(InventoryGeneric inv, IWorldAccessor world, int start, int end) {
+        if (inv.Empty) return "";
+
+        StringBuilder dsc = new();
+        Dictionary<string, List<ItemSlot>> grouped = new();
+
+        // Group items by their name
+        for (int i = start; i < end; i++) {
+            if (i >= inv.Count || inv[i].Empty) continue;
+
+            ItemStack stack = inv[i].Itemstack;
+            if (stack == null) continue;
+
+            string itemKey = stack.GetName();
+
+            if (!grouped.TryGetValue(itemKey, out List<ItemSlot> value)) {
+                value = new List<ItemSlot>();
+                grouped[itemKey] = value;
+            }
+
+            value.Add(inv[i]);
+        }
+
+        // Display grouped items with their count and average perish rate
+        foreach (var group in grouped) {
+            string itemName = group.Key;
+            List<ItemSlot> slots = group.Value;
+            int totalCount = 0;
+
+            foreach (var slot in slots) {
+                totalCount += slot.Itemstack.StackSize;
+            }
+
+            dsc.Append(itemName + " x" + totalCount);
+
+            // Calculate and display perish information based on the first item's transition properties
+            if (slots.Count > 0 && slots[0].Itemstack.Collectible.TransitionableProps != null &&
+                slots[0].Itemstack.Collectible.TransitionableProps.Length > 0) {
+
+                Dictionary<EnumTransitionType, List<double>> timeLeftByType = new();
+
+                foreach (var slot in slots) {
+                    TransitionState[] states = slot.Itemstack.Collectible.UpdateAndGetTransitionStates(world, slot);
+
+                    if (states != null) {
+                        foreach (TransitionState state in states) {
+                            TransitionableProperties prop = state.Props;
+                            float perishRate = slot.Itemstack.Collectible.GetTransitionRateMul(world, slot, prop.Type);
+
+                            if (perishRate <= 0) continue;
+
+                            float transitionLevel = state.TransitionLevel;
+                            float freshHoursLeft = state.FreshHoursLeft / perishRate;
+
+                            if (!timeLeftByType.TryGetValue(prop.Type, out List<double> value)) {
+                                value = new List<double>();
+                                timeLeftByType[prop.Type] = value;
+                            }
+
+                            if (prop.Type == EnumTransitionType.Perish || prop.Type == EnumTransitionType.Ripen) {
+                                value.Add(freshHoursLeft);
+                            }
+                        }
+                    }
+                }
+
+                // Display average perish info
+                foreach (var entry in timeLeftByType) {
+                    EnumTransitionType type = entry.Key;
+                    List<double> hoursLeftList = entry.Value;
+
+                    if (hoursLeftList.Count > 0) {
+                        double avgHoursLeft = hoursLeftList.Average();
+                        double hoursPerDay = world.Calendar.HoursPerDay;
+
+                        if (type == EnumTransitionType.Perish) {
+                            if (avgHoursLeft / hoursPerDay >= world.Calendar.DaysPerYear) {
+                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} years", Math.Round(avgHoursLeft / hoursPerDay / world.Calendar.DaysPerYear, 1)));
+                            }
+                            else if (avgHoursLeft > hoursPerDay) {
+                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} days", Math.Round(avgHoursLeft / hoursPerDay, 1)));
+                            }
+                            else {
+                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} hours", Math.Round(avgHoursLeft, 1)));
+                            }
+                        }
+                    }
+                }
+            }
+
+            dsc.AppendLine();
+        }
+
+        return dsc.ToString();
+    }
+
     public static string CuringInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float curingRate = 1.0f) {
         if (contentSlot.Empty) return "";
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         if (transitionStates == null) return "";
 
+        string toReturn = "";
         string text = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: ";
 
         foreach (TransitionState state in transitionStates) {
@@ -207,17 +311,17 @@ public static class InfoDisplay {
             double daysLeft = hoursLeft / world.Calendar.HoursPerDay;
 
             if (daysLeft >= world.Calendar.DaysPerYear) {
-                text += Lang.Get("foodshelves:Will cure in {0} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
+                toReturn = text + Lang.Get("foodshelves:Will cure in {0} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
             }
             else if (hoursLeft > world.Calendar.HoursPerDay) {
-                text += Lang.Get("foodshelves:Will cure in {0} days", Math.Round(daysLeft, 1));
+                toReturn = text + Lang.Get("foodshelves:Will cure in {0} days", Math.Round(daysLeft, 1));
             }
             else {
-                text += Lang.Get("foodshelves:Will cure in {0} hours", Math.Round(hoursLeft, 1));
+                toReturn = text + Lang.Get("foodshelves:Will cure in {0} hours", Math.Round(hoursLeft, 1));
             }
         }
 
-        return text;
+        return toReturn;
     }
 
     public static string CrockInfoCompact(InventoryGeneric inv, IWorldAccessor world, ItemSlot inSlot) {
@@ -386,13 +490,13 @@ public static class InfoDisplay {
             double hoursPerDay = world.Calendar.HoursPerDay;
 
             if (averageFreshHoursLeft / hoursPerDay >= world.Calendar.DaysPerYear) {
-                dsc.AppendLine(Lang.Get("foodshelves:Average perish rate {0} years", Math.Round(averageFreshHoursLeft / hoursPerDay / world.Calendar.DaysPerYear, 1)));
+                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} years", Math.Round(averageFreshHoursLeft / hoursPerDay / world.Calendar.DaysPerYear, 1)));
             }
             else if (averageFreshHoursLeft > hoursPerDay) {
-                dsc.AppendLine(Lang.Get("foodshelves:Average perish rate {0} days", Math.Round(averageFreshHoursLeft / hoursPerDay, 1)));
+                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} days", Math.Round(averageFreshHoursLeft / hoursPerDay, 1)));
             }
             else {
-                dsc.AppendLine(Lang.Get("foodshelves:Average perish rate {0} hours", Math.Round(averageFreshHoursLeft, 1)));
+                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} hours", Math.Round(averageFreshHoursLeft, 1)));
             }
         }
 

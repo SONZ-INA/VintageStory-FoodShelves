@@ -463,16 +463,21 @@ public static class Extensions {
 
     public static bool IsLargeItem(ItemStack stack) {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
-        if (stack?.Collectible?.GetType().Name == "ItemCheese") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockFruitBasket") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockVegetableBasket") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockEggBasket") return true;
+
+        string[] validTypes = new[] { "ItemCheese", "BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket" };
+        if (validTypes.Contains(stack?.Collectible?.GetType().Name)) return true;
 
         return false;
     }
 
     public static bool IsSmallItem(ItemStack stack) {
-        if (stack?.Collectible.Code == "wildcraftfruit:nut-hazelbar") return true;
+        string stackCode = stack?.Collectible.Code.ToString() ?? "";
+
+        if (WildcardUtil.Match("wildcraftfruit:nut-*bar", stackCode)) return true;
+        if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
+        if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
+        if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
+        if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
 
         return false;
     }
