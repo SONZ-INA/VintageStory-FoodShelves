@@ -1,58 +1,32 @@
 [
   {
     "file": "foodshelves:blocktypes/shelves/barshelf.json",
-    "op": "replace",
-    "path": "/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/0/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/0/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/1/enabled",
-    "value": true,
-    "side": "server",
-    "dependsOn": [ { "modid": "expandedfoods" } ]
-  },
-  {
-    "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/2/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/1/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
     "file": "foodshelves:blocktypes/shelves/sushishelf.json",
-    "op": "addmerge",
-    "path": "/enabled",
-    "value": false,
-    "side": "server",
+    "op": "addmerge", "path": "/enabled", "side": "server", "value": false,
     "dependsOn": [ { "modid": "expandedfoods", "invert": true } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/sushishelf.json",
-    "op": "addmerge",
-    "path": "/0/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/0/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/sushishelf.json",
-    "op": "addmerge",
-    "path": "/13/enabled",
-    "value": true,
-    "side": "server",
-    "condition": { "when": "FoodShelves.ExpandedFoodsVariants", "isValue": "true" }
+    "op": "replace", "path": "/1/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "expandedfoods" } ]
   }
 ]

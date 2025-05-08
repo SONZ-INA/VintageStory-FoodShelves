@@ -2,15 +2,23 @@
   {
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4 },
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*" },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2 }
+      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
     },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "coolingcabinet-normal-east" }
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "coolingcabinet-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "glass": "{glass}",
+          "rock": "{rock}"
+        }
+      }
+    }
   }
 ]

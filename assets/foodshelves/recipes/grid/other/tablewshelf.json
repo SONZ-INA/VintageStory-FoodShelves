@@ -1,46 +1,116 @@
 [
   {
-    "ingredientPattern": "_T,_P",
+    "ingredientPattern": "TP",
     "ingredients": {
       "T": { "type": "block", "code": "game:table-*", "name": "type", "skipVariants": ["aged"] },
       "P": { "type": "item", "code": "game:plank-*" }
     },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "tablewshelf-{type}-north" }
+    "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
+    "output": { "type": "block", "code": "tablewshelf-{type}-east" }
   },
   {
     "ingredientPattern": "M,S,T",
 		"ingredients": {
-			"T": { "type": "block", "code": "tablewshelf-normal-north" },
+			"T": { "type": "block", "code": "tablewshelf-normal-east" },
 			"M": { "type": "block", "code": "game:polishedrockslab-whitemarble-down-free" },
-			"S": { "type": "item", "code": "game:saw-*", "isTool": true, "allowedVariants": ["meteoriciron", "steel"]}
+			"S": { "type": "item", "code": "game:saw-*", "isTool": true }
 		},
-    "width": 1,
-    "height": 3,
-    "output": { "type": "block", "code": "tablewshelf-whitemarble-north" }
+    "width": 1, "height": 3, "recipeGroup": 2,
+    "copyAttributesFrom": "T",
+    "output": { "type": "block", "code": "tablewshelf-whitemarble-east" }
   },
   {
     "ingredientPattern": "M,S,T",
 		"ingredients": {
-			"T": { "type": "block", "code": "tablewshelf-normal-north" },
+			"T": { "type": "block", "code": "tablewshelf-normal-east" },
 			"M": { "type": "block", "code": "game:polishedrockslab-redmarble-down-free" },
-			"S": { "type": "item", "code": "game:saw-*", "isTool": true, "allowedVariants": ["meteoriciron", "steel"]}
+			"S": { "type": "item", "code": "game:saw-*", "isTool": true }
 		},
-    "width": 1,
-    "height": 3,
-    "output": { "type": "block", "code": "tablewshelf-redmarble-north" }
+    "width": 1, "height": 3, "recipeGroup": 2,
+    "copyAttributesFrom": "T",
+    "output": { "type": "block", "code": "tablewshelf-redmarble-east" }
   },
   {
     "ingredientPattern": "M,S,T",
 		"ingredients": {
-			"T": { "type": "block", "code": "tablewshelf-normal-north" },
+			"T": { "type": "block", "code": "tablewshelf-normal-east" },
 			"M": { "type": "block", "code": "game:polishedrockslab-greenmarble-down-free" },
-			"S": { "type": "item", "code": "game:saw-*", "isTool": true, "allowedVariants": ["meteoriciron", "steel"]}
+			"S": { "type": "item", "code": "game:saw-*", "isTool": true }
 		},
-    "width": 1,
-    "height": 3,
-    "output": { "type": "block", "code": "tablewshelf-greenmarble-north" }
+    "width": 1, "height": 3, "recipeGroup": 2,
+    "copyAttributesFrom": "T",
+    "output": { "type": "block", "code": "tablewshelf-greenmarble-east" }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "TP",
+    "ingredients": {
+      "T": { "type": "block", "code": "vanvar:table-*-normal", "name": "wood", "skipVariants": ["aged"] },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "tablewshelf-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "TP",
+    "ingredients": {
+      "T": { "type": "block", "code": "vanvar:table-*-whitemarble", "name": "wood", "skipVariants": ["aged"] },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "tablewshelf-whitemarble-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "TP",
+    "ingredients": {
+      "T": { "type": "block", "code": "vanvar:table-*-redmarble", "name": "wood", "skipVariants": ["aged"] },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "tablewshelf-redmarble-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "TP",
+    "ingredients": {
+      "T": { "type": "block", "code": "vanvar:table-*-greenmarble", "name": "wood", "skipVariants": ["aged"] },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
+    "output": {
+      "type": "block",
+      "code": "tablewshelf-greenmarble-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   }
 ]

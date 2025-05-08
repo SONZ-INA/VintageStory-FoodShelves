@@ -122,7 +122,7 @@
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
-  <None Remove="assets\foodshelves\recipes\grid\shelves\shelfshort.json" />
+  <None Remove="assets\foodshelves\recipes\grid\shelves\shortshelf.json" />
   <None Remove="assets\foodshelves\shapes\block\barrels\firkin.json" />
   <None Remove="assets\foodshelves\shapes\block\barrels\firkinrack.json" />
   <None Remove="assets\foodshelves\shapes\block\barrels\firkinracktop.json" />

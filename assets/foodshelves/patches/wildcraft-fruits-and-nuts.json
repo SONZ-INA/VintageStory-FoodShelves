@@ -1,26 +1,17 @@
 [
   {
     "file": "foodshelves:blocktypes/shelves/barshelf.json",
-    "op": "replace",
-    "path": "/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "wildcraftfruit" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/0/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/0/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "wildcraftfruit" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/13/enabled",
-    "value": true,
-    "side": "server",
-    "condition": { "when": "FoodShelves.WildcraftFruitsNutsVariants", "isValue": "true" }
+    "op": "replace", "path": "/1/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "wildcraftfruit" } ]
   }
 ]

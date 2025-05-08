@@ -2,11 +2,17 @@
   {
     "ingredientPattern": "_P_,P_P,_P_",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" }
     },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "pumpkincase-normal" }
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "pumpkincase-normal",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   }
 ]

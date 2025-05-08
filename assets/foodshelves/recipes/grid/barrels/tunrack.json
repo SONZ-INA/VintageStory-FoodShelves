@@ -1,0 +1,29 @@
+[
+  {
+    "ingredientPattern": "PSP,SNS,PSP",
+    "ingredients": {
+      "S": { "type": "item", "code": "game:stick", "quantity": 8 },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*" },
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 8, "name": "wood" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "tunrack-normal-north",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "B",
+    "ingredients": {
+      "B": { "type": "block", "code": "foodshelves:tunrack-normal-north" }
+    },
+    "width": 1, "height": 1, "recipeGroup": 2, "shapeless": true,
+    "copyAttributesFrom": "B",
+    "output": { "type": "block", "code": "tunrack-top-north", "quantity": 2 }
+  }
+]

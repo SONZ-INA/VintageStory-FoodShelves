@@ -2,31 +2,35 @@
   {
     "ingredientPattern": "PP,P_,P_",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 2 }
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 2, "name": "wood" }
     },
-    "width": 2,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "breadshelf-normal-east" }
+    "width": 2, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "breadshelf-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   },
   {
-    "ingredientPattern": "__,_S",
+    "ingredientPattern": "ST",
     "ingredients": {
-      "S": { "type": "block", "code": "foodshelves:breadshelf-normal-east" }
+      "S": { "type": "block", "code": "foodshelves:breadshelf-normal-east" },
+      "T": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 1,
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
+    "copyAttributesFrom": "S",
     "output": { "type": "block", "code": "breadshelf-short-east", "quantity": 2 }
   },
   {
-    "ingredientPattern": "__,_S",
+    "ingredientPattern": "PP,P_,P_",
     "ingredients": {
-      "S": { "type": "block", "code": "foodshelves:breadshelf-short-east", "quantity": 2 }
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 2 }
     },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 2,
+    "width": 2, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "breadshelf-normal-east" }
   }
 ]
