@@ -8,7 +8,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}"
+      "surface": "foodshelves:variants/wood/{wood}"
     },
     "handbook": {
       "groupBy": [ "pumpkincase-*" ],
@@ -24,7 +24,7 @@
     { "name": "UnstableFalling" }
   ],
   "shape": {
-    "base": "block/wood/pumpkincase"
+    "base": "block/other/pumpkincase"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 

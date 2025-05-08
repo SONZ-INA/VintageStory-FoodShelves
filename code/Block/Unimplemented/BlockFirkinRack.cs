@@ -32,10 +32,10 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         else return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
-    public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalizedOLD(new[] { "type" }, new[] { "normal", "top" });
-        return base.GetHeldItemName(itemStack) + " " + variantName;
-    }
+    //public override string GetHeldItemName(ItemStack itemStack) {
+    //    string variantName = itemStack.GetMaterialNameLocalizedOLD(new[] { "type" }, new[] { "normal", "top" });
+    //    return base.GetHeldItemName(itemStack) + " " + variantName;
+    //}
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
         // First, check for behaviors preventing default, for example Reinforcement system

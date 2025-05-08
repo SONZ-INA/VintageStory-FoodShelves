@@ -14,7 +14,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
 
     public BlockEntityFirkinRack() {
         inv = new InventoryGeneric(slotCount, InventoryClassName + "-0", Api, (id, inv) => {
-            if (id / (slotCount / 2) == 0) return new ItemSlotFirkinRack(inv);
+            if (id / (slotCount / 2) == 0) return new ItemSlotFSUniversal(inv, "fsFirkinRack");
             else return new ItemSlotLiquidOnly(inv, CapacityLitres);
         });
     }
@@ -53,7 +53,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
             }
         }
         else {
-            if (inv[blockSel.SelectionBoxIndex].Empty && slot.FirkinRackCheck()) { // Put firkin in rack
+            if (inv[blockSel.SelectionBoxIndex].Empty && slot.CanStoreInSlot("fsFirkinRack")) { // Put firkin in rack
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                 if (TryPut(slot, blockSel)) {

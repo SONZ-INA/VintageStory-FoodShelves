@@ -12,11 +12,17 @@ public static class Meshing {
         Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
         if (shape == null) return null;
 
+        if (shape.Textures.Count == 0) {
+            foreach (var texture in block.Textures) {
+                shape.Textures.Add(texture.Key, texture.Value.Base);
+            }
+        }
+
         var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
-        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
-            foreach (var pair in block.Attributes["variantTextures"].AsObject<OrderedDictionary<string, string>>()) {
+        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
+            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string>>()) {
                 string texPath = pair.Value;
 
                 foreach (var attr in tree) {

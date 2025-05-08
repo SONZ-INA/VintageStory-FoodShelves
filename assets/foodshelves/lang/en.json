@@ -5,7 +5,7 @@
 
   "item-cutice": "Cut ice",
 
-  "block-shelfshort-*": "Short Shelf",
+  "block-shortshelf-*": "Short Shelf",
   "block-pieshelf-*": "Pie/Cheese Shelf",
   "block-breadshelf-*": "Bread Shelf",
   "block-barshelf-*": "Bar Shelf",
@@ -58,7 +58,7 @@
   "helddesc-tunrack": "Liquids stored in this tun rack stay fresh for 60% longer and cure 25% slower.",
   "helddesc-ceilingjar": "Dehydrated fruit placed in the Ceiling Jar dries or melts 2.5x faster, and stays fresh for 25% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
   "helddesc-fooddisplaycase": "Food placed in this case stays fresh for 25% longer.",
-  "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 25% longer, or up to 60% longer when ice is added.<br>Make sure to keep it closed!",
+  "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 25% longer, or up to 70% longer when ice is added.<br>Make sure to keep it closed!",
 
   "This item cannot be placed in this container.": "This item cannot be placed in this container.",
   "Only pies or cheese can be placed on this shelf.": "Only pies or cheese can be placed on this shelf.",
@@ -82,9 +82,12 @@
 
   "placefailure-requireceilingattachable": "Cannot place this block here. It has to be attached to the ceiling of an unchiseled block.",
 
+  "Displaying segment": "<font color=\"#7b7b7b\">Displaying segment:</font>",
+
   "Contents": "<font color=\"orange\">Contents: </font>",
   "Soonest": "Soonest:",
   "Empty.": "Empty.",
+
   "short": "Short",
   "veryshort": "Very Short",
   "top": "Top",

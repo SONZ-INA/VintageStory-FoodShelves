@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}",
+      "surface": "foodshelves:variants/wood/{wood}",
       "glass": "game:block/glass/{glass}"
     },
     "handbook": {
@@ -27,7 +27,7 @@
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
-    "base": "block/wood/glassware/fooddisplaycase",
+    "base": "block/glassware/fooddisplaycase",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",

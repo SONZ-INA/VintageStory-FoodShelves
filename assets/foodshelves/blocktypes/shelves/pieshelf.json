@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}",
+      "surface": "foodshelves:variants/wood/{wood}",
       "wood": "game:block/wood/debarked/{wood}"
     },
     "handbook": {
@@ -26,7 +26,7 @@
     { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
-    "base": "block/wood/shelves/pieshelf",
+    "base": "block/shelves/pieshelf",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "heldTpIdleAnimation": "holdunderarm",

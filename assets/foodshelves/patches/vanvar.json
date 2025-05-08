@@ -6,5 +6,32 @@
     "value": "vanvar:BlockBarrel",
     "side": "server",
     "dependsOn": [ { "modid": "vanvar" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/shelves/shortshelf.json",
+    "op": "addmerge",
+    "path": "/attributes",
+    "value": {
+      "materials": { "loadFromProperties": "block/wood" },
+      "variantTextures": {
+        "surface": "foodshelves:variants/wood/{wood}",
+        "wood": "game:block/wood/debarked/{wood}"
+      }
+    },
+    "side": "server",
+    "dependsOn": [ { "modid": "vanvar" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/other/tablewshelf.json",
+    "op": "addmerge",
+    "path": "/attributes",
+    "value": {
+      "materials": { "loadFromProperties": "block/wood" },
+      "variantTextures": {
+        "wood": "game:block/wood/debarked/{wood}"
+      }
+    },
+    "side": "server",
+    "dependsOn": [ { "modid": "vanvar" } ]
   }
 ]

@@ -1,10 +1,9 @@
 {
 	"code": "shortshelf",
-	"class": "FoodShelves.BlockShelfShort",
-	"entityClass": "FoodShelves.BlockEntityShelfShort",
-	"creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
+	"class": "FoodShelves.BlockFSContainer",
+	"entityClass": "FoodShelves.BEShortShelf",
 	"variantgroups": [
-		{ "code": "type", "states": [ "normal" ] },
+		{ "code": "type", "states": ["normal"] },
 		{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
 	],
 	"attributes": {
@@ -15,12 +14,8 @@
 		{ "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
 	],
 	"shape": {
-    "base": "block/wood/shelves/shortshelf",
+    "base": "block/shelves/shortshelf",
 		"rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
-	},
-	"textures": {
-		"wood": { "base": "game:block/wood/shelf/wood" },
-		"surface": { "base": "game:block/wood/shelf/surface" }
 	},
 	"heldTpIdleAnimation": "holdunderarm",
 	"blockmaterial": "Wood",
@@ -39,7 +34,7 @@
 	},
 	"combustibleProps": {
 		"burnTemperature": 600,
-		"burnDuration": 35
+		"burnDuration": 12
 	},
 	"tpHandTransform": {
 		"translation": { "x": -0.8, "y": -0.68, "z": -0.41 },

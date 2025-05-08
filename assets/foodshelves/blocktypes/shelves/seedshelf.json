@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}",
+      "surface": "foodshelves:variants/wood/{wood}",
       "wood": "game:block/wood/debarked/{wood}"
     },
     "handbook": {
@@ -27,15 +27,15 @@
   ],
   "shapeByType": {
     "*-veryshort*": {
-      "base": "block/wood/shelves/seedshelfveryshort",
+      "base": "block/shelves/seedshelfveryshort",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     },
     "*-short*": {
-      "base": "block/wood/shelves/seedshelfshort",
+      "base": "block/shelves/seedshelfshort",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     },
     "*": {
-      "base": "block/wood/shelves/seedshelf",
+      "base": "block/shelves/seedshelf",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     }
   },

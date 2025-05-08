@@ -8,7 +8,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}",
+      "surface": "foodshelves:variants/wood/{wood}",
       "glass": "game:block/glass/{glass}"
     },
     "handbook": {
@@ -26,8 +26,8 @@
     { "name": "UnstableFalling" }
   ],
   "shapeByType": {
-    "*-top*": { "base": "block/wood/glassware/fooddisplayblocktop" },
-    "*": { "base": "block/wood/glassware/fooddisplayblock" }
+    "*-top*": { "base": "block/glassware/fooddisplayblocktop" },
+    "*": { "base": "block/glassware/fooddisplayblock" }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 

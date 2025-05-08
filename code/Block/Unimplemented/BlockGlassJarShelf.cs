@@ -10,11 +10,11 @@ public class BlockGlassJarShelf : Block {
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
-    public override string GetHeldItemName(ItemStack itemStack) {
-        string variantType = "";
-        if (this.Code.SecondCodePart().StartsWith("short"))
-            variantType = Lang.Get("foodshelves:Short") + " ";
+    //public override string GetHeldItemName(ItemStack itemStack) {
+    //    string variantType = "";
+    //    if (this.Code.SecondCodePart().StartsWith("short"))
+    //        variantType = Lang.Get("foodshelves:Short") + " ";
 
-        return variantType + base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalizedOLD();
-    }
+    //    return variantType + base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalizedOLD();
+    //}
 }

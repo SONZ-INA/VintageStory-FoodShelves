@@ -24,7 +24,7 @@
     "placingMessage": "foodshelves:This tun needs to be placed in a tun rack."
   },
   "shape": {
-    "base": "block/wood/barrel/tun"
+    "base": "block/barrels/tun"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 

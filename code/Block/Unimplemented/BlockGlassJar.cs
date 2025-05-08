@@ -42,10 +42,10 @@ public class BlockGlassJar : BlockContainer {
         renderinfo.ModelRef = meshRef;
     }
 
-    public override string GetHeldItemName(ItemStack itemStack) {
-        string variantName = itemStack.GetMaterialNameLocalizedOLD();
-        return base.GetHeldItemName(itemStack) + " " + variantName;
-    }
+    //public override string GetHeldItemName(ItemStack itemStack) {
+    //    string variantName = itemStack.GetMaterialNameLocalizedOLD();
+    //    return base.GetHeldItemName(itemStack) + " " + variantName;
+    //}
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);

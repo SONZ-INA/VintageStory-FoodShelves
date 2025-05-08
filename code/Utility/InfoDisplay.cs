@@ -16,7 +16,7 @@ public static class InfoDisplay {
         dsc.AppendLine(Lang.Get("Stored food perish speed: {0}x", Math.Round(perishMul, 2)));
     }
 
-    public static void DisplayInfo(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf = 0, int itemsPerSegment = 0, bool skipLine = true, int skipSlotsFrom = -1) {
+    public static void DisplayInfo(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf = 0, int itemsPerSegment = 0, bool skipLine = true, int skipSlotsFrom = -1, int selectedSegment = -1) {
         if (skipLine) sb.AppendLine(); // Space in between to be in line with vanilla
 
         IWorldAccessor world = inv.Api.World;
@@ -36,8 +36,7 @@ public static class InfoDisplay {
             return;
         }
 
-        int selectedSegment = -1;
-        if (forPlayer.CurrentBlockSelection != null)
+        if (selectedSegment == -1 && forPlayer.CurrentBlockSelection != null)
             selectedSegment = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
 
         if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1) return;
@@ -290,7 +289,7 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static string CuringInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float curingRate = 1.0f) {
+    public static string CuringInfoCompact(IWorldAccessor world, ItemSlot contentSlot) {
         if (contentSlot.Empty) return "";
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);

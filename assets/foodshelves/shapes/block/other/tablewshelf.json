@@ -5,10 +5,7 @@
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textures": {
-		"wood": "wood",
-		"top": "block/top"
-	},
+	"textures": {},
 	"elements": [
 		{
 			"name": "Cube1",

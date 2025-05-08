@@ -8,7 +8,7 @@ public class BEShortShelf : BEBaseFSContainer {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     protected override bool RipeningSpot => true;
 
-    public override int SlotCount => 4; // Check if proper
+    public override int SlotCount => 4;
 
     public BEShortShelf() { inv = new InventoryGeneric(SlotCount, "shelf-0", null, null); }
 

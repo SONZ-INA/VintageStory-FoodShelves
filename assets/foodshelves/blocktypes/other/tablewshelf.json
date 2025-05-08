@@ -1,11 +1,7 @@
 {
   "code": "tablewshelf",
-  "class": "FoodShelves.BlockTableWShelf",
-  "entityclass": "FoodShelves.BlockEntityTableWShelf",
-  "creativeinventoryByType": {
-	  "*-aged": {},
-	  "*": { "general": ["*-north"], "decorative": ["*-north"], "foodshelves": ["*-north"] }
-  },
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BETableWShelf",
   "variantgroups": [
     { "code": "type", "states": ["normal", "whitemarble", "redmarble", "greenmarble"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
@@ -20,16 +16,14 @@
           "text": "foodshelves:blockdesc-tablewshelf-text"
         }
       ]
-    },
-    "inventoryClassName": "tablewshelf",
-    "attributeTransformCode": "onTableWShelfTransform"
+    }
   },
   "behaviors": [
     { "name": "UnstableFalling" },
-    { "name": "HorizontalOrientable" }
+    { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
-    "base": "block/wood/tablewshelf",
+    "base": "block/other/tablewshelf",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "texturesByType": {
@@ -53,6 +47,9 @@
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",
   "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": {
@@ -63,14 +60,12 @@
 	  "up": true,
 	  "all": false
   },
-  "replaceable": 999,
-  "resistance": 1.5,
   "combustibleProps": {
     "burnTemperature": 600,
     "burnDuration": 41
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.7, "y": -0.6, "z": -0.9 },
+	  "translation": { "x": -0.9, "y": -0.6, "z": -0.8 },
 	  "rotation": { "x": 80, "y": 0, "z": 0 },
 	  "scale": 0.56
   },
@@ -79,7 +74,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionbox": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
   "selectionBoxes": [
 	  { "x1": 0, "y1": 0.125, "z1": 0.28, "x2": 0.975, "y2": 0.5625, "z2": 0.72, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },

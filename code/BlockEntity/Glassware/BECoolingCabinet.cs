@@ -13,6 +13,8 @@ public class BECoolingCabinet : BEBaseFSContainer {
     public bool DrawerOpen { get; set; }
 
     private readonly string CoolingOnly = "fsCoolingOnly";
+    private readonly float perishMultiplierBuffed = 0.3f;
+    private readonly int cutIceSlot = 216;
 
     public BECoolingCabinet() {
         ShelfCount = 3;
@@ -22,7 +24,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
         PerishMultiplier = 0.75f;
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
-            if (id != 36) return new ItemSlotFSUniversal(inv, AttributeCheck);
+            if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
         });
     }
@@ -32,13 +34,13 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
         base.Initialize(api);
 
-        if (!DrawerOpen && !inv[36].Empty && inv[36].CanStoreInSlot(CoolingOnly)) PerishMultiplier = 0.4f;
+        if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
         if (CabinetOpen) PerishMultiplier = 1f;
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        if (!inv[36].Empty && PerishMultiplier < 0.75f && !inv[36].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[cutIceSlot].Empty && PerishMultiplier < 0.75f && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             if (CabinetOpen) PerishMultiplier = 1f;
             else PerishMultiplier = 0.75f;
             SetWaterHeight(true);
@@ -56,8 +58,8 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
-            // A stack would last about 32 days which is 8 ice blocks
-            return (float)((float)1 / inv[36].Itemstack?.StackSize ?? 1) * 4;
+            // A stack should last about 32 days which is 8 ice blocks
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 4;
         }
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -174,11 +176,11 @@ public class BECoolingCabinet : BEBaseFSContainer {
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
         if (selection.SelectionBoxIndex != 9) return false;
         if (slot.Empty) return false;
-        ItemStack stack = inv[36].Itemstack;
+        ItemStack stack = inv[cutIceSlot].Itemstack;
 
-        if (inv[36].Empty || (stack.StackSize < stack.Collectible.MaxStackSize && inv[36].CanStoreInSlot(CoolingOnly))) {
+        if (inv[cutIceSlot].Empty || (stack.StackSize < stack.Collectible.MaxStackSize && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))) {
             int quantity = byPlayer.Entity.Controls.CtrlKey ? slot.Itemstack.StackSize : 1;
-            int moved = slot.TryPutInto(Api.World, inv[36], quantity);
+            int moved = slot.TryPutInto(Api.World, inv[cutIceSlot], quantity);
 
             if (moved == 0 && slot.Itemstack != null) { // Attempt to merge if it fails
                 ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, quantity) {
@@ -188,9 +190,9 @@ public class BECoolingCabinet : BEBaseFSContainer {
                 stack.Collectible.TryMergeStacks(op);
             }
 
-            if (inv[36].Itemstack?.StackSize < 20) SetIceHeight(1);
-            else if (inv[36].Itemstack?.StackSize < 40) SetIceHeight(2);
-            else if (inv[36].Itemstack?.StackSize >= 40) SetIceHeight(3);
+            if (inv[cutIceSlot].Itemstack?.StackSize < 20) SetIceHeight(1);
+            else if (inv[cutIceSlot].Itemstack?.StackSize < 40) SetIceHeight(2);
+            else if (inv[cutIceSlot].Itemstack?.StackSize >= 40) SetIceHeight(3);
 
             MarkDirty(true);
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
@@ -202,8 +204,8 @@ public class BECoolingCabinet : BEBaseFSContainer {
     }
 
     private bool TryTakeIceOrSlush(IPlayer byPlayer) {
-        if (!inv[36].Empty) {
-            ItemStack stack = inv[36].TakeOutWhole();
+        if (!inv[cutIceSlot].Empty) {
+            ItemStack stack = inv[cutIceSlot].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
                 AssetLocation sound = stack.Block?.Sounds?.Place;
                 Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
@@ -244,11 +246,11 @@ public class BECoolingCabinet : BEBaseFSContainer {
             if (DrawerOpen) ToggleCabinetDrawer(true);
             else ToggleCabinetDrawer(false);
 
-            if (!inv[36].Empty) {
-                if (inv[36].CanStoreInSlot(CoolingOnly)) {
-                    if (inv[36].Itemstack?.StackSize < 20) SetIceHeight(1);
-                    else if (inv[36].Itemstack?.StackSize < 40) SetIceHeight(2);
-                    else if (inv[36].Itemstack?.StackSize >= 40) SetIceHeight(3);
+            if (!inv[cutIceSlot].Empty) {
+                if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
+                    if (inv[cutIceSlot].Itemstack?.StackSize < 20) SetIceHeight(1);
+                    else if (inv[cutIceSlot].Itemstack?.StackSize < 40) SetIceHeight(2);
+                    else if (inv[cutIceSlot].Itemstack?.StackSize >= 40) SetIceHeight(3);
                 }
                 else {
                     SetWaterHeight(true);
@@ -262,7 +264,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
     }
 
     private void ToggleCabinetDoor(bool open, IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !inv[36].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -286,15 +288,15 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
             PerishMultiplier = 0.75f;
             
-            if (!DrawerOpen && !inv[36].Empty && inv[36].CanStoreInSlot(CoolingOnly))
-                PerishMultiplier = 0.4f;
+            if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
+                PerishMultiplier = perishMultiplierBuffed;
         }
 
         CabinetOpen = open;
     }
 
     private void ToggleCabinetDrawer(bool open, IPlayer byPlayer = null) {
-        if (!inv[36].Empty && !inv[36].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -316,8 +318,8 @@ public class BECoolingCabinet : BEBaseFSContainer {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey("draweropen") == true) {
                 animUtil?.StopAnimation("draweropen");
             }
-            if (!CabinetOpen && !inv[36].Empty && inv[36].CanStoreInSlot(CoolingOnly)) {
-                PerishMultiplier = 0.4f;
+            if (!CabinetOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
+                PerishMultiplier = perishMultiplierBuffed;
             }
         }
 
@@ -482,7 +484,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
             }
         }
 
-        tfMatrices[36] = new Matrixf().Scale(0.01f, 0.01f, 0.01f).Values; // Hide original cut ice shape, can't bother to custom mesh it out
+        tfMatrices[cutIceSlot] = new Matrixf().Scale(0.01f, 0.01f, 0.01f).Values; // Hide original cut ice shape, can't bother to custom mesh it out
 
         return tfMatrices;
     }
@@ -510,12 +512,25 @@ public class BECoolingCabinet : BEBaseFSContainer {
         base.GetBlockInfo(forPlayer, sb);
 
         // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[36].Empty) {
-            if (inv[36].CanStoreInSlot(CoolingOnly)) {
-                sb.AppendLine(GetNameAndStackSize(inv[36].Itemstack) + " - " + GetUntilMelted(inv[36]));
+        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[cutIceSlot].Empty) {
+            if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
+                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
             else {
-                sb.AppendLine(GetAmountOfLiters(inv[36].Itemstack));
+                sb.AppendLine(inv[cutIceSlot].Itemstack.GetName());
+            }
+        }
+
+        // Cycle segments when cabinet is closed
+        if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == 10) {
+            int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
+            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + currentSegment);
+
+            if (inv[currentSegment * ItemsPerSegment].Empty) {
+                sb.AppendLine(Lang.Get("foodshelves:Empty."));
+            }
+            else {
+                DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, SlotCount, SegmentsPerShelf, ItemsPerSegment, false, -1, currentSegment);
             }
         }
     }

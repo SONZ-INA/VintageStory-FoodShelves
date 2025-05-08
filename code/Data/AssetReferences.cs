@@ -1,8 +1,8 @@
 ﻿namespace FoodShelves;
 
 public static class ShapeReferences {
-    public const string HorizontalBarrel = "foodshelves:shapes/block/wood/barrel/horizontalbarrel.json";
-    public const string CoolingCabinet = "foodshelves:shapes/block/wood/glassware/coolingcabinet.json";
+    public const string HorizontalBarrel = "foodshelves:shapes/block/barrel/horizontalbarrel.json";
+    public const string CoolingCabinet = "foodshelves:shapes/block/glassware/coolingcabinet.json";
 
     public const string utilFruitBasket = "foodshelves:shapes/util/fruitbasketrope.json";
     public const string utilVegetableBasket = "foodshelves:shapes/util/vegetablebasketrope.json";

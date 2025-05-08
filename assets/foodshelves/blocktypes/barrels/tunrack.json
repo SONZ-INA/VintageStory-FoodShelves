@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}"
+      "surface": "foodshelves:variants/wood/{wood}"
     },
     "handbook": {
       "groupBy": [ "tunrack-*" ],
@@ -35,11 +35,11 @@
   ],
   "shapeByType": {
     "*-normal*": {
-      "base": "block/wood/barrel/tunrack",
+      "base": "block/barrels/tunrack",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     },
     "*-top*": {
-      "base": "block/wood/barrel/tunracktop",
+      "base": "block/barrels/tunracktop",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     }
   },

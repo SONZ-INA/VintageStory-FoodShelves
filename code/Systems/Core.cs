@@ -53,30 +53,26 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEBarrelRack", typeof(BEBarrelRack));
         api.RegisterBlockEntityClass("FoodShelves.BETunRack", typeof(BETunRack));
 
+        api.RegisterBlockEntityClass("FoodShelves.BEEggBasket", typeof(BEEggBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEFruitBasket", typeof(BEFruitBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEVegetableBasket", typeof(BEVegetableBasket));
-        api.RegisterBlockEntityClass("FoodShelves.BEEggBasket", typeof(BEEggBasket));
 
         api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
+        api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
-        api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
-
-        api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BESushiShelf", typeof(BESushiShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf)); // Placeholder
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
-        // ------------------------
-        api.RegisterBlockClass("FoodShelves.BlockShelfShort", typeof(BlockShelfShort));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityShelfShort", typeof(BlockEntityShelfShort));
-        api.RegisterBlockClass("FoodShelves.BlockTableWShelf", typeof(BlockTableWShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BlockEntityTableWShelf", typeof(BlockEntityTableWShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
 
+        api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf)); // Placeholder
+        api.RegisterBlockEntityClass("FoodShelves.BESushiShelf", typeof(BESushiShelf));
+        // ------------------------
     }
 
     public override void AssetsLoaded(ICoreAPI api) {

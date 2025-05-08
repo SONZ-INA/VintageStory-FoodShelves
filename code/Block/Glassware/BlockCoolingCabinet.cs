@@ -6,7 +6,6 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[] itemSlottableInteractions;
     private WorldInteraction[] cabinetInteractions;
     private WorldInteraction[] drawerInteractions;
-    private WorldInteraction[] bucketInteractions;
 
     public readonly AssetLocation soundCabinetOpen = new(SoundReferences.CoolingCabinetOpen);
     public readonly AssetLocation soundCabinetClose = new(SoundReferences.CoolingCabinetClose);
@@ -71,24 +70,6 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 }
             };
         });
-
-        bucketInteractions = ObjectCacheUtil.GetOrCreate(api, "coolingCabinetBucketInteractions", () => {
-            List<ItemStack> liquidContainerStackList = new();
-
-            foreach (var obj in api.World.Collectibles) {
-                if (obj.Code == "game:woodbucket" || obj.Code == "game:bowl-fired") {
-                    liquidContainerStackList.Add(new ItemStack(obj));
-                }
-            }
-
-            return new WorldInteraction[] {
-                new() {
-                    ActionLangCode = "blockhelp-meal-pickup",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = liquidContainerStackList.ToArray()
-                }
-            };
-        });
     }
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
@@ -96,9 +77,6 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             if (becc.DrawerOpen) {
                 if (becc.Inventory?[36].Empty == true || becc.Inventory?[36].CanStoreInSlot("fsCoolingOnly") == true) {
                     return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
-                }
-                else {
-                    return bucketInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
                 }
             }
         }

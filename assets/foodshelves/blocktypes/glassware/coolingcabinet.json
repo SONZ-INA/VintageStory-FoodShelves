@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}",
+      "surface": "foodshelves:variants/wood/{wood}",
       "surface_long": "game:block/wood/debarked/{wood}",
       "glass": "game:block/glass/{glass}",
       "rock": "game:block/stone/polishedrock/{rock}"
@@ -37,7 +37,7 @@
   ],
   "entityBehaviors": [{ "name": "Animatable" }],
   "shape": {
-    "base": "block/wood/glassware/coolingcabinet",
+    "base": "block/glassware/coolingcabinet",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",

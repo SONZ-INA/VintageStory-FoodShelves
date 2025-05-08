@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/variants/{wood}"
+      "surface": "foodshelves:variants/wood/{wood}"
     },
     "handbook": {
       "groupBy": [ "barrelrack-*" ],
@@ -28,11 +28,11 @@
   ],
   "shapeByType": {
     "*-normal*": {
-      "base": "block/wood/barrel/barrelrack",
+      "base": "block/barrels/barrelrack",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     },
     "*-top*": {
-      "base": "block/wood/barrel/barrelracktop",
+      "base": "block/barrels/barrelracktop",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     }
   },

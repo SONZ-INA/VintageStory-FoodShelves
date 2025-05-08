@@ -9,7 +9,7 @@
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
       "sides": "game:block/wood/debarked/{wood}",
-      "top": "foodshelves:variants/variants/{wood}"
+      "top": "foodshelves:variants/wood/{wood}"
     },
     "handbook": {
       "groupBy": [ "eggbasket-*" ],
@@ -26,7 +26,7 @@
     { "name": "FoodShelves.CanCeilingAttachFalling" }
   ],
   "shape": {
-    "base": "block/wood/baskets/eggbasket",
+    "base": "block/baskets/eggbasket",
     "scale": 0.8
   },
   "heldTpIdleAnimation": "holdbothhandslarge",

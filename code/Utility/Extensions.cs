@@ -10,42 +10,6 @@ public static class Extensions {
     public static void EnsureAttributesNotNull(this CollectibleObject obj) => obj.Attributes ??= new JsonObject(new JObject());
     public static T LoadAsset<T>(this ICoreAPI api, string path) => api.Assets.Get(new AssetLocation(path)).ToObject<T>();
 
-    public static void SetTreeAttributeContents(this ItemStack stack, InventoryGeneric inv, string attributeName, int index = 1) {
-        TreeAttribute stacksTree = new();
-
-        for (; index < inv.Count; index++) {
-            if (inv[index].Itemstack == null) break;
-            stacksTree[index + ""] = new ItemstackAttribute(inv[index].Itemstack);
-        }
-
-        stack.Attributes[$"{attributeName}"] = stacksTree;
-    }
-
-    public static ItemStack[] GetTreeAttributeContents(this ItemStack itemStack, ICoreClientAPI capi, string attributeName, int index = 1) {
-        ITreeAttribute tree = itemStack?.Attributes?.GetTreeAttribute($"{attributeName}");
-        List<ItemStack> contents = new();
-
-        if (tree != null) {
-            for (; index < tree.Count + 1; index++) {
-                ItemStack stack = tree.GetItemstack(index + "");
-                stack?.ResolveBlockOrItem(capi.World);
-                contents.Add(stack);
-            }
-        }
-
-        return contents.ToArray();
-    }
-
-    #endregion
-
-    #region StringExtensions
-
-    public static string FirstCharToUpper(this string input) {
-        if (input == null) throw new ArgumentNullException(nameof(input));
-        if (string.IsNullOrEmpty(input)) throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
-        return string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
-    }
-
     #endregion
 
     #region MeshExtensions
@@ -127,7 +91,7 @@ public static class Extensions {
         if (contentStack == null) return 0;
 
         unchecked {
-            // FNV-1 hash since any other simpler one ends up colliding, fuck data structures & algorithms btw
+            // FNV-1 hash since any other simpler one ends up colliding
             const uint FNV_OFFSET_BASIS = 2166136261;
             const uint FNV_32_PRIME = 16777619;
 
@@ -181,6 +145,21 @@ public static class Extensions {
         return null;
     }
 
+    // Must be called before initialize
+    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
+        // Need to save items and transfer it over to new inventory, they disappear otherwise
+        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
+
+        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
+
+        for (int i = 0; i < be.SlotCount; i++) {
+            if (i >= stack.Length) break;
+            be.inv[i].Itemstack = stack[i];
+        }
+
+        be.inv.LateInitialize(be.inv.InventoryID, api);
+    }
+
     public static void LoadVariantsCreative(ICoreAPI api, Block block) {
         string blockSide = block.Variant["side"];
         string dropSide = "east";
@@ -193,11 +172,6 @@ public static class Extensions {
 
         if (blockSide != null && blockSide != dropSide) return;
 
-        //string[] directions = new[] { "-east", "-west", "-north", "-south" };
-        //bool hasDirection = directions.Any(block.Code.Path.EndsWith);
-
-        //if (hasDirection && !block.Code.Path.EndsWith("-east")) return;
-
         var materials = block.Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
         string material = "";
         StandardWorldProperty props = null;
@@ -206,9 +180,6 @@ public static class Extensions {
             material = materials.LoadFromProperties.ToString().Split('/')[1];
             props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
         }
-
-        if (props == null) return;
-        if (material == "") return;
 
         var stacks = new List<JsonItemStack>();
 
@@ -220,18 +191,20 @@ public static class Extensions {
         defaultBlock.Resolve(api.World, block.Code);
         stacks.Add(defaultBlock);
 
-        foreach (var prop in props.Variants) {
-            string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
-            string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
+        if (props != null && material != "") {
+            foreach (var prop in props.Variants) {
+                string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
+                string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
 
-            var jstack = new JsonItemStack() {
-                Code = block.Code,
-                Type = EnumItemClass.Block,
-                Attributes = new JsonObject(JToken.Parse(attributesJson))
-            };
+                var jstack = new JsonItemStack() {
+                    Code = block.Code,
+                    Type = EnumItemClass.Block,
+                    Attributes = new JsonObject(JToken.Parse(attributesJson))
+                };
 
-            jstack.Resolve(api.World, block.Code);
-            stacks.Add(jstack);
+                jstack.Resolve(api.World, block.Code);
+                stacks.Add(jstack);
+            }
         }
 
         block.CreativeInventoryStacks = new CreativeTabAndStackList[] {
@@ -265,44 +238,6 @@ public static class Extensions {
         }
 
         return "";
-    }
-
-    public static string GetMaterialNameLocalizedOLD(this ItemStack itemStack, string[] variantKeys = null, string[] toExclude = null, bool includeParenthesis = true) {
-        string material = "";
-        string[] materialCheck = { "material-", "rock-", "ore-" };
-
-        if (variantKeys == null) {
-            material = itemStack.Collectible.Variant["type"];
-        }
-        else {
-            for (int i = 0; i < variantKeys.Length; i++) {
-                if (itemStack.Collectible.Variant.ContainsKey(variantKeys[i])) {
-                    material = itemStack.Collectible.Variant[variantKeys[i]];
-                    break;
-                }
-            }
-        }
-
-        if (toExclude == null) {
-            material = material.Replace("normal", "");
-            material = material.Replace("short", "");
-            material = material.Replace("very", "");
-        }
-        else {
-            for (int i = 0; i < toExclude.Length; i++) {
-                material = material.Replace(toExclude[i], "");
-            }
-        }
-
-        if (material == "") return "";
-
-        string toReturn = "";
-        foreach (string check in materialCheck) {
-            toReturn = Lang.Get(check + material);
-            if (toReturn != check + material) break;
-        }
-
-        return (includeParenthesis ? "(" : "") + toReturn + (includeParenthesis ? ")" : "");
     }
 
     public static float[,] GenTransformationMatrix(float[] x, float[] y, float[] z, float[] rX, float[] rY, float[] rZ) {
@@ -344,93 +279,6 @@ public static class Extensions {
 
     #endregion
 
-    #region BlockInventoryExtensions
-
-    // Must be called before initialize
-    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
-        // Need to save items and transfer it over to new inventory, they disappear otherwise
-        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
-
-        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
-
-        for (int i = 0; i < be.SlotCount; i++) {
-            if (i >= stack.Length) break;
-            be.inv[i].Itemstack = stack[i];
-        }
-
-        be.inv.LateInitialize(be.inv.InventoryID, api);
-    }
-
-    public static ItemStack[] GetContents(IWorldAccessor world, ItemStack itemstack) {
-        ITreeAttribute treeAttr = itemstack?.Attributes?.GetTreeAttribute("contents");
-        if (treeAttr == null) {
-            return ResolveUcontents(world, itemstack);
-        }
-
-        ItemStack[] stacks = new ItemStack[treeAttr.Count];
-        foreach (var val in treeAttr) {
-            ItemStack stack = (val.Value as ItemstackAttribute).value;
-            stack?.ResolveBlockOrItem(world);
-
-            if (int.TryParse(val.Key, out int index)) stacks[index] = stack;
-        }
-
-        return stacks;
-    }
-
-    public static void SetContents(ItemStack containerStack, ItemStack[] stacks) {
-        if (stacks == null || stacks.Length == 0) {
-            containerStack.Attributes.RemoveAttribute("contents");
-            return;
-        }
-
-        TreeAttribute stacksTree = new TreeAttribute();
-        for (int i = 0; i < stacks.Length; i++) {
-            stacksTree[i + ""] = new ItemstackAttribute(stacks[i]);
-        }
-
-        containerStack.Attributes["contents"] = stacksTree;
-    }
-
-    public static ItemStack[] ResolveUcontents(IWorldAccessor world, ItemStack itemstack) {
-        if (itemstack?.Attributes.HasAttribute("ucontents") == true) {
-            List<ItemStack> stacks = new();
-
-            var attrs = itemstack.Attributes["ucontents"] as TreeArrayAttribute;
-
-            foreach (ITreeAttribute stackAttr in attrs.value) {
-                stacks.Add(CreateItemStackFromJson(stackAttr, world, itemstack.Collectible.Code.Domain));
-            }
-            ItemStack[] stacksAsArray = stacks.ToArray();
-            SetContents(itemstack, stacksAsArray);
-            itemstack.Attributes.RemoveAttribute("ucontents");
-
-            return stacksAsArray;
-        }
-        else {
-            return Array.Empty<ItemStack>();
-        }
-    }
-
-    private static ItemStack CreateItemStackFromJson(ITreeAttribute stackAttr, IWorldAccessor world, string defaultDomain) {
-        CollectibleObject collObj;
-        var loc = AssetLocation.Create(stackAttr.GetString("code"), defaultDomain);
-        if (stackAttr.GetString("type") == "item") {
-            collObj = world.GetItem(loc);
-        }
-        else {
-            collObj = world.GetBlock(loc);
-        }
-
-        ItemStack stack = new(collObj, (int)stackAttr.GetDecimal("quantity", 1));
-        var attr = (stackAttr["attributes"] as TreeAttribute)?.Clone();
-        if (attr != null) stack.Attributes = attr;
-
-        return stack;
-    }
-
-    #endregion
-
     #region ItemStackExtensions
 
     public static DummySlot[] ToDummySlots(this ItemStack[] contents) {
@@ -449,7 +297,6 @@ public static class Extensions {
     #region CheckExtensions
 
     public static bool CheckTypedRestriction(this CollectibleObject obj, RestrictionData data) => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
-    public static bool IsFull(this ItemSlot slot) => slot.StackSize == slot.MaxSlotStackSize;
 
     public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist) {
         if (slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == false) return false;
@@ -484,81 +331,3 @@ public static class Extensions {
 
     #endregion
 }
-
-#region SyncResolver
-
-// Unused code
-
-//public override void OnReceivedClientPacket(IPlayer fromPlayer, int packetid, byte[] data) {
-//    base.OnReceivedClientPacket(fromPlayer, packetid, data);
-
-//    if (packetid == (int)CoolingCabinetPacket.CabinetOpen) {
-//        data = SerializerUtil.Serialize(true);
-//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.CabinetOpenOthers, data, (IServerPlayer)fromPlayer);
-//    }
-
-//    if (packetid == (int)CoolingCabinetPacket.CabinetClose) {
-//        data = SerializerUtil.Serialize(false);
-//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.CabinetOpenOthers, data, (IServerPlayer)fromPlayer);
-//    }
-
-//    if (packetid == (int)CoolingCabinetPacket.DrawerOpen) {
-//        data = SerializerUtil.Serialize(true);
-//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerOpenOthers, data, (IServerPlayer)fromPlayer);
-//    }
-
-//    if (packetid == (int)CoolingCabinetPacket.DrawerClose) {
-//        data = SerializerUtil.Serialize(false);
-//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerOpenOthers, data, (IServerPlayer)fromPlayer);
-//    }
-
-//    if (packetid == (int)CoolingCabinetPacket.DrawerInteracted) {
-//        data = SerializerUtil.Serialize(new Dictionary<string, int>() {
-//            { inv[36].Itemstack?.Collectible.Code ?? "", inv[36].Itemstack?.StackSize ?? 0 } 
-//        });
-//        ((ICoreServerAPI)Api).Network.BroadcastBlockEntityPacket(Pos, (int)CoolingCabinetPacket.DrawerInteractedOthers, data, (IServerPlayer)fromPlayer);
-//    }
-//}
-
-//public override void OnReceivedServerPacket(int packetid, byte[] data) {
-
-//    if (this is BlockEntityCoolingCabinet becc) {
-//        if (packetid == (int)CoolingCabinetPacket.CabinetOpenOthers) {
-//            bool containerOpened = SerializerUtil.Deserialize<bool>(data);
-//            if (containerOpened) becc.OpenCabinet(null);
-//            else becc.CloseCabinet(null);
-//        }
-
-//        if (packetid == (int)CoolingCabinetPacket.DrawerOpenOthers) {
-//            bool containerOpened = SerializerUtil.Deserialize<bool>(data);
-//            if (containerOpened) becc.OpenDrawer(null);
-//            else becc.CloseDrawer(null);
-//        }
-
-//        if (packetid == (int)CoolingCabinetPacket.DrawerInteractedOthers) {
-//            var drawerProps = SerializerUtil.Deserialize<Dictionary<string, int>>(data);
-
-
-//            string collectibleCode = drawerProps.Keys.FirstOrDefault();
-//            int stackSize = drawerProps.Values.FirstOrDefault();
-//            Api.Logger.Debug($"Got: {drawerProps} - {collectibleCode} - {stackSize}.");
-
-//            if (collectibleCode == "") {
-//                IceHeightAllDown();
-//                WaterHeightDown();
-//            }
-//            else {
-//                if (WildcardUtil.Match(CoolingOnlyData.CollectibleCodes, collectibleCode)) {
-//                    if (stackSize < 20) IceHeight1Up();
-//                    else if (stackSize < 40) IceHeight2Up();
-//                    else if (stackSize >= 40) IceHeight3Up();
-//                }
-//                else {
-//                    WaterHeightUp();
-//                }
-//            }
-//        }
-//    }
-//}
-
-#endregion
