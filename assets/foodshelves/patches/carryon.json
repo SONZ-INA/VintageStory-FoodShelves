@@ -1,8 +1,7 @@
 [
   {
     "file": "foodshelves:blocktypes/shelves/*",
-    "op": "addmerge",
-    "path": "/behaviors/-",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
       "properties": {
@@ -14,13 +13,11 @@
         }
       }
     },
-    "side": "server",
     "dependsOn": [ { "modid": "carryon" } ]
   },
   {
     "file": "foodshelves:blocktypes/glassware/ceilingjar.json",
-    "op": "addmerge",
-    "path": "/behaviors/-",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
       "properties": {
@@ -31,13 +28,11 @@
         }
       }
     },
-    "side": "server",
     "dependsOn": [ { "modid": "carryon" } ]
   },
   {
     "file": "foodshelves:blocktypes/glassware/fooddisplay*",
-    "op": "addmerge",
-    "path": "/behaviors/-",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
       "properties": {
@@ -48,13 +43,11 @@
         }
       }
     },
-    "side": "server",
     "dependsOn": [ { "modid": "carryon" } ]
   },
   {
     "file": "foodshelves:blocktypes/other/pumpkincase.json",
-    "op": "addmerge",
-    "path": "/behaviors/-",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
       "properties": {
@@ -65,13 +58,11 @@
         }
       }
     },
-    "side": "server",
     "dependsOn": [ { "modid": "carryon" } ]
   },
   {
     "file": "foodshelves:blocktypes/other/tablewshelf.json",
-    "op": "addmerge",
-    "path": "/behaviors/-",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
       "properties": {
@@ -82,7 +73,6 @@
         }
       }
     },
-    "side": "server",
     "dependsOn": [ { "modid": "carryon" } ]
   }
 ]

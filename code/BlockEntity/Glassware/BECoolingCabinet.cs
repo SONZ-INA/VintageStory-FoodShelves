@@ -517,7 +517,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
                 sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
             else {
-                sb.AppendLine(inv[cutIceSlot].Itemstack.GetName());
+                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack));
             }
         }
 

@@ -1,26 +1,20 @@
 [
   {
     "file": "foodshelves:config/restrictions/shelves/pieshelf.json",
-    "op": "addmerge",
-    "path": "/CollectibleTypes/-",
+    "op": "addmerge", "path": "/CollectibleTypes/-", "side": "server",
     "value": "game:NotifyingPie",
-    "side": "server",
     "dependsOn": [ { "modid": "gourmand" } ]
   },
   {
     "file": "foodshelves:config/restrictions/general/fooduniversal.json",
-    "op": "addmerge",
-    "path": "/CollectibleTypes/-",
+    "op": "addmerge", "path": "/CollectibleTypes/-", "side": "server",
     "value": "game:NotifyingPie",
-    "side": "server",
     "dependsOn": [ { "modid": "gourmand" } ]
   },
   {
     "file": "foodshelves:config/restrictions/general/holderuniversal.json",
-    "op": "addmerge",
-    "path": "/CollectibleTypes/-",
+    "op": "addmerge", "path": "/CollectibleTypes/-", "side": "server",
     "value": "game:NotifyingPie",
-    "side": "server",
     "dependsOn": [ { "modid": "gourmand" } ]
   }
 ]

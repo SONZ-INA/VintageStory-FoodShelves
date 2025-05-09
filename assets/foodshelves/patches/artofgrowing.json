@@ -1,8 +1,7 @@
 [
   {
     "file": "foodshelves:config/restrictions/other/pumpkincase.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "game:pumpkin-fruit-small-4",
       "game:pumpkin-fruit-medium-4",
@@ -10,13 +9,11 @@
       "game:pumpkin-fruit-large-4",
       "game:pumpkin-fruit-hefty-4"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "artofgrowing" } ]
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge",
-    "path": "/GroupingCodes/group1",
+    "op": "addmerge", "path": "/GroupingCodes/group1", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-cabbage",
       "artofgrowing:vegetable-small-cabbage",
@@ -26,13 +23,11 @@
       "artofgrowing:vegetable-hefty-cabbage",
       "artofgrowing:vegetable-gigantic-cabbage"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "artofgrowing" } ]
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge",
-    "path": "/GroupingCodes/group2",
+    "op": "addmerge", "path": "/GroupingCodes/group2", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-onion",
       "artofgrowing:vegetable-small-onion",
@@ -49,13 +44,11 @@
       "artofgrowing:vegetable-hefty-turnip",
       "artofgrowing:vegetable-gigantic-turnip"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "artofgrowing" } ]
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge",
-    "path": "/GroupingCodes/group3",
+    "op": "addmerge", "path": "/GroupingCodes/group3", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-carrot",
       "artofgrowing:vegetable-small-carrot",
@@ -72,7 +65,6 @@
       "artofgrowing:vegetable-hefty-parsnip",
       "artofgrowing:vegetable-gigantic-parsnip"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "artofgrowing" } ]
   }
 ]

@@ -62,14 +62,13 @@ public static class InfoDisplay {
 
         for (int i = start; i != end; i = displaySelection == InfoDisplayOptions.ByBlock ? i - 1 : i + 1) {
             if (i >= slotCount) break;
-            if (inv[i].Empty) continue;
-            //if (skipSlots?.Contains(i) == true) continue;
             if (skipSlotsFrom != -1 && i >= skipSlotsFrom) break;
+            if (inv[i].Empty) continue;
 
             ItemStack stack = inv[i].Itemstack;
             float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
 
-            if (stack.Collectible.TransitionableProps != null && stack.Collectible.TransitionableProps.Length > 0) {
+            if (stack.Collectible.TransitionableProps?.Length > 0) {
                 if (IsSmallItem(stack)) {
                     sb.Append(PerishableInfoGrouped(inv, world, i, end));
                     return;
@@ -99,17 +98,7 @@ public static class InfoDisplay {
             if (meltRate <= 0) return Lang.Get("foodshelves:Will not melt");
 
             double hoursLeft = meltTransitionState.TransitionHours / meltRate * (1 - meltTransitionState.TransitionLevel);
-            double daysLeft = hoursLeft / world.Calendar.HoursPerDay;
-
-            if (daysLeft >= world.Calendar.DaysPerYear) {
-                return Lang.Get("foodshelves:Will melt in {0} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
-            }
-            else if (daysLeft > 1) {
-                return Lang.Get("foodshelves:Will melt in {0} days", Math.Round(daysLeft, 1));
-            }
-            else {
-                return Lang.Get("foodshelves:Will melt in {0} hours", Math.Round(hoursLeft, 1));
-            }
+            return GetTimeRemainingText(world, hoursLeft, EnumTransitionType.Melt);
         }
 
         return Lang.Get("foodshelves:Will not melt");
@@ -151,17 +140,7 @@ public static class InfoDisplay {
                             dsc.Append(", " + Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100)));
                         }
                         else {
-                            double hoursPerday = world.Calendar.HoursPerDay;
-
-                            if (freshHoursLeft / hoursPerday >= world.Calendar.DaysPerYear) {
-                                dsc.Append(", " + Lang.Get("fresh for {0} years", Math.Round(freshHoursLeft / hoursPerday / world.Calendar.DaysPerYear, 1)));
-                            }
-                            else if (freshHoursLeft > hoursPerday) {
-                                dsc.Append(", " + Lang.Get("fresh for {0} days", Math.Round(freshHoursLeft / hoursPerday, 1)));
-                            }
-                            else {
-                                dsc.Append(", " + Lang.Get("fresh for {0} hours", Math.Round(freshHoursLeft, 1)));
-                            }
+                            dsc.Append(", " + GetTimeRemainingText(world, freshHoursLeft, prop.Type, transitionLevel));
                         }
                         break;
                     case EnumTransitionType.Ripen:
@@ -171,17 +150,7 @@ public static class InfoDisplay {
                             dsc.Append(", " + Lang.Get("{1:0.#} days left to ripen ({0}%)", (int)Math.Round(transitionLevel * 100), (state.TransitionHours - state.TransitionedHours) / world.Calendar.HoursPerDay / ripenRate));
                         }
                         else {
-                            double hoursPerday = world.Calendar.HoursPerDay;
-
-                            if (freshHoursLeft / hoursPerday >= world.Calendar.DaysPerYear) {
-                                dsc.Append(", " + Lang.Get("will ripen in {0} years", Math.Round(freshHoursLeft / hoursPerday / world.Calendar.DaysPerYear, 1)));
-                            }
-                            else if (freshHoursLeft > hoursPerday) {
-                                dsc.Append(", " + Lang.Get("will ripen in {0} days", Math.Round(freshHoursLeft / hoursPerday, 1)));
-                            }
-                            else {
-                                dsc.Append(", " + Lang.Get("will ripen in {0} hours", Math.Round(freshHoursLeft, 1)));
-                            }
+                            dsc.Append(", " + GetTimeRemainingText(world, freshHoursLeft, prop.Type, transitionLevel));
                         }
                         break;
                 }
@@ -295,38 +264,22 @@ public static class InfoDisplay {
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         if (transitionStates == null) return "";
 
-        string toReturn = "";
-        string text = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: ";
+        TransitionState cureState = transitionStates.FirstOrDefault(state => state.Props.Type == EnumTransitionType.Cure);
 
-        foreach (TransitionState state in transitionStates) {
-            TransitionableProperties prop = state.Props;
-
-            if (prop.Type != EnumTransitionType.Cure) continue;
-
-            float curingRateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, prop.Type);
-            if (curingRateMul <= 0) continue;
-
-            float hoursLeft = state.FreshHoursLeft / curingRateMul;
-            double daysLeft = hoursLeft / world.Calendar.HoursPerDay;
-
-            if (daysLeft >= world.Calendar.DaysPerYear) {
-                toReturn = text + Lang.Get("foodshelves:Will cure in {0} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
-            }
-            else if (hoursLeft > world.Calendar.HoursPerDay) {
-                toReturn = text + Lang.Get("foodshelves:Will cure in {0} days", Math.Round(daysLeft, 1));
-            }
-            else {
-                toReturn = text + Lang.Get("foodshelves:Will cure in {0} hours", Math.Round(hoursLeft, 1));
+        if (cureState != null) {
+            float curingRateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, EnumTransitionType.Cure);
+            if (curingRateMul > 0) {
+                float hoursLeft = cureState.FreshHoursLeft / curingRateMul;
+                return GetTimeRemainingText(world, hoursLeft, EnumTransitionType.Cure);
             }
         }
 
-        return toReturn;
+        return "";
     }
 
     public static string CrockInfoCompact(InventoryGeneric inv, IWorldAccessor world, ItemSlot inSlot) {
         BlockMeal mealblock = world.GetBlock(new AssetLocation("bowl-meal")) as BlockMeal;
         BlockCrock crock = inSlot.Itemstack.Collectible as BlockCrock;
-
         CookingRecipe recipe = crock.GetCookingRecipe(world, inSlot.Itemstack);
         ItemStack[] stacks = crock.GetNonEmptyContents(world, inSlot.Itemstack);
 
@@ -338,15 +291,7 @@ public static class InfoDisplay {
 
         if (recipe != null) {
             double servings = inSlot.Itemstack.Attributes.GetDecimal("quantityServings");
-
-            if (recipe != null) {
-                if (servings == 1) {
-                    dsc.Append(Lang.Get("{0:0.#}x {1}.", servings, recipe.GetOutputName(world, stacks)));
-                }
-                else {
-                    dsc.Append(Lang.Get("{0:0.#}x {1}.", servings, recipe.GetOutputName(world, stacks)));
-                }
-            }
+            dsc.Append(Lang.Get("{0:0.#}x {1}.", servings, recipe.GetOutputName(world, stacks)));
         }
         else {
             int i = 0;
@@ -355,12 +300,10 @@ public static class InfoDisplay {
                 if (i++ > 0) dsc.Append(", ");
                 dsc.Append(stack.StackSize + "x " + stack.GetName());
             }
-
             dsc.Append('.');
         }
 
         DummyInventory dummyInv = new(world.Api);
-
         ItemSlot contentSlot = BlockCrock.GetDummySlotForFirstPerishableStack(world, stacks, null, dummyInv);
         dummyInv.OnAcquireTransitionSpeed += (transType, stack, mul) => {
             return mul * crock.GetContainingTransitionModifierContained(world, inSlot, transType) * inv.GetTransitionSpeedMul(transType, stack);
@@ -368,37 +311,19 @@ public static class InfoDisplay {
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         bool addNewLine = true;
+
         if (transitionStates != null) {
-            for (int i = 0; i < transitionStates.Length; i++) {
-                TransitionState state = transitionStates[i];
+            // Find perish transition state
+            TransitionState perishState = transitionStates.FirstOrDefault(state =>
+                state.Props.Type == EnumTransitionType.Perish &&
+                contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, state.Props.Type) > 0);
 
-                TransitionableProperties prop = state.Props;
-                float perishRate = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, prop.Type);
-
-                if (perishRate <= 0) continue;
+            if (perishState != null) {
+                float perishRate = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, perishState.Props.Type);
+                float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
 
                 addNewLine = false;
-                float transitionLevel = state.TransitionLevel;
-                float freshHoursLeft = state.FreshHoursLeft / perishRate;
-
-                if (prop.Type == EnumTransitionType.Perish) {
-                    if (transitionLevel > 0) {
-                        dsc.AppendLine(" " + Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100)));
-                    }
-                    else {
-                        double hoursPerday = world.Calendar.HoursPerDay;
-
-                        if (freshHoursLeft / hoursPerday >= world.Calendar.DaysPerYear) {
-                            dsc.AppendLine(" " + Lang.Get("Fresh for {0} years", Math.Round(freshHoursLeft / hoursPerday / world.Calendar.DaysPerYear, 1)));
-                        }
-                        else if (freshHoursLeft > hoursPerday) {
-                            dsc.AppendLine(" " + Lang.Get("Fresh for {0} days", Math.Round(freshHoursLeft / hoursPerday, 1)));
-                        }
-                        else {
-                            dsc.AppendLine(" " + Lang.Get("Fresh for {0} hours", Math.Round(freshHoursLeft, 1)));
-                        }
-                    }
-                }
+                dsc.AppendLine(" " + GetTimeRemainingText(world, freshHoursLeft, EnumTransitionType.Perish, perishState.TransitionLevel));
             }
         }
 
@@ -486,41 +411,61 @@ public static class InfoDisplay {
         // Average perish rate
         if (totalCount > 0) {
             double averageFreshHoursLeft = totalFreshHours / totalCount;
-            double hoursPerDay = world.Calendar.HoursPerDay;
 
-            if (averageFreshHoursLeft / hoursPerDay >= world.Calendar.DaysPerYear) {
-                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} years", Math.Round(averageFreshHoursLeft / hoursPerDay / world.Calendar.DaysPerYear, 1)));
-            }
-            else if (averageFreshHoursLeft > hoursPerDay) {
-                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} days", Math.Round(averageFreshHoursLeft / hoursPerDay, 1)));
-            }
-            else {
-                dsc.AppendLine(Lang.Get("foodshelves:Average freshness {0} hours", Math.Round(averageFreshHoursLeft, 1)));
-            }
+            string averageFreshnessText = GetTimeRemainingText(world, averageFreshHoursLeft, EnumTransitionType.Perish, 0, "foodshelves:Average freshness");
+            dsc.AppendLine(averageFreshnessText);
         }
 
         // Item soonest to perish
         if (soonestPerishStack != null) {
             dsc.Append(Lang.Get("foodshelves:Soonest") + " " + soonestPerishStack.GetName());
-            double hoursPerDay = world.Calendar.HoursPerDay;
 
             if (soonestTransitionLevel > 0) {
                 dsc.AppendLine(", " + Lang.Get("{0}% spoiled", (int)Math.Round(soonestTransitionLevel * 100)));
             }
             else {
-                if (soonestPerishHours / hoursPerDay >= world.Calendar.DaysPerYear) {
-                    dsc.AppendLine(", " + Lang.Get("foodshelves:will perish in {0} years", Math.Round(soonestPerishHours / hoursPerDay / world.Calendar.DaysPerYear, 1)));
-                }
-                else if (soonestPerishHours > hoursPerDay) {
-                    dsc.AppendLine(", " + Lang.Get("foodshelves:will perish in {0} days", Math.Round(soonestPerishHours / hoursPerDay, 1)));
-                }
-                else {
-                    dsc.AppendLine(", " + Lang.Get("foodshelves:will perish in {0} hours", Math.Round(soonestPerishHours, 1)));
-                }
+                dsc.AppendLine(", " + GetTimeRemainingText(world, soonestPerishHours, EnumTransitionType.Perish));
             }
         }
         else {
             dsc.AppendLine(Lang.Get("foodshelves:No item will perish soon."));
+        }
+    }
+
+    private static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
+        string prefix = "";
+
+        if (transitionType == EnumTransitionType.Perish && transitionLevel > 0) {
+            return Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100));
+        }
+
+        if (actionVerb == "") {
+            switch (transitionType) {
+                case EnumTransitionType.Perish:
+                    actionVerb = "fresh for"; break;
+                case EnumTransitionType.Ripen:
+                    actionVerb = "will ripen in"; break;
+                case EnumTransitionType.Cure:
+                    prefix = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: ";
+                    actionVerb = "foodshelves:Will cure in"; break;
+                case EnumTransitionType.Melt:
+                    actionVerb = "foodshelves:Will melt in"; break;
+            }
+        }
+
+        if (actionVerb == "") return "";
+
+        double hoursPerDay = world.Calendar.HoursPerDay;
+        double daysLeft = hoursLeft / hoursPerDay;
+
+        if (daysLeft >= world.Calendar.DaysPerYear) {
+            return prefix + Lang.Get($"{actionVerb} {{0}} years", Math.Round(daysLeft / world.Calendar.DaysPerYear, 1));
+        }
+        else if (hoursLeft > hoursPerDay) {
+            return prefix + Lang.Get($"{actionVerb} {{0}} days", Math.Round(daysLeft, 1));
+        }
+        else {
+            return prefix + Lang.Get($"{actionVerb} {{0}} hours", Math.Round(hoursLeft, 1));
         }
     }
 }
