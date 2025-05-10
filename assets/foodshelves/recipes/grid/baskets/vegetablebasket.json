@@ -4,11 +4,17 @@
     "ingredients": {
       "O": { "type": "item", "code": "game:stick" },
       "S": { "type": "item", "code": "game:stick", "quantity": 4 },
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" }
     },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "vegetablebasket-normal" }
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "vegetablebasket-normal",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   }
 ]

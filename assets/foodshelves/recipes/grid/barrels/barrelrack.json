@@ -3,31 +3,26 @@
     "ingredientPattern": "PSP,S_S,PSP",
     "ingredients": {
       "S": { "type": "item", "code": "game:stick" },
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" }
     },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "barrelrack-normal-north" }
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "barrelrack-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   },
   {
     "ingredientPattern": "__,_B",
     "ingredients": {
-      "B": { "type": "block", "code": "foodshelves:barrelrack-normal-north" }
+      "B": { "type": "block", "code": "foodshelves:barrelrack-normal-east" }
     },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 2,
-    "output": { "type": "block", "code": "barrelrack-top-north", "quantity": 2 }
-  },
-  {
-    "ingredientPattern": "__,_B",
-    "ingredients": {
-      "B": { "type": "block", "code": "foodshelves:barrelrack-top-north", "quantity": 2 }
-    },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 3,
-    "output": { "type": "block", "code": "barrelrack-normal-north" }
+    "width": 2, "height": 2, "recipeGroup": 2, "shapeless": true,
+    "copyAttributesFrom": "B",
+    "output": { "type": "block", "code": "barrelrack-top-east", "quantity": 2 }
   }
 ]

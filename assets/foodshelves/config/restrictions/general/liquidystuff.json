@@ -4,6 +4,7 @@
     "game:resin",
     "game:beeswax",
     "game:fat",
+    "game:grain-*",
 
     "expandedfoods:dehydratedfruit-*",
     "expandedfoods:dryfruit-*",

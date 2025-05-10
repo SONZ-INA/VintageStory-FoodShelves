@@ -1,18 +1,14 @@
 [
   {
     "file": "detailedanimals:itemtypes/egg-ceramic.json",
-    "op": "addmerge",
-    "path": "/attributes/eggbasketcheck",
+    "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
     "value": true,
-    "side": "server",
     "dependsOn": [ { "modid": "detailedanimals" } ]
   },
   {
     "file": "detailedanimals:itemtypes/egg-chicken.json",
-    "op": "addmerge",
-    "path": "/attributes/eggbasketcheck",
+    "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
     "value": true,
-    "side": "server",
     "dependsOn": [ { "modid": "detailedanimals" } ]
   }
 ]

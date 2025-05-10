@@ -1,0 +1,20 @@
+[
+  {
+    "ingredientPattern": "SPS,NP_,SPS",
+    "ingredients": {
+      "S": { "type": "item", "code": "game:stick", "quantity": 4 },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*" },
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "tun-normal",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  }
+]

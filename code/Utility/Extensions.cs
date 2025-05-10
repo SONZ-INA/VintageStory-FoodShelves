@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Text.Json;
+using Vintagestory.ServerMods;
 
 namespace FoodShelves; 
 
@@ -8,49 +10,12 @@ public static class Extensions {
     public static void EnsureAttributesNotNull(this CollectibleObject obj) => obj.Attributes ??= new JsonObject(new JObject());
     public static T LoadAsset<T>(this ICoreAPI api, string path) => api.Assets.Get(new AssetLocation(path)).ToObject<T>();
 
-    public static void SetTreeAttributeContents(this ItemStack stack, InventoryGeneric inv, string attributeName, int index = 1) {
-        TreeAttribute stacksTree = new();
-
-        for (; index < inv.Count; index++) {
-            if (inv[index].Itemstack == null) break;
-            stacksTree[index + ""] = new ItemstackAttribute(inv[index].Itemstack);
-        }
-
-        stack.Attributes[$"{attributeName}"] = stacksTree;
-    }
-
-    public static ItemStack[] GetTreeAttributeContents(this ItemStack itemStack, ICoreClientAPI capi, string attributeName, int index = 1) {
-        ITreeAttribute tree = itemStack?.Attributes?.GetTreeAttribute($"{attributeName}");
-        List<ItemStack> contents = new();
-
-        if (tree != null) {
-            for (; index < tree.Count + 1; index++) {
-                ItemStack stack = tree.GetItemstack(index + "");
-                stack?.ResolveBlockOrItem(capi.World);
-                contents.Add(stack);
-            }
-        }
-
-        return contents.ToArray();
-    }
-
-    #endregion
-
-    #region StringExtensions
-
-    public static string FirstCharToUpper(this string input) {
-        if (input == null) throw new ArgumentNullException(nameof(input));
-        if (string.IsNullOrEmpty(input)) throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
-        return string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
-    }
-
     #endregion
 
     #region MeshExtensions
 
-    public static MeshData BlockYRotation(this MeshData obj, BlockEntity BE) {
-        Block block = BE.Api.World.BlockAccessor.GetBlock(BE.Pos);
-        return obj.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
+    public static MeshData BlockYRotation(this MeshData mesh, Block block) {
+        return mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
     }
 
     public static float GetBlockMeshAngle(IPlayer byPlayer, BlockSelection blockSel, bool val) {
@@ -65,6 +30,27 @@ public static class Extensions {
             return roundRad;
         }
         return 0;
+    }
+
+    public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
+        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string>>();
+        if (variantTextures == null) return;
+
+        if (fscontainer.VariantAttributes == null) return;
+
+        foreach (var texture in variantTextures) {
+            string textureValue = texture.Value;
+
+            foreach (var attr in fscontainer.VariantAttributes) {
+                string paramPlaceholder = "{" + attr.Key + "}";
+                string paramValue = attr.Value.ToString();
+
+                textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+            }
+
+            if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
+            shape.Textures[texture.Key] = textureValue;
+        }
     }
 
     public static void ChangeShapeTextureKey(Shape shape, string key) {
@@ -105,7 +91,7 @@ public static class Extensions {
         if (contentStack == null) return 0;
 
         unchecked {
-            // FNV-1 hash since any other simpler one ends up colliding, fuck data structures & algorithms btw
+            // FNV-1 hash since any other simpler one ends up colliding
             const uint FNV_OFFSET_BASIS = 2166136261;
             const uint FNV_32_PRIME = 16777619;
 
@@ -121,6 +107,17 @@ public static class Extensions {
             }
 
             return (int)hash;
+        }
+    }
+
+    public static Dictionary<string, MultiTextureMeshRef> GetCacheDictionary(ICoreClientAPI capi, string meshCacheKey) {
+        if (capi.ObjectCache.TryGetValue(meshCacheKey, out object obj)) {
+            return obj as Dictionary<string, MultiTextureMeshRef>;
+        }
+        else {
+            var dict = new Dictionary<string, MultiTextureMeshRef>();
+            capi.ObjectCache[meshCacheKey] = dict;
+            return dict;
         }
     }
 
@@ -145,46 +142,87 @@ public static class Extensions {
         foreach (KeyValuePair<string, ModelTransform> transformation in transformations) {
             if (WildcardUtil.Match(transformation.Key, obj.Code.ToString())) return transformation.Value;
         }
-
         return null;
     }
 
-    public static string GetMaterialNameLocalized(this ItemStack itemStack, string[] variantKeys = null, string[] toExclude = null, bool includeParenthesis = true) {
+    public static void LoadVariantsCreative(ICoreAPI api, Block block) {
+        string blockSide = block.Variant["side"];
+        string dropSide = "east";
+
+        string properties = block.GetBehavior<BlockBehaviorHorizontalOrientable>()?.propertiesAtString;
+        if (properties != null) {
+            JsonDocument jsonDoc = JsonDocument.Parse(properties);
+            dropSide = jsonDoc.RootElement.GetProperty("dropBlockFace").GetString() ?? "east";
+        }
+
+        if (blockSide != null && blockSide != dropSide) return;
+
+        var materials = block.Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
         string material = "";
-        string[] materialCheck = { "material-", "rock-", "ore-" };
+        StandardWorldProperty props = null;
 
-        if (variantKeys == null) {
-            material = itemStack.Collectible.Variant["type"];
+        if (materials?.LoadFromProperties != null) {
+            material = materials.LoadFromProperties.ToString().Split('/')[1];
+            props = api.Assets.TryGet(materials.LoadFromProperties.WithPathPrefixOnce("worldproperties/").WithPathAppendixOnce(".json"))?.ToObject<StandardWorldProperty>();
         }
-        else {
-            for (int i = 0; i < variantKeys.Length; i++) {
-                if (itemStack.Collectible.Variant.ContainsKey(variantKeys[i])) {
-                    material = itemStack.Collectible.Variant[variantKeys[i]];
-                    break;
-                }
+
+        var stacks = new List<JsonItemStack>();
+
+        var defaultBlock = new JsonItemStack() {
+            Code = block.Code,
+            Type = EnumItemClass.Block,
+            Attributes = new JsonObject(JToken.Parse("{}"))
+        };
+        defaultBlock.Resolve(api.World, block.Code);
+        stacks.Add(defaultBlock);
+
+        if (props != null && material != "") {
+            foreach (var prop in props.Variants) {
+                string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
+                string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
+
+                var jstack = new JsonItemStack() {
+                    Code = block.Code,
+                    Type = EnumItemClass.Block,
+                    Attributes = new JsonObject(JToken.Parse(attributesJson))
+                };
+
+                jstack.Resolve(api.World, block.Code);
+                stacks.Add(jstack);
             }
         }
 
-        if (toExclude == null) {
-            material = material.Replace("normal", "");
-            material = material.Replace("short", "");
-            material = material.Replace("very", "");
-        }
-        else {
-            for (int i = 0; i < toExclude.Length; i++) {
-                material = material.Replace(toExclude[i], "");
+        block.CreativeInventoryStacks = new CreativeTabAndStackList[] {
+            new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
+        };
+    }
+
+    public static string GetBlockTypeLocalized(Block block) {
+        string blockType = block.Variant["type"];
+
+        if (blockType != "normal") {
+            string entry = "foodshelves:" + blockType;
+            string typeName = Lang.Get(entry);
+            if (typeName != entry) {
+                return typeName + " ";
             }
         }
 
-        if (material == "") return "";
+        return "";
+    }
 
-        string toReturn = "";
-        foreach (string check in materialCheck) {
-            toReturn = Lang.Get(check + material);
-            if (toReturn != check + material) break;
+    public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
+        if (itemStack.Attributes["FSAttributes"] is not ITreeAttribute tree)
+            return "";
+
+        foreach (var pair in tree) {
+            if (pair.Key == "wood") {
+                string toReturn = Lang.Get("game:material-" + pair.Value);
+                return (includeParenthesis ? "(" : "") + toReturn + (includeParenthesis ? ")" : "");
+            }
         }
 
-        return (includeParenthesis ? "(" : "") + toReturn + (includeParenthesis ? ")" : "");
+        return "";
     }
 
     public static float[,] GenTransformationMatrix(float[] x, float[] y, float[] z, float[] rX, float[] rY, float[] rZ) {
@@ -227,6 +265,21 @@ public static class Extensions {
     #endregion
 
     #region BlockInventoryExtensions
+
+    // Must be called before initialize
+    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
+        // Need to save items and transfer it over to new inventory, they disappear otherwise
+        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
+
+        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
+
+        for (int i = 0; i < be.SlotCount; i++) {
+            if (i >= stack.Length) break;
+            be.inv[i].Itemstack = stack[i];
+        }
+
+        be.inv.LateInitialize(be.inv.InventoryID, api);
+    }
 
     public static ItemStack[] GetContents(IWorldAccessor world, ItemStack itemstack) {
         ITreeAttribute treeAttr = itemstack?.Attributes?.GetTreeAttribute("contents");
@@ -316,20 +369,34 @@ public static class Extensions {
     #region CheckExtensions
 
     public static bool CheckTypedRestriction(this CollectibleObject obj, RestrictionData data) => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
-    public static bool IsFull(this ItemSlot slot) => slot.StackSize == slot.MaxSlotStackSize;
+
+    public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist) {
+        if (slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == false) return false;
+        if (slot?.Inventory?.ClassName == "hopper") return false;
+        return true;
+    }
+
+    public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) {
+        return obj?.Attributes?[attributeWhitelist].AsBool() == true;
+    }
 
     public static bool IsLargeItem(ItemStack stack) {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
-        if (stack?.Collectible?.GetType().Name == "ItemCheese") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockFruitBasket") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockVegetableBasket") return true;
-        if (stack?.Collectible?.GetType().Name == "BlockEggBasket") return true;
+
+        string[] validTypes = new[] { "ItemCheese", "BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket" };
+        if (validTypes.Contains(stack?.Collectible?.GetType().Name)) return true;
 
         return false;
     }
 
     public static bool IsSmallItem(ItemStack stack) {
-        if (stack?.Collectible.Code == "wildcraftfruit:nut-hazelbar") return true;
+        string stackCode = stack?.Collectible.Code.ToString() ?? "";
+
+        if (WildcardUtil.Match("wildcraftfruit:nut-*bar", stackCode)) return true;
+        if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
+        if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
+        if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
+        if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
 
         return false;
     }

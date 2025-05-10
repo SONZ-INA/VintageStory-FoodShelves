@@ -1,0 +1,90 @@
+{
+  "code": "tunrack",
+  "class": "FoodShelves.BlockTunRack",
+  "entityclass": "FoodShelves.BETunRack",
+  "variantgroups": [
+    { "code": "type", "states": ["normal", "top"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/wood/{wood}"
+    },
+    "handbook": {
+      "groupBy": [ "tunrack-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-tunrack-text"
+        }
+      ]
+    },
+    "capacityLitres": 500
+  },
+  "behaviors": [
+    { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "north" } },
+    { "name": "Multiblock",
+      "propertiesByType": {
+        "*-north": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } },
+        "*-east": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-south": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 0 } },
+        "*-west": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 1 } }
+      }
+    }
+  ],
+  "shapeByType": {
+    "*-normal*": {
+      "base": "block/barrels/tunrack",
+      "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+    },
+    "*-top*": {
+      "base": "block/barrels/tunracktop",
+      "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+    }
+  },
+  "heldTpIdleAnimationByType": {
+    "tunrack-normal-*": "holdbothhandslarge",
+    "tunrack-top-*": "holdunderarm"
+  },
+  "heldRightReadyAnimation": "heldblockready", 
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 4,
+  "maxStackSize": 16,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": {
+    "verticals": true,
+    "horizontals": false
+  },	
+  "sideopaque": { "all": false },
+  "guiTransform": {
+    "origin": { "x": 1, "y": 1, "z": 0 },
+    "scale": 0.5
+  },
+  "tpHandTransformByType": {
+    "tunrack-normal*": {
+      "translation": { "x": -1.8, "y": -0.91, "z": -0.8 },
+	    "rotation": { "x": 88, "y": 25, "z": -78 },
+	    "scale": 0.25
+    },
+    "tunrack-top*": {
+	    "translation": { "x": -1.2, "y": -0.6, "z": -1.2 },
+	    "rotation": { "x": 93, "y": -15, "z": 0 },
+	    "scale": 0.25
+    }
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 },
+  "selectionBoxes": [ 
+    { "x1": 0, "y1": 0, "z1": -1, "x2": 2, "y2": 2, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
+  ]
+}

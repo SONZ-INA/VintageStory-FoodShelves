@@ -1,0 +1,78 @@
+[
+  {
+    "file": "foodshelves:blocktypes/shelves/*",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {},
+          "Back": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/ceilingjar.json",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/fooddisplay*",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/other/pumpkincase.json",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/other/tablewshelf.json",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  }
+]

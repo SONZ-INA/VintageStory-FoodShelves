@@ -1,0 +1,64 @@
+{
+  "code": "pumpkincase",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BEPumpkinCase",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/wood/{wood}"
+    },
+    "handbook": {
+      "groupBy": [ "pumpkincase-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-pumpkincase-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "UnstableFalling" }
+  ],
+  "shape": {
+    "base": "block/other/pumpkincase"
+  },
+  "heldTpIdleAnimation": "holdbothhandslarge",
+  "heldRightReadyAnimation": "heldblockready", 
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": {
+	  "up": true,
+	  "all": false
+  },
+  "sideopaque": {
+    "down": true,
+    "all": false
+  },
+  "combustibleProps": {
+    "burnTemperature": 700,
+    "burnDuration": 24
+  },
+  "tpHandTransform": {
+	  "translation": { "x": -1.23, "y": -0.91, "z": -0.8 },
+	  "rotation": { "x": -2, "y": 25, "z": -78 },
+	  "scale": 0.4
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionSelectionBoxes": [ 
+    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+  ]
+}

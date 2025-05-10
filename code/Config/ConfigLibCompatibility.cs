@@ -29,7 +29,6 @@ public class ConfigLibCompatibility {
     private void BuildSettingsServer(ConfigServer config, string id) {
         if (config == null) return;
 
-        config.EnableVariants = OnCheckBox(id, config.EnableVariants, nameof(config.EnableVariants));
         config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0);
     }
 

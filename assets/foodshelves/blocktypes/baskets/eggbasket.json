@@ -1,12 +1,16 @@
 {
   "code": "eggbasket",
   "class": "FoodShelves.BlockEggBasket",
-  "entityclass": "FoodShelves.BlockEntityEggBasket",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "entityclass": "FoodShelves.BEEggBasket",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "sides": "game:block/wood/debarked/{wood}",
+      "top": "foodshelves:variants/wood/{wood}"
+    },
     "handbook": {
       "groupBy": [ "eggbasket-*" ],
       "extraSections": [
@@ -15,21 +19,15 @@
           "text": "foodshelves:blockdesc-eggshelf-text"
         }
       ]
-    },
-    "inventoryClassName": "eggbasket",
-    "attributeTransformCode": "onEggBasketTransform"
+    }
   },
   "behaviors": [
-    { "name": "UnstableFalling" },
-    { "name": "RightClickPickup" }
+    { "name": "RightClickPickup" },
+    { "name": "FoodShelves.CanCeilingAttachFalling" }
   ],
   "shape": {
-    "base": "block/wood/baskets/eggbasket",
+    "base": "block/baskets/eggbasket",
     "scale": 0.8
-  },
-  "textures": {
-    "sides": { "base": "game:block/wood/table/normal/sides" },
-    "top": { "base": "game:block/wood/table/normal/top" }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
@@ -37,12 +35,13 @@
   "blockmaterial": "Wood",
   "lightAbsorption": 0,
   "maxStackSize": 4,
+  "replaceable": 900,
   "faceCullMode": "NeverCull",
+  "resistance": 1.5,
+  "materialDensity": 400,
   "emitSideAo": { "all": false },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "guiTransform": {
     "origin": { "x": 0.5, "y": 0.3, "z": 0.5 },
     "scale": 1.5
@@ -57,7 +56,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [
     { "x1": 0.2125, "y1": 0, "z1": 0.2125, "x2": 0.7875, "y2": 0.225, "z2": 0.7875 }
   ]

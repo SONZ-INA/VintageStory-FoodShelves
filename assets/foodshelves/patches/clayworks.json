@@ -1,13 +1,11 @@
 [
   {
     "file": "foodshelves:config/restrictions/general/holderuniversal.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "clayworks:crock-fired*-*",
       "clayworks:bowl-*-fired*"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "clayworks" } ]
   }
 ]

@@ -1,32 +1,27 @@
 [
   {
     "file": "foodshelves:config/restrictions/general/fooduniversal.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
       "pemmican:mushroompatebar"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:config/restrictions/general/holderuniversal.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
       "pemmican:mushroompatebar"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:config/restrictions/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:pemmican-raw",
       "pemmican:pemmican-bar",
@@ -34,47 +29,27 @@
       "pemmican:pemmican-cooked",
       "pemmican:mushroompatebar"
     ],
-    "side": "server",
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:config/restrictions/shelves/breadshelf.json",
-    "op": "addmerge",
-    "path": "/CollectibleCodes/-",
+    "op": "addmerge", "path": "/CollectibleCodes/-", "side": "server",
     "value": "pemmican:rusks-*",
-    "side": "server",
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:blocktypes/shelves/barshelf.json",
-    "op": "replace",
-    "path": "/enabled",
-    "value": true,
-    "side": "server",
+    "op": "replace", "path": "/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/0/enabled",
-    "value": true,
-    "side": "server",
+    "op": "addmerge", "path": "/0/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "long-term_food" } ]
   },
   {
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/1/enabled",
-    "value": true,
-    "side": "server",
-    "dependsOn": [ { "modid": "long-term_food" } ]
-  },
-  {
-    "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge",
-    "path": "/2/enabled",
-    "value": true,
-    "side": "server",
+    "op": "addmerge", "path": "/1/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "long-term_food" } ]
   }
 ]

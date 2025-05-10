@@ -3,11 +3,17 @@
     "ingredientPattern": "__,_S,_P",
     "ingredients": {
       "S": { "type": "item", "code": "game:stick", "quantity": 2 },
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" }
     },
-    "width": 2,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "eggbasket-normal" }
+    "width": 2, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "eggbasket-normal",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
   }
 ]

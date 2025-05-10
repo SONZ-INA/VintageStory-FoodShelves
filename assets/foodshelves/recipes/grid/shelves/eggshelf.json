@@ -5,29 +5,18 @@
       "P": { "type": "item", "code": "game:plank-*" },
       "S": { "type": "block", "code": "foodshelves:breadshelf-normal-east" }
     },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "copyAttributesFrom": "S",
     "output": { "type": "block", "code": "eggshelf-normal-east" }
   },
   {
-    "ingredientPattern": "__,_S",
+    "ingredientPattern": "ST",
     "ingredients": {
-      "S": { "type": "block", "code": "foodshelves:eggshelf-normal-east" }
+      "S": { "type": "block", "code": "foodshelves:eggshelf-normal-east" },
+      "T": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 1,
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
+    "copyAttributesFrom": "S",
     "output": { "type": "block", "code": "eggshelf-short-east", "quantity": 2 }
-  },
-  {
-    "ingredientPattern": "__,_S",
-    "ingredients": {
-      "S": { "type": "block", "code": "foodshelves:eggshelf-short-east", "quantity": 2 }
-    },
-    "width": 2,
-    "height": 2,
-    "recipeGroup": 2,
-    "output": { "type": "block", "code": "eggshelf-normal-east" }
   }
 ]

@@ -2,7 +2,9 @@
 	"textureWidth": 16,
 	"textureHeight": 16,
 	"textureSizes": {},
-	"textures": {},
+	"textures": {
+		"ice": "game:block/liquid/ice/packedglacier1"
+	},
 	"elements": [
 		{
 			"name": "Cube2",

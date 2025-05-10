@@ -1,12 +1,16 @@
 {
   "code": "ceilingjar",
-  "class": "FoodShelves.BlockCeilingJar",
-  "entityclass": "FoodShelves.BlockEntityCeilingJar",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BECeilingJar",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/wood/{wood}",
+      "glass": "game:block/glass/{glass}"
+    },
     "handbook": {
       "groupBy": [ "ceilingjar-*" ],
       "extraSections": [
@@ -15,21 +19,13 @@
           "text": "foodshelves:blockdesc-liquidystuff-text"
         }
       ]
-    },
-    "inventoryClassName": "ceilingjar",
-    "attributeTransformCode": "onCeilingJarTransform"
+    }
   },
   "behaviors": [
     { "name": "FoodShelves.CeilingAttachable" }
   ],
   "shape": {
-    "base": "block/wood/glassware/ceilingjar"
-  },
-  "textures": {
-    "frame": { "base": "game:block/glass/frame" },
-    "smoky": { "base": "game:block/glass/smoky" },
-    "surface": { "base": "game:block/wood/shelf/surface" },
-    "rope": { "base": "game:item/resource/rope" }
+    "base": "block/glassware/ceilingjar"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
@@ -37,7 +33,10 @@
   "blockmaterial": "Wood",
   "lightAbsorption": 1,
   "maxStackSize": 16,
+  "replaceable": 900,
   "faceCullMode": "NeverCull",
+  "resistance": 1.5,
+  "materialDensity": 400,
   "drawtype": "json",
   "emitSideAo": { "all": false },
   "sideao": { "all": true },
@@ -49,8 +48,6 @@
 	  "up": true,
 	  "all": false
   },
-  "replaceable": 999,
-  "resistance": 1.5,
   "tpHandTransform": {
 	  "translation": { "x": -0.9, "y": -1, "z": -0.55 },
 	  "rotation": { "x": -2, "y": 25, "z": -78 },
@@ -61,7 +58,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [ 
     { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
   ]

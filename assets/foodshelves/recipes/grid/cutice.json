@@ -5,9 +5,7 @@
       "I": { "type": "block", "code": "game:glacierice" },
       "S": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
-    "width": 2,
-    "height": 1,
-    "recipeGroup": 1,
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
     "output": { "type": "item", "code": "cutice", "quantity": 8 }
   },
   {
@@ -16,9 +14,7 @@
       "I": { "type": "block", "code": "game:lakeice" },
       "S": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
-    "width": 2,
-    "height": 1,
-    "recipeGroup": 1,
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
     "output": { "type": "item", "code": "cutice", "quantity": 8 }
   },
   {
@@ -27,9 +23,7 @@
       "I": { "type": "block", "code": "game:packedglacierice" },
       "S": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
-    "width": 2,
-    "height": 1,
-    "recipeGroup": 1,
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
     "output": { "type": "item", "code": "cutice", "quantity": 8 }
   }
 ]
