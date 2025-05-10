@@ -8,6 +8,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
     public override string AttributeTransformCode => "onHolderUniversalTransform";
     public override string AttributeCheck => "fsHolderUniversal";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
+    protected override bool RipeningSpot => true;
 
     public bool CabinetOpen { get; set; }
     public bool DrawerOpen { get; set; }

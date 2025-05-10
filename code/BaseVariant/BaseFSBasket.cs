@@ -83,7 +83,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
         }
 
         ItemStack[] contents = GetContents(world, inSlot.Itemstack);
-        PerishableInfoAverageAndSoonest(contents.ToDummySlots(), dsc, world);
+        dsc.Append(PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world));
     }
 
     public abstract float[,] GetTransformationMatrix(string path = null);
@@ -102,7 +102,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
 
     protected virtual MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 0.5f, Transformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 1f, Transformations);
 
         return contentMesh;
     }

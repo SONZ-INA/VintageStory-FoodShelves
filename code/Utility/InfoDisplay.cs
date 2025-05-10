@@ -11,6 +11,9 @@ public static class InfoDisplay {
         ByBlockMerged
     }
 
+    public static string GetNameAndStackSize(ItemStack stack) => stack.GetName() + " x" + stack.StackSize;
+    public static string GetAmountOfLiters(ItemStack stack) => stack.GetName() + " (" + (float)stack.StackSize / 100 + " L)";
+
     public static void DisplayPerishMultiplier(float perishMul, StringBuilder dsc, InWorldContainer container = null) {
         container?.ReloadRoom();
         dsc.AppendLine(Lang.Get("Stored food perish speed: {0}x", Math.Round(perishMul, 2)));
@@ -27,7 +30,7 @@ public static class InfoDisplay {
         }
         
         if (displaySelection == InfoDisplayOptions.ByBlockAverageAndSoonest) {
-            PerishableInfoAverageAndSoonest(itemSlotList.ToArray(), sb, world);
+            sb.Append(PerishableInfoAverageAndSoonest(itemSlotList.ToArray(), world));
             return;
         }
 
@@ -79,6 +82,12 @@ public static class InfoDisplay {
             else if (stack.Collectible is BlockCrock) {
                 sb.Append(CrockInfoCompact(inv, world, inv[i]));
             }
+            else if (stack.Collectible is BaseFSBasket) {
+                sb.AppendLine(stack.GetName());
+                ItemStack[] contents = GetContents(world, stack);
+                float perishMul = inv.GetTransitionSpeedMul(EnumTransitionType.Perish, new ItemSlot(inv).Itemstack);
+                sb.AppendLine("<font color=\"#989898\">" + PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world, perishMul) + "</font>");
+            }
             else {
                 sb.Append(stack.GetName());
                 if (stack.StackSize > 1) sb.Append(" x" + stack.StackSize);
@@ -102,14 +111,6 @@ public static class InfoDisplay {
         }
 
         return Lang.Get("foodshelves:Will not melt");
-    }
-
-    public static string GetNameAndStackSize(ItemStack stack) {
-        return stack.GetName() + " x" + stack.StackSize;
-    }
-
-    public static string GetAmountOfLiters(ItemStack stack) {
-        return stack.GetName() + " (" + (float)stack.StackSize / 100 + " L)";
     }
 
     public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float ripenRate, bool withStackName = true) {
@@ -155,10 +156,9 @@ public static class InfoDisplay {
                         break;
                 }
             }
-
-            dsc.AppendLine();
         }
 
+        dsc.AppendLine();
         return dsc.ToString();
     }
 
@@ -235,18 +235,9 @@ public static class InfoDisplay {
 
                     if (hoursLeftList.Count > 0) {
                         double avgHoursLeft = hoursLeftList.Average();
-                        double hoursPerDay = world.Calendar.HoursPerDay;
 
                         if (type == EnumTransitionType.Perish) {
-                            if (avgHoursLeft / hoursPerDay >= world.Calendar.DaysPerYear) {
-                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} years", Math.Round(avgHoursLeft / hoursPerDay / world.Calendar.DaysPerYear, 1)));
-                            }
-                            else if (avgHoursLeft > hoursPerDay) {
-                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} days", Math.Round(avgHoursLeft / hoursPerDay, 1)));
-                            }
-                            else {
-                                dsc.Append(", " + Lang.Get("foodshelves:Average freshness {0} hours", Math.Round(avgHoursLeft, 1)));
-                            }
+                            dsc.Append(", " + GetTimeRemainingText(world, avgHoursLeft, type, 0, "foodshelves:Average freshness"));
                         }
                     }
                 }
@@ -258,19 +249,26 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static string CuringInfoCompact(IWorldAccessor world, ItemSlot contentSlot) {
+    public static string TransitionInfoCompact(IWorldAccessor world, ItemSlot contentSlot, EnumTransitionType transitionType) {
         if (contentSlot.Empty) return "";
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         if (transitionStates == null) return "";
 
-        TransitionState cureState = transitionStates.FirstOrDefault(state => state.Props.Type == EnumTransitionType.Cure);
+        TransitionState state = transitionStates.FirstOrDefault(s => s.Props.Type == transitionType);
 
-        if (cureState != null) {
-            float curingRateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, EnumTransitionType.Cure);
-            if (curingRateMul > 0) {
-                float hoursLeft = cureState.FreshHoursLeft / curingRateMul;
-                return GetTimeRemainingText(world, hoursLeft, EnumTransitionType.Cure);
+        if (state != null) {
+            float rateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, transitionType);
+            if (rateMul > 0) {
+                if (state.TransitionLevel > 0) {
+                    double hoursLeft = state.TransitionHours / rateMul * (1 - state.TransitionLevel);
+                    return GetTimeRemainingText(world, hoursLeft, transitionType, state.TransitionLevel);
+
+                }
+                else {
+                    float hoursLeft = state.FreshHoursLeft / rateMul;
+                    return GetTimeRemainingText(world, hoursLeft, transitionType);
+                }
             }
         }
 
@@ -358,14 +356,14 @@ public static class InfoDisplay {
         if (collectible.TransitionableProps != null && collectible.TransitionableProps.Length > 0) {
             sb.Append(PerishableInfoCompact(world, slots[0], ripenRate, false));
         }
-
-        sb.AppendLine();
     }
 
-    public static void PerishableInfoAverageAndSoonest(ItemSlot[] contentSlots, StringBuilder dsc, IWorldAccessor world) {
+    public static string PerishableInfoAverageAndSoonest(ItemSlot[] contentSlots, IWorldAccessor world, float perishMul = 1) {
+        StringBuilder dsc = new();
+
         if (contentSlots == null || contentSlots.Length == 0) {
             dsc.Append(Lang.Get("foodshelves:Empty."));
-            return;
+            return dsc.ToString();
         }
 
         int itemCount = 0, rotCount = 0, totalCount = 0;
@@ -388,8 +386,9 @@ public static class InfoDisplay {
             TransitionState[] transitionStates = stack?.Collectible.UpdateAndGetTransitionStates(world, slot);
             if (transitionStates != null) {
                 foreach (var state in transitionStates) {
-                    double perishRateMultiplier = stack.Collectible.GetTransitionRateMul(world, slot, state.Props.Type);
-                    double freshHoursLeft = state.FreshHoursLeft / perishRateMultiplier;
+                    double basePerishRateMul = stack.Collectible.GetTransitionRateMul(world, slot, state.Props.Type);
+                    double effectivePerishRateMul = basePerishRateMul * perishMul;
+                    double freshHoursLeft = state.FreshHoursLeft / effectivePerishRateMul;
 
                     if (state.Props.Type == EnumTransitionType.Perish) {
                         totalFreshHours += freshHoursLeft * stack.StackSize;
@@ -411,7 +410,6 @@ public static class InfoDisplay {
         // Average perish rate
         if (totalCount > 0) {
             double averageFreshHoursLeft = totalFreshHours / totalCount;
-
             string averageFreshnessText = GetTimeRemainingText(world, averageFreshHoursLeft, EnumTransitionType.Perish, 0, "foodshelves:Average freshness");
             dsc.AppendLine(averageFreshnessText);
         }
@@ -430,26 +428,43 @@ public static class InfoDisplay {
         else {
             dsc.AppendLine(Lang.Get("foodshelves:No item will perish soon."));
         }
+
+        return dsc.ToString();
     }
 
     private static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
+
+        if (transitionLevel > 0) {
+            switch (transitionType) {
+                case EnumTransitionType.Perish:
+                    return Lang.Get("itemstack-perishable-spoiling", (int)Math.Round(transitionLevel * 100));
+                case EnumTransitionType.Dry:
+                    return Lang.Get("itemstack-dryable-dried", (int)Math.Round(transitionLevel * 100));
+                case EnumTransitionType.Cure:
+                    return Lang.Get("itemstack-curable-curing", (int)Math.Round(transitionLevel * 100));
+                case EnumTransitionType.Ripen:
+                    return Lang.Get("itemstack-ripenable-ripening", (int)Math.Round(transitionLevel * 100));
+                case EnumTransitionType.Melt:
+                    return Lang.Get("itemstack-meltable-melted", (int)Math.Round(transitionLevel * 100));
+            }
+        }
+
         string prefix = "";
 
-        if (transitionType == EnumTransitionType.Perish && transitionLevel > 0) {
-            return Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100));
+        switch (transitionType) {
+            case EnumTransitionType.Cure:
+                prefix = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: "; break;
+            case EnumTransitionType.Dry:
+                prefix = "<font color=\"#d6ba7a\">" + Lang.Get("Drying") + "</font>: "; break;
         }
 
         if (actionVerb == "") {
             switch (transitionType) {
-                case EnumTransitionType.Perish:
-                    actionVerb = "fresh for"; break;
-                case EnumTransitionType.Ripen:
-                    actionVerb = "will ripen in"; break;
-                case EnumTransitionType.Cure:
-                    prefix = "<font color=\"#bd5424\">" + Lang.Get("Curing") + "</font>: ";
-                    actionVerb = "foodshelves:Will cure in"; break;
-                case EnumTransitionType.Melt:
-                    actionVerb = "foodshelves:Will melt in"; break;
+                case EnumTransitionType.Perish: actionVerb = "fresh for"; break;
+                case EnumTransitionType.Ripen: actionVerb = "will ripen in"; break;
+                case EnumTransitionType.Cure: actionVerb = "foodshelves:Will cure in"; break;
+                case EnumTransitionType.Dry: actionVerb = "foodshelves:Will dry in"; break;
+                case EnumTransitionType.Melt: actionVerb = "foodshelves:Will melt in"; break;
             }
         }
 

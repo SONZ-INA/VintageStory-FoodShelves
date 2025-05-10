@@ -51,10 +51,5 @@
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
     "op": "addmerge", "path": "/1/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "long-term_food" } ]
-  },
-  {
-    "file": "foodshelves:recipes/grid/shelves/barshelf.json",
-    "op": "addmerge", "path": "/2/enabled", "side": "server", "value": true,
-    "dependsOn": [ { "modid": "long-term_food" } ]
   }
 ]

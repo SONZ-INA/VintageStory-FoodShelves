@@ -35,7 +35,7 @@ public static class Meshing {
                         var ctex = new CompositeTexture(pair.Value.ToString().Replace($"{{{key}}}", value));
 
                         //BlendedOverlayTexture overlay = new() {
-                        //    Base = new AssetLocation("foodshelves:variants/shelves/wood")
+                        //    Base = new AssetLocation("foodshelves:variants/overlay/shelves/wood")
                         //};
 
                         //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();

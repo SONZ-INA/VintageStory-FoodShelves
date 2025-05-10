@@ -48,7 +48,7 @@
   "blockdesc-barrelrack-text": "  -Barrels. These barrels can only hold liquids.",
   "blockdesc-tunrack-text": "  -Tuns. These tuns can only hold liquids.",
   "blockdesc-tun-text": "  -This tun can only be placed inside a tun rack.",
-  "blockdesc-liquidystuff-text": "  -Grain, resin, beeswax, animal fat<br>  -All dehydrated/dry fruits from Expanded Foods.",
+  "blockdesc-liquidystuff-text": "  -Grain, resin, beeswax, animal fat<br>Expanded Foods:<br>  -All dehydrated/dry fruits",
   "blockdesc-pumpkincase-text": "  -Pumpkins.",
   "blockdesc-fooduniversal-text": "  -Pies, Cheese, all bread types<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread",
   "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Fruit bars<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -All nut bars<br>  -Pacoca<br>  -Halva<br>  -Marzipam<br>Long-term food:<br>  -All pemmicans<br>  -Packed pemmican<br>  -Mushroom pate",
@@ -100,6 +100,10 @@
   "Will cure in {0} years": "Will cure in {0} years",
   "Will cure in {0} days": "Will cure in {0} days",
   "Will cure in {0} hours": "Will cure in {0} hours",
+
+  "Will dry in {0} years": "Will dry in {0} years",
+  "Will dry in {0} days": "Will dry in {0} days",
+  "Will dry in {0} hours": "Will dry in {0} hours",
 
   "Average freshness {0} years": "Average freshness: {0} years",
   "Average freshness {0} days": "Average freshness: {0} days",

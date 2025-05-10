@@ -145,21 +145,6 @@ public static class Extensions {
         return null;
     }
 
-    // Must be called before initialize
-    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
-        // Need to save items and transfer it over to new inventory, they disappear otherwise
-        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
-
-        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
-
-        for (int i = 0; i < be.SlotCount; i++) {
-            if (i >= stack.Length) break;
-            be.inv[i].Itemstack = stack[i];
-        }
-
-        be.inv.LateInitialize(be.inv.InventoryID, api);
-    }
-
     public static void LoadVariantsCreative(ICoreAPI api, Block block) {
         string blockSide = block.Variant["side"];
         string dropSide = "east";
@@ -275,6 +260,93 @@ public static class Extensions {
         if (blockPath.EndsWith("-east")) return 270;
         if (blockPath.EndsWith("-west")) return 90;
         return 0;
+    }
+
+    #endregion
+
+    #region BlockInventoryExtensions
+
+    // Must be called before initialize
+    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
+        // Need to save items and transfer it over to new inventory, they disappear otherwise
+        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
+
+        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
+
+        for (int i = 0; i < be.SlotCount; i++) {
+            if (i >= stack.Length) break;
+            be.inv[i].Itemstack = stack[i];
+        }
+
+        be.inv.LateInitialize(be.inv.InventoryID, api);
+    }
+
+    public static ItemStack[] GetContents(IWorldAccessor world, ItemStack itemstack) {
+        ITreeAttribute treeAttr = itemstack?.Attributes?.GetTreeAttribute("contents");
+        if (treeAttr == null) {
+            return ResolveUcontents(world, itemstack);
+        }
+
+        ItemStack[] stacks = new ItemStack[treeAttr.Count];
+        foreach (var val in treeAttr) {
+            ItemStack stack = (val.Value as ItemstackAttribute).value;
+            stack?.ResolveBlockOrItem(world);
+
+            if (int.TryParse(val.Key, out int index)) stacks[index] = stack;
+        }
+
+        return stacks;
+    }
+
+    public static void SetContents(ItemStack containerStack, ItemStack[] stacks) {
+        if (stacks == null || stacks.Length == 0) {
+            containerStack.Attributes.RemoveAttribute("contents");
+            return;
+        }
+
+        TreeAttribute stacksTree = new TreeAttribute();
+        for (int i = 0; i < stacks.Length; i++) {
+            stacksTree[i + ""] = new ItemstackAttribute(stacks[i]);
+        }
+
+        containerStack.Attributes["contents"] = stacksTree;
+    }
+
+    public static ItemStack[] ResolveUcontents(IWorldAccessor world, ItemStack itemstack) {
+        if (itemstack?.Attributes.HasAttribute("ucontents") == true) {
+            List<ItemStack> stacks = new();
+
+            var attrs = itemstack.Attributes["ucontents"] as TreeArrayAttribute;
+
+            foreach (ITreeAttribute stackAttr in attrs.value) {
+                stacks.Add(CreateItemStackFromJson(stackAttr, world, itemstack.Collectible.Code.Domain));
+            }
+            ItemStack[] stacksAsArray = stacks.ToArray();
+            SetContents(itemstack, stacksAsArray);
+            itemstack.Attributes.RemoveAttribute("ucontents");
+
+            return stacksAsArray;
+        }
+        else {
+            return Array.Empty<ItemStack>();
+        }
+    }
+
+    private static ItemStack CreateItemStackFromJson(ITreeAttribute stackAttr, IWorldAccessor world, string defaultDomain) {
+        CollectibleObject collObj;
+        var loc = AssetLocation.Create(stackAttr.GetString("code"), defaultDomain);
+        if (stackAttr.GetString("type") == "item") {
+            collObj = world.GetItem(loc);
+        }
+        else {
+            collObj = world.GetBlock(loc);
+        }
+
+        ItemStack stack = new(collObj, (int)stackAttr.GetDecimal("quantity", 1));
+        var attr = (stackAttr["attributes"] as TreeAttribute)?.Clone();
+        if (attr != null) stack.Attributes = attr;
+
+        return stack;
     }
 
     #endregion

@@ -96,4 +96,9 @@ public class BECeilingJar : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
+        base.GetBlockInfo(forPlayer, sb);
+        sb.AppendLine(TransitionInfoCompact(Api.World, inv[1], EnumTransitionType.Dry));
+    }
 }
