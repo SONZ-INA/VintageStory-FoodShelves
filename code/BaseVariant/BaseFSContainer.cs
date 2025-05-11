@@ -98,6 +98,8 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
+        if (api.Side == EnumAppSide.Server) return;
+        
         string meshCacheKey = GetMeshCacheKey(itemstack);
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);
 

@@ -79,7 +79,7 @@ public class Core : ModSystem {
         base.AssetsLoaded(api);
 
         if (api.Side == EnumAppSide.Server) {
-            Dictionary<string, string[]> restrictionGroups = new() {
+            Dictionary<string, string[]> restrictionGroupsServer = new() {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
                 ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
@@ -87,20 +87,32 @@ public class Core : ModSystem {
                 ["other"] = new[] { "pumpkincase" }
             };
 
-            foreach (var (category, names) in restrictionGroups) {
-                foreach (var name in names) {
-                    string restrictionPath = $"foodshelves:config/restrictions/{category}/{name}.json".Replace("//", "/");
-                    string transformationPath = $"foodshelves:config/transformations/{category}/{name}.json".Replace("//", "/");
+            LoadData(api, restrictionGroupsServer);
+        }
 
-                    restrictions[name] = api.LoadAsset<RestrictionData>(restrictionPath);
+        if (api.Side == EnumAppSide.Client) {
+            Dictionary<string, string[]> restrictionGroups = new() {
+                ["baskets"] = new[] { "vegetablebasket" }
+            };
 
-                    if (api.Assets.Exists(transformationPath)) {
-                        transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
-                    }
+            LoadData(api, restrictionGroups);
+        }
+
+        BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
+    }
+
+    private void LoadData(ICoreAPI api, Dictionary<string, string[]> restrictionGroups) {
+        foreach (var (category, names) in restrictionGroups) {
+            foreach (var name in names) {
+                string restrictionPath = $"foodshelves:config/restrictions/{category}/{name}.json".Replace("//", "/");
+                string transformationPath = $"foodshelves:config/transformations/{category}/{name}.json".Replace("//", "/");
+
+                restrictions[name] = api.LoadAsset<RestrictionData>(restrictionPath);
+
+                if (api.Assets.Exists(transformationPath)) {
+                    transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
                 }
             }
-
-            BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
         }
     }
 

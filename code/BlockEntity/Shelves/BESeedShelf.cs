@@ -15,11 +15,11 @@ public class BESeedShelf : BEBaseFSContainer {
         switch (Block.Variant["type"]) {
             case "short":
                 ItemsPerSegment /= 2;
-                this.RebuildInventory(api);
+                this.RebuildInventory(api, 64);
                 break;
             case "veryshort":
                 ItemsPerSegment /= 4;
-                this.RebuildInventory(api);
+                this.RebuildInventory(api, 64);
                 break;
         }
 
