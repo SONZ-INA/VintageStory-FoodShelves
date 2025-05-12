@@ -98,6 +98,7 @@
   <None Remove="assets\foodshelves\config\transformations\shelves\breadshelf.json" />
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
   <None Remove="assets\foodshelves\lang\fr.json" />
+  <None Remove="assets\foodshelves\lang\pt-br.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
   <None Remove="assets\foodshelves\patches\carryon.json" />
   <None Remove="assets\foodshelves\patches\clayworks.json" />

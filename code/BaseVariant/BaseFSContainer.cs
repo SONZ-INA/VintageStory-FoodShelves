@@ -1,6 +1,8 @@
 ﻿namespace FoodShelves;
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
+    protected bool globalBlockBuffs = true;
+
     public const string FSAttributes = "FSAttributes";
 
     private string heldDescEntry;
@@ -11,9 +13,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         base.OnLoaded(api);
         
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
+        globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
         preventPlacing = Attributes["preventPlacing"].AsBool(false);
         placingMessage = Attributes["placingMessage"].AsString("");
-        heldDescEntry = Attributes["helddescentry"].AsString(Code.FirstCodePart());
+        heldDescEntry = globalBlockBuffs 
+            ? Attributes["helddescentry"].AsString(Code.FirstCodePart())
+            : "";
 
         LoadVariantsCreative(api, this);
     }

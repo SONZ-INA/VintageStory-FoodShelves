@@ -401,5 +401,25 @@ public static class Extensions {
         return false;
     }
 
+    public static bool IsSolitaryMatch(ItemStack checkSlot, ItemStack currSlot) {
+        if (checkSlot?.Collectible == null || currSlot?.Collectible == null) return true;
+        
+        string[] solitaryItems = new[] { "pemmican:pemmican-pack" };
+
+        bool solitary = false;
+        foreach (string item in solitaryItems) {
+            if (checkSlot.Collectible.Code == item || currSlot.Collectible.Code == item) {
+                solitary = true;
+                break;
+            }
+        }
+
+        if (solitary) { // Return false only if it should be solitary and the codes don't match.
+            return checkSlot.Collectible.Code == currSlot.Collectible.Code;
+        }
+
+        return true;
+    }
+
     #endregion
 }

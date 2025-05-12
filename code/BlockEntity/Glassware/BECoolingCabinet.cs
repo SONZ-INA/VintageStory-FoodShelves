@@ -14,8 +14,9 @@ public class BECoolingCabinet : BEBaseFSContainer {
     public bool DrawerOpen { get; set; }
 
     private readonly string CoolingOnly = "fsCoolingOnly";
-    private readonly float perishMultiplierBuffed = 0.3f;
     private readonly int cutIceSlot = 216;
+    private float perishMultiplierBuffed = 0.3f;
+    private float perishMultiplierUnBuffed = 0.75f;
 
     public BECoolingCabinet() {
         ShelfCount = 3;
@@ -34,16 +35,23 @@ public class BECoolingCabinet : BEBaseFSContainer {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockCoolingCabinet;
 
         base.Initialize(api);
+        
+        perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", perishMultiplierBuffed);
+        perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
 
         if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
         if (CabinetOpen) PerishMultiplier = 1f;
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
+    protected override float GetPerishRate() {
+        return container.GetPerishRate() * globalPerishMultiplier * PerishMultiplier;
+    }
+
     public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        if (!inv[cutIceSlot].Empty && PerishMultiplier < 0.75f && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[cutIceSlot].Empty && PerishMultiplier < perishMultiplierUnBuffed && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             if (CabinetOpen) PerishMultiplier = 1f;
-            else PerishMultiplier = 0.75f;
+            else PerishMultiplier = perishMultiplierUnBuffed;
             SetWaterHeight(true);
             MarkDirty(true);
         }
@@ -131,12 +139,15 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
         startIndex *= ItemsPerSegment;
         if (!inv[startIndex].Empty) {
+            if (!IsSolitaryMatch(inv[startIndex].Itemstack, slot.Itemstack)) return false;
             if (IsLargeItem(slot.Itemstack) || IsLargeItem(inv[startIndex].Itemstack)) return false;
             if (IsSmallItem(inv[startIndex].Itemstack) != IsSmallItem(slot.Itemstack)) return false; 
         }
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
+            if (currentIndex == startIndex + 4 && !IsSmallItem(slot.Itemstack)) return false;
+
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
                 MarkDirty();
@@ -287,7 +298,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
             if (animUtil.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == true)
                 animUtil.StopAnimation("cabinetopen");
 
-            PerishMultiplier = 0.75f;
+            PerishMultiplier = perishMultiplierUnBuffed;
             
             if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
                 PerishMultiplier = perishMultiplierBuffed;
@@ -313,7 +324,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
                     EaseInSpeed = 2
                 });
             }
-            if (!CabinetOpen) PerishMultiplier = 0.75f;
+            if (!CabinetOpen) PerishMultiplier = perishMultiplierUnBuffed;
         }
         else {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey("draweropen") == true) {

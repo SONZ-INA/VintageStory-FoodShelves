@@ -3,12 +3,16 @@
 namespace FoodShelves;
 
 public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
+    private bool globalBlockBuffs = true;
+
     public override bool AllowHeldLiquidTransfer => false;
     public override int GetContainerSlotId(BlockPos pos) => 1;
     public override int GetContainerSlotId(ItemStack containerStack) => 1;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
+
+        globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
 
         LoadVariantsCreative(api, this);
@@ -40,8 +44,10 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
-        dsc.AppendLine("");
-        dsc.AppendLine(Lang.Get("foodshelves:helddesc-tunrack"));
+        if (globalBlockBuffs) {
+            dsc.AppendLine("");
+            dsc.AppendLine(Lang.Get("foodshelves:helddesc-tunrack"));
+        }
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {

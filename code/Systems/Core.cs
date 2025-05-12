@@ -16,7 +16,9 @@ public class Core : ModSystem {
         switch (api.Side) {
             case EnumAppSide.Server:
                 ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
+                api.World.Config.SetBool("FoodShelves.GlobalBlockBuffs", ConfigServer.GlobalBlockBuffs);
                 api.World.Config.SetFloat("FoodShelves.GlobalPerishMultiplier", ConfigServer.GlobalPerishMultiplier);
+                api.World.Config.SetFloat("FoodShelves.CooledBuff", ConfigServer.CooledBuff);
                 break;
             //case EnumAppSide.Client:
             //    ConfigClient = ModConfig.ReadConfig<ConfigClient>(api, ConfigClient.ConfigClientName);
@@ -70,7 +72,7 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf)); // Placeholder
+        api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESushiShelf", typeof(BESushiShelf));
         // ------------------------
     }

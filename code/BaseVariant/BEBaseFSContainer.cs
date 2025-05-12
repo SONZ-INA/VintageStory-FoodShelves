@@ -2,7 +2,8 @@
 
 public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
     protected float globalPerishMultiplier = 1f;
-    
+    protected bool globalBlockBuffs = true;
+
     public InventoryGeneric inv;
     protected BaseFSContainer block;
     protected MeshData blockMesh;
@@ -31,6 +32,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void Initialize(ICoreAPI api) {
         block ??= api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
+        globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
 
         base.Initialize(api);
 
@@ -56,17 +58,18 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         InitMesh();
     }
 
-    public float GetPerishRate() {
-        return container.GetPerishRate() * globalPerishMultiplier * PerishMultiplier;
+    protected virtual float GetPerishRate() {
+        return container.GetPerishRate() * globalPerishMultiplier * (globalBlockBuffs ? PerishMultiplier : 1);
     }
 
     public virtual float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt) {
+            if (!globalBlockBuffs) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
             return container.Room?.ExitCount == 0 ? DryingMultiplier * 2f : DryingMultiplier * 0.5f;
         }
 
         if (transType == EnumTransitionType.Cure) {
-            return CuringMultiplier;
+            return globalBlockBuffs ? CuringMultiplier : 1f;
         }
 
         if (Api == null) return 0;
@@ -75,7 +78,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
         }
 
-        return globalPerishMultiplier * PerishMultiplier;
+        return globalPerishMultiplier * (globalBlockBuffs ? PerishMultiplier : 1);
     }
 
     public virtual bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {

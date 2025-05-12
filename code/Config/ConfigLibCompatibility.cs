@@ -29,7 +29,9 @@ public class ConfigLibCompatibility {
     private void BuildSettingsServer(ConfigServer config, string id) {
         if (config == null) return;
 
-        config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0);
+        config.GlobalBlockBuffs = OnCheckBox(id, config.GlobalBlockBuffs, nameof(config.GlobalBlockBuffs));
+        config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0, 10);
+        config.CooledBuff = OnInputFloat(id, config.CooledBuff, nameof(config.CooledBuff), 0, 1);
     }
 
     private void BuildSettingsClient(ConfigClient config, string id) {
@@ -44,10 +46,10 @@ public class ConfigLibCompatibility {
         return newValue;
     }
 
-    private float OnInputFloat(string id, float value, string name, float minValue) {
+    private float OnInputFloat(string id, float value, string name, float minValue, float maxValue) {
         float newValue = value;
         ImGui.InputFloat(Lang.Get(name) + $"##{name}-{id}", ref newValue, step: 0.05f, step_fast: 1.0f);
-        return newValue < minValue ? minValue : newValue;
+        return Math.Clamp(newValue, minValue, maxValue);
     }
 }
 
