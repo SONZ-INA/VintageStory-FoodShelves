@@ -75,7 +75,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
             if (becc.DrawerOpen) {
-                if (becc.Inventory?[36].Empty == true || becc.Inventory?[36].CanStoreInSlot("fsCoolingOnly") == true) {
+                if (becc.Inventory?[becc.cutIceSlot].Empty == true || becc.Inventory?[becc.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
                     return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                 }
             }

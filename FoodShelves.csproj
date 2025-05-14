@@ -64,6 +64,7 @@
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\glassjar.json" />
+  <None Remove="assets\foodshelves\blocktypes\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelbig.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrack.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrackbig.json" />
@@ -82,6 +83,7 @@
   <None Remove="assets\foodshelves\config\restrictions\general\coolingonly.json" />
   <None Remove="assets\foodshelves\config\restrictions\general\holderuniversal.json" />
   <None Remove="assets\foodshelves\config\restrictions\general\liquidystuff.json" />
+  <None Remove="assets\foodshelves\config\restrictions\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\config\restrictions\shelves\barshelf.json" />
   <None Remove="assets\foodshelves\config\restrictions\shelves\breadshelf.json" />
   <None Remove="assets\foodshelves\config\restrictions\shelves\eggshelf.json" />
@@ -106,6 +108,7 @@
   <None Remove="assets\foodshelves\patches\gourmand.json" />
   <None Remove="assets\foodshelves\patches\longtermfood.json" />
   <None Remove="assets\foodshelves\patches\pewter.json" />
+  <None Remove="assets\foodshelves\patches\primitivesurvival.json" />
   <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
   <None Remove="assets\foodshelves\patches\wildcraft-fruits-and-nuts.json" />
@@ -120,6 +123,7 @@
   <None Remove="assets\foodshelves\recipes\grid\glassware\coolingcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodblock.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodcase.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
@@ -139,6 +143,7 @@
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplayblocktop.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\GlassJar.json" />
+  <None Remove="assets\foodshelves\shapes\block\glassware\MeatFreezer.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BarShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BreadShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\EggShelfShort.json" />

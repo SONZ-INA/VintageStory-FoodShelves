@@ -118,6 +118,7 @@ public static class InfoDisplay {
 
         StringBuilder dsc = new();
         if (withStackName) dsc.Append(contentSlot.Itemstack.GetName());
+        if (contentSlot.StackSize > 1) dsc.Append(" x" + contentSlot.StackSize);
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
 

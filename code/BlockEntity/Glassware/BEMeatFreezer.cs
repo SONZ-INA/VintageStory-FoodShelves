@@ -2,46 +2,54 @@
 
 namespace FoodShelves;
 
-public class BECoolingCabinet : BEBaseFSContainer {
-    protected new BlockCoolingCabinet block;
+public class BEMeatFreezer : BEBaseFSContainer {
+    protected new BlockMeatFreezer block;
+    private readonly MeshData[] contentMeshes = new MeshData[4];
 
-    public override string AttributeTransformCode => "onHolderUniversalTransform";
-    public override string AttributeCheck => "fsHolderUniversal";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
-    protected override bool RipeningSpot => true;
 
-    public bool CabinetOpen { get; set; }
+    public bool FreezerOpen { get; set; }
     public bool DrawerOpen { get; set; }
 
     private readonly string CoolingOnly = "fsCoolingOnly";
-    private float perishMultiplierBuffed = 0.3f;
-    private float perishMultiplierUnBuffed = 0.75f;
-    public readonly int cutIceSlot = 216;
+    private float perishMultiplierBuffed = 0.65f;
+    private float perishMultiplierUnBuffed = 0.65f;
+    public readonly int cutIceSlot = 4;
 
-    public BECoolingCabinet() {
-        ShelfCount = 3;
-        SegmentsPerShelf = 3;
-        ItemsPerSegment = 24;
+    public BEMeatFreezer() {
+        ShelfCount = 4;
+        SegmentsPerShelf = 1;
+        ItemsPerSegment = 1;
         AdditionalSlots = 1;
-        PerishMultiplier = 0.75f;
+        PerishMultiplier = 0.65f;
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
-            if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
+            if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
         });
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockCoolingCabinet;
+        block = api.World.BlockAccessor.GetBlock(Pos) as BlockMeatFreezer;
 
         base.Initialize(api);
         
-        perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", perishMultiplierBuffed);
-        perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
+        perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", perishMultiplierBuffed) * perishMultiplierBuffed;
+        perishMultiplierUnBuffed = globalBlockBuffs ? perishMultiplierUnBuffed : 1f;
 
         if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
-        if (CabinetOpen) PerishMultiplier = 1f;
+        if (FreezerOpen) PerishMultiplier = 1f;
+
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+    }
+
+    protected override void InitMesh() {
+        base.InitMesh();
+
+        for (int i = 0; i < 3; i++) {
+            contentMeshes[i] = GenLiquidyMesh(capi, new[] { inv[i].Itemstack }, ShapeReferences.utilMeatFreezer, 13f).BlockYRotation(block);
+        }
+        contentMeshes[3] = GenLiquidyMesh(capi, new[] { inv[3].Itemstack }, ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
     }
 
     protected override float GetPerishRate() {
@@ -50,7 +58,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
     public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (!inv[cutIceSlot].Empty && PerishMultiplier < perishMultiplierUnBuffed && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
-            if (CabinetOpen) PerishMultiplier = 1f;
+            if (FreezerOpen) PerishMultiplier = 1f;
             else PerishMultiplier = perishMultiplierUnBuffed;
             SetWaterHeight(true);
             MarkDirty(true);
@@ -79,114 +87,65 @@ public class BECoolingCabinet : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        // Open/Close cabinet or drawer
-        if (byPlayer.Entity.Controls.ShiftKey) {
-            switch (blockSel.SelectionBoxIndex) {
-                case 9:
-                    if (!DrawerOpen) ToggleCabinetDrawer(true, byPlayer);
-                    else ToggleCabinetDrawer(false, byPlayer);
-                    break;
-                default:
-                    if (!CabinetOpen) ToggleCabinetDoor(true, byPlayer);
-                    else ToggleCabinetDoor(false, byPlayer);
-                    break;
-            }
+        switch (blockSel.SelectionBoxIndex) {
+            case 0: case 1: case 2: case 3:
+                if (!FreezerOpen) return false;
+                if (slot.Empty) {
+                    return TryTake(byPlayer, blockSel);
+                }
+                else if (slot.CanStoreInSlot(AttributeCheck)) {
+                    AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
-            MarkDirty(true);
-            return true;
-        }
-
-        // Take/Put items
-        if (slot.Empty) {
-            if (CabinetOpen && blockSel.SelectionBoxIndex <= 8) {
-                return TryTake(byPlayer, blockSel);
-            }
-            else if (DrawerOpen && blockSel.SelectionBoxIndex == 9) {
-                return TryTakeIceOrSlush(byPlayer);
-            }
-
-            return false;
-        }
-        else {
-            if (CabinetOpen && slot.CanStoreInSlot(AttributeCheck)) {
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
-
-                if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                    MarkDirty();
+                    if (TryPut(byPlayer, slot, blockSel)) {
+                        Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                        return true;
+                    }
+                }
+                (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:Only raw meat can be placed in this freezer."));
+                break;
+            case 4:
+                if (!FreezerOpen) ToggleFreezerDoor(true, byPlayer);
+                else ToggleFreezerDoor(false, byPlayer);
+                MarkDirty(true);
+                return true;
+            case 5:
+                if (byPlayer.Entity.Controls.ShiftKey) {
+                    if (!DrawerOpen) ToggleFreezerDrawer(true, byPlayer);
+                    else ToggleFreezerDrawer(false, byPlayer);
+                    MarkDirty(true);
                     return true;
                 }
-            }
 
-            if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                if (!slot.Empty) {
+                    if (slot.CanStoreInSlot(CoolingOnly)) {
+                        AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
-                if (TryPutIce(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                    MarkDirty();
-                    return true;
+                        if (TryPutIce(byPlayer, slot, blockSel)) {
+                            Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                            MarkDirty();
+                            return true;
+                        }
+                    }
+                    (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
                 }
-            }
-
-            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
-            return false;
+                else {
+                    return TryTakeIceOrSlush(byPlayer);
+                }
+                break;
+            case 6:
+                break;
         }
+
+        return false;
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex;
-        if (startIndex > 8) return false; // If it's cabinet or drawer selection box, return
-
-        startIndex *= ItemsPerSegment;
-        if (!inv[startIndex].Empty) {
-            if (!IsSolitaryMatch(inv[startIndex].Itemstack, slot.Itemstack)) return false;
-            if (IsLargeItem(slot.Itemstack) || IsLargeItem(inv[startIndex].Itemstack)) return false;
-            if (IsSmallItem(inv[startIndex].Itemstack) != IsSmallItem(slot.Itemstack)) return false; 
-        }
-
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !IsSmallItem(slot.Itemstack)) return false;
-
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return moved > 0;
-            }
-        }
-
-        return false;
-    }
-
-    protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex;
-        startIndex *= ItemsPerSegment;
-
-        for (int i = ItemsPerSegment - 1; i >= 0; i--) {
-            int currentIndex = startIndex + i;
-            if (!inv[currentIndex].Empty) {
-                ItemStack stack = inv[currentIndex].TakeOut(1);
-                if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                }
-
-                if (stack.StackSize > 0) {
-                    Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-                }
-
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
-                return true;
-            }
-        }
-
-        return false;
+        if (blockSel.SelectionBoxIndex > 3) return false; // If it's freezer or drawer selection box, return
+        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
-        if (selection.SelectionBoxIndex != 9) return false;
+        if (selection.SelectionBoxIndex != 5) return false;
         if (slot.Empty) return false;
         ItemStack stack = inv[cutIceSlot].Itemstack;
 
@@ -252,11 +211,11 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
     private void HandleAnimations() {
         if (animUtil != null) {
-            if (CabinetOpen) ToggleCabinetDoor(true);
-            else ToggleCabinetDoor(false);
+            if (FreezerOpen) ToggleFreezerDoor(true);
+            else ToggleFreezerDoor(false);
 
-            if (DrawerOpen) ToggleCabinetDrawer(true);
-            else ToggleCabinetDrawer(false);
+            if (DrawerOpen) ToggleFreezerDrawer(true);
+            else ToggleFreezerDrawer(false);
 
             if (!inv[cutIceSlot].Empty) {
                 if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
@@ -275,42 +234,41 @@ public class BECoolingCabinet : BEBaseFSContainer {
         }
     }
 
-    private void ToggleCabinetDoor(bool open, IPlayer byPlayer = null) {
+    private void ToggleFreezerDoor(bool open, IPlayer byPlayer = null) {
         if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
-
         if (open) {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == false) {
+            if (animUtil.activeAnimationsByAnimCode.ContainsKey("freezeropen") == false) {
                 animUtil.StartAnimation(new AnimationMetaData() {
-                    Animation = "cabinetopen",
-                    Code = "cabinetopen",
+                    Animation = "freezeropen",
+                    Code = "freezeropen",
                     AnimationSpeed = 3f,
                     EaseOutSpeed = 1,
                     EaseInSpeed = 2
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerOpen, byPlayer.Entity, byPlayer, true, 16);
             PerishMultiplier = 1f;
         }
         else {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == true)
-                animUtil.StopAnimation("cabinetopen");
+            if (animUtil.activeAnimationsByAnimCode.ContainsKey("freezeropen") == true)
+                animUtil.StopAnimation("freezeropen");
 
             PerishMultiplier = perishMultiplierUnBuffed;
             
             if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
                 PerishMultiplier = perishMultiplierBuffed;
             
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerClose, byPlayer.Entity, byPlayer, true, 16);
         }
 
-        CabinetOpen = open;
+        FreezerOpen = open;
     }
 
-    private void ToggleCabinetDrawer(bool open, IPlayer byPlayer = null) {
+    private void ToggleFreezerDrawer(bool open, IPlayer byPlayer = null) {
         if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
@@ -326,16 +284,16 @@ public class BECoolingCabinet : BEBaseFSContainer {
                     EaseInSpeed = 2
                 });
             }
-
             if (byPlayer != null) Api.World.PlaySoundAt(block.soundDrawerOpen, byPlayer.Entity, byPlayer, true, 16);
-            if (!CabinetOpen) PerishMultiplier = perishMultiplierUnBuffed;
+            if (!FreezerOpen) PerishMultiplier = perishMultiplierUnBuffed;
         }
         else {
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("draweropen") == true)
+            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("draweropen") == true) {
                 animUtil?.StopAnimation("draweropen");
-
-            if (!CabinetOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
+            }
+            if (!FreezerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 PerishMultiplier = perishMultiplierBuffed;
+            }
 
             if (byPlayer != null) Api.World.PlaySoundAt(block.soundDrawerClose, byPlayer.Entity, byPlayer, true, 16);
         }
@@ -398,28 +356,28 @@ public class BECoolingCabinet : BEBaseFSContainer {
     #region Meshing
 
     private MeshData GenMesh(ITesselatorAPI tesselator) {
-        string key = "coolingCabinetMeshes" + Block.Code.ToShortString();
+        string key = "meatFreezerMeshes" + Block.Code.ToShortString();
         Dictionary<string, MeshData> meshes = ObjectCacheUtil.GetOrCreate(Api, key, () => {
             return new Dictionary<string, MeshData>();
         });
 
         Shape shape = null;
         if (animUtil != null) {
-            string skeydict = "coolingCabinetMeshes";
+            string skeydict = "meatFreezerMeshes";
             Dictionary<string, Shape> shapes = ObjectCacheUtil.GetOrCreate(Api, skeydict, () => {
                 return new Dictionary<string, Shape>();
             });
 
-            string sKey = "coolingCabinetShape" + '-' + Block.Code.ToShortString();
+            string sKey = "meatFreezerShape" + '-' + Block.Code.ToShortString();
             if (!shapes.TryGetValue(sKey, out shape)) {
-                AssetLocation shapeLocation = new(ShapeReferences.CoolingCabinet);
+                AssetLocation shapeLocation = new(ShapeReferences.MeatFreezer);
                 shape = Shape.TryGet(capi, shapeLocation);
                 shapes[sKey] = shape;
             }
         }
 
         string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
-        string meshKey = "coolingCabinetAnim" + '-' + string.Join('-', parts) + '-' + block.Code.ToShortString();
+        string meshKey = "meatFreezerAnim" + '-' + string.Join('-', parts) + '-' + block.Code.ToShortString();
 
         if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
             if (animUtil != null && animUtil.renderer == null) {
@@ -433,7 +391,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
             if (animUtil.renderer == null) {
                 shape.ApplyVariantTextures(this);
 
-                ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-CoolingCabinetAnimation");
+                ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-MeatFreezerAnimation");
                 mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, GetRotationAngle(block), 0));
             }
 
@@ -456,55 +414,24 @@ public class BECoolingCabinet : BEBaseFSContainer {
             HandleAnimations();
         }
 
+        for (int i = 0; i < 4; i++) {
+            if (contentMeshes[i] == null) continue;
+
+            MeshData contentMesh = contentMeshes[i].Clone();
+            switch (GetRotationAngle(block)) {
+                case 0: contentMesh.Translate(i * 0.4375f, 0, 0); break;
+                case 90: contentMesh.Translate(0, 0, -i * 0.4375f); break;
+                case 180: contentMesh.Translate(-i * 0.4375f, 0, 0); break;
+                case 270: contentMesh.Translate(0, 0, i * 0.4375f); break;
+            }
+
+            mesher.AddMeshData(contentMesh);
+        }
+
         return true;
     }
 
-    protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int shelf = 0; shelf < ShelfCount; shelf++) {
-            for (int segment = 0; segment < SegmentsPerShelf; segment++) {
-                for (int item = 0; item < ItemsPerSegment; item++) {
-                    int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
-
-                    float x, y = shelf * 0.4921875f, z;
-                    float scale = 0.95f;
-
-                    if (IsLargeItem(inv[index].Itemstack)) {
-                        x = segment * 0.65f;
-                        z = item * 0.65f;
-                    }
-                    else if (!IsSmallItem(inv[index].Itemstack)) {
-                        x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
-                        z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
-                    }
-                    else {
-                        x = segment * 0.763f + (item % 4) * 0.19f - 0.314f;
-                        y = y * 1.16f + (item / 8) * 0.10f + 0.103f;
-                        z = ((item / 4) % 2) * 0.45f - 0.25f;
-                        scale = 0.82f;
-                    }
-                    
-                    if (inv[index].Itemstack?.Collectible.Code == "pemmican:pemmican-pack") {
-                        y += item / 2 * 0.13f;
-                        z = -0.18f;
-                    }
-
-                    tfMatrices[index] =
-                        new Matrixf()
-                        .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
-                        .Scale(scale, scale, scale)
-                        .Translate(x - 0.625f, y + 0.66f, z - 0.5325f)
-                        .Values;
-                }
-            }
-        }
-
-        tfMatrices[cutIceSlot] = new Matrixf().Scale(0.01f, 0.01f, 0.01f).Values; // Hide original cut ice shape, can't bother to custom mesh it out
-
-        return tfMatrices;
-    }
+    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
 
     #endregion
 
@@ -512,7 +439,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
-        CabinetOpen = tree.GetBool("cabinetOpen", false);
+        FreezerOpen = tree.GetBool("freezerOpen", false);
         DrawerOpen = tree.GetBool("drawerOpen", false);
 
         HandleAnimations();
@@ -521,7 +448,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
     public override void ToTreeAttributes(ITreeAttribute tree) {
         base.ToTreeAttributes(tree);
-        tree.SetBool("cabinetOpen", CabinetOpen);
+        tree.SetBool("freezerOpen", FreezerOpen);
         tree.SetBool("drawerOpen", DrawerOpen);
     }
 
@@ -529,7 +456,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
         base.GetBlockInfo(forPlayer, sb);
 
         // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[cutIceSlot].Empty) {
+        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 5 && !inv[cutIceSlot].Empty) {
             if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
@@ -538,16 +465,15 @@ public class BECoolingCabinet : BEBaseFSContainer {
             }
         }
 
-        // Cycle segments when cabinet is closed
-        if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == 10) {
-            int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
-            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + currentSegment);
-
-            if (inv[currentSegment * ItemsPerSegment].Empty) {
-                sb.AppendLine(Lang.Get("foodshelves:Empty."));
-            }
-            else {
-                DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, SlotCount, SegmentsPerShelf, ItemsPerSegment, false, -1, currentSegment);
+        // Display all segments if freezer is closed
+        if (!FreezerOpen && (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 4 || forPlayer.CurrentBlockSelection.SelectionBoxIndex == 6)) {
+            for (int i = 0; i < 4; i++) {
+                if (inv[i * ItemsPerSegment].Empty) {
+                    sb.AppendLine(Lang.Get("foodshelves:Empty."));
+                }
+                else {
+                    DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, SlotCount, SegmentsPerShelf, ItemsPerSegment, false, -1, i);
+                }
             }
         }
     }

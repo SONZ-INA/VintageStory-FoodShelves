@@ -1,0 +1,8 @@
+{
+  "CollectibleTypes": [],
+  "CollectibleCodes": [
+    "game:redmeat-raw",
+    "game:bushmeat-raw",
+    "game:poultry-raw"
+  ]
+}

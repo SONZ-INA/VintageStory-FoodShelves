@@ -1,0 +1,24 @@
+[
+  {
+    "ingredientPattern": "PGP,PCP,RPN",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 6 },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass" },
+      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 4, "name": "rock" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "meatfreezer-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "glass": "{glass}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  }
+]

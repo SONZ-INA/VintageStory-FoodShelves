@@ -49,6 +49,7 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
+        api.RegisterBlockClass("FoodShelves.BlockMeatFreezer", typeof(BlockMeatFreezer));
         // ------------------------
 
         // Block Entity Classes----
@@ -63,6 +64,7 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
+        api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
@@ -85,8 +87,9 @@ public class Core : ModSystem {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
                 ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
-                ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
-                ["other"] = new[] { "pumpkincase" }
+                ["glassware"] = new[] { "meatfreezer" },
+                ["other"] = new[] { "pumpkincase" },
+                ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" }
             };
 
             LoadData(api, restrictionGroupsServer);
