@@ -250,7 +250,7 @@ public class BEMeatFreezer : BEBaseFSContainer {
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerOpen, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerOpen, byPlayer.Entity, byPlayer, true, 16, 0.3f);
             PerishMultiplier = 1f;
         }
         else {
@@ -262,7 +262,7 @@ public class BEMeatFreezer : BEBaseFSContainer {
             if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
                 PerishMultiplier = perishMultiplierBuffed;
             
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerClose, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundFreezerClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
         }
 
         FreezerOpen = open;
@@ -356,6 +356,8 @@ public class BEMeatFreezer : BEBaseFSContainer {
     #region Meshing
 
     private MeshData GenMesh(ITesselatorAPI tesselator) {
+        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
+
         string key = "meatFreezerMeshes" + Block.Code.ToShortString();
         Dictionary<string, MeshData> meshes = ObjectCacheUtil.GetOrCreate(Api, key, () => {
             return new Dictionary<string, MeshData>();
@@ -368,7 +370,7 @@ public class BEMeatFreezer : BEBaseFSContainer {
                 return new Dictionary<string, Shape>();
             });
 
-            string sKey = "meatFreezerShape" + '-' + Block.Code.ToShortString();
+            string sKey = "meatFreezerShape" + '-' + Block.Code.ToShortString() + '-' + string.Join('-', parts);
             if (!shapes.TryGetValue(sKey, out shape)) {
                 AssetLocation shapeLocation = new(ShapeReferences.MeatFreezer);
                 shape = Shape.TryGet(capi, shapeLocation);
@@ -376,9 +378,7 @@ public class BEMeatFreezer : BEBaseFSContainer {
             }
         }
 
-        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
-        string meshKey = "meatFreezerAnim" + '-' + string.Join('-', parts) + '-' + block.Code.ToShortString();
-
+        string meshKey = "meatFreezerAnim" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
         if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
             if (animUtil != null && animUtil.renderer == null) {
                 animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, GetRotationAngle(block), 0));

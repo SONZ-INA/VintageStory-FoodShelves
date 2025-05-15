@@ -1,0 +1,54 @@
+{
+  "code": "wallcabinet",
+  "class": "FoodShelves.BlockWallCabinet",
+  "entityclass": "FoodShelves.BEWallCabinet",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": "foodshelves:variants/wood/{wood}"
+    },
+    "handbook": {
+      "groupBy": [ "wallcabinet-*" ]
+    }
+  },
+  "behaviors": [
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
+  ],
+  "entityBehaviors": [{ "name": "Animatable" }],
+  "shape": {
+    "base": "block/glassware/wallcabinet",
+    "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+  },
+  "heldTpIdleAnimation": "holdunderarm",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
+  "tpHandTransform": {
+	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
+	  "rotation": { "x": 99, "y": -10, "z": -6 },
+	  "scale": 0.5
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionbox": { "x1": 0.4375, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+  "selectionBoxes": [
+	  { "x1": 0.4875, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.4875, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.4875, "y1": 0.5, "z1": 0, "x2": 1, "y2": 1, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.4875, "y1": 0.5, "z1": 0.5, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+    { "x1": 0.4375, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
+  ]
+}

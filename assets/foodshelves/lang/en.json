@@ -33,6 +33,7 @@
   "block-ceilingjar-*": "Ceiling Jar",
   "block-coolingcabinet-*": "Cooling Cabinet",
   "block-meatfreezer-*": "Meat Freezer",
+  "block-wallcabinet-*": "Wall Cabinet",
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
@@ -62,6 +63,7 @@
   "helddesc-fooddisplaycase": "Food placed in this case stays fresh for 25% longer.",
   "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 25% longer, or up to 70% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-meatfreezer": "Raw meat stored in this freezer stays fresh 60% longer, or up to 5x longer when ice is added.<br>Make sure to keep it closed!",
+  "helddesc-wallcabinet": "Stuff placed in this cabinet lasts up to 25% longer.<br>Make sure to keep it closed!",
 
   "This item cannot be placed in this container.": "This item cannot be placed in this container.",
   "Only pies or cheese can be placed on this shelf.": "Only pies or cheese can be placed on this shelf.",

@@ -24,5 +24,14 @@
     "width": 2, "height": 2, "recipeGroup": 2, "shapeless": true,
     "copyAttributesFrom": "B",
     "output": { "type": "block", "code": "barrelrack-top-east", "quantity": 2 }
+  },
+  {
+    "ingredientPattern": "PSP,S_S,PSP",
+    "ingredients": {
+      "S": { "type": "item", "code": "game:stick" },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "barrelrack-normal-east" }
   }
 ]

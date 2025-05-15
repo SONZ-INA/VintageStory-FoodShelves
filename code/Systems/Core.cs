@@ -50,6 +50,8 @@ public class Core : ModSystem {
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
         api.RegisterBlockClass("FoodShelves.BlockMeatFreezer", typeof(BlockMeatFreezer));
+        api.RegisterBlockClass("FoodShelves.BlockWallCabinet", typeof(BlockWallCabinet));
+        //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
         // ------------------------
 
         // Block Entity Classes----
@@ -65,6 +67,8 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
         api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
+        api.RegisterBlockEntityClass("FoodShelves.BEWallCabinet", typeof(BEWallCabinet));
+        //api.RegisterBlockEntityClass("FoodShelves.BEGlassJar", typeof(BEGlassJar));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));

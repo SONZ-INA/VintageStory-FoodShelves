@@ -15,5 +15,21 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "B",
+    "ingredients": {
+      "B": {
+        "type": "block",
+        "code": "eggbasket-normal",
+        "attributes": {
+          "FSAttributes": {
+            "wood": "oak"
+          }
+        }
+      }
+    },
+    "width": 1, "height": 1, "recipeGroup": 1, "shapeless": true,
+    "output": { "type": "block", "code": "eggbasket-normal" }
   }
 ]

@@ -16,5 +16,15 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "_O_,S_S,P_P",
+    "ingredients": {
+      "O": { "type": "item", "code": "game:stick" },
+      "S": { "type": "item", "code": "game:stick", "quantity": 4 },
+      "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "vegetablebasket-normal" }
   }
 ]

@@ -7,48 +7,9 @@ public static class Meshing {
         if (api is not ICoreClientAPI capi) return null;
 
         Block block = stackWithAttributes.Block;
+        var variantData = GetBlockVariantData(capi, stackWithAttributes);
 
-        string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
-        Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
-        if (shape == null) return null;
-
-        if (shape.Textures.Count == 0) {
-            foreach (var texture in block.Textures) {
-                shape.Textures.Add(texture.Key, texture.Value.Base);
-            }
-        }
-
-        var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
-
-        // Custom Textures
-        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
-            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string>>()) {
-                string texPath = pair.Value;
-
-                foreach (var attr in tree) {
-                    string key = attr.Key;
-                    string value = attr.Value.ToString();
-
-                    if (texPath.Contains($"{{{key}}}")) {
-                        shape.Textures[key] = pair.Value.Replace($"{{{key}}}", value);
-
-                        var ctex = new CompositeTexture(pair.Value.ToString().Replace($"{{{key}}}", value));
-
-                        //BlendedOverlayTexture overlay = new() {
-                        //    Base = new AssetLocation("foodshelves:variants/overlay/shelves/wood")
-                        //};
-
-                        //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();
-                        //ctex.BlendedOverlays.Append(overlay);
-
-                        ctex.Bake(capi.Assets);
-                        stexSource.textures[pair.Key] = ctex;
-                    }
-                }
-            }
-        }
-
-        capi.Tesselator.TesselateShape("FS-TesselateShape", shape, out MeshData blockMesh, stexSource);
+        capi.Tesselator.TesselateShape("FS-TesselateShape", variantData.Item1, out MeshData blockMesh, variantData.Item2);
 
         float scale = block.Shape.Scale;
         if (scale != 1) blockMesh.Scale(new Vec3f(.5f, 0, .5f), scale, scale, scale);
@@ -76,19 +37,11 @@ public static class Meshing {
         return mesh;
     }
 
-    public static MeshData GenBlockMeshWithoutElements(ICoreClientAPI capi, Block block, string[] elements) {
-        if (block == null) return null;
+    public static MeshData GenBlockMeshWithoutElements(ICoreClientAPI capi, ItemStack stackWithAttributes, string[] elements) {
+        if (stackWithAttributes == null) return null;
 
-        ITexPositionSource texSource = capi.Tesselator.GetTextureSource(block);
-        Shape shape = capi.TesselatorManager.GetCachedShape(block.Shape.Base);
-        
-        if (shape == null) {
-            string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json").ToString();
-            shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>();
-            if (shape == null) return null;
-        }
-        
-        Shape shapeClone = shape.Clone();
+        Block block = stackWithAttributes.Block;
+        var variantData = GetBlockVariantData(capi, stackWithAttributes);
 
         ShapeElement[] RemoveElements(ShapeElement[] elementArray) {
             var remainingElements = elementArray.Where(e => !elements.Contains(e.Name)).ToArray();
@@ -100,9 +53,9 @@ public static class Meshing {
             return remainingElements;
         }
 
-        shapeClone.Elements = RemoveElements(shapeClone.Elements);
+        variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements);
 
-        capi.Tesselator.TesselateShape("FS-ShapeErased", shapeClone, out MeshData mesh, texSource);
+        capi.Tesselator.TesselateShape("FS-ShapeErased", variantData.Item1, out MeshData mesh, variantData.Item2);
         return mesh;
     }
 

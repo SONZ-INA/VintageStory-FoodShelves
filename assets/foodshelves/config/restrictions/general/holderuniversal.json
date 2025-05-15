@@ -4,7 +4,8 @@
     "game:ItemCheese",
     "foodshelves:BlockFruitBasket",
     "foodshelves:BlockVegetableBasket",
-    "foodshelves:BlockEggBasket"
+    "foodshelves:BlockEggBasket",
+    "foodshelves:BlockGlassJar"
   ],
   "CollectibleCodes": [
     "game:crock-burned*",

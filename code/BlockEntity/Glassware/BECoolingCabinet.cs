@@ -292,7 +292,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16, 0.3f);
             PerishMultiplier = 1f;
         }
         else {
@@ -304,7 +304,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
             if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
                 PerishMultiplier = perishMultiplierBuffed;
             
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
         }
 
         CabinetOpen = open;
@@ -398,6 +398,8 @@ public class BECoolingCabinet : BEBaseFSContainer {
     #region Meshing
 
     private MeshData GenMesh(ITesselatorAPI tesselator) {
+        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
+        
         string key = "coolingCabinetMeshes" + Block.Code.ToShortString();
         Dictionary<string, MeshData> meshes = ObjectCacheUtil.GetOrCreate(Api, key, () => {
             return new Dictionary<string, MeshData>();
@@ -410,7 +412,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
                 return new Dictionary<string, Shape>();
             });
 
-            string sKey = "coolingCabinetShape" + '-' + Block.Code.ToShortString();
+            string sKey = "coolingCabinetShape" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
             if (!shapes.TryGetValue(sKey, out shape)) {
                 AssetLocation shapeLocation = new(ShapeReferences.CoolingCabinet);
                 shape = Shape.TryGet(capi, shapeLocation);
@@ -418,9 +420,7 @@ public class BECoolingCabinet : BEBaseFSContainer {
             }
         }
 
-        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
-        string meshKey = "coolingCabinetAnim" + '-' + string.Join('-', parts) + '-' + block.Code.ToShortString();
-
+        string meshKey = "coolingCabinetAnim" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
         if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
             if (animUtil != null && animUtil.renderer == null) {
                 animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, GetRotationAngle(block), 0));

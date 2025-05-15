@@ -63,8 +63,8 @@
   <None Remove="assets\foodshelves\blocktypes\glassware\ceilingjar.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplaycase.json" />
-  <None Remove="assets\foodshelves\blocktypes\glassware\glassjar.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\meatfreezer.json" />
+  <None Remove="assets\foodshelves\blocktypes\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelbig.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrack.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrackbig.json" />
@@ -124,6 +124,7 @@
   <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodblock.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodcase.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
@@ -144,6 +145,7 @@
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\GlassJar.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\MeatFreezer.json" />
+  <None Remove="assets\foodshelves\shapes\block\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BarShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BreadShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\EggShelfShort.json" />
@@ -162,6 +164,8 @@
   <None Remove="assets\foodshelves\sounds\block\glassCabinetOpen.ogg" />
   <None Remove="assets\foodshelves\sounds\block\icedrawerclose.ogg" />
   <None Remove="assets\foodshelves\sounds\block\icedraweropen.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\wallcabinetclose.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\wallcabinetopen.ogg" />
   <None Remove="assets\foodshelves\textures\block\wood\coolingcabinet\surface_long.png" />
   <None Remove="assets\foodshelves\textures\block\wood\fruitbasket\top.png" />
   <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\bottom.png" />
