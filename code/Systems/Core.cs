@@ -72,6 +72,7 @@ public class Core : ModSystem {
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEFlourSack", typeof(BEFlourSack));
 
         api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
@@ -92,7 +93,7 @@ public class Core : ModSystem {
                 ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
                 ["glassware"] = new[] { "meatfreezer" },
-                ["other"] = new[] { "pumpkincase" },
+                ["other"] = new[] { "pumpkincase", "floursack" },
                 ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" }
             };
 

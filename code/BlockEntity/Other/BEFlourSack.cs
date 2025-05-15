@@ -1,29 +1,37 @@
 ﻿namespace FoodShelves;
 
-public class BECeilingJar : BEBaseFSContainer {
-    public override string AttributeCheck => "fsLiquidyStuff";
+public class BEFlourSack : BEBaseFSContainer {
+    protected override string CantPlaceMessage => "foodshelves:Only flour can be placed in this sack.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
 
-    protected override float PerishMultiplier => 0.75f;
-    protected override float DryingMultiplier => 1.25f;
-    public override int SlotCount => 12;
+    protected override float PerishMultiplier => 0.6f;
+    public override int SlotCount => 4;
 
-    public BECeilingJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
+    public BEFlourSack() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
 
     public override void Initialize(ICoreAPI api) {
-        // Adjust when Storage Vessels are fixed
-        inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() { [EnumFoodCategory.Grain] = 0.5f };
-
         base.Initialize(api);
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override void InitMesh() {
-        base.InitMesh();
-
         if (capi == null) return;
 
-        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar, 8.5f);
+        if (!inv[0].Empty) {
+            string flourtype = inv[0].Itemstack.Collectible.Code.Path.Replace("flour-", "");
+            VariantAttributes.SetString("seed", flourtype);
+            base.InitMesh();
+        }
+        else {
+            var stack = new ItemStack(block);
+            if (VariantAttributes.Count != 0) {
+                stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
+            }
+
+            blockMesh = GenBlockMeshWithoutElements(capi, stack, new[] { "sackicon" });
+        }
+
+        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);
         if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
     }
 
@@ -71,7 +79,7 @@ public class BECeilingJar : BEBaseFSContainer {
                     AssetLocation sound = stack.Block?.Sounds?.Place;
                     Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
                     (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                    
+
                     InitMesh();
                     MarkDirty();
                     return true;
@@ -83,14 +91,10 @@ public class BECeilingJar : BEBaseFSContainer {
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        InitMesh(); // Re-meshing the falling block
         mesher.AddMeshData(blockMesh);
         return true;
     }
 
     protected override float[][] genTransformationMatrices() { return null; } // Unneeded
-
-    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
-        sb.AppendLine(TransitionInfoCompact(Api.World, inv[1], EnumTransitionType.Dry));
-    }
 }

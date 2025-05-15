@@ -1,0 +1,30 @@
+[
+  {
+    "ingredientPattern": "PLP,PSP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "L": { "type": "block", "code": "game:linen-normal-down", "quantity": 2 },
+      "S": { "type": "item", "code": "game:stick", "quantity": 4 }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "floursack-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "PLP,PSP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*" },
+      "L": { "type": "block", "code": "game:linen-normal-down", "quantity": 2 },
+      "S": { "type": "item", "code": "game:stick", "quantity": 4 }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": { "type": "block", "code": "floursack-normal-east" }
+  }
+]

@@ -34,6 +34,7 @@
   "block-coolingcabinet-*": "Cooling Cabinet",
   "block-meatfreezer-*": "Meat Freezer",
   "block-wallcabinet-*": "Wall Cabinet",
+  "block-floursack-*": "Flour Sack",
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
@@ -55,6 +56,7 @@
   "blockdesc-fooduniversal-text": "  -Pies, Cheese, all bread types<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread",
   "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Fruit bars<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -All nut bars<br>  -Pacoca<br>  -Halva<br>  -Marzipam<br>Long-term food:<br>  -All pemmicans<br>  -Packed pemmican<br>  -Mushroom pate",
   "blockdesc-meatfreezer-text": "  -Most types of raw meat.",
+  "blockdesc-floursack-text": "  -All types of flour.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
@@ -64,6 +66,7 @@
   "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 25% longer, or up to 70% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-meatfreezer": "Raw meat stored in this freezer stays fresh 60% longer, or up to 5x longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-wallcabinet": "Stuff placed in this cabinet lasts up to 25% longer.<br>Make sure to keep it closed!",
+  "helddesc-floursack": "Flour placed in this sack lasts up to 40% longer.",
 
   "This item cannot be placed in this container.": "This item cannot be placed in this container.",
   "Only pies or cheese can be placed on this shelf.": "Only pies or cheese can be placed on this shelf.",
@@ -79,6 +82,7 @@
   "Only barrels can be placed on this rack.": "Only barrels can be placed on this rack.",
   "Only tuns can be placed on this rack.": "Only tuns can be placed on this rack.",
   "Only raw meat can be placed in this freezer.": "Only raw meat can be placed in this freezer.",
+  "Only flour can be placed in this sack.": "Only flour can be placed in this sack.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",
