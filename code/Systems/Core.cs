@@ -1,13 +1,15 @@
-﻿using static FoodShelves.Patches;
+﻿using Vintagestory.ServerMods;
+using static FoodShelves.Patches;
 
 [assembly: ModInfo(name: "Food Shelves", modID: "foodshelves")]
 
 namespace FoodShelves;
 
 public class Core : ModSystem {
+    public override double ExecuteOrder() => 1.01; // For the dynamic recipes to load, this must be after 1
+
     private readonly Dictionary<string, RestrictionData> restrictions = new();
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
-    // private readonly Dictionary<string, string[2]> connections = new();
 
     public static ConfigServer ConfigServer { get; set; }
     // public static ConfigClient ConfigClient { get; set; }
@@ -88,13 +90,15 @@ public class Core : ModSystem {
         base.AssetsLoaded(api);
 
         if (api.Side == EnumAppSide.Server) {
+            SupportModdedIngredients(api);
+
             Dictionary<string, string[]> restrictionGroupsServer = new() {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
-                ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
+                ["baskets"] = new[] { "eggbasket", "vegetablebasket", "fruitbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
                 ["glassware"] = new[] { "meatfreezer" },
-                ["other"] = new[] { "pumpkincase", "floursack" },
-                ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" }
+                ["other"] = new[] { "floursack", "pumpkincase" },
+                ["shelves"] = new[] { "barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf" }
             };
 
             LoadData(api, restrictionGroupsServer);
@@ -110,6 +114,37 @@ public class Core : ModSystem {
 
         BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
     }
+
+    private void SupportModdedIngredients(ICoreAPI api) {
+        Dictionary<string, string[]> variantData = api.LoadAsset<Dictionary<string, string[]>>("foodshelves:config/variantdata/variantmodsloaded.json");
+        List<IAsset> allCollectibleRecipes = api.Assets.GetManyInCategory("recipes", "grid", "foodshelves");
+
+        foreach (var entry in variantData) {
+            foreach (string variantModItem in entry.Value) {
+                foreach (var collectibleRecipes in allCollectibleRecipes) {
+                    foreach (var recipe in collectibleRecipes.ToObject<GridRecipe[]>()) {
+                        if (!recipe.Enabled) continue;
+                        
+                        GridRecipe newRecipe = recipe.Clone();
+                        bool recipeChanged = false;
+
+                        foreach (var ingredient in recipe.Ingredients) {
+                            if (ingredient.Value.Code == entry.Key) {
+                                newRecipe.Ingredients[ingredient.Key].Code = variantModItem;
+                                recipeChanged = true;
+                            }
+                        }
+                        
+                        if (recipeChanged) {
+                            GridRecipeLoader gridRecipeLoader = api.ModLoader.GetModSystem<GridRecipeLoader>();
+                            gridRecipeLoader.LoadRecipe(collectibleRecipes.Location, newRecipe);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     private void LoadData(ICoreAPI api, Dictionary<string, string[]> restrictionGroups) {
         foreach (var (category, names) in restrictionGroups) {

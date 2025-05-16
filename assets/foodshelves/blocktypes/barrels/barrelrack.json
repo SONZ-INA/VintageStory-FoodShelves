@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/wood/{wood}"
+      "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ]
     },
     "handbook": {
       "groupBy": [ "barrelrack-*" ],

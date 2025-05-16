@@ -49,27 +49,36 @@ public static class Extensions {
 
         // Custom Textures
         if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
-            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string>>()) {
-                string texPath = pair.Value;
+            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()) {
+                string[] texPaths = pair.Value;
 
                 foreach (var attr in tree) {
                     string key = attr.Key;
                     string value = attr.Value.ToString();
 
-                    if (texPath.Contains($"{{{key}}}")) {
-                        shape.Textures[key] = pair.Value.Replace($"{{{key}}}", value);
+                    foreach (string texPath in texPaths) {
+                        if (texPath.Contains($"{{{key}}}")) {
+                            string fullTexPath = texPath.Replace($"{{{key}}}", value);
 
-                        var ctex = new CompositeTexture(pair.Value.ToString().Replace($"{{{key}}}", value));
+                            if (capi.Assets.TryGet(new AssetLocation(fullTexPath).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                                continue;
+                            }
+                                
+                            shape.Textures[key] = fullTexPath;
 
-                        //BlendedOverlayTexture overlay = new() {
-                        //    Base = new AssetLocation("foodshelves:variants/overlay/shelves/wood")
-                        //};
+                            var ctex = new CompositeTexture(fullTexPath);
 
-                        //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();
-                        //ctex.BlendedOverlays.Append(overlay);
+                            //BlendedOverlayTexture overlay = new() {
+                            //    Base = new AssetLocation("foodshelves:variants/overlay/shelves/wood")
+                            //};
 
-                        ctex.Bake(capi.Assets);
-                        stexSource.textures[pair.Key] = ctex;
+                            //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();
+                            //ctex.BlendedOverlays.Append(overlay);
+
+                            ctex.Bake(capi.Assets);
+                            stexSource.textures[pair.Key] = ctex;
+                            break;
+                        }
                     }
                 }
             }
@@ -79,23 +88,32 @@ public static class Extensions {
     }
 
     public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
-        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string>>();
+        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string[]>>();
+        
         if (variantTextures == null) return;
-
         if (fscontainer.VariantAttributes == null) return;
 
         foreach (var texture in variantTextures) {
-            string textureValue = texture.Value;
+            string[] textureValues = texture.Value;
 
-            foreach (var attr in fscontainer.VariantAttributes) {
-                string paramPlaceholder = "{" + attr.Key + "}";
-                string paramValue = attr.Value.ToString();
+            foreach (string originalTexVal in textureValues) {
+                string textureValue = originalTexVal;
 
-                textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+                foreach (var attr in fscontainer.VariantAttributes) {
+                    string paramPlaceholder = "{" + attr.Key + "}";
+                    string paramValue = attr.Value.ToString();
+                    textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+                }
+
+                if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
+
+                if ((fscontainer.Api as ICoreClientAPI)?.Assets.TryGet(new AssetLocation(textureValue).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                    continue;
+                }
+
+                shape.Textures[texture.Key] = textureValue;
+                break;
             }
-
-            if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
-            shape.Textures[texture.Key] = textureValue;
         }
     }
 
@@ -443,6 +461,8 @@ public static class Extensions {
         if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
         if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
         if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
+        if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
+        if (WildcardUtil.Match("expandedfoods:cookedveggie-*", stackCode)) return true;
 
         return false;
     }

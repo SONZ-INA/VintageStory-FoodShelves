@@ -9,8 +9,9 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/wood/{wood}",
-      "seed": "game:item/resource/seeds/{seed}"
+      "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ],
+      "cloth": [ "game:block/cloth/basic/{cloth}" ],
+      "seed": [ "game:item/resource/seeds/{seed}" ]
     },
     "handbook": {
       "groupBy": [ "floursack-*" ],
@@ -55,6 +56,6 @@
     "break": "game:block/planks"
   },
   "collisionSelectionBoxes": [ 
-    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+    { "x1": 0.03, "y1": 0, "z1": 0.03, "x2": 0.97, "y2": 1, "z2": 0.97 }
   ]
 }

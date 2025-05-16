@@ -11,8 +11,8 @@
     "value": {
       "materials": { "loadFromProperties": "block/wood" },
       "variantTextures": {
-        "surface": "foodshelves:variants/wood/{wood}",
-        "wood": "game:block/wood/debarked/{wood}"
+        "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ],
+        "wood": [ "game:block/wood/debarked/{wood}" ]
       }
     },
     "dependsOn": [ { "modid": "vanvar" } ]
@@ -23,7 +23,7 @@
     "value": {
       "materials": { "loadFromProperties": "block/wood" },
       "variantTextures": {
-        "wood": "game:block/wood/debarked/{wood}"
+        "wood": [ "game:block/wood/debarked/{wood}" ]
       }
     },
     "dependsOn": [ { "modid": "vanvar" } ]
@@ -52,5 +52,5 @@
     "file": "foodshelves:recipes/grid/other/tablewshelf.json",
     "op": "replace", "path": "/7/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "vanvar" } ]
-  },
+  }
 ]

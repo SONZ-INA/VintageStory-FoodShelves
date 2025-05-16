@@ -56,7 +56,7 @@ public static class Meshing {
         variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements);
 
         capi.Tesselator.TesselateShape("FS-ShapeErased", variantData.Item1, out MeshData mesh, variantData.Item2);
-        return mesh;
+        return mesh.BlockYRotation(block);
     }
 
     public static MeshData GenContentMesh(ICoreClientAPI capi, ITextureAtlasAPI targetAtlas, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {

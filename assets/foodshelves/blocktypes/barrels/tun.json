@@ -7,9 +7,9 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "wood": "game:block/wood/debarked/{wood}",
-      "bottom": "foodshelves:variants/tun/bottom{wood}",
-      "top": "foodshelves:variants/tun/top{wood}"
+      "wood": [ "game:block/wood/debarked/{wood}" ],
+      "bottom": [ "foodshelves:variants/tun/bottom{wood}", "game:block/wood/debarked/{wood}" ],
+      "top": [ "foodshelves:variants/tun/top{wood}", "game:block/wood/debarked/{wood}" ]
     },
     "handbook": {
       "groupBy": [ "tun-*" ],

@@ -9,9 +9,9 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/wood/{wood}",
-      "glass": "game:block/glass/{glass}",
-      "rock": "game:block/stone/polishedrock/{rock}"
+      "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ],
+      "glass": [ "game:block/glass/{glass}" ],
+      "rock": [ "game:block/stone/polishedrock/{rock}" ]
     },
     "handbook": {
       "groupBy": [ "meatfreezer-*" ],
