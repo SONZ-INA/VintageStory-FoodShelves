@@ -21,8 +21,8 @@
   {
     "ingredientPattern": "PLP,PSP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*" },
-      "L": { "type": "item", "code": "game:cloth-*", "quantity": 2 },
+      "P": { "type": "item", "code": "*:plank-*" },
+      "L": { "type": "item", "code": "*:cloth-*", "quantity": 2 },
       "S": { "type": "item", "code": "game:stick", "quantity": 2 }
     },
     "width": 3, "height": 2, "recipeGroup": 1,

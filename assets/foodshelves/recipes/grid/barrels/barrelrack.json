@@ -29,7 +29,7 @@
     "ingredientPattern": "PSP,S_S,PSP",
     "ingredients": {
       "S": { "type": "item", "code": "game:stick" },
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "*:plank-*" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "barrelrack-normal-east" }

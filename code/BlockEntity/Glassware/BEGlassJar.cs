@@ -6,11 +6,6 @@ public class BEGlassJar : BEBaseFSContainer {
 
     public BEGlassJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsLiquidyStuff")); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         return false;
     }

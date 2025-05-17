@@ -23,23 +23,15 @@
   },
   {
     "ingredientPattern": "PNP,GSG,PCP",
+    "name": "Variantless CC",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4 },
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass" },
-      "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
+      "G": { "type": "block", "code": "game:glass-*" },
+      "S": { "type": "block", "code": "*:shelf-*", "quantity": 3 },
+      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2 }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
-    "output": {
-      "type": "block",
-      "code": "coolingcabinet-normal-east",
-      "attributes": {
-        "FSAttributes": {
-          "glass": "{glass}",
-          "rock": "{rock}"
-        }
-      }
-    }
+    "output": { "type": "block", "code": "coolingcabinet-normal-east" }
   }
 ]

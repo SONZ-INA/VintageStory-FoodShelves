@@ -15,8 +15,7 @@
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
-          "glass": "{glass}",
-          "rock": "{rock}"
+          "glass": "{glass}"
         }
       }
     }
@@ -24,22 +23,13 @@
   {
     "ingredientPattern": "_PP,SGP,PPP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*" },
+      "P": { "type": "item", "code": "*:plank-*" },
       "S": { "type": "item", "code": "game:stick" },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass" }
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" }
     },
     "width": 3,
     "height": 3,
     "recipeGroup": 1,
-    "output": {
-      "type": "block",
-      "code": "fooddisplaycase-normal-east",
-      "attributes": {
-        "FSAttributes": {
-          "glass": "{glass}",
-          "rock": "{rock}"
-        }
-      }
-    }
+    "output": { "type": "block", "code": "fooddisplaycase-normal-east" }
   }
 ]

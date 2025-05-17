@@ -102,6 +102,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         return new ItemStack[] { OnPickBlock(world, pos) };
     }
 
+    public override BlockDropItemStack[] GetDropsForHandbook(ItemStack handbookStack, IPlayer forPlayer) {
+        BlockDropItemStack[] drops = base.GetDropsForHandbook(handbookStack, forPlayer);
+        drops[0].ResolvedItemstack.SetFrom(handbookStack);
+        return drops;
+    }
+
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
         if (api.Side == EnumAppSide.Server) return;
         

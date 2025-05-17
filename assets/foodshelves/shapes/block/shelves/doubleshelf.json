@@ -1,0 +1,177 @@
+{
+	"editor": {
+		"collapsedPaths": "Root/ShelfL,Root/TMBeam,Root/TRBeam,Root/ShelfR,Root/TLBeam",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {},
+	"textures": {
+		"surface": "game:block/wood/shelf/surface",
+		"wood": "game:block/wood/shelf/wood"
+	},
+	"elements": [
+		{
+			"name": "ShelfL",
+			"from": [ 1.0, 5.0, 1.0 ],
+			"to": [ 16.0, 6.0, 14.0 ],
+			"rotationOrigin": [ 1.0, 5.0, 1.0 ],
+			"faces": {
+				"south": { "texture": "#surface", "uv": [ 0.0, 3.0, 15.0, 4.0 ] },
+				"up": { "texture": "#surface", "uv": [ 0.0, 3.0, 15.0, 16.0 ] },
+				"down": { "texture": "#surface", "uv": [ 0.0, 3.0, 15.0, 16.0 ] }
+			},
+			"children": [
+				{
+					"name": "TBFenceL",
+					"from": [ 0.0, 0.0, -1.0 ],
+					"to": [ 15.0, 2.0, 0.0 ],
+					"rotationOrigin": [ 0.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 5.0 ] },
+						"south": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 5.0 ] },
+						"up": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 4.0 ] },
+						"down": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 4.0 ] }
+					}
+				},
+				{
+					"name": "TLFence",
+					"from": [ -1.0, 0.0, -1.0 ],
+					"to": [ 0.0, 2.0, 13.0 ],
+					"rotationOrigin": [ -1.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 1.0, 3.0, 3.0, 4.0 ], "rotation": 90 },
+						"east": { "texture": "#surface", "uv": [ 14.0, 3.0, 16.0, 16.0 ], "rotation": 270, "autoUv": false },
+						"south": { "texture": "#surface", "uv": [ 1.0, 15.0, 3.0, 16.0 ], "rotation": 90 },
+						"west": { "texture": "#surface", "uv": [ 0.0, 3.0, 2.0, 16.0 ], "rotation": 90, "autoUv": false },
+						"up": { "texture": "#surface", "uv": [ 15.0, 3.0, 16.0, 16.0 ], "rotation": 180, "autoUv": false },
+						"down": { "texture": "#surface", "uv": [ 0.0, 3.0, 1.0, 16.0 ], "rotation": 180, "autoUv": false }
+					}
+				}
+			]
+		},
+		{
+			"name": "TLBeam",
+			"from": [ 1.0, 2.0, 0.0 ],
+			"to": [ 3.0, 5.0, 1.0 ],
+			"rotationOrigin": [ 1.0, 2.0, 0.0 ],
+			"faces": {
+				"north": { "texture": "#wood", "uv": [ 3.5, 10.0, 5.5, 13.0 ] },
+				"east": { "texture": "#wood", "uv": [ 3.5, 9.0, 4.5, 12.0 ] },
+				"south": { "texture": "#wood", "uv": [ 3.5, 10.5, 5.5, 13.5 ] },
+				"west": { "texture": "#wood", "uv": [ 4.0, 10.0, 5.0, 13.0 ] },
+				"down": { "texture": "#wood", "uv": [ 4.0, 9.0, 6.0, 10.0 ] }
+			},
+			"children": [
+				{
+					"name": "TLBeam2",
+					"from": [ 0.2, 0.0, 0.0 ],
+					"to": [ 1.8, 11.65, 1.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"rotationX": 75.0,
+					"faces": {
+						"north": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"east": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 },
+						"south": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"west": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 }
+					}
+				}
+			]
+		},
+		{
+			"name": "TMBeam",
+			"from": [ 15.0, 2.0, 0.0 ],
+			"to": [ 17.0, 5.0, 1.0 ],
+			"rotationOrigin": [ 15.0, 2.0, 0.0 ],
+			"faces": {
+				"north": { "texture": "#wood", "uv": [ 5.0, 11.5, 7.0, 14.5 ] },
+				"east": { "texture": "#wood", "uv": [ 4.5, 10.5, 5.5, 13.5 ] },
+				"south": { "texture": "#wood", "uv": [ 3.0, 10.0, 5.0, 13.0 ] },
+				"west": { "texture": "#wood", "uv": [ 4.0, 11.0, 5.0, 14.0 ] },
+				"down": { "texture": "#wood", "uv": [ 3.0, 9.5, 5.0, 10.5 ] }
+			},
+			"children": [
+				{
+					"name": "TMBeam2",
+					"from": [ 0.2, 0.0, 0.0 ],
+					"to": [ 1.8, 11.65, 1.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"rotationX": 75.0,
+					"faces": {
+						"north": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"east": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 },
+						"south": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"west": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 }
+					}
+				}
+			]
+		},
+		{
+			"name": "ShelfR",
+			"from": [ 16.0, 5.0, 1.0 ],
+			"to": [ 31.0, 6.0, 14.0 ],
+			"rotationOrigin": [ 16.0, 5.0, 1.0 ],
+			"faces": {
+				"south": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 4.0 ] },
+				"up": { "texture": "#surface", "uv": [ 1.0, 3.0, 16.0, 16.0 ] },
+				"down": { "texture": "#surface", "uv": [ 1.0, 3.0, 16.0, 16.0 ] }
+			},
+			"children": [
+				{
+					"name": "TBFenceR",
+					"from": [ 0.0, 0.0, -1.0 ],
+					"to": [ 15.0, 2.0, 0.0 ],
+					"rotationOrigin": [ 0.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 5.0 ] },
+						"south": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 5.0 ] },
+						"up": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 4.0 ] },
+						"down": { "texture": "#surface", "uv": [ 0.5, 3.0, 15.5, 4.0 ] }
+					}
+				},
+				{
+					"name": "TRFence",
+					"from": [ 15.0, 0.0, -1.0 ],
+					"to": [ 16.0, 2.0, 13.0 ],
+					"rotationOrigin": [ 15.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 1.0, 15.0, 3.0, 16.0 ], "rotation": 90 },
+						"east": { "texture": "#surface", "uv": [ 14.0, 3.0, 16.0, 16.0 ], "rotation": 270, "autoUv": false },
+						"south": { "texture": "#surface", "uv": [ 1.0, 3.0, 3.0, 4.0 ], "rotation": 90 },
+						"west": { "texture": "#surface", "uv": [ 0.0, 3.0, 2.0, 16.0 ], "rotation": 90, "autoUv": false },
+						"up": { "texture": "#surface", "uv": [ 0.0, 3.0, 1.0, 16.0 ], "rotation": 180, "autoUv": false },
+						"down": { "texture": "#surface", "uv": [ 15.0, 3.0, 16.0, 16.0 ], "rotation": 180, "autoUv": false }
+					}
+				}
+			]
+		},
+		{
+			"name": "TRBeam",
+			"from": [ 29.0, 2.0, 0.0 ],
+			"to": [ 31.0, 5.0, 1.0 ],
+			"rotationOrigin": [ 29.0, 2.0, 0.0 ],
+			"faces": {
+				"north": { "texture": "#wood", "uv": [ 5.0, 11.5, 7.0, 14.5 ] },
+				"east": { "texture": "#wood", "uv": [ 4.5, 10.5, 5.5, 13.5 ] },
+				"south": { "texture": "#wood", "uv": [ 3.0, 10.0, 5.0, 13.0 ] },
+				"west": { "texture": "#wood", "uv": [ 4.0, 11.0, 5.0, 14.0 ] },
+				"down": { "texture": "#wood", "uv": [ 3.0, 9.5, 5.0, 10.5 ] }
+			},
+			"children": [
+				{
+					"name": "TRBeam2",
+					"from": [ 0.2, 0.0, 0.0 ],
+					"to": [ 1.8, 11.65, 1.0 ],
+					"rotationOrigin": [ 1.0, 0.0, 1.0 ],
+					"rotationX": 75.0,
+					"faces": {
+						"north": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"east": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 },
+						"south": { "texture": "#wood", "uv": [ 4.5, 14.5, 16.0, 16.0 ], "rotation": 90 },
+						"west": { "texture": "#wood", "uv": [ 4.5, 15.0, 16.0, 16.0 ], "rotation": 90 }
+					}
+				}
+			]
+		}
+	]}

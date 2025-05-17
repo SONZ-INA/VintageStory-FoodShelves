@@ -9,11 +9,6 @@ public class BEFlourSack : BEBaseFSContainer {
 
     public BEFlourSack() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     protected override void InitMesh() {
         if (capi == null) return;
 

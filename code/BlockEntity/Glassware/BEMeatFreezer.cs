@@ -39,8 +39,6 @@ public class BEMeatFreezer : BEBaseFSContainer {
 
         if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
         if (FreezerOpen) PerishMultiplier = 1f;
-
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override void InitMesh() {

@@ -15,7 +15,6 @@ public class BECeilingJar : BEBaseFSContainer {
         inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() { [EnumFoodCategory.Grain] = 0.5f };
 
         base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override void InitMesh() {

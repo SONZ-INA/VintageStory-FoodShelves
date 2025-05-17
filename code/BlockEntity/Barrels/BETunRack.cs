@@ -27,7 +27,6 @@ public class BETunRack : BEBaseFSContainer {
 
         (inv[1] as ItemSlotLiquidOnly).CapacityLitres = capacityLitres;
         inv.SlotModified += Inventory_SlotModified;
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     private void Inventory_SlotModified(int slotId) {

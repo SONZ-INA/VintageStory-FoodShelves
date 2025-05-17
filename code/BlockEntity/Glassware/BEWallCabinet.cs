@@ -23,7 +23,6 @@ public class BEWallCabinet : BEBaseFSContainer {
         base.Initialize(api);
 
         perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {

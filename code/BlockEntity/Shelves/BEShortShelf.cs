@@ -12,11 +12,6 @@ public class BEShortShelf : BEBaseFSContainer {
 
     public BEShortShelf() { inv = new InventoryGeneric(SlotCount, "shelf-0", null, null); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 

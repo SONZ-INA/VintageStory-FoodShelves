@@ -22,7 +22,7 @@
     "ingredients": {
       "O": { "type": "item", "code": "game:stick" },
       "S": { "type": "item", "code": "game:stick", "quantity": 4 },
-      "P": { "type": "item", "code": "game:plank-*" }
+      "P": { "type": "item", "code": "*:plank-*" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "vegetablebasket-normal" }

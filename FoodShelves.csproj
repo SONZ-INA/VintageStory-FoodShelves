@@ -69,8 +69,8 @@
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrack.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelrackbig.json" />
   <None Remove="assets\foodshelves\blocktypes\seedshelf.json" />
+  <None Remove="assets\foodshelves\blocktypes\shelves\doubleshelf.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\glassjarshelf.json" />
-  <None Remove="assets\foodshelves\blocktypes\shelves\pieshelf - Copy.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\pieshelfattr.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\shelfshort.json" />
   <None Remove="assets\foodshelves\blocktypes\vegetablebasket.json" />
@@ -132,6 +132,7 @@
   <None Remove="assets\foodshelves\recipes\grid\other\floursack.json" />
   <None Remove="assets\foodshelves\recipes\grid\pumpkincase.json" />
   <None Remove="assets\foodshelves\recipes\grid\seedshelf.json" />
+  <None Remove="assets\foodshelves\recipes\grid\shelves\doubleshelf.json" />
   <None Remove="assets\foodshelves\recipes\grid\shelves\shortshelf.json" />
   <None Remove="assets\foodshelves\shapes\block\barrels\firkin.json" />
   <None Remove="assets\foodshelves\shapes\block\barrels\firkinrack.json" />
@@ -153,6 +154,7 @@
   <None Remove="assets\foodshelves\shapes\block\other\FlourSack.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BarShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\BreadShelfShort.json" />
+  <None Remove="assets\foodshelves\shapes\block\shelves\DoubleShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\EggShelfShort.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\GlassJarShelf.json" />
   <None Remove="assets\foodshelves\shapes\block\shelves\GlassJarShelfShort.json" />

@@ -9,11 +9,6 @@ public class BEPieShelf : BEBaseFSContainer {
 
     public BEPieShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 

@@ -37,6 +37,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         base.Initialize(api);
 
         if (blockMesh == null) InitMesh();
+        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected virtual void InitMesh() {

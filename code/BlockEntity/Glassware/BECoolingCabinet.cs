@@ -41,7 +41,6 @@ public class BECoolingCabinet : BEBaseFSContainer {
 
         if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
         if (CabinetOpen) PerishMultiplier = 1f;
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override float GetPerishRate() {
