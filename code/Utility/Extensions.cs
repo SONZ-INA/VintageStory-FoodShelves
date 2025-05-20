@@ -261,20 +261,6 @@ public static class Extensions {
         };
     }
 
-    public static string GetBlockTypeLocalized(Block block) {
-        string blockType = block.Variant["type"];
-
-        if (blockType != "normal") {
-            string entry = "foodshelves:" + blockType;
-            string typeName = Lang.Get(entry);
-            if (typeName != entry) {
-                return typeName + " ";
-            }
-        }
-
-        return "";
-    }
-
     public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
         if (itemStack.Attributes["FSAttributes"] is not ITreeAttribute tree)
             return "";

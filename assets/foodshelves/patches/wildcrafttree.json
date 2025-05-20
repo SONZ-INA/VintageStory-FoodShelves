@@ -1,0 +1,8 @@
+[
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ "wildcrafttree:plank-*" ],
+    "dependsOn": [ { "modid": "wildcrafttree" } ]
+  }
+]

@@ -20,17 +20,5 @@
         }
       }
     }
-  },
-  {
-    "ingredientPattern": "PGP,PCP,HPN",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
-      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 20 },
-      "G": { "type": "block", "code": "game:glass-*" },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 4 }
-    },
-    "width": 3, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "meatfreezer-normal-east" }
   }
 ]

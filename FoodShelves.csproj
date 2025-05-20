@@ -114,7 +114,9 @@
   <None Remove="assets\foodshelves\patches\primitivesurvival.json" />
   <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
-  <None Remove="assets\foodshelves\patches\wildcraft-fruits-and-nuts.json" />
+  <None Remove="assets\foodshelves\patches\wildcraftfruit.json" />
+  <None Remove="assets\foodshelves\patches\wildcrafttree.json" />
+  <None Remove="assets\foodshelves\patches\wool.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelbig.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrack.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrackbig.json" />
@@ -124,8 +126,8 @@
   <None Remove="assets\foodshelves\recipes\grid\fruitbasket.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\ceilingjar.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\coolingcabinet.json" />
-  <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodblock.json" />
-  <None Remove="assets\foodshelves\recipes\grid\glassware\glassfoodcase.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplayblock.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />

@@ -24,13 +24,5 @@
     "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
     "copyAttributesFrom": "S",
     "output": { "type": "block", "code": "breadshelf-short-east", "quantity": 2 }
-  },
-  {
-    "ingredientPattern": "PP,P_,P_",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 }
-    },
-    "width": 2, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "breadshelf-normal-east" }
   }
 ]

@@ -19,17 +19,5 @@
         }
       }
     }
-  },
-  {
-    "ingredientPattern": "_PP,SGP,PPP",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*" },
-      "S": { "type": "item", "code": "game:stick" },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free" }
-    },
-    "width": 3,
-    "height": 3,
-    "recipeGroup": 1,
-    "output": { "type": "block", "code": "fooddisplaycase-normal-east" }
   }
 ]

@@ -1,5 +1,4 @@
-﻿using Vintagestory.ServerMods;
-using static FoodShelves.Patches;
+﻿using static FoodShelves.Patches;
 
 [assembly: ModInfo(name: "Food Shelves", modID: "foodshelves")]
 
@@ -93,7 +92,7 @@ public class Core : ModSystem {
         base.AssetsLoaded(api);
 
         if (api.Side == EnumAppSide.Server) {
-            SupportModdedIngredients(api);
+            RecipePatcher.SupportModdedIngredients(api);
 
             Dictionary<string, string[]> restrictionGroupsServer = new() {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
@@ -118,36 +117,16 @@ public class Core : ModSystem {
         BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
     }
 
-    private void SupportModdedIngredients(ICoreAPI api) {
-        Dictionary<string, string[]> variantData = api.LoadAsset<Dictionary<string, string[]>>("foodshelves:config/variantdata/variantmodsloaded.json");
-        List<IAsset> allCollectibleRecipes = api.Assets.GetManyInCategory("recipes", "grid", "foodshelves");
+    public override void AssetsFinalize(ICoreAPI api) {
+        base.AssetsFinalize(api);
 
-        foreach (var entry in variantData) {
-            foreach (string variantModItem in entry.Value) {
-                foreach (var collectibleRecipes in allCollectibleRecipes) {
-                    foreach (var recipe in collectibleRecipes.ToObject<GridRecipe[]>()) {
-                        if (!recipe.Enabled) continue;
-                        
-                        GridRecipe newRecipe = recipe.Clone();
-                        bool recipeChanged = false;
-
-                        foreach (var ingredient in recipe.Ingredients) {
-                            if (ingredient.Value.Code == entry.Key) {
-                                newRecipe.Ingredients[ingredient.Key].Code = variantModItem;
-                                recipeChanged = true;
-                            }
-                        }
-                        
-                        if (recipeChanged) {
-                            GridRecipeLoader gridRecipeLoader = api.ModLoader.GetModSystem<GridRecipeLoader>();
-                            gridRecipeLoader.LoadRecipe(collectibleRecipes.Location, newRecipe);
-                        }
-                    }
-                }
+        foreach (CollectibleObject obj in api.World.Collectibles) {
+            foreach (var restriction in restrictions) {
+                transformations.TryGetValue(restriction.Key, out var transformation);
+                PatchCollectibleWhitelist(obj, restriction, transformation);
             }
         }
     }
-
 
     private void LoadData(ICoreAPI api, Dictionary<string, string[]> restrictionGroups) {
         foreach (var (category, names) in restrictionGroups) {
@@ -160,17 +139,6 @@ public class Core : ModSystem {
                 if (api.Assets.Exists(transformationPath)) {
                     transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
                 }
-            }
-        }
-    }
-
-    public override void AssetsFinalize(ICoreAPI api) {
-        base.AssetsFinalize(api);
-
-        foreach (CollectibleObject obj in api.World.Collectibles) {
-            foreach (var restriction in restrictions) {
-                transformations.TryGetValue(restriction.Key, out var transformation);
-                PatchCollectibleWhitelist(obj, restriction, transformation);
             }
         }
     }

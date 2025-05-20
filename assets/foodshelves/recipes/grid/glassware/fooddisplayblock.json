@@ -36,25 +36,5 @@
         }
       }
     }
-  },
-  {
-    "ingredientPattern": "PPP,SGS,PPP",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*" },
-      "S": { "type": "item", "code": "game:stick" },
-      "G": { "type": "block", "code": "game:glass-*" }
-    },
-    "width": 3, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "fooddisplayblock-normal" }
-  },
-  {
-    "ingredientPattern": "_P_,SGS,P_P",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*" },
-      "S": { "type": "item", "code": "game:stick" },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
-    },
-    "width": 3, "height": 3, "recipeGroup": 2,
-    "output": { "type": "block", "code": "fooddisplayblock-top" }
   }
 ]

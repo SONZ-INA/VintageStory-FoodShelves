@@ -1,9 +1,9 @@
 [
   {
-    "ingredientPattern": "PLP,PSP",
+    "ingredientPattern": "PCP,PSP",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
-      "L": { "type": "item", "code": "game:cloth-*", "name": "cloth", "quantity": 2 },
+      "C": { "type": "item", "code": "game:cloth-*", "name": "cloth", "quantity": 2, "skipVariants": [ "mordant" ] },
       "S": { "type": "item", "code": "game:stick", "quantity": 4 }
     },
     "width": 3, "height": 2, "recipeGroup": 1,
@@ -17,15 +17,5 @@
         }
       }
     }
-  },
-  {
-    "ingredientPattern": "PLP,PSP",
-    "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*" },
-      "L": { "type": "item", "code": "*:cloth-*", "quantity": 2 },
-      "S": { "type": "item", "code": "game:stick", "quantity": 2 }
-    },
-    "width": 3, "height": 2, "recipeGroup": 1,
-    "output": { "type": "block", "code": "floursack-normal-east" }
   }
 ]

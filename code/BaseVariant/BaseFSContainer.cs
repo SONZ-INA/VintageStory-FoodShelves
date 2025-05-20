@@ -41,8 +41,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string itemName = base.GetHeldItemName(itemStack);
-        return GetBlockTypeLocalized(this) + itemName + " " + itemStack.GetMaterialNameLocalized();
+        return base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
