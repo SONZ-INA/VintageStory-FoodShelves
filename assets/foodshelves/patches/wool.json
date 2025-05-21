@@ -8,7 +8,7 @@
   {
     "file": "foodshelves:config/variantdata/variantdata.json",
     "op": "addmerge", "path": "/RecipeVariantData/game:cloth-*", "side": "server",
-    "value": [ "wool:cloth-wool-*" ],
+    "value": [ { "name": "wool:cloth-wool-*" } ],
     "dependsOn": [ { "modid": "wool" } ]
   }
 ]

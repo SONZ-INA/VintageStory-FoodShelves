@@ -2,7 +2,12 @@
   {
     "file": "foodshelves:config/variantdata/variantdata.json",
     "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
-    "value": [ "wildcrafttree:plank-*" ],
+    "value": [
+      {
+        "name": "wildcrafttree:plank-*",
+        "skipVariants": [ "petrified" ]
+      }
+    ],
     "dependsOn": [ { "modid": "wildcrafttree" } ]
   }
 ]

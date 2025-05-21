@@ -12,7 +12,8 @@ public static class RecipePatcher {
 
         string debugCode = null; // Used to "filter" only 1 (or multiple) block codes that will be patched
 
-        if (debugCode != null && debugCode != "") api.Logger.Warning($"[FoodShelves] Debug code is \"{debugCode}\". Will only patch those recipes");
+        if (debugCode != null && debugCode != "") 
+            api.Logger.Warning($"[FoodShelves] Debug code is \"{debugCode}\". Will only patch those recipes");
 
         // Data needed to process
         VariantData variantData = api.LoadAsset<VariantData>("foodshelves:config/variantdata/variantdata.json");
@@ -48,7 +49,7 @@ public static class RecipePatcher {
             }
 
             // Generate all possible combinations of values for the selected keys
-            GenerateAndApplyValueCombinations(keysToReplace, 0, new Dictionary<string, string>(), variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
+            GenerateAndApplyValueCombinations(keysToReplace, 0, new Dictionary<string, SwitchData>(), variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
         }
     }
 
@@ -56,7 +57,7 @@ public static class RecipePatcher {
     private static void GenerateAndApplyValueCombinations(
         List<string> keysToReplace,
         int currentKeyIndex,
-        Dictionary<string, string> currentReplacements,
+        Dictionary<string, SwitchData> currentReplacements,
         VariantData variantData,
         List<IAsset> allCollectibleRecipes,
         GridRecipeLoader gridRecipeLoader,
@@ -69,12 +70,12 @@ public static class RecipePatcher {
         }
 
         string currentKey = keysToReplace[currentKeyIndex];
-        string[] possibleValues = variantData.RecipeVariantData[currentKey];
+        SwitchData[] possibleValues = variantData.RecipeVariantData[currentKey];
 
         // For each possible value for the current key
-        foreach (string value in possibleValues) {
+        foreach (var value in possibleValues) {
             // Create a copy of the current replacements
-            Dictionary<string, string> newReplacements = new(currentReplacements) {
+            Dictionary<string, SwitchData> newReplacements = new(currentReplacements) {
                 [currentKey] = value // Add the current key-value pair
             };
 
@@ -83,7 +84,7 @@ public static class RecipePatcher {
         }
     }
 
-    private static void ApplyReplacements(Dictionary<string, string> replacements, List<IAsset> allCollectibleRecipes, GridRecipeLoader gridRecipeLoader, string debugCode) {
+    private static void ApplyReplacements(Dictionary<string, SwitchData> replacements, List<IAsset> allCollectibleRecipes, GridRecipeLoader gridRecipeLoader, string debugCode) {
         foreach (var collectibleRecipes in allCollectibleRecipes) {
             foreach (var recipe in collectibleRecipes.ToObject<GridRecipe[]>()) {
                 if (!recipe.Enabled) continue;
@@ -95,10 +96,21 @@ public static class RecipePatcher {
                 // Apply all replacements for this combination
                 foreach (var ingredient in recipe.Ingredients) {
                     string ingredientCode = ingredient.Value.Code;
-                    if (replacements.TryGetValue(ingredientCode, out string value)) {
-                        newRecipe.Ingredients[ingredient.Key].Code = value;
+
+                    // For some reason won't work when these are present so I'm removing them (floursack hardcoded).
+                    if (ingredientCode.Contains("cloth")) {
+                        newRecipe.Ingredients[ingredient.Key].AllowedVariants = null;
+                        newRecipe.Ingredients[ingredient.Key].SkipVariants = null;
+                    }
+                    
+                    if (replacements.TryGetValue(ingredientCode, out var value)) {
+                        newRecipe.Ingredients[ingredient.Key].Code = value.Name;
+                        newRecipe.Ingredients[ingredient.Key].AllowedVariants = value.AllowedVariants;
+                        newRecipe.Ingredients[ingredient.Key].SkipVariants = value.SkipVariants;
+
                         recipeChanged = true;
                     }
+
                 }
 
                 if (recipeChanged) {
@@ -134,7 +146,7 @@ public static class RecipePatcher {
     private static void ProcessCombination(HashSet<string> entriesToReplace, VariantData variantData, List<IAsset> allCollectibleRecipes, GridRecipeLoader gridRecipeLoader, string debugCode) {
         // Find entries from RecipeVariantData that are NOT in the current combination
         // These will be used for modded variant fallbacks
-        Dictionary<string, string[]> moddedFallback = new();
+        Dictionary<string, SwitchData[]> moddedFallback = new();
         foreach (var entry in variantData.RecipeVariantData) {
             if (!entriesToReplace.Contains(entry.Key)) {
                 moddedFallback.Add(entry.Key, entry.Value);
@@ -161,7 +173,7 @@ public static class RecipePatcher {
         return false;
     }
 
-    private static void ProcessRecipeCollection(RecipeProcessingContext contextData, Dictionary<string, string[]> moddedFallback, string debugCode) {
+    private static void ProcessRecipeCollection(RecipeProcessingContext contextData, Dictionary<string, SwitchData[]> moddedFallback, string debugCode) {
         foreach (var recipe in contextData.CollectibleRecipes.ToObject<GridRecipe[]>()) {
             if (!recipe.Enabled) continue;
             if (!string.IsNullOrEmpty(debugCode) && !recipe.Output.Code.ToString().Contains(debugCode)) continue;
@@ -181,16 +193,16 @@ public static class RecipePatcher {
         ApplyRecipeVariant(contextData, recipe, new(), ingredientsChanged); // Empty Dictionary for standard fallback
     }
 
-    private static void ProcessModdedVariants(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, string[]> moddedFallback) {
+    private static void ProcessModdedVariants(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, SwitchData[]> moddedFallback) {
         // Generate all combinations of modded variants
-        GenerateAndApplyModdedVariants(contextData, moddedFallback.Keys.ToList(), 0, new Dictionary<string, string>(), recipe);
+        GenerateAndApplyModdedVariants(contextData, moddedFallback.Keys.ToList(), 0, new(), recipe);
     }
 
     private static void GenerateAndApplyModdedVariants(
         RecipeProcessingContext contextData,
         List<string> moddedKeys,
         int currentKeyIndex,
-        Dictionary<string, string> currentReplacements,
+        Dictionary<string, SwitchData> currentReplacements,
         GridRecipe recipe
     ) {
         // Base case: if we've processed all keys, apply the replacements
@@ -203,11 +215,11 @@ public static class RecipePatcher {
         }
 
         string currentKey = moddedKeys[currentKeyIndex];
-        string[] possibleValues = contextData.VariantData.RecipeVariantData[currentKey];
+        SwitchData[] possibleValues = contextData.VariantData.RecipeVariantData[currentKey];
 
-        foreach (string value in possibleValues) {
+        foreach (var value in possibleValues) {
             // Create a copy of the current replacements
-            Dictionary<string, string> newReplacements = new(currentReplacements) {
+            Dictionary<string, SwitchData> newReplacements = new(currentReplacements) {
                 [currentKey] = value // Add the current key-value pair
             };
 
@@ -216,17 +228,19 @@ public static class RecipePatcher {
         }
     }
 
-    private static void ApplyRecipeVariant(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, string> moddedReplacements, Dictionary<string, bool> ingredientsChanged) {
+    private static void ApplyRecipeVariant(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, SwitchData> moddedReplacements, Dictionary<string, bool> ingredientsChanged) {
         GridRecipe newRecipe = recipe.Clone();
 
         // Apply modded replacements if any
         foreach (var moddedPair in moddedReplacements) {
             string originalKey = moddedPair.Key;
-            string replacementValue = moddedPair.Value;
+            string replacementValue = moddedPair.Value.Name;
 
             foreach (var ingredient in recipe.Ingredients) {
                 if (ingredient.Value.Code == originalKey) {
                     newRecipe.Ingredients[ingredient.Key].Code = replacementValue;
+                    newRecipe.Ingredients[ingredient.Key].AllowedVariants = moddedPair.Value.AllowedVariants;
+                    newRecipe.Ingredients[ingredient.Key].SkipVariants = moddedPair.Value.SkipVariants;
                 }
             }
         }
