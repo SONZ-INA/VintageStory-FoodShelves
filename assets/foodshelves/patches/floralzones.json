@@ -8,7 +8,12 @@
   {
     "file": "foodshelves:config/variantdata/variantdata.json",
     "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
-    "value": [ "floralzonescaperegion:plank-*" ],
+    "value": [
+      {
+        "name": "floralzonescaperegion:plank-*",
+        "allowedVariants": [ "ocoteabullata", "searsialancea" ]
+      }
+    ],
     "dependsOn": [ { "modid": "floralzonescaperegion" } ]
   },
   {
