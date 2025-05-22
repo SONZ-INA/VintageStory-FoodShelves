@@ -21,13 +21,14 @@ public static class RecipePatcher {
         GridRecipeLoader gridRecipeLoader = api.ModLoader.GetModSystem<GridRecipeLoader>();
 
         // Switcher - Switch "game:" with custom mod domains.
-        SwitchModdedIngredients(variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
-        int recipeCountAfterSwitch = api.World.GridRecipes.Count;
-        api.Logger.Debug($"\tPatched in {recipeCountAfterSwitch - recipeCountBefore} recipes using the switcher method.");
+        //SwitchModdedIngredients(variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
+        //int recipeCountAfterSwitch = api.World.GridRecipes.Count;
+        //api.Logger.Debug($"\tPatched in {recipeCountAfterSwitch - recipeCountBefore} recipes using the switcher method.");
+        api.Logger.Debug("Recipe switcher is currently turned off for performance reasons.");
 
         // Fallback recipes - those that will accept "*:ingredient-*" and fallback to default textures.
         DefaultFallbackAddition(variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
-        api.Logger.Debug($"\tPatched in {api.World.GridRecipes.Count - recipeCountAfterSwitch} recipes using the default fallback method.");
+        api.Logger.Debug($"\tPatched in {api.World.GridRecipes.Count - /*recipeCountAfterSwitch*/ recipeCountBefore} recipes using the default fallback method.");
 
         api.Logger.Debug($"[FoodShelves] Patched in {api.World.GridRecipes.Count - recipeCountBefore} total recipes in {Math.Round((api.World.ElapsedMilliseconds - elapsedMilliseconds) / 1000.0, 2)}s");
     }

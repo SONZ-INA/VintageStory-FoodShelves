@@ -3,7 +3,7 @@
     "ingredientPattern": "PGP,PCP,HPN",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
+      "N": { "type": "item", "code": "game:resin", "quantity": 8 },
       "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 20 },
       "G": { "type": "block", "code": "game:glass-*", "name": "glass" },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 4, "name": "rock" }

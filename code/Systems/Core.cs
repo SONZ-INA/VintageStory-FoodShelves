@@ -11,7 +11,7 @@ public class Core : ModSystem {
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
 
     public static ConfigServer ConfigServer { get; set; }
-    // public static ConfigClient ConfigClient { get; set; }
+    public static ConfigClient ConfigClient { get; set; }
 
     public override void StartPre(ICoreAPI api) {
         switch (api.Side) {
