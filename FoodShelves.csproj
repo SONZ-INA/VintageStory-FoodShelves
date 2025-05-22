@@ -102,6 +102,7 @@
   <None Remove="assets\foodshelves\config\transformations\shelves\breadshelf.json" />
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
   <None Remove="assets\foodshelves\lang\fr.json" />
+  <None Remove="assets\foodshelves\lang\pl.json" />
   <None Remove="assets\foodshelves\lang\pt-br.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
   <None Remove="assets\foodshelves\patches\carryon.json" />
@@ -230,6 +231,12 @@
 
 <ItemGroup>
   <Content Update="assets\foodshelves\patches\detailedanimals.json">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+
+<ItemGroup>
+  <Content Update="assets\foodshelves\lang\pl.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
 </ItemGroup>

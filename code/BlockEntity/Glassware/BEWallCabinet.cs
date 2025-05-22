@@ -16,7 +16,7 @@ public class BEWallCabinet : BEBaseFSContainer {
     public bool CabinetOpen { get; set; }
     private float perishMultiplierUnBuffed = 0.75f;
 
-    public BEWallCabinet() { inv = new InventoryGeneric(SlotCount, "shelf-0", null, null); }
+    public BEWallCabinet() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     public override void Initialize(ICoreAPI api) {
         block = api.World.BlockAccessor.GetBlock(Pos) as BlockWallCabinet;

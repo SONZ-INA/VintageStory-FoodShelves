@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ]
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ]
     },
     "handbook": {
       "groupBy": [ "wallcabinet-*" ]
@@ -37,6 +37,9 @@
 	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
 	  "rotation": { "x": 99, "y": -10, "z": -6 },
 	  "scale": 0.5
+  },
+  "guiTransform": {
+    "origin": { "x": 0.7, "y": 0.5, "z": 0.5 }
   },
   "sounds": {
     "place": "game:block/planks",

@@ -9,7 +9,7 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": [ "foodshelves:variants/wood/{wood}", "game:block/wood/debarked/{wood}" ],
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
       "wood": [ "game:block/wood/debarked/{wood}" ]
     },
     "handbook": {

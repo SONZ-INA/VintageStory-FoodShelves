@@ -10,7 +10,7 @@ public class BEShortShelf : BEBaseFSContainer {
 
     public override int SlotCount => 4;
 
-    public BEShortShelf() { inv = new InventoryGeneric(SlotCount, "shelf-0", null, null); }
+    public BEShortShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];

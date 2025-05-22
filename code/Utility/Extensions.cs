@@ -56,7 +56,7 @@ public static class Extensions {
                     string key = attr.Key;
                     string value = attr.Value.ToString();
 
-                    foreach (string texPath in texPaths) {
+                    foreach (string texPath in texPaths.Reverse()) { // Reverse to start from the end texture paths (patched textures), first one serving as default
                         if (texPath.Contains($"{{{key}}}")) {
                             string fullTexPath = texPath.Replace($"{{{key}}}", value);
 
