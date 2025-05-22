@@ -25,7 +25,6 @@ public class BEBarrelRack : BEBaseFSContainer {
         base.Initialize(api);
 
         (inv[1] as ItemSlotLiquidOnly).CapacityLitres = capacityLitres;
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override void InitMesh() {

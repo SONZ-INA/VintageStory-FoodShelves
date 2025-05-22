@@ -113,11 +113,12 @@ public static class InfoDisplay {
         return Lang.Get("foodshelves:Will not melt");
     }
 
-    public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float ripenRate, bool withStackName = true) {
+    public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float ripenRate, bool withStackName = true, bool withStackSize = true) {
         if (contentSlot.Empty) return "";
 
         StringBuilder dsc = new();
         if (withStackName) dsc.Append(contentSlot.Itemstack.GetName());
+        if (withStackSize && contentSlot.StackSize > 1) dsc.Append(" x" + contentSlot.StackSize);
 
         TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
 
@@ -354,7 +355,7 @@ public static class InfoDisplay {
         if (totalStackSize > 1) sb.Append(" x" + totalStackSize);
 
         if (collectible.TransitionableProps != null && collectible.TransitionableProps.Length > 0) {
-            sb.Append(PerishableInfoCompact(world, slots[0], ripenRate, false));
+            sb.Append(PerishableInfoCompact(world, slots[0], ripenRate, false, false));
         }
     }
 

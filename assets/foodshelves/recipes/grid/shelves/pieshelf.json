@@ -14,13 +14,5 @@
         }
       }
     }
-  },
-  {
-    "ingredientPattern": "P,P,P",
-    "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 2 }
-    },
-    "width": 1, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "pieshelf-normal-east" }
   }
 ]

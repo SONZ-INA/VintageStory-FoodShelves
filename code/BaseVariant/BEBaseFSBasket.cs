@@ -10,7 +10,6 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     public override void Initialize(ICoreAPI api) {
         block ??= api.World.BlockAccessor.GetBlock(Pos) as BaseFSBasket;
         base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {

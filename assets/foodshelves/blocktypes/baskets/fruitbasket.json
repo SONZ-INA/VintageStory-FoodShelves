@@ -8,8 +8,8 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "sides": "game:block/wood/debarked/{wood}",
-      "top": "foodshelves:variants/wood/{wood}"
+      "sides": [ "game:block/wood/debarked/{wood}" ],
+      "top": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ]
     },
     "handbook": {
       "groupBy": [ "fruitbasket-*" ],

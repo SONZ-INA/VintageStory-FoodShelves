@@ -1,0 +1,21 @@
+[
+  {
+    "ingredientPattern": "PCP,PSP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "C": { "type": "item", "code": "game:cloth-*", "name": "cloth", "quantity": 2, "skipVariants": [ "mordant" ] },
+      "S": { "type": "item", "code": "game:stick", "quantity": 4 }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "floursack-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "cloth": "{cloth}"
+        }
+      }
+    }
+  }
+]

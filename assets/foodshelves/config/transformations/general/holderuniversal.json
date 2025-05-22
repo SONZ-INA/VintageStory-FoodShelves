@@ -4,17 +4,21 @@
   "game:bowl-fired": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "game:bowl-meal": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
 
+  "*vegetable-pumpkin": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 90, "z": 0 }, "scalexyz": { "x": 1, "y": 1.6, "z": 0.75 } },
+
   "foodshelves:fruitbasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "foodshelves:vegetablebasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
+  "foodshelves:glassjar-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
 
   "pewter:bowl-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   
   "expandedfoods:fruitbar*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scalexyz": { "x": 0.5, "y": 0.8, "z": 0.7 } },
+  "expandedfoods:cookedveggie-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 90, "z": 0 }, "scalexyz": { "x": 1, "y": 1.6, "z": 0.75 } },
   "*muffin-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 30, "z": 0 }, "scale": 0.7 },
   "*dumpling-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
   "*doughball-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.95 },
   "*breadedball-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": -65, "z": 0 }, "scale": 0.45 },
-  
+
   "*halva": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "rotation": { "x": 0, "y": 35, "z": 0 }, "scale": 0.7 },
   "*pacoca": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "rotation": { "x": 0, "y": -45, "z": 0 }, "scale": 0.65 },
   "*marzipan": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0, "y": 0, "z": -0.05 }, "scalexyz": { "x": 0.7, "y": 0.7, "z": 0.58 } },

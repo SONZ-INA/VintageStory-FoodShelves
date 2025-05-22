@@ -9,10 +9,10 @@
   "attributes": {
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
-      "surface": "foodshelves:variants/wood/{wood}",
-      "surface_long": "game:block/wood/debarked/{wood}",
-      "glass": "game:block/glass/{glass}",
-      "rock": "game:block/stone/polishedrock/{rock}"
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "surface_long": [ "game:block/wood/debarked/{wood}" ],
+      "glass": [ "game:block/glass/{glass}" ],
+      "rock": [ "game:block/stone/polishedrock/{rock}" ]
     },
     "handbook": {
       "groupBy": [ "coolingcabinet-*" ],

@@ -15,8 +15,7 @@
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
-          "glass": "{glass}",
-          "rock": "{rock}"
+          "glass": "{glass}"
         }
       }
     }

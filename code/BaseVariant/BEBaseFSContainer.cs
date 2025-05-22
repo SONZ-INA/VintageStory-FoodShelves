@@ -37,6 +37,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         base.Initialize(api);
 
         if (blockMesh == null) InitMesh();
+        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected virtual void InitMesh() {
@@ -120,6 +121,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     : slot.TryPutInto(Api.World, inv[currentIndex]);
 
                 if (moved > 0) {
+                    InitMesh();
                     MarkDirty();
                     (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
                     return true;
@@ -151,6 +153,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                 }
 
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                InitMesh();
                 MarkDirty();
                 return true;
             }

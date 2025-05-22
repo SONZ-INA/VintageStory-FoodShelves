@@ -6,11 +6,6 @@ public class BEPumpkinCase : BEBaseFSContainer {
 
     public BEPumpkinCase() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         InitMesh(); // Re-meshing the falling block
         return base.OnTesselation(mesher, tesselator);

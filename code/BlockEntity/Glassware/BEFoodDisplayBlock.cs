@@ -27,7 +27,6 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
         }
 
         base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {

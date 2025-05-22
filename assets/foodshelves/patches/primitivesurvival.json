@@ -1,0 +1,12 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/glassware/meatfreezer.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "primitivesurvival:crabmeat-raw",
+      "primitivesurvival:snakemeat-raw",
+      "primitivesurvival:fishfillet-raw"
+    ],
+    "dependsOn": [ { "modid": "primitivesurvival" } ]
+  }
+]

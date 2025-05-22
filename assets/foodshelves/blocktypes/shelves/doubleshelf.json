@@ -1,0 +1,74 @@
+{
+  "code": "doubleshelf",
+  "class": "FoodShelves.BlockDoubleShelf",
+  "entityclass": "FoodShelves.BEDoubleShelf",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "wood": [ "game:block/wood/debarked/{wood}" ]
+    },
+    "handbook": {
+      "groupBy": [ "doubleshelf-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-holderuniversal-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } },
+    { "name": "Multiblock",
+      "propertiesByType": {
+        "*-north": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-east": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-south": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 1, "y": 0, "z": 0 } },
+        "*-west": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } }
+      }
+    }
+  ],
+  "shape": {
+    "base": "block/shelves/doubleshelf",
+    "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+  },
+  "heldTpIdleAnimation": "holdunderarm",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
+  "combustibleProps": {
+    "burnTemperature": 700,
+    "burnDuration": 60
+  },
+  "guiTransform": {
+    "origin": { "x": 0.5, "y": 0.5, "z": 0.9 },
+    "scale": 0.8
+  },
+  "tpHandTransform": {
+	  "translation": { "x": -0.8, "y": -0.68, "z": -0.51 },
+	  "rotation": { "x": 93, "y": -30, "z": -20 },
+	  "scale": 0.5
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+  "selectionBoxes": [
+    { "x1": 0.0625, "y1": 0.375, "z1": 0.0625, "x2": 0.6875, "y2": 0.7375, "z2": 0.875, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.6875, "y1": 0.375, "z1": 0.0625, "x2": 1.3125, "y2": 0.7375, "z2": 0.875, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.3125, "y1": 0.375, "z1": 0.0625, "x2": 1.9375, "y2": 0.7375, "z2": 0.875, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
+  ]
+}

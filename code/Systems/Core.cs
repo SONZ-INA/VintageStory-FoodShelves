@@ -5,9 +5,10 @@
 namespace FoodShelves;
 
 public class Core : ModSystem {
+    public override double ExecuteOrder() => 1.01; // For the dynamic recipes to load, this must be after 1
+
     private readonly Dictionary<string, RestrictionData> restrictions = new();
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
-    // private readonly Dictionary<string, string[2]> connections = new();
 
     public static ConfigServer ConfigServer { get; set; }
     // public static ConfigClient ConfigClient { get; set; }
@@ -49,6 +50,11 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
+        api.RegisterBlockClass("FoodShelves.BlockMeatFreezer", typeof(BlockMeatFreezer));
+        api.RegisterBlockClass("FoodShelves.BlockWallCabinet", typeof(BlockWallCabinet));
+        //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
+
+        api.RegisterBlockClass("FoodShelves.BlockDoubleShelf", typeof(BlockDoubleShelf));
         // ------------------------
 
         // Block Entity Classes----
@@ -63,12 +69,17 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayBlock", typeof(BEFoodDisplayBlock));
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
+        api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
+        api.RegisterBlockEntityClass("FoodShelves.BEWallCabinet", typeof(BEWallCabinet));
+        //api.RegisterBlockEntityClass("FoodShelves.BEGlassJar", typeof(BEGlassJar));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEFlourSack", typeof(BEFlourSack));
 
         api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
+        api.RegisterBlockEntityClass("FoodShelves.BEDoubleShelf", typeof(BEDoubleShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
@@ -81,12 +92,15 @@ public class Core : ModSystem {
         base.AssetsLoaded(api);
 
         if (api.Side == EnumAppSide.Server) {
+            RecipePatcher.SupportModdedIngredients(api);
+
             Dictionary<string, string[]> restrictionGroupsServer = new() {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
-                ["baskets"] = new[] { "fruitbasket", "vegetablebasket", "eggbasket" },
+                ["baskets"] = new[] { "eggbasket", "vegetablebasket", "fruitbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
-                ["shelves"] = new[] { "pieshelf", "breadshelf", "barshelf", "sushishelf", "eggshelf", "seedshelf", "glassjarshelf" },
-                ["other"] = new[] { "pumpkincase" }
+                ["glassware"] = new[] { "meatfreezer" },
+                ["other"] = new[] { "floursack", "pumpkincase" },
+                ["shelves"] = new[] { "barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf" }
             };
 
             LoadData(api, restrictionGroupsServer);
@@ -103,6 +117,17 @@ public class Core : ModSystem {
         BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
     }
 
+    public override void AssetsFinalize(ICoreAPI api) {
+        base.AssetsFinalize(api);
+
+        foreach (CollectibleObject obj in api.World.Collectibles) {
+            foreach (var restriction in restrictions) {
+                transformations.TryGetValue(restriction.Key, out var transformation);
+                PatchCollectibleWhitelist(obj, restriction, transformation);
+            }
+        }
+    }
+
     private void LoadData(ICoreAPI api, Dictionary<string, string[]> restrictionGroups) {
         foreach (var (category, names) in restrictionGroups) {
             foreach (var name in names) {
@@ -114,17 +139,6 @@ public class Core : ModSystem {
                 if (api.Assets.Exists(transformationPath)) {
                     transformations[name] = api.LoadAsset<Dictionary<string, ModelTransform>>(transformationPath);
                 }
-            }
-        }
-    }
-
-    public override void AssetsFinalize(ICoreAPI api) {
-        base.AssetsFinalize(api);
-
-        foreach (CollectibleObject obj in api.World.Collectibles) {
-            foreach (var restriction in restrictions) {
-                transformations.TryGetValue(restriction.Key, out var transformation);
-                PatchCollectibleWhitelist(obj, restriction, transformation);
             }
         }
     }

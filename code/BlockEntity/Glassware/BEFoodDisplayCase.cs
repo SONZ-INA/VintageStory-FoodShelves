@@ -20,11 +20,6 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); 
     }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int index = blockSel.SelectionBoxIndex;
         if (index >= ShelfCount) return false;

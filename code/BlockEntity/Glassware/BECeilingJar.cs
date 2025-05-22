@@ -15,9 +15,6 @@ public class BECeilingJar : BEBaseFSContainer {
         inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() { [EnumFoodCategory.Grain] = 0.5f };
 
         base.Initialize(api);
-
-        inv.SlotModified += Inventory_SlotModified;
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override void InitMesh() {
@@ -25,16 +22,8 @@ public class BECeilingJar : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar);
+        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar, 8.5f);
         if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
-    }
-
-    private void Inventory_SlotModified(int slotId) {
-        if (Api?.Side == EnumAppSide.Client) {
-            InitMesh();
-        }
-
-        MarkDirty(true);
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
@@ -59,6 +48,7 @@ public class BECeilingJar : BEBaseFSContainer {
             }
 
             if (moved > 0) {
+                InitMesh();
                 MarkDirty();
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
                 return true;
@@ -76,12 +66,13 @@ public class BECeilingJar : BEBaseFSContainer {
                 if (byPlayer.Entity.Controls.ShiftKey) stack = inv[i].TakeOutWhole();
                 else stack = inv[i].TakeOut(1);
 
-                if (stack != null && stack.StackSize > 0 && byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+                if (stack?.StackSize > 0 && byPlayer.InventoryManager.TryGiveItemstack(stack)) {
                     AssetLocation sound = stack.Block?.Sounds?.Place;
                     Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
                     (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                    
+                    InitMesh();
                     MarkDirty();
-
                     return true;
                 }
             }

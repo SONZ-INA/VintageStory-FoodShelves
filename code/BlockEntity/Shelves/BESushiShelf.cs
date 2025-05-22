@@ -18,7 +18,6 @@ public class BESushiShelf : BEBaseFSContainer {
         }
 
         base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     protected override float[][] genTransformationMatrices() {

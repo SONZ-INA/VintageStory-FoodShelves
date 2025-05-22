@@ -14,11 +14,6 @@ public class BETableWShelf : BEBaseFSContainer {
 
     public BETableWShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
-    public override void Initialize(ICoreAPI api) {
-        base.Initialize(api);
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
-    }
-
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf) return false;
 

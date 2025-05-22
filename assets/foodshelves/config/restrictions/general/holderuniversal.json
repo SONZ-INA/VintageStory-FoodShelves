@@ -4,7 +4,8 @@
     "game:ItemCheese",
     "foodshelves:BlockFruitBasket",
     "foodshelves:BlockVegetableBasket",
-    "foodshelves:BlockEggBasket"
+    "foodshelves:BlockEggBasket",
+    "foodshelves:BlockGlassJar"
   ],
   "CollectibleCodes": [
     "game:crock-burned*",
@@ -12,10 +13,14 @@
     "game:claypot-cooked",
     "game:bowl-fired",
     "game:bowl-meal",
+    "game:vegetable-pumpkin",
+    "game:pickledvegetable-pumpkin",
 
     "*bread-*",
     "*dough-*",
 
+    "expandedfoods:cookedveggie-pumpkin-*",
+    "expandedfoods:cookedveggie-pickledpumpkin-*",
     "expandedfoods:muffin-*",
     "expandedfoods:acornmuffin-*",
     "expandedfoods:breadedball-*",

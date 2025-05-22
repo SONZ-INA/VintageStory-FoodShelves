@@ -32,24 +32,88 @@ public static class Extensions {
         return 0;
     }
 
-    public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
-        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string>>();
-        if (variantTextures == null) return;
+    public static (Shape, ITexPositionSource) GetBlockVariantData(ICoreClientAPI capi, ItemStack stackWithAttributes) {
+        Block block = stackWithAttributes.Block;
 
+        string shapeLocation = block.Shape.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
+        Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
+        if (shape == null) return (null, null);
+
+        if (shape.Textures.Count == 0) {
+            foreach (var texture in block.Textures) {
+                shape.Textures.Add(texture.Key, texture.Value.Base);
+            }
+        }
+
+        var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
+
+        // Custom Textures
+        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
+            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()) {
+                string[] texPaths = pair.Value;
+
+                foreach (var attr in tree) {
+                    string key = attr.Key;
+                    string value = attr.Value.ToString();
+
+                    foreach (string texPath in texPaths.Reverse()) { // Reverse to start from the end texture paths (patched textures), first one serving as default
+                        if (texPath.Contains($"{{{key}}}")) {
+                            string fullTexPath = texPath.Replace($"{{{key}}}", value);
+
+                            if (capi.Assets.TryGet(new AssetLocation(fullTexPath).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                                continue;
+                            }
+                                
+                            shape.Textures[key] = fullTexPath;
+
+                            var ctex = new CompositeTexture(fullTexPath);
+
+                            //BlendedOverlayTexture overlay = new() {
+                            //    Base = new AssetLocation("foodshelves:variants/overlay/shelves/wood")
+                            //};
+
+                            //ctex.BlendedOverlays ??= Array.Empty<BlendedOverlayTexture>();
+                            //ctex.BlendedOverlays.Append(overlay);
+
+                            ctex.Bake(capi.Assets);
+                            stexSource.textures[pair.Key] = ctex;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return (shape, stexSource);
+    }
+
+    public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
+        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string[]>>();
+        
+        if (variantTextures == null) return;
         if (fscontainer.VariantAttributes == null) return;
 
         foreach (var texture in variantTextures) {
-            string textureValue = texture.Value;
+            string[] textureValues = texture.Value;
 
-            foreach (var attr in fscontainer.VariantAttributes) {
-                string paramPlaceholder = "{" + attr.Key + "}";
-                string paramValue = attr.Value.ToString();
+            foreach (string originalTexVal in textureValues) {
+                string textureValue = originalTexVal;
 
-                textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+                foreach (var attr in fscontainer.VariantAttributes) {
+                    string paramPlaceholder = "{" + attr.Key + "}";
+                    string paramValue = attr.Value.ToString();
+                    textureValue = textureValue.Replace(paramPlaceholder, paramValue);
+                }
+
+                if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
+
+                if ((fscontainer.Api as ICoreClientAPI)?.Assets.TryGet(new AssetLocation(textureValue).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                    continue;
+                }
+
+                shape.Textures[texture.Key] = textureValue;
+                break;
             }
-
-            if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
-            shape.Textures[texture.Key] = textureValue;
         }
     }
 
@@ -195,20 +259,6 @@ public static class Extensions {
         block.CreativeInventoryStacks = new CreativeTabAndStackList[] {
             new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
         };
-    }
-
-    public static string GetBlockTypeLocalized(Block block) {
-        string blockType = block.Variant["type"];
-
-        if (blockType != "normal") {
-            string entry = "foodshelves:" + blockType;
-            string typeName = Lang.Get(entry);
-            if (typeName != entry) {
-                return typeName + " ";
-            }
-        }
-
-        return "";
     }
 
     public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
@@ -397,6 +447,8 @@ public static class Extensions {
         if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
         if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
         if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
+        if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
+        if (WildcardUtil.Match("expandedfoods:cookedveggie-*", stackCode)) return true;
 
         return false;
     }

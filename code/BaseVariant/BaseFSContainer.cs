@@ -41,8 +41,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string itemName = base.GetHeldItemName(itemStack);
-        return GetBlockTypeLocalized(this) + itemName + " " + itemStack.GetMaterialNameLocalized();
+        return base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
@@ -102,6 +101,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         return new ItemStack[] { OnPickBlock(world, pos) };
     }
 
+    public override BlockDropItemStack[] GetDropsForHandbook(ItemStack handbookStack, IPlayer forPlayer) {
+        BlockDropItemStack[] drops = base.GetDropsForHandbook(handbookStack, forPlayer);
+        drops[0].ResolvedItemstack.SetFrom(handbookStack);
+        return drops;
+    }
+
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
         if (api.Side == EnumAppSide.Server) return;
         
@@ -125,7 +130,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
         List<string> parts = new();
         foreach (var pair in tree) {
-            parts.Add($"{pair.Key}-{pair.Value}");
+            parts.Add($"{pair.Key}-{pair.Value}"); // No support for various domains across mods. (eg. cloth from game: and wool: domains)
         }
 
         return $"{Code}-{string.Join("-", parts)}";

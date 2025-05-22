@@ -1,13 +1,17 @@
 {
   "code": "glassjar",
   "class": "FoodShelves.BlockGlassJar",
-  "entityclass": "FoodShelves.BlockEntityGlassJar",
-  "creativeinventory": { "general": ["*"], "decorative": ["*"], "foodshelves": ["*"] },
+  "entityclass": "FoodShelves.BEGlassJar",
+  "enabled": false,
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
-  "enabled": false,
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "glass": [ "game:block/glass/{glass}" ]
+    },
     "handbook": {
       "groupBy": [ "glassjar-*" ],
       "extraSections": [
@@ -16,39 +20,34 @@
           "text": "foodshelves:blockdesc-liquidystuff-text"
         }
       ]
-    },
-    "inventoryClassName": "glassjar",
-    "attributeTransformCode": "onGlassJarTransform"
+    }
   },
   "behaviors": [
     { "name": "UnstableFalling" },
     { "name": "RightClickPickup" }
   ],
   "shape": {
-    "base": "block/wood/glassware/glassjar"
-  },
-  "textures": {
-    "frame-slab": { "base": "game:block/glass/frame-slab" },
-    "smoky": { "base": "game:block/glass/smoky" },
-    "surface": { "base": "game:block/wood/shelf/surface" }
+    "base": "block/glassware/glassjar"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
+  "storageFlags": 257,
   "lightAbsorption": 1,
   "maxStackSize": 8,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
   "faceCullMode": "NeverCull",
   "drawtype": "json",
   "emitSideAo": { "all": false },
   "sideao": { "all": true },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
-  "replaceable": 999,
-  "resistance": 1.5,
   "guiTransform": {
     "origin": { "x": 0.5, "y": 0.35, "z": 0.5 },
-    "scale": 1.7
+    "scale": 1.8
   },
   "tpHandTransform": {
 	  "translation": { "x": -0.6, "y": -0.4, "z": -0.25 },
@@ -60,7 +59,6 @@
     "hit": "game:block/planks",
     "break": "game:block/planks"
   },
-  "materialDensity": 400,
   "collisionSelectionBoxes": [ 
     { "x1": 0.25, "y1": 0, "z1": 0.25, "x2": 0.75, "y2": 0.6875, "z2": 0.75 }
   ]

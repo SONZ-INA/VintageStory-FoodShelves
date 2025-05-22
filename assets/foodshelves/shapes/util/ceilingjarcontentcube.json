@@ -5,8 +5,7 @@
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textureSizes": {
-	},
+	"textureSizes": {},
 	"textures": {
 		"surface": "surface"
 	},
@@ -153,4 +152,5 @@
 				}
 			]
 		}
-	]}
+	]
+}

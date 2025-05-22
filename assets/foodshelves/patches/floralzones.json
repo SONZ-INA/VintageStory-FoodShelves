@@ -1,0 +1,32 @@
+[
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ { "name": "floralzonesneozeylandicregion:plank-*" } ],
+    "dependsOn": [ { "modid": "floralzonesneozeylandicregion" } ]
+  },
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ { "name": "floralzonescaperegion:plank-*" } ],
+    "dependsOn": [ { "modid": "floralzonescaperegion" } ]
+  },
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ { "name": "floralzonescaribbeanregion:plank-*" } ],
+    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
+  },
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ { "name": "floralzonesmediterraneanregion:plank-*" } ],
+    "dependsOn": [ { "modid": "floralzonesmediterraneanregion" } ]
+  },
+  {
+    "file": "foodshelves:config/variantdata/variantdata.json",
+    "op": "addmerge", "path": "/RecipeVariantData/game:plank-*", "side": "server",
+    "value": [ { "name": "floralzonescentralaustralianregion:plank-*" } ],
+    "dependsOn": [ { "modid": "floralzonescentralaustralianregion" } ]
+  }
+]
