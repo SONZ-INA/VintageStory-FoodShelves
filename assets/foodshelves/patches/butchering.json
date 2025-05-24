@@ -1,0 +1,14 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/glassware/meatfreezer.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "butchering:primemeat-raw",
+      "butchering:sausage-bloodsausage-raw",
+      "butchering:sausage-blackpudding-raw",
+      "butchering:offal-bloody",
+      "butchering:offal-clean"
+    ],
+    "dependsOn": [ { "modid": "butchering" } ]
+  }
+]

@@ -139,7 +139,10 @@ public class BEMeatFreezer : BEBaseFSContainer {
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         if (blockSel.SelectionBoxIndex > 3) return false; // If it's freezer or drawer selection box, return
-        return base.TryPut(byPlayer, slot, blockSel);
+        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Invert shift to bulk-place by default
+        bool result = base.TryPut(byPlayer, slot, blockSel);
+        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Restore original value
+        return result;
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
@@ -387,10 +390,8 @@ public class BEMeatFreezer : BEBaseFSContainer {
 
         if (animUtil != null) {
             if (animUtil.renderer == null) {
-                shape.ApplyVariantTextures(this);
-
-                ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-MeatFreezerAnimation");
-                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, GetRotationAngle(block), 0));
+                (Shape, ITexPositionSource) data = GetBlockVariantData(capi, block.OnPickBlock(capi.World, Pos));
+                mesh = animUtil.InitializeAnimator(key, data.Item1, data.Item2, new Vec3f(0, GetRotationAngle(block), 0));
             }
 
             return meshes[meshKey] = mesh;

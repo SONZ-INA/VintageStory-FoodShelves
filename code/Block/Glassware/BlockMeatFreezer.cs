@@ -114,6 +114,8 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         return null;
     }
 
+    #region MBColSelBoxes
+
     // Selection box for master block
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BEMeatFreezer be = blockAccessor.GetBlockEntityExt<BEMeatFreezer>(pos);
@@ -205,4 +207,6 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
     public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
         return base.GetCollisionBoxes(blockAccessor, pos);
     }
+
+    #endregion
 }

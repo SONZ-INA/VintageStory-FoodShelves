@@ -105,6 +105,7 @@
   <None Remove="assets\foodshelves\lang\pl.json" />
   <None Remove="assets\foodshelves\lang\pt-br.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
+  <None Remove="assets\foodshelves\patches\butchering.json" />
   <None Remove="assets\foodshelves\patches\carryon.json" />
   <None Remove="assets\foodshelves\patches\clayworks.json" />
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />

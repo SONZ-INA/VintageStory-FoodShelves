@@ -85,6 +85,8 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         else return cabinetInteractions.Append(itemSlottableInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
     }
 
+    #region MBColSelBoxes
+
     // Selection box for master block
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BECoolingCabinet be = blockAccessor.GetBlockEntityExt<BECoolingCabinet>(pos);
@@ -173,4 +175,6 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
         return base.GetCollisionBoxes(blockAccessor, pos);
     }
+
+    #endregion
 }

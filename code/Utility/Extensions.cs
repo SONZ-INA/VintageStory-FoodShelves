@@ -87,36 +87,6 @@ public static class Extensions {
         return (shape, stexSource);
     }
 
-    public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
-        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string[]>>();
-        
-        if (variantTextures == null) return;
-        if (fscontainer.VariantAttributes == null) return;
-
-        foreach (var texture in variantTextures) {
-            string[] textureValues = texture.Value;
-
-            foreach (string originalTexVal in textureValues) {
-                string textureValue = originalTexVal;
-
-                foreach (var attr in fscontainer.VariantAttributes) {
-                    string paramPlaceholder = "{" + attr.Key + "}";
-                    string paramValue = attr.Value.ToString();
-                    textureValue = textureValue.Replace(paramPlaceholder, paramValue);
-                }
-
-                if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
-
-                if ((fscontainer.Api as ICoreClientAPI)?.Assets.TryGet(new AssetLocation(textureValue).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
-                    continue;
-                }
-
-                shape.Textures[texture.Key] = textureValue;
-                break;
-            }
-        }
-    }
-
     public static void ChangeShapeTextureKey(Shape shape, string key) {
         foreach (var face in shape.Elements[0].FacesResolved) {
             face.Texture = key;

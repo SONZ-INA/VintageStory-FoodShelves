@@ -24,7 +24,7 @@ public static class RecipePatcher {
         //SwitchModdedIngredients(variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
         //int recipeCountAfterSwitch = api.World.GridRecipes.Count;
         //api.Logger.Debug($"\tPatched in {recipeCountAfterSwitch - recipeCountBefore} recipes using the switcher method.");
-        api.Logger.Debug("Recipe switcher is currently turned off for performance reasons.");
+        api.Logger.Debug("\tRecipe switcher is currently turned off for performance reasons.");
 
         // Fallback recipes - those that will accept "*:ingredient-*" and fallback to default textures.
         DefaultFallbackAddition(variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
@@ -159,7 +159,7 @@ public static class RecipePatcher {
                 continue;
 
             var contextData = new RecipeProcessingContext(collectibleRecipes, entriesToReplace, variantData, gridRecipeLoader);
-            ProcessRecipeCollection(contextData, moddedFallback, debugCode);
+            ProcessRecipeCollection(contextData, new() /* return this upon performance upgrade */, debugCode);
         }
     }
 
