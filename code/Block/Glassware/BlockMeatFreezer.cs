@@ -27,12 +27,12 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
 
             return new WorldInteraction[] {
                 new() {
-                    ActionLangCode = "blockhelp-groundstorage-add",
+                    ActionLangCode = "blockhelp-groundstorage-addbulk",
                     MouseButton = EnumMouseButton.Right,
                     Itemstacks = meatFreezerStackList.ToArray()
                 },
                 new() {
-                    ActionLangCode = "blockhelp-groundstorage-addbulk",
+                    ActionLangCode = "blockhelp-groundstorage-add",
                     MouseButton = EnumMouseButton.Right,
                     Itemstacks = meatFreezerStackList.ToArray(),
                     HotKeyCode = "shift"

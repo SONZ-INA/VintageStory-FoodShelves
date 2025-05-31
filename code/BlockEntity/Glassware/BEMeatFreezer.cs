@@ -390,8 +390,10 @@ public class BEMeatFreezer : BEBaseFSContainer {
 
         if (animUtil != null) {
             if (animUtil.renderer == null) {
-                (Shape, ITexPositionSource) data = GetBlockVariantData(capi, block.OnPickBlock(capi.World, Pos));
-                mesh = animUtil.InitializeAnimator(key, data.Item1, data.Item2, new Vec3f(0, GetRotationAngle(block), 0));
+                shape.ApplyVariantTextures(this);
+
+                ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-MeatFreezerAnimation");
+                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, GetRotationAngle(block), 0));
             }
 
             return meshes[meshKey] = mesh;
