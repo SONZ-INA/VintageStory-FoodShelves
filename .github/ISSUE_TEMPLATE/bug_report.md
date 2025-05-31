@@ -1,20 +1,61 @@
----
-name: Bug report
-about: Something is wrong with the mod
-title: ''
-labels: bug
-assignees: SONZ-INA
+name: Bugreport
+description: Report a bug related to the Food Shelves mod here.
+labels: ["status: new"]
 
----
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: A short title describing the bug
+      placeholder: Example: Fruit Basket doesn't drop contents when broken
+    validations:
+      required: true
 
-**Version of the game**
-What version of the game are you using?
+  - type: input
+    id: gameversion
+    attributes:
+      label: Game Version
+      description: What Vintage Story game version are you using?
+      placeholder: v1.20.10
+    validations:
+      required: false
 
-**Version of the mod**
-What version of Food Shelves are you using?
+  - type: input
+    id: modversion
+    attributes:
+      label: Food Shelves Mod Version
+      description: Which version of the Food Shelves mod are you using?
+      placeholder: v2.1.3
+    validations:
+      required: true
 
-**Does the issue happen with just Food Shelves enabled (no other mods enabled)?**
-If you turn off all other mods, does this issue still happen? (If you haven't checked, it's fine).
+  - type: dropdown
+    id: onlyfoodshelves
+    attributes:
+      label: Does this issue happen when only Food Shelves is enabled (no other mods)?
+      description: Disable all other mods and test again, if possible.
+      options:
+        - Yes
+        - No
+        - I don't know
+    validations:
+      required: false
 
-**Describe the issue**
-Please describe the issue you have with the mod. You can provide screenshots if you think that will help the mod developer pinpoint what it is.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Explain the issue you're running into.
+      placeholder: What exactly goes wrong? When did it start happening? What are the steps to reproduce?
+    validations:
+      required: false
+
+  - type: input
+    id: labels
+    attributes:
+      label: Labels
+      description: Suggested tags for this issue (e.g., bug, visual bug, crash, performance)
+      placeholder: bug, visual bug
+    validations:
+      required: false
