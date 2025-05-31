@@ -50,12 +50,3 @@ body:
       placeholder: "What exactly goes wrong? When did it start happening? What are the steps to reproduce?"
     validations:
       required: false
-
-  - type: input
-    id: labels
-    attributes:
-      label: "Labels"
-      description: "Suggested tags for this issue (e.g., bug, visual bug, crash, performance)"
-      placeholder: "bug, visual bug"
-    validations:
-      required: false
