@@ -48,6 +48,7 @@
   "block-floursack-*": "Flour Sack",
   "block-doubleshelf-*": "Double Shelf",
   "block-buckethook-*": "Bucket Hook",
+  "block-seedbins-*": "Seed Bins",
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
@@ -71,6 +72,7 @@
   "blockdesc-meatfreezer-text": "  -Most types of raw meat.",
   "blockdesc-floursack-text": "  -All types of flour.",
   "blockdesc-buckethook-text": "  -Buckets.",
+  "blockdesc-seedbins-text": "  -All seedbags.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
@@ -98,6 +100,7 @@
   "Only raw meat can be placed in this freezer.": "Only raw meat can be placed in this freezer.",
   "Only flour can be placed in this sack.": "Only flour can be placed in this sack.",
   "Only buckets can be placed on this hook.": "Only buckets can be placed on this hook.",
+  "Only seeds can be placed in these jars.": "Only seeds can be placed in these jars.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",

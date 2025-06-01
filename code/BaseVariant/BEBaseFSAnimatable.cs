@@ -7,7 +7,7 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
 
     protected virtual string ReferencedShape {
         get {
-            var className = GetType().Name.Replace("BE", "");
+            var className = this.GetType().Name.Replace("BE", "");
             var field = typeof(ShapeReferences).GetField(className, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             return field?.GetValue(null) as string
                 ?? throw new InvalidOperationException($"No shape reference found for {className}");
@@ -16,6 +16,13 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
 
     protected BlockEntityAnimationUtil animUtil {
         get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; }
+    }
+
+    public override void Initialize(ICoreAPI api) {
+        BlockEntityBehavior behavior = api.World.ClassRegistry.CreateBlockEntityBehavior(this, "Animatable");
+        Behaviors.Add(behavior);
+
+        base.Initialize(api);
     }
 
     protected abstract void HandleAnimations();

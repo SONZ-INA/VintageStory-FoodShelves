@@ -117,7 +117,7 @@ public static class Meshing {
         return nestedContentMesh;
     }
 
-    public static MeshData GenLiquidyMesh(ICoreClientAPI capi, ItemStack[] contents, string pathToFillShape, float maxHeight) {
+    public static MeshData GenLiquidyMesh(ICoreClientAPI capi, ItemStack[] contents, string pathToFillShape, float maxHeight, bool inheritTextures = true) {
         if (capi == null) return null;
         if (contents == null || contents.Length == 0 || contents[0] == null) return null;
         if (pathToFillShape == null || pathToFillShape == "") return null;
@@ -131,25 +131,31 @@ public static class Meshing {
 
         // Handle textureSource
         ITexPositionSource texSource;
-        if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
-            AssetLocation textureRerouteLocation;
 
-            if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond"); // Fucking exception
-            else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
+        if (inheritTextures) {
+            if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
+                AssetLocation textureRerouteLocation;
 
-            shapeClone.Textures.Clear();
-            shapeClone.Textures.Add("surface", textureRerouteLocation);
+                if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond"); // Fucking exception
+                else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
 
+                shapeClone.Textures.Clear();
+                shapeClone.Textures.Add("surface", textureRerouteLocation);
+
+                texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
+            }
+            else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
+                var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
+                texSource = new ContainerTextureSource(capi, contents[0], texture);
+            }
+            else { // If all else fails, take the item's own texture
+                // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
+                var textures = contents[0].Item.Textures;
+                texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
+            }
+        }
+        else {
             texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
-        }
-        else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
-            var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
-            texSource = new ContainerTextureSource(capi, contents[0], texture);
-        }
-        else { // If all else fails, take the item's own texture
-            // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
-            var textures = contents[0].Item.Textures;
-            texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
         }
 
         // Calculate the total content amount

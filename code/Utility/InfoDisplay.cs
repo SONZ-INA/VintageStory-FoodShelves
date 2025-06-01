@@ -7,6 +7,7 @@ public static class InfoDisplay {
         ByBlock,
         ByShelf,
         BySegment,
+        BySegmentGrouped,
         ByBlockAverageAndSoonest,
         ByBlockMerged
     }
@@ -29,14 +30,17 @@ public static class InfoDisplay {
             itemSlotList.Add(slot);
         }
         
-        if (displaySelection == InfoDisplayOptions.ByBlockAverageAndSoonest) {
-            sb.Append(PerishableInfoAverageAndSoonest(itemSlotList.ToArray(), world));
-            return;
-        }
-
-        if (displaySelection == InfoDisplayOptions.ByBlockMerged) {
-            ByBlockMerged(itemSlotList.ToArray(), sb, world);
-            return;
+        switch (displaySelection) {
+            case InfoDisplayOptions.ByBlockAverageAndSoonest:
+                sb.Append(PerishableInfoAverageAndSoonest(itemSlotList.ToArray(), world));
+                return;
+            case InfoDisplayOptions.ByBlockMerged:
+                ByBlockMerged(itemSlotList.ToArray(), sb, world);
+                return;
+            case InfoDisplayOptions.BySegmentGrouped:
+                int fromSlot = forPlayer.CurrentBlockSelection.SelectionBoxIndex * itemsPerSegment;
+                sb.Append(PerishableInfoGrouped(inv, world, fromSlot, fromSlot + itemsPerSegment));
+                return;
         }
 
         if (selectedSegment == -1 && forPlayer.CurrentBlockSelection != null)
