@@ -1,8 +1,6 @@
-﻿using System.Linq;
+﻿namespace FoodShelves;
 
-namespace FoodShelves;
-
-public class BEWallCabinet : BEBaseFSContainer {
+public class BEWallCabinet : BEBaseFSAnimatable {
     protected new BlockWallCabinet block;
 
     public override string InventoryClassName => "shelf";
@@ -13,7 +11,8 @@ public class BEWallCabinet : BEBaseFSContainer {
 
     public override int SlotCount => 4;
 
-    public bool CabinetOpen { get; set; }
+    [TreeSerializable(false)] public bool CabinetOpen { get; set; }
+    
     private float perishMultiplierUnBuffed = 0.75f;
 
     public BEWallCabinet() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
@@ -38,17 +37,9 @@ public class BEWallCabinet : BEBaseFSContainer {
         return base.OnInteract(byPlayer, blockSel);
     }
 
-    #region Animation & Meshing
+    #region Animations
 
-    private MeshData ownMesh;
-
-    BlockEntityAnimationUtil animUtil {
-        get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; }
-    }
-
-    #region Animation
-
-    private void HandleAnimations() {
+    protected override void HandleAnimations() {
         if (animUtil != null) {
             if (CabinetOpen) ToggleCabinetDoor(true);
             else ToggleCabinetDoor(false);
@@ -84,70 +75,6 @@ public class BEWallCabinet : BEBaseFSContainer {
 
     #endregion
 
-    #region Meshing
-
-    private MeshData GenMesh(ITesselatorAPI tesselator) {
-        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
-
-        string key = "wallCabinetMeshes" + Block.Code.ToShortString();
-        Dictionary<string, MeshData> meshes = ObjectCacheUtil.GetOrCreate(Api, key, () => {
-            return new Dictionary<string, MeshData>();
-        });
-
-        Shape shape = null;
-        if (animUtil != null) {
-            string skeydict = "wallCabinetMeshes";
-            Dictionary<string, Shape> shapes = ObjectCacheUtil.GetOrCreate(Api, skeydict, () => {
-                return new Dictionary<string, Shape>();
-            });
-
-            string sKey = "wallCabinetShape" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
-            if (!shapes.TryGetValue(sKey, out shape)) {
-                AssetLocation shapeLocation = new(ShapeReferences.WallCabinet);
-                shape = Shape.TryGet(capi, shapeLocation);
-                shapes[sKey] = shape;
-            }
-        }
-
-        string meshKey = "wallCabinetAnim" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
-        if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
-            if (animUtil != null && animUtil.renderer == null) {
-                animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, GetRotationAngle(block), 0));
-            }
-
-            return mesh;
-        }
-
-        if (animUtil != null) {
-            if (animUtil.renderer == null) {
-                shape.ApplyVariantTextures(this);
-
-                ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-WallCabinetAnimation");
-                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, GetRotationAngle(block), 0));
-            }
-
-            return meshes[meshKey] = mesh;
-        }
-
-        return null;
-    }
-
-    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = BaseRenderContents(mesher, tesselator);
-
-        if (!skipmesh) {
-            if (ownMesh == null) {
-                ownMesh = GenMesh(tesselator);
-                if (ownMesh == null) return false;
-            }
-
-            mesher.AddMeshData(ownMesh.Clone().BlockYRotation(block));
-            HandleAnimations();
-        }
-
-        return true;
-    }
-
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 
@@ -166,22 +93,5 @@ public class BEWallCabinet : BEBaseFSContainer {
         }
 
         return tfMatrices;
-    }
-
-    #endregion
-
-    #endregion
-
-    public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
-        base.FromTreeAttributes(tree, worldForResolving);
-        CabinetOpen = tree.GetBool("cabinetOpen", false);
-
-        HandleAnimations();
-        RedrawAfterReceivingTreeAttributes(worldForResolving);
-    }
-
-    public override void ToTreeAttributes(ITreeAttribute tree) {
-        base.ToTreeAttributes(tree);
-        tree.SetBool("cabinetOpen", CabinetOpen);
     }
 }

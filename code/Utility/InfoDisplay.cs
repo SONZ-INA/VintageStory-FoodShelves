@@ -433,12 +433,12 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    private static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
+    public static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
 
         if (transitionLevel > 0) {
             switch (transitionType) {
                 case EnumTransitionType.Perish:
-                    return Lang.Get("itemstack-perishable-spoiling", (int)Math.Round(transitionLevel * 100));
+                    return Lang.Get("{0}% spoiled", (int)Math.Round(transitionLevel * 100));
                 case EnumTransitionType.Dry:
                     return Lang.Get("itemstack-dryable-dried", (int)Math.Round(transitionLevel * 100));
                 case EnumTransitionType.Cure:

@@ -47,6 +47,7 @@
   "block-wallcabinet-*": "Wall Cabinet",
   "block-floursack-*": "Flour Sack",
   "block-doubleshelf-*": "Double Shelf",
+  "block-buckethook-*": "Bucket Hook",
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
@@ -69,6 +70,7 @@
   "blockdesc-holderuniversal-text": "  -Pies, Cheese, all bread types, crocks and pots<br>Food Shelves:<br>  -All baskets<br>Expanded Foods:<br>  -Fruit bars<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -All nut bars<br>  -Pacoca<br>  -Halva<br>  -Marzipam<br>Long-term food:<br>  -All pemmicans<br>  -Packed pemmican<br>  -Mushroom pate",
   "blockdesc-meatfreezer-text": "  -Most types of raw meat.",
   "blockdesc-floursack-text": "  -All types of flour.",
+  "blockdesc-buckethook-text": "  -Buckets.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
@@ -95,6 +97,7 @@
   "Only tuns can be placed on this rack.": "Only tuns can be placed on this rack.",
   "Only raw meat can be placed in this freezer.": "Only raw meat can be placed in this freezer.",
   "Only flour can be placed in this sack.": "Only flour can be placed in this sack.",
+  "Only buckets can be placed on this hook.": "Only buckets can be placed on this hook.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",
