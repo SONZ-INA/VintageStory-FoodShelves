@@ -11,7 +11,10 @@
 		"surface": "game:block/wood/shelf/surface",
 		"frame": "game:block/glass/frame",
 		"glass": "game:block/glass/smoky",
-		"seed": "game:item/resource/seeds/amaranth"
+		"seed0": "game:item/resource/seeds/blank",
+		"seed1": "game:item/resource/seeds/blank",
+		"seed2": "game:item/resource/seeds/blank",
+		"seed3": "game:item/resource/seeds/blank"
 	},
 	"elements": [
 		{
@@ -355,7 +358,7 @@
 					},
 					"children": [
 						{
-							"name": "Lid1Frame",
+							"name": "Lid2Frame",
 							"from": [ 1.002, 9.0, 1.002 ],
 							"to": [ 7.498, 9.5, 7.498 ],
 							"renderPass": 1,
@@ -364,52 +367,6 @@
 								"north": { "texture": "#surface", "uv": [ 2.0, 3.0, 8.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
 								"east": { "texture": "#surface", "uv": [ 6.5, 3.0, 12.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
 								"west": { "texture": "#surface", "uv": [ 2.0, 3.0, 8.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"up": { "texture": "#frame", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
-							},
-							"children": [
-								{
-									"name": "Lid1Glass",
-									"from": [ 0.0, -0.01, 0.0 ],
-									"to": [ 6.5, 0.49, 6.5 ],
-									"renderPass": 3,
-									"faces": {
-										"up": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
-									}
-								},
-								{
-									"name": "Lid1Handle",
-									"from": [ 1.5, 0.5, 1.0 ],
-									"to": [ 5.0, 0.75, 1.5 ],
-									"rotationOrigin": [ 1.5, 0.0, 1.0 ],
-									"faces": {
-										"north": { "texture": "#surface", "uv": [ 1.0, 15.5, 4.5, 16.0 ] },
-										"east": { "texture": "#surface", "uv": [ 15.5, 15.5, 16.0, 16.0 ] },
-										"south": { "texture": "#surface", "uv": [ 8.5, 3.0, 12.0, 3.5 ] },
-										"west": { "texture": "#surface", "uv": [ 0.0, 3.0, 0.5, 3.5 ] },
-										"up": { "texture": "#surface", "uv": [ 4.5, 3.0, 8.0, 3.5 ] }
-									}
-								},
-								{
-									"name": "Lid1Icon",
-									"from": [ 1.0, 0.01, 1.6 ],
-									"to": [ 5.5, 0.51, 6.1 ],
-									"rotationOrigin": [ 1.0, 0.0, 1.6 ],
-									"faces": {
-										"up": { "texture": "#seed", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
-									}
-								}
-							]
-						},
-						{
-							"name": "Lid2Frame",
-							"from": [ 8.502, 9.0, 1.002 ],
-							"to": [ 14.998, 9.5, 7.498 ],
-							"renderPass": 1,
-							"rotationOrigin": [ 8.0, 9.5, 7.5 ],
-							"faces": {
-								"north": { "texture": "#surface", "uv": [ 7.5, 3.0, 13.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"east": { "texture": "#surface", "uv": [ 0.0, 3.0, 6.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"west": { "texture": "#surface", "uv": [ 9.0, 3.0, 15.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
 								"up": { "texture": "#frame", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 							},
 							"children": [
@@ -439,23 +396,23 @@
 									"name": "Lid2Icon",
 									"from": [ 1.0, 0.01, 1.6 ],
 									"to": [ 5.5, 0.51, 6.1 ],
-									"rotationOrigin": [ 1.5, 0.0, 1.6 ],
+									"rotationOrigin": [ 1.0, 0.0, 1.6 ],
 									"faces": {
-										"up": { "texture": "#seed", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+										"up": { "texture": "#seed2", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 									}
 								}
 							]
 						},
 						{
 							"name": "Lid3Frame",
-							"from": [ 8.502, 9.0, 8.502 ],
-							"to": [ 14.998, 9.5, 14.998 ],
+							"from": [ 8.502, 9.0, 1.002 ],
+							"to": [ 14.998, 9.5, 7.498 ],
 							"renderPass": 1,
-							"rotationOrigin": [ 8.0, 9.5, 15.0 ],
+							"rotationOrigin": [ 8.0, 9.5, 7.5 ],
 							"faces": {
-								"north": { "texture": "#surface", "uv": [ 7.0, 15.5, 13.0, 16.0 ], "windMode": [-1,-1,-1,-1] },
-								"east": { "texture": "#surface", "uv": [ 1.0, 3.0, 7.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"west": { "texture": "#surface", "uv": [ 5.5, 3.0, 11.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"north": { "texture": "#surface", "uv": [ 7.5, 3.0, 13.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"east": { "texture": "#surface", "uv": [ 0.0, 3.0, 6.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"west": { "texture": "#surface", "uv": [ 9.0, 3.0, 15.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
 								"up": { "texture": "#frame", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 							},
 							"children": [
@@ -485,28 +442,28 @@
 									"name": "Lid3Icon",
 									"from": [ 1.0, 0.01, 1.6 ],
 									"to": [ 5.5, 0.51, 6.1 ],
-									"rotationOrigin": [ 1.5, 0.0, 1.1 ],
+									"rotationOrigin": [ 1.5, 0.0, 1.6 ],
 									"faces": {
-										"up": { "texture": "#seed", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+										"up": { "texture": "#seed3", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 									}
 								}
 							]
 						},
 						{
-							"name": "Lid4Frame",
-							"from": [ 1.002, 9.0, 8.502 ],
-							"to": [ 7.498, 9.5, 14.998 ],
+							"name": "Lid1Frame",
+							"from": [ 8.502, 9.0, 8.502 ],
+							"to": [ 14.998, 9.5, 14.998 ],
 							"renderPass": 1,
-							"rotationOrigin": [ 1.0, 9.5, 15.0 ],
+							"rotationOrigin": [ 8.0, 9.5, 15.0 ],
 							"faces": {
-								"north": { "texture": "#surface", "uv": [ 5.0, 3.0, 11.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"east": { "texture": "#surface", "uv": [ 2.5, 3.0, 8.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
-								"west": { "texture": "#surface", "uv": [ 3.0, 3.0, 9.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"north": { "texture": "#surface", "uv": [ 7.0, 15.5, 13.0, 16.0 ], "windMode": [-1,-1,-1,-1] },
+								"east": { "texture": "#surface", "uv": [ 1.0, 3.0, 7.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"west": { "texture": "#surface", "uv": [ 5.5, 3.0, 11.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
 								"up": { "texture": "#frame", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 							},
 							"children": [
 								{
-									"name": "Lid4Glass",
+									"name": "Lid1Glass",
 									"from": [ 0.0, -0.01, 0.0 ],
 									"to": [ 6.5, 0.49, 6.5 ],
 									"renderPass": 3,
@@ -515,7 +472,7 @@
 									}
 								},
 								{
-									"name": "Lid4Handle",
+									"name": "Lid1Handle",
 									"from": [ 1.5, 0.5, 1.0 ],
 									"to": [ 5.0, 0.75, 1.5 ],
 									"rotationOrigin": [ 1.5, 0.0, 1.0 ],
@@ -528,12 +485,58 @@
 									}
 								},
 								{
-									"name": "Lid4Icon",
+									"name": "Lid1Icon",
+									"from": [ 1.0, 0.01, 1.6 ],
+									"to": [ 5.5, 0.51, 6.1 ],
+									"rotationOrigin": [ 1.5, 0.0, 1.1 ],
+									"faces": {
+										"up": { "texture": "#seed1", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+									}
+								}
+							]
+						},
+						{
+							"name": "Lid0Frame",
+							"from": [ 1.002, 9.0, 8.502 ],
+							"to": [ 7.498, 9.5, 14.998 ],
+							"renderPass": 1,
+							"rotationOrigin": [ 1.0, 9.5, 15.0 ],
+							"faces": {
+								"north": { "texture": "#surface", "uv": [ 5.0, 3.0, 11.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"east": { "texture": "#surface", "uv": [ 2.5, 3.0, 8.5, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"west": { "texture": "#surface", "uv": [ 3.0, 3.0, 9.0, 3.5 ], "windMode": [-1,-1,-1,-1] },
+								"up": { "texture": "#frame", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+							},
+							"children": [
+								{
+									"name": "Lid0Glass",
+									"from": [ 0.0, -0.01, 0.0 ],
+									"to": [ 6.5, 0.49, 6.5 ],
+									"renderPass": 3,
+									"faces": {
+										"up": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+									}
+								},
+								{
+									"name": "Lid0Handle",
+									"from": [ 1.5, 0.5, 1.0 ],
+									"to": [ 5.0, 0.75, 1.5 ],
+									"rotationOrigin": [ 1.5, 0.0, 1.0 ],
+									"faces": {
+										"north": { "texture": "#surface", "uv": [ 1.0, 15.5, 4.5, 16.0 ] },
+										"east": { "texture": "#surface", "uv": [ 15.5, 15.5, 16.0, 16.0 ] },
+										"south": { "texture": "#surface", "uv": [ 8.5, 3.0, 12.0, 3.5 ] },
+										"west": { "texture": "#surface", "uv": [ 0.0, 3.0, 0.5, 3.5 ] },
+										"up": { "texture": "#surface", "uv": [ 4.5, 3.0, 8.0, 3.5 ] }
+									}
+								},
+								{
+									"name": "Lid0Icon",
 									"from": [ 1.0, 0.01, 1.6 ],
 									"to": [ 5.5, 0.51, 6.1 ],
 									"rotationOrigin": [ 3.0, 0.0, 1.1 ],
 									"faces": {
-										"up": { "texture": "#seed", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
+										"up": { "texture": "#seed0", "uv": [ 0.0, 0.0, 16.0, 16.0 ], "autoUv": false }
 									}
 								}
 							]

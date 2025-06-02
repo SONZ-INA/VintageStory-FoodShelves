@@ -1,6 +1,6 @@
 {
   "code": "seedbins",
-  "class": "FoodShelves.BlockSeedBins",
+  "class": "FoodShelves.BlockFSContainer",
   "entityclass": "FoodShelves.BESeedBins",
   "variantgroups": [
     { "code": "type", "states": ["normal"] },
@@ -10,7 +10,11 @@
     "materials": { "loadFromProperties": "block/wood" },
     "variantTextures": {
       "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
-      "glass": [ "game:block/glass/{glass}" ]
+      "glass": [ "game:block/glass/{glass}" ],
+      "seed0": [ "game:item/resource/seeds/{seed0}" ],
+      "seed1": [ "game:item/resource/seeds/{seed1}" ],
+      "seed2": [ "game:item/resource/seeds/{seed2}" ],
+      "seed3": [ "game:item/resource/seeds/{seed3}" ]
     },
     "handbook": {
       "groupBy": [ "seedbins-*" ],

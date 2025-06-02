@@ -13,17 +13,12 @@ public class BEFlourSack : BEBaseFSContainer {
         if (capi == null) return;
 
         if (!inv[0].Empty) {
-            string flourtype = inv[0].Itemstack.Collectible.Code.Path.Replace("flour-", "");
+            string flourtype = inv[0].Itemstack.Collectible.Variant["type"];
             VariantAttributes.SetString("seed", flourtype);
             base.InitMesh();
         }
         else {
-            var stack = new ItemStack(block);
-            if (VariantAttributes.Count != 0) {
-                stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
-            }
-
-            blockMesh = GenBlockMeshWithoutElements(capi, stack, new[] { "sackicon" });
+            blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), new[] { "sackicon" });
         }
 
         MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);
