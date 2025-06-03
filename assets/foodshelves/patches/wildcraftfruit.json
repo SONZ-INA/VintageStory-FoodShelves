@@ -13,5 +13,29 @@
     "file": "foodshelves:recipes/grid/shelves/barshelf.json",
     "op": "replace", "path": "/1/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "wildcraftfruit" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed0/-", "side": "server", 
+    "value": "wildcraftfruit:items/seeds/{seed0}",
+    "dependsOn": [ { "modid": "wildcraftfruit" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed1/-", "side": "server", 
+    "value": "wildcraftfruit:items/seeds/{seed1}",
+    "dependsOn": [ { "modid": "wildcraftfruit" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed2/-", "side": "server", 
+    "value": "wildcraftfruit:items/seeds/{seed2}",
+    "dependsOn": [ { "modid": "wildcraftfruit" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed3/-", "side": "server", 
+    "value": "wildcraftfruit:items/seeds/{seed3}",
+    "dependsOn": [ { "modid": "wildcraftfruit" } ]
   }
 ]

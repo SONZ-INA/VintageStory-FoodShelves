@@ -11,7 +11,7 @@ public class Core : ModSystem {
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
 
     public static ConfigServer ConfigServer { get; set; }
-    public static ConfigClient ConfigClient { get; set; }
+    // public static ConfigClient ConfigClient { get; set; }
 
     public override void StartPre(ICoreAPI api) {
         switch (api.Side) {
@@ -71,11 +71,13 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEFoodDisplayCase", typeof(BEFoodDisplayCase));
         api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
         api.RegisterBlockEntityClass("FoodShelves.BEWallCabinet", typeof(BEWallCabinet));
+        api.RegisterBlockEntityClass("FoodShelves.BESeedBins", typeof(BESeedBins));
         //api.RegisterBlockEntityClass("FoodShelves.BEGlassJar", typeof(BEGlassJar));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEFlourSack", typeof(BEFlourSack));
+        api.RegisterBlockEntityClass("FoodShelves.BEBucketHook", typeof(BEBucketHook));
 
         api.RegisterBlockEntityClass("FoodShelves.BEBarShelf", typeof(BEBarShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
@@ -98,8 +100,8 @@ public class Core : ModSystem {
                 ["barrels"] = new[] { "barrelrack", "tunrack" },
                 ["baskets"] = new[] { "eggbasket", "vegetablebasket", "fruitbasket" },
                 ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
-                ["glassware"] = new[] { "meatfreezer" },
-                ["other"] = new[] { "floursack", "pumpkincase" },
+                ["glassware"] = new[] { "meatfreezer", "seedbins" },
+                ["other"] = new[] { "floursack", "pumpkincase", "buckethook" },
                 ["shelves"] = new[] { "barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf" }
             };
 

@@ -41,12 +41,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     protected virtual void InitMesh() {
-        var stack = new ItemStack(block);
-        if (VariantAttributes.Count != 0) {
-            stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
-        }
-
-        blockMesh = GenBlockVariantMesh(Api, stack);
+        blockMesh = GenBlockVariantMesh(Api, GetVariantStack(this));
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {

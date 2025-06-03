@@ -14,10 +14,16 @@ public static class Extensions {
 
     #region MeshExtensions
 
+    /// <summary>
+    /// Rotates the mesh in a specific cardinal direction the block has.
+    /// </summary>
     public static MeshData BlockYRotation(this MeshData mesh, Block block) {
         return mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
     }
 
+    /// <summary>
+    /// Returns the angle that the block is placed at. Used for meshing blocks that can rotate freely (eg. baskets).
+    /// </summary>
     public static float GetBlockMeshAngle(IPlayer byPlayer, BlockSelection blockSel, bool val) {
         if (val) {
             BlockPos targetPos = blockSel.DidOffset ? blockSel.Position.AddCopy(blockSel.Face.Opposite) : blockSel.Position;
@@ -32,6 +38,9 @@ public static class Extensions {
         return 0;
     }
 
+    /// <summary>
+    /// Block Variant Data needed for blocks to mesh their variant textures properly. Avoid using in animation mesh generation.
+    /// </summary>
     public static (Shape, ITexPositionSource) GetBlockVariantData(ICoreClientAPI capi, ItemStack stackWithAttributes) {
         Block block = stackWithAttributes.Block;
 
@@ -54,7 +63,7 @@ public static class Extensions {
 
                 foreach (var attr in tree) {
                     string key = attr.Key;
-                    string value = attr.Value.ToString();
+                    string value = attr.Value?.GetValue()?.ToString() ?? ""; // Null safety when removing a mod from a world.
 
                     foreach (string texPath in texPaths.Reverse()) { // Reverse to start from the end texture paths (patched textures), first one serving as default
                         if (texPath.Contains($"{{{key}}}")) {
@@ -87,6 +96,9 @@ public static class Extensions {
         return (shape, stexSource);
     }
 
+    /// <summary>
+    /// Apply variant textures from block attributes. Used in animations. Don't use GetBlockVariantData in animations!
+    /// </summary>
     public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
         var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string[]>>();
 
@@ -115,6 +127,18 @@ public static class Extensions {
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// Get the stack from the entity that has the attributes needed to mesh the textures properly. Use in GetBlockVariantMesh().
+    /// </summary>
+    public static ItemStack GetVariantStack(BEBaseFSContainer entity) {
+        var stack = new ItemStack(entity.Block);
+        if (entity.VariantAttributes.Count != 0) {
+            stack.Attributes[BaseFSContainer.FSAttributes] = entity.VariantAttributes;
+        }
+
+        return stack;
     }
 
     public static void ChangeShapeTextureKey(Shape shape, string key) {
@@ -151,6 +175,9 @@ public static class Extensions {
         mat.Translate(-0.5f, 0, -0.5f);
     }
 
+    /// <summary>
+    /// For blocks that can have a variety of items, similar in stacksize and type (like baskets), uses a hashing function to disperse cached meshes.
+    /// </summary>
     public static int GetStackCacheHashCodeFNV(ItemStack[] contentStack) {
         if (contentStack == null) return 0;
 
@@ -174,6 +201,9 @@ public static class Extensions {
         }
     }
 
+    /// <summary>
+    /// Returns the dictionary used for caching meshes.
+    /// </summary>
     public static Dictionary<string, MultiTextureMeshRef> GetCacheDictionary(ICoreClientAPI capi, string meshCacheKey) {
         if (capi.ObjectCache.TryGetValue(meshCacheKey, out object obj)) {
             return obj as Dictionary<string, MultiTextureMeshRef>;

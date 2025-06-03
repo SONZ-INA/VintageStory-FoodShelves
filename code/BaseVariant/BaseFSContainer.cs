@@ -130,7 +130,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
         List<string> parts = new();
         foreach (var pair in tree) {
-            parts.Add($"{pair.Key}-{pair.Value}"); // No support for various domains across mods. (eg. cloth from game: and wool: domains)
+            parts.Add($"{pair.Key}-{pair.Value}"); // No support for various domains across mods. (eg. cloth from "game:" and "wool:" domains)
         }
 
         return $"{Code}-{string.Join("-", parts)}";

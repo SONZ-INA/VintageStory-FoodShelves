@@ -1,0 +1,77 @@
+{
+	"editor": {
+		"collapsedPaths": "Root/originSeedJars,Root/originSeedJars/originPistons,Root/originSeedJars/originLids/Lid2Frame,Root/originSeedJars/originLids/Lid3Frame,Root/originSeedJars/originPistons/PistonBL1,Root/originSeedJars/originHolders,Root/originSeedJars/originPistons/PistonTR1,Root/originSeedJars/originLids/Lid4Frame,Root/originSeedJars/originHolders/edge8,Root/originSeedJars/originLids/Lid1Frame,Root/originSeedJars/originHolders/edge7,Root/originSeedJars/originHolders/edge6,Root/originSeedJars/originPistons/PistonTL3,Root/originSeedJars/originDeco,Root/originSeedJars/originBack,Root/originSeedJars/originPistons/PistonTL1,Root/originSeedJars/originHolders/edge1,Root/originSeedJars/originHolders/edge5,Root/originSeedJars/originHolders/edge4,Root/originSeedJars/originPistons/PistonBR1,Root/originSeedJars/originLids,Root/originSeedJars/originHolders/edge3,Root/originSeedJars/originHolders/edge2",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {},
+	"textures": {
+		"sunflower": "game:block/food/grain/sunflower"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [ 1.002, 0.5, 2.001 ],
+			"to": [ 7.4995, 0.8, 9.201 ],
+			"rotationOrigin": [ 1.0, 0.5, 2.0 ],
+			"faces": {
+				"north": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 1.25 ], "autoUv": false },
+				"east": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 1.25 ], "autoUv": false },
+				"south": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 1.25 ], "autoUv": false },
+				"west": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 1.25 ], "autoUv": false },
+				"up": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 11.0 ], "autoUv": false }
+			},
+			"children": [
+				{
+					"name": "Cube2",
+					"from": [ 1.0, 0.3, 1.0 ],
+					"to": [ 3.4975, 0.5, 4.2 ],
+					"rotationOrigin": [ 0.998, 0.3, 1.0 ],
+					"faces": {
+						"east": { "texture": "#sunflower", "uv": [ 5.0, 0.5, 10.0, 1.0 ], "autoUv": false },
+						"south": { "texture": "#sunflower", "uv": [ 2.5, 5.5, 6.5, 6.0 ], "autoUv": false },
+						"west": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 5.0, 0.5 ], "autoUv": false },
+						"up": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 4.0, 5.0 ], "autoUv": false }
+					}
+				},
+				{
+					"name": "Cube3",
+					"from": [ 3.2, 0.3, 4.3 ],
+					"to": [ 5.6975, 0.4, 6.5 ],
+					"rotationOrigin": [ 3.198, 0.3, 4.3 ],
+					"faces": {
+						"east": { "texture": "#sunflower", "uv": [ 5.0, 0.5, 10.0, 1.0 ], "autoUv": false },
+						"south": { "texture": "#sunflower", "uv": [ 2.5, 5.5, 6.5, 6.0 ], "autoUv": false },
+						"west": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 5.0, 0.5 ], "autoUv": false },
+						"up": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 4.0, 4.0 ], "autoUv": false }
+					}
+				},
+				{
+					"name": "Cube4",
+					"from": [ 5.2, 0.3, 0.9 ],
+					"to": [ 6.4975, 0.4, 4.1 ],
+					"rotationOrigin": [ 5.198, 0.3, 0.9 ],
+					"faces": {
+						"east": { "texture": "#sunflower", "uv": [ 5.0, 0.5, 10.0, 1.0 ], "autoUv": false },
+						"south": { "texture": "#sunflower", "uv": [ 2.5, 5.5, 6.5, 6.0 ], "autoUv": false },
+						"west": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 5.0, 0.5 ], "autoUv": false },
+						"up": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 2.0, 7.0 ], "autoUv": false }
+					}
+				},
+				{
+					"name": "Cube5",
+					"from": [ 1.0, 0.3, 4.2 ],
+					"to": [ 2.6975, 0.4, 6.2 ],
+					"rotationOrigin": [ 0.998, 0.3, 4.2 ],
+					"faces": {
+						"east": { "texture": "#sunflower", "uv": [ 5.0, 0.5, 10.0, 1.0 ], "autoUv": false },
+						"south": { "texture": "#sunflower", "uv": [ 2.5, 5.5, 6.5, 6.0 ], "autoUv": false },
+						"west": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 5.0, 0.5 ], "autoUv": false },
+						"up": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 3.0, 3.5 ], "autoUv": false }
+					}
+				}
+			]
+		}
+	]}

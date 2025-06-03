@@ -5,11 +5,16 @@
     "game:beeswax",
     "game:fat",
     "game:grain-*",
+    "game:legume-peanut",
 
     "expandedfoods:dehydratedfruit-*",
     "expandedfoods:dryfruit-*",
     "expandedfoods:wilddehydratedfruit-*",
     "expandedfoods:wilddryfruit-*",
-    "expandedfoods:wildtreedryfruit-*"
+    "expandedfoods:wildtreedryfruit-*",
+    "expandedfoods:peanut-cooked",
+    "expandedfoods:peanut-kernels",
+
+    "wildcraftfruit:nut-peanutground"
   ]
 }

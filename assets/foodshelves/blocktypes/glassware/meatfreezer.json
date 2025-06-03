@@ -34,7 +34,6 @@
       }
     }
   ],
-  "entityBehaviors": [{ "name": "Animatable" }],
   "shape": {
     "base": "block/glassware/meatfreezer",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }

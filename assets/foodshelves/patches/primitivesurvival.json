@@ -8,5 +8,11 @@
       "primitivesurvival:fishfillet-raw"
     ],
     "dependsOn": [ { "modid": "primitivesurvival" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/other/buckethook.json",
+    "op": "addmerge", "path": "/CollectibleCodes/-", "side": "server",
+    "value": "primitivesurvival:metalbucket-*",
+    "dependsOn": [ { "modid": "primitivesurvival" } ]
   }
 ]

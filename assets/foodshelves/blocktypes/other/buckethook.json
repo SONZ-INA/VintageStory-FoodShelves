@@ -1,0 +1,62 @@
+{
+  "code": "buckethook",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BEBucketHook",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ]
+    },
+    "handbook": {
+      "groupBy": [ "buckethook-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-buckethook-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
+  ],
+  "shape": {
+    "base": "block/other/buckethook",
+    "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+  },
+  "heldTpIdleAnimation": "holdunderarm",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
+  "combustibleProps": {
+    "burnTemperature": 700,
+    "burnDuration": 28
+  },
+  "guiTransform": {
+    "origin": { "x": 0.8, "y": 0.7, "z": 0.3 },
+    "scale": 1.4
+  },
+  "tpHandTransform": {
+	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
+	  "rotation": { "x": 90, "y": -5, "z": -91 },
+	  "scale": 0.5
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionSelectionBoxes": [ 
+    { "x1": 0.1875, "y1": 0.1875, "z1": 0.125, "x2": 1, "y2": 1, "z2": 0.875, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
+  ]
+}

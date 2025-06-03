@@ -19,10 +19,6 @@ public class BlockGlassJar : BaseFSContainer {
         return BaseOnBlockInteractStart(world, byPlayer, blockSel); // To handle behaviors
     }
 
-    public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling) {
-        base.OnHeldInteractStart(slot, byEntity, blockSel, entitySel, firstEvent, ref handling);
-    }
-
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
         if (api.Side == EnumAppSide.Server) return;
 
@@ -32,7 +28,7 @@ public class BlockGlassJar : BaseFSContainer {
         if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef meshRef)) {
             ItemStack[] contents = GetContents(api.World, itemstack);
             
-            MeshData jarMesh = GenBlockMeshWithoutElements(capi, itemstack, new[] { "Glass1" }); // Glass hides the content in GUI
+            MeshData jarMesh = GenBlockVariantMesh(capi, itemstack, new[] { "Glass1" }); // Glass hides the content in GUI
             MeshData contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.utilGlassJar, 8.5f);
             
             if (contentMesh != null) jarMesh.AddMeshData(contentMesh);

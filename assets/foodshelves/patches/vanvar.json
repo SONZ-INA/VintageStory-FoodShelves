@@ -6,6 +6,12 @@
     "dependsOn": [ { "modid": "vanvar" } ]
   },
   {
+    "file": "foodshelves:config/restrictions/other/buckethook.json",
+    "op": "addmerge", "path": "/CollectibleCodes/-", "side": "server",
+    "value": "vanvar:woodbucket-*",
+    "dependsOn": [ { "modid": "vanvar" } ]
+  },
+  {
     "file": "foodshelves:blocktypes/shelves/shortshelf.json",
     "op": "addmerge", "path": "/attributes", "side": "server",
     "value": {

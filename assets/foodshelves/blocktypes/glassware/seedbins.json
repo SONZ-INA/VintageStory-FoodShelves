@@ -1,0 +1,67 @@
+{
+  "code": "seedbins",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BESeedBins",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "glass": [ "game:block/glass/{glass}" ],
+      "seed0": [ "game:item/resource/seeds/{seed0}" ],
+      "seed1": [ "game:item/resource/seeds/{seed1}" ],
+      "seed2": [ "game:item/resource/seeds/{seed2}" ],
+      "seed3": [ "game:item/resource/seeds/{seed3}" ]
+    },
+    "handbook": {
+      "groupBy": [ "seedbins-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-seedbins-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
+  ],
+  "shape": {
+    "base": "block/glassware/seedbins",
+    "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+  },
+  "heldTpIdleAnimation": "holdunderarm",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
+  "guiTransform": {
+    "origin": { "x": 0.8, "y": 0.5, "z": 0.6 },
+    "scale": 1.1
+  },
+  "tpHandTransform": {
+	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
+	  "rotation": { "x": 0, "y": -90, "z": -2 },
+	  "scale": 0.5
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionbox": { "x1": 0.3125, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+  "selectionBoxes": [
+	  { "x1": 0.3125, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.3125, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.3125, "y1": 0.5, "z1": 0, "x2": 1, "y2": 1, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+	  { "x1": 0.3125, "y1": 0.5, "z1": 0.5, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed0/-", "side": "server", 
+    "value": "mushroom:item/resource/seeds/{seed0}",
+    "dependsOn": [ { "modid": "mushroom" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed1/-", "side": "server", 
+    "value": "mushroom:item/resource/seeds/{seed1}",
+    "dependsOn": [ { "modid": "mushroom" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed2/-", "side": "server", 
+    "value": "mushroom:item/resource/seeds/{seed2}",
+    "dependsOn": [ { "modid": "mushroom" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed3/-", "side": "server", 
+    "value": "mushroom:item/resource/seeds/{seed3}",
+    "dependsOn": [ { "modid": "mushroom" } ]
+  }
+]

@@ -3,11 +3,29 @@
 namespace FoodShelves;
 
 public static class Meshing {
-    public static MeshData GenBlockVariantMesh(ICoreAPI api, ItemStack stackWithAttributes) {
+    /// <summary>
+    /// Generates a mesh for a block that has (or doesn't have) any attributes set to get textures from. Mainly used for many plank textures.
+    /// skipElements is used to remove specific cubes from the model (recursive) before meshing.
+    /// </summary>
+    public static MeshData GenBlockVariantMesh(ICoreAPI api, ItemStack stackWithAttributes, string[] skipElements = null) {
         if (api is not ICoreClientAPI capi) return null;
 
         Block block = stackWithAttributes.Block;
         var variantData = GetBlockVariantData(capi, stackWithAttributes);
+
+        if (skipElements?.Length > 0) {
+            ShapeElement[] RemoveElements(ShapeElement[] elementArray) {
+                var remainingElements = elementArray.Where(e => !skipElements.Contains(e.Name)).ToArray();
+                foreach (var element in remainingElements) {
+                    if (element.Children != null && element.Children.Length > 0) {
+                        element.Children = RemoveElements(element.Children); // Recursively filter children
+                    }
+                }
+                return remainingElements;
+            }
+
+            variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements);
+        }
 
         capi.Tesselator.TesselateShape("FS-TesselateShape", variantData.Item1, out MeshData blockMesh, variantData.Item2);
 
@@ -17,6 +35,9 @@ public static class Meshing {
         return blockMesh.BlockYRotation(block);
     }
 
+    /// <summary>
+    /// Changes the block shape to another shape. Please note that the textures should be the same for the substitute shape.
+    /// </summary>
     public static MeshData SubstituteBlockShape(ICoreAPI Api, ITesselatorAPI tesselator, string shapePath, Block texturesFromBlock) {
         AssetLocation shapeLocation = new(shapePath);
         ITexPositionSource texSource = tesselator.GetTextureSource(texturesFromBlock);
@@ -27,6 +48,9 @@ public static class Meshing {
         return mesh;
     }
 
+    /// <summary>
+    /// Changes the item shape to another shape. Please note that the textures should be the same for the substitute shape.
+    /// </summary>
     public static MeshData SubstituteItemShape(ICoreAPI Api, ITesselatorAPI tesselator, string shapePath, Item texturesFromItem) {
         AssetLocation shapeLocation = new(shapePath);
         ITexPositionSource texSource = tesselator.GetTextureSource(texturesFromItem);
@@ -37,28 +61,9 @@ public static class Meshing {
         return mesh;
     }
 
-    public static MeshData GenBlockMeshWithoutElements(ICoreClientAPI capi, ItemStack stackWithAttributes, string[] elements) {
-        if (stackWithAttributes == null) return null;
-
-        Block block = stackWithAttributes.Block;
-        var variantData = GetBlockVariantData(capi, stackWithAttributes);
-
-        ShapeElement[] RemoveElements(ShapeElement[] elementArray) {
-            var remainingElements = elementArray.Where(e => !elements.Contains(e.Name)).ToArray();
-            foreach (var element in remainingElements) {
-                if (element.Children != null && element.Children.Length > 0) {
-                    element.Children = RemoveElements(element.Children); // Recursively filter children
-                }
-            }
-            return remainingElements;
-        }
-
-        variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements);
-
-        capi.Tesselator.TesselateShape("FS-ShapeErased", variantData.Item1, out MeshData mesh, variantData.Item2);
-        return mesh.BlockYRotation(block);
-    }
-
+    /// <summary>
+    /// Generates the content mesh of the block's inventory. Mainly used for generating basket contents.
+    /// </summary>
     public static MeshData GenContentMesh(ICoreClientAPI capi, ITextureAtlasAPI targetAtlas, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {
         if (capi == null) return null;
 
@@ -117,7 +122,11 @@ public static class Meshing {
         return nestedContentMesh;
     }
 
-    public static MeshData GenLiquidyMesh(ICoreClientAPI capi, ItemStack[] contents, string pathToFillShape, float maxHeight) {
+    /// <summary>
+    /// Generates a mesh that has a specific "util" shape that resemble liquids or stuff that can behave as liquids.
+    /// The parent of the util shape will scale up depending on stacksize passed, and the children of that parent will simply move up.
+    /// </summary>
+    public static MeshData GenLiquidyMesh(ICoreClientAPI capi, ItemStack[] contents, string pathToFillShape, float maxHeight, bool inheritTextures = true) {
         if (capi == null) return null;
         if (contents == null || contents.Length == 0 || contents[0] == null) return null;
         if (pathToFillShape == null || pathToFillShape == "") return null;
@@ -131,25 +140,36 @@ public static class Meshing {
 
         // Handle textureSource
         ITexPositionSource texSource;
-        if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
-            AssetLocation textureRerouteLocation;
 
-            if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond"); // Fucking exception
-            else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
+        if (inheritTextures) {
+            if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
+                AssetLocation textureRerouteLocation;
 
-            shapeClone.Textures.Clear();
-            shapeClone.Textures.Add("surface", textureRerouteLocation);
+                // Exceptions
+                if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond");
+                else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
 
+                if (textureRerouteLocation.ToString().Contains("peanutground")) {
+                    textureRerouteLocation = textureRerouteLocation.ToString().Replace("ground", "");
+                }
+
+                shapeClone.Textures.Clear();
+                shapeClone.Textures.Add("surface", textureRerouteLocation);
+
+                texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
+            }
+            else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
+                var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
+                texSource = new ContainerTextureSource(capi, contents[0], texture);
+            }
+            else { // If all else fails, take the item's own texture
+                // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
+                var textures = contents[0].Item.Textures;
+                texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
+            }
+        }
+        else {
             texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
-        }
-        else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
-            var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
-            texSource = new ContainerTextureSource(capi, contents[0], texture);
-        }
-        else { // If all else fails, take the item's own texture
-            // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
-            var textures = contents[0].Item.Textures;
-            texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
         }
 
         // Calculate the total content amount
