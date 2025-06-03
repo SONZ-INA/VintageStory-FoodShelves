@@ -63,7 +63,7 @@ public static class Extensions {
 
                 foreach (var attr in tree) {
                     string key = attr.Key;
-                    string value = attr.Value.ToString();
+                    string value = attr.Value?.GetValue()?.ToString() ?? ""; // Null safety when removing a mod from a world.
 
                     foreach (string texPath in texPaths.Reverse()) { // Reverse to start from the end texture paths (patched textures), first one serving as default
                         if (texPath.Contains($"{{{key}}}")) {

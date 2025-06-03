@@ -145,8 +145,13 @@ public static class Meshing {
             if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
                 AssetLocation textureRerouteLocation;
 
-                if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond"); // Fucking exception
+                // Exceptions
+                if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond");
                 else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
+
+                if (textureRerouteLocation.ToString().Contains("peanutground")) {
+                    textureRerouteLocation = textureRerouteLocation.ToString().Replace("ground", "");
+                }
 
                 shapeClone.Textures.Clear();
                 shapeClone.Textures.Add("surface", textureRerouteLocation);
