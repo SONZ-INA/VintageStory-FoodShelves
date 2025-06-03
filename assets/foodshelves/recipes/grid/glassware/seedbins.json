@@ -1,0 +1,21 @@
+[
+  {
+    "ingredientPattern": "PGP,PSP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 3, "name": "wood" },
+      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass" }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "seedbins-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "glass": "{glass}"
+        }
+      }
+    }
+  }
+]
