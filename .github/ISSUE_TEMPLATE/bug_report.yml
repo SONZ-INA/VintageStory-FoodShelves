@@ -4,15 +4,6 @@ labels: ["status: new"]
 
 body:
   - type: input
-    id: title
-    attributes:
-      label: "Title"
-      description: "A short title describing the bug"
-      placeholder: "Example: Fruit Basket doesn't drop contents when broken"
-    validations:
-      required: true
-
-  - type: input
     id: gameversion
     attributes:
       label: "Game Version"
