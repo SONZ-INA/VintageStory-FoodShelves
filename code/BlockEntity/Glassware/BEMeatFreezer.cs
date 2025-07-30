@@ -43,9 +43,9 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         base.InitMesh();
 
         for (int i = 0; i < 3; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, new[] { inv[i].Itemstack }, ShapeReferences.utilMeatFreezer, 13f).BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilMeatFreezer, 13f).BlockYRotation(block);
         }
-        contentMeshes[3] = GenLiquidyMesh(capi, new[] { inv[3].Itemstack }, ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
+        contentMeshes[3] = GenLiquidyMesh(capi, [inv[3].Itemstack], ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
     }
 
     protected override float GetPerishRate() {
@@ -293,7 +293,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     }
 
     private void SetIceHeight(int heightLevel) {
-        string[] iceAnimations = { "iceheight1", "iceheight2", "iceheight3" };
+        string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
 
         foreach (string anim in iceAnimations) {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey(anim) == true) {

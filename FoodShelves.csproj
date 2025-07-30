@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)\Mods\mod</OutputPath>
+	<MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -136,6 +137,7 @@
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplaycase.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\seedbins.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\other\buckethook.json" />

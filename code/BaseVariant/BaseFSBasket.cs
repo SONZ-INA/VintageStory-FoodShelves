@@ -12,7 +12,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
         Transformations ??= api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
 
         interactions = ObjectCacheUtil.GetOrCreate(api, InteractionsName + "BlockInteractions", () => {
-            List<ItemStack> stackList = new();
+            List<ItemStack> stackList = [];
 
             foreach (Item item in api.World.Items) {
                 if (item.Code == null) continue;
@@ -27,7 +27,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
                     ActionLangCode = "blockhelp-groundstorage-add",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "shift",
-                    Itemstacks = stackList.ToArray()
+                    Itemstacks = [.. stackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-remove",

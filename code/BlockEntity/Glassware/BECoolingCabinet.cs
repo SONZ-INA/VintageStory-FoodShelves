@@ -333,7 +333,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     }
 
     private void SetIceHeight(int heightLevel) {
-        string[] iceAnimations = { "iceheight1", "iceheight2", "iceheight3" };
+        string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
 
         foreach (string anim in iceAnimations) {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey(anim) == true) {

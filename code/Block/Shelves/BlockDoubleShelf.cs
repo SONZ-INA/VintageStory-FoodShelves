@@ -9,7 +9,7 @@ public class BlockDoubleShelf : BaseFSContainer, IMultiBlockColSelBoxes {
         Cuboidf segment2 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
         Cuboidf skip = new();
 
-        return new Cuboidf[] { segment1, segment2, skip };
+        return [segment1, segment2, skip];
     }
 
     // Selection boxes for multiblock parts
@@ -21,7 +21,7 @@ public class BlockDoubleShelf : BaseFSContainer, IMultiBlockColSelBoxes {
         segment2.MBNormalizeSelectionBox(offset);
         segment3.MBNormalizeSelectionBox(offset);
 
-        return new Cuboidf[] { skip, segment2, segment3 };
+        return [skip, segment2, segment3];
     }
 
     public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {

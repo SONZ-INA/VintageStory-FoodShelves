@@ -69,7 +69,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
-            ItemStack[] array = new ItemStack[1] { OnPickBlock(world, pos) };
+            ItemStack[] array = [OnPickBlock(world, pos)];
             for (int j = 0; j < array.Length; j++) {
                 world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
             }
@@ -92,7 +92,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
             Cuboidf currentSelBox = base.GetSelectionBoxes(blockAccessor, pos).FirstOrDefault().Clone();
             currentSelBox.MBNormalizeSelectionBox(offset);
 
-            return new Cuboidf[] { currentSelBox };
+            return [currentSelBox];
         }
 
         return base.GetSelectionBoxes(blockAccessor, pos);
@@ -141,7 +141,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     }
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        return new ItemStack[] { OnPickBlock(world, pos) };
+        return [OnPickBlock(world, pos)];
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
@@ -163,7 +163,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     public virtual string GetMeshCacheKey(ItemStack itemstack) {
         if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree) return Code;
 
-        List<string> parts = new();
+        List<string> parts = [];
         foreach (var pair in tree) {
             parts.Add($"{pair.Key}-{pair.Value}");
         }

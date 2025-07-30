@@ -7,8 +7,8 @@ namespace FoodShelves;
 public class Core : ModSystem {
     public override double ExecuteOrder() => 1.01; // For the dynamic recipes to load, this must be after 1
 
-    private readonly Dictionary<string, RestrictionData> restrictions = new();
-    private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = new();
+    private readonly Dictionary<string, RestrictionData> restrictions = [];
+    private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = [];
 
     public static ConfigServer ConfigServer { get; set; }
     // public static ConfigClient ConfigClient { get; set; }
@@ -97,12 +97,12 @@ public class Core : ModSystem {
             RecipePatcher.SupportModdedIngredients(api);
 
             Dictionary<string, string[]> restrictionGroupsServer = new() {
-                ["barrels"] = new[] { "barrelrack", "tunrack" },
-                ["baskets"] = new[] { "eggbasket", "vegetablebasket", "fruitbasket" },
-                ["general"] = new[] { "fooduniversal", "holderuniversal", "liquidystuff", "coolingonly" },
-                ["glassware"] = new[] { "meatfreezer", "seedbins" },
-                ["other"] = new[] { "floursack", "pumpkincase", "buckethook" },
-                ["shelves"] = new[] { "barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf" }
+                ["barrels"] = ["barrelrack", "tunrack"],
+                ["baskets"] = ["eggbasket", "vegetablebasket", "fruitbasket"],
+                ["general"] = ["fooduniversal", "holderuniversal", "liquidystuff", "coolingonly"],
+                ["glassware"] = ["meatfreezer", "seedbins"],
+                ["other"] = ["floursack", "pumpkincase", "buckethook"],
+                ["shelves"] = ["barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf"]
             };
 
             LoadData(api, restrictionGroupsServer);
@@ -110,7 +110,7 @@ public class Core : ModSystem {
 
         if (api.Side == EnumAppSide.Client) {
             Dictionary<string, string[]> restrictionGroups = new() {
-                ["baskets"] = new[] { "vegetablebasket" }
+                ["baskets"] = ["vegetablebasket"]
             };
 
             LoadData(api, restrictionGroups);

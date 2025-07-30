@@ -15,10 +15,10 @@ public class BlockWallCabinet : BaseFSContainer {
         if (be != null) {
             if (be.CabinetOpen) {
                 List<Cuboidf> segments = base.GetSelectionBoxes(blockAccessor, pos).Take(4).Select(c => c.Clone()).ToList();
-                return new Cuboidf[] { segments[0], segments[1], segments[2], segments[3], skip };
+                return [segments[0], segments[1], segments[2], segments[3], skip];
             }
 
-            return new Cuboidf[] { skip, skip, skip, skip, cabinetSelBox };
+            return [skip, skip, skip, skip, cabinetSelBox];
         }
 
         return base.GetSelectionBoxes(blockAccessor, pos);

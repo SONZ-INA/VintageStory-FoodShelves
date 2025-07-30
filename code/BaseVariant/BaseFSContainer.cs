@@ -98,7 +98,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        return new ItemStack[] { OnPickBlock(world, pos) };
+        return [OnPickBlock(world, pos)];
     }
 
     public override BlockDropItemStack[] GetDropsForHandbook(ItemStack handbookStack, IPlayer forPlayer) {
@@ -128,7 +128,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     public virtual string GetMeshCacheKey(ItemStack itemstack) {
         if (itemstack.Attributes[FSAttributes] is not ITreeAttribute tree) return Code;
 
-        List<string> parts = new();
+        List<string> parts = [];
         foreach (var pair in tree) {
             parts.Add($"{pair.Key}-{pair.Value}"); // No support for various domains across mods. (eg. cloth from "game:" and "wool:" domains)
         }

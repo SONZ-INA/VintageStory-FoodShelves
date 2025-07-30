@@ -9,15 +9,12 @@ namespace FoodShelves;
 /// Attribute attachable to any property that can be safely read/wrote to the attributes of a block. Mainly used for animation properties.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class TreeSerializableAttribute : Attribute {
-    public object DefaultValue { get; set; }
-    public TreeSerializableAttribute(object defaultValue = null) {
-        DefaultValue = defaultValue;
-    }
+public class TreeSerializableAttribute(object defaultValue = null) : Attribute {
+    public object DefaultValue { get; set; } = defaultValue;
 }
 
 public static class TreeAttributeSerializer {
-    private static readonly Dictionary<Type, PropertyInfo[]> _propertyCache = new();
+    private static readonly Dictionary<Type, PropertyInfo[]> _propertyCache = [];
 
     /// <summary>
     /// Gets all properties marked with TreeSerializableAttribute for the given type
@@ -73,7 +70,7 @@ public static class TreeAttributeSerializer {
             string key = prop.Name;
 
             if (prop.PropertyType == typeof(bool)) {
-                bool defaultValue = attr.DefaultValue is bool b ? b : false;
+                bool defaultValue = attr.DefaultValue is bool b && b;
                 prop.SetValue(obj, tree.GetBool(key, defaultValue));
             }
             else if (prop.PropertyType == typeof(int)) {

@@ -1,21 +1,19 @@
 ﻿namespace FoodShelves;
 
-public class UniversalShapeTextureSource : ITexPositionSource {
-    private readonly ICoreClientAPI capi;
-    private readonly ITextureAtlasAPI targetAtlas;
-    private readonly Shape shape;
-    private readonly string filenameForLogging;
-    public Dictionary<string, CompositeTexture> textures = new();
+public class UniversalShapeTextureSource(
+    ICoreClientAPI capi,
+    ITextureAtlasAPI targetAtlas,
+    Shape shape,
+    string filenameForLogging
+    ) : ITexPositionSource {
+    private readonly ICoreClientAPI capi = capi;
+    private readonly ITextureAtlasAPI targetAtlas = targetAtlas;
+    private readonly Shape shape = shape;
+    private readonly string filenameForLogging = filenameForLogging;
+    public Dictionary<string, CompositeTexture> textures = [];
     public TextureAtlasPosition firstTexPos;
 
-    private HashSet<AssetLocation> missingTextures = new();
-
-    public UniversalShapeTextureSource(ICoreClientAPI capi, ITextureAtlasAPI targetAtlas, Shape shape, string filenameForLogging) {
-        this.capi = capi;
-        this.targetAtlas = targetAtlas;
-        this.shape = shape;
-        this.filenameForLogging = filenameForLogging;
-    }
+    private readonly HashSet<AssetLocation> missingTextures = [];
 
     public TextureAtlasPosition this[string textureCode] {
         get {

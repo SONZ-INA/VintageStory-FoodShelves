@@ -14,12 +14,6 @@ public class BESeedBins : BEBaseFSContainer {
     public override int ShelfCount => 4;
     public override int ItemsPerSegment => 6;
 
-    // No TreeSerializable fields - only client should see the animations.
-    public bool Section1Open { get; set; }
-    public bool Section2Open { get; set; }
-    public bool Section3Open { get; set; }
-    public bool Section4Open { get; set; }
-
     public BESeedBins() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
 
     public override void Initialize(ICoreAPI api) {
@@ -31,7 +25,7 @@ public class BESeedBins : BEBaseFSContainer {
         base.InitMesh();
 
         var stacks = GetContentStacks();
-        List<string> dontRender = new();
+        List<string> dontRender = [];
 
         for (int i = 0; i < 4; i++) {
             // Content
@@ -50,7 +44,7 @@ public class BESeedBins : BEBaseFSContainer {
             }
         }
 
-        blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), dontRender.ToArray());
+        blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), [.. dontRender]);
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {

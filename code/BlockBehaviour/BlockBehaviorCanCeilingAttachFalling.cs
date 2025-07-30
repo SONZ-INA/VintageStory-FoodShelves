@@ -3,9 +3,7 @@ using Vintagestory.API.Server;
 
 namespace FoodShelves;
 
-public class BlockBehaviorCanCeilingAttachFalling : BlockBehavior {
-    public BlockBehaviorCanCeilingAttachFalling(Block block) : base(block) { }
-
+public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(block) {
     private bool ignorePlaceTest;
 
     private AssetLocation[] exceptions;

@@ -17,7 +17,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         base.OnLoaded(api);
 
         itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, "meatFreezerItemInteractions", () => {
-            List<ItemStack> meatFreezerStackList = new();
+            List<ItemStack> meatFreezerStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
                 if (obj.CanStoreInSlot("fsMeatFreezer")) {
@@ -29,12 +29,12 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-addbulk",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = meatFreezerStackList.ToArray()
+                    Itemstacks = [.. meatFreezerStackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-add",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = meatFreezerStackList.ToArray(),
+                    Itemstacks = [.. meatFreezerStackList],
                     HotKeyCode = "shift"
                 },
                 new() {
@@ -69,7 +69,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         });
 
         drawerInteractions = ObjectCacheUtil.GetOrCreate(api, "meatFreezerDrawerInteractions", () => {
-            List<ItemStack> coolingOnlyStackList = new();
+            List<ItemStack> coolingOnlyStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
                 if (obj.CanStoreInSlot("fsCoolingOnly")) {
@@ -81,12 +81,12 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-addone",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = coolingOnlyStackList.ToArray()
+                    Itemstacks = [.. coolingOnlyStackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-addbulk",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = coolingOnlyStackList.ToArray(),
+                    Itemstacks = [.. coolingOnlyStackList],
                     HotKeyCode = "ctrl",
                 }
             };
@@ -128,10 +128,10 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 Cuboidf section1 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
                 Cuboidf section2 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
 
-                return new Cuboidf[] { section1, section2, skip, skip, skip, skip, freezerBase };
+                return [section1, section2, skip, skip, skip, skip, freezerBase];
             }
 
-            return new Cuboidf[] { skip, skip, skip, skip, skip, skip, freezerBase, };
+            return [skip, skip, skip, skip, skip, skip, freezerBase,];
         }
 
         return base.GetSelectionBoxes(blockAccessor, pos);
@@ -182,10 +182,10 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             }
 
             if (!be.FreezerOpen) {
-                return new Cuboidf[] { skip, skip, skip, skip, freezerDoor, drawerSelBox, freezerBase };
+                return [skip, skip, skip, skip, freezerDoor, drawerSelBox, freezerBase];
             }
             else {                
-                List<Cuboidf> sBs = new();
+                List<Cuboidf> sBs = [];
 
                 for (int i = 0; i < 4; i++) {
                     sBs.Add(base.GetSelectionBoxes(blockAccessor, pos).ElementAt(i).Clone());
@@ -194,10 +194,10 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 sBs.Add(drawerSelBox);
 
                 if (offset.Y != 0) {
-                    return new Cuboidf[] { sBs[0], sBs[1], sBs[2], sBs[3], freezerDoor, skip, skip };
+                    return [sBs[0], sBs[1], sBs[2], sBs[3], freezerDoor, skip, skip];
                 }
 
-                return new Cuboidf[] { skip, skip, skip, skip, skip, drawerSelBox, freezerBase };
+                return [skip, skip, skip, skip, skip, drawerSelBox, freezerBase];
             }
         }
 

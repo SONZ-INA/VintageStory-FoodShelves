@@ -4,8 +4,8 @@
   "name": "FoodShelves",
   "authors": [ "SONZ-INA" ],
   "description": "Contains various food shelves and food storage, mainly made to be used alongside Expanded Foods.",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "dependencies": {
-    "game": "1.20.11"
+    "game": "1.21.0-rc.2"
   }
 }

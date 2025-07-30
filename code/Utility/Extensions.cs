@@ -158,17 +158,17 @@ public static class Extensions {
 
         mat.Translate(0.5f, 0, 0.5f);
 
-        if (transformation.Translation != null) {
+        if (!transformation.Translation.Equals(new FastVec3f(0, 0, 0))) {
             mat.Translate(transformation.Translation.X, transformation.Translation.Y, transformation.Translation.Z);
         }
-        
-        if (transformation.Rotation != null) {
+
+        if (!transformation.Rotation.Equals(new FastVec3f(0, 0, 0))) {
             mat.RotateXDeg(transformation.Rotation.X);
             mat.RotateYDeg(transformation.Rotation.Y);
             mat.RotateZDeg(transformation.Rotation.Z);
         }
 
-        if (transformation.ScaleXYZ != null) {
+        if (!transformation.ScaleXYZ.Equals(new FastVec3f(1f, 1f, 1f))) {
             mat.Scale(transformation.ScaleXYZ.X, transformation.ScaleXYZ.Y, transformation.ScaleXYZ.Z);
         }
 
@@ -286,9 +286,9 @@ public static class Extensions {
             }
         }
 
-        block.CreativeInventoryStacks = new CreativeTabAndStackList[] {
-            new() { Stacks = stacks.ToArray(), Tabs = new string[] { "general", "decorative", "foodshelves" }}
-        };
+        block.CreativeInventoryStacks = [
+            new() { Stacks = [.. stacks], Tabs = ["general", "decorative", "foodshelves"]}
+        ];
     }
 
     public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
@@ -384,7 +384,7 @@ public static class Extensions {
             return;
         }
 
-        TreeAttribute stacksTree = new TreeAttribute();
+        TreeAttribute stacksTree = new();
         for (int i = 0; i < stacks.Length; i++) {
             stacksTree[i + ""] = new ItemstackAttribute(stacks[i]);
         }
@@ -394,21 +394,21 @@ public static class Extensions {
 
     public static ItemStack[] ResolveUcontents(IWorldAccessor world, ItemStack itemstack) {
         if (itemstack?.Attributes.HasAttribute("ucontents") == true) {
-            List<ItemStack> stacks = new();
+            List<ItemStack> stacks = [];
 
             var attrs = itemstack.Attributes["ucontents"] as TreeArrayAttribute;
 
             foreach (ITreeAttribute stackAttr in attrs.value) {
                 stacks.Add(CreateItemStackFromJson(stackAttr, world, itemstack.Collectible.Code.Domain));
             }
-            ItemStack[] stacksAsArray = stacks.ToArray();
+            ItemStack[] stacksAsArray = [.. stacks];
             SetContents(itemstack, stacksAsArray);
             itemstack.Attributes.RemoveAttribute("ucontents");
 
             return stacksAsArray;
         }
         else {
-            return Array.Empty<ItemStack>();
+            return [];
         }
     }
 
@@ -434,7 +434,7 @@ public static class Extensions {
     #region ItemStackExtensions
 
     public static DummySlot[] ToDummySlots(this ItemStack[] contents) {
-        if (contents == null || contents.Length == 0) return Array.Empty<DummySlot>();
+        if (contents == null || contents.Length == 0) return [];
 
         DummySlot[] dummySlots = new DummySlot[contents.Length];
         for (int i = 0; i < contents.Length; i++) {
@@ -463,7 +463,7 @@ public static class Extensions {
     public static bool IsLargeItem(ItemStack stack) {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
 
-        string[] validTypes = new[] { "ItemCheese", "BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket" };
+        string[] validTypes = ["ItemCheese", "BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket"];
         if (validTypes.Contains(stack?.Collectible?.GetType().Name)) return true;
 
         return false;
@@ -486,7 +486,7 @@ public static class Extensions {
     public static bool IsSolitaryMatch(ItemStack checkSlot, ItemStack currSlot) {
         if (checkSlot?.Collectible == null || currSlot?.Collectible == null) return true;
         
-        string[] solitaryItems = new[] { "pemmican:pemmican-pack" };
+        string[] solitaryItems = ["pemmican:pemmican-pack"];
 
         bool solitary = false;
         foreach (string item in solitaryItems) {

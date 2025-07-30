@@ -56,7 +56,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
-            ItemStack[] array = new ItemStack[1] { OnPickBlock(world, pos) };
+            ItemStack[] array = [OnPickBlock(world, pos)];
             for (int j = 0; j < array.Length; j++) {
                 world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
             }
@@ -72,7 +72,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         Block block = blockAccessor.GetBlock(pos);
         if (block.Code.Path.StartsWith("firkinrack-top")) {
             if (blockAccessor.GetBlockEntity(pos) is BlockEntityFirkinRack be && be.Inventory.Empty) {
-                return new Cuboidf[] { new(0, 0, 0, 1f, 0.3f, 1f) };
+                return [new(0, 0, 0, 1f, 0.3f, 1f)];
             }
         }
 

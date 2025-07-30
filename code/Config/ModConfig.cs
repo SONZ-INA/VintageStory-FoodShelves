@@ -36,6 +36,6 @@ public static class ModConfig {
     }
 
     private static T CloneConfig<T>(ICoreAPI api, T config = null) where T : class, IModConfig {
-        return (T)Activator.CreateInstance(typeof(T), new object[] { api, config });
+        return (T)Activator.CreateInstance(typeof(T), [api, config]);
     }
 }

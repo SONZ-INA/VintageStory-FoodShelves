@@ -41,7 +41,7 @@ public static class RecipePatcher {
         int combinationCount = (1 << entriesList.Count) - 1;
 
         for (int i = 1; i <= combinationCount; i++) {
-            List<string> keysToReplace = new();
+            List<string> keysToReplace = [];
 
             for (int j = 0; j < entriesList.Count; j++) {
                 if ((i & (1 << j)) > 0) {
@@ -50,7 +50,7 @@ public static class RecipePatcher {
             }
 
             // Generate all possible combinations of values for the selected keys
-            GenerateAndApplyValueCombinations(keysToReplace, 0, new Dictionary<string, SwitchData>(), variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
+            GenerateAndApplyValueCombinations(keysToReplace, 0, [], variantData, allCollectibleRecipes, gridRecipeLoader, debugCode);
         }
     }
 
@@ -131,7 +131,7 @@ public static class RecipePatcher {
         int combinationCount = (1 << entriesList.Count) - 1;
 
         for (int i = 1; i <= combinationCount; i++) { // Start from 1 to avoid handling the empty-set
-            HashSet<string> entriesToReplace = new();
+            HashSet<string> entriesToReplace = [];
 
             // Generate all possible sets
             for (int j = 0; j < entriesList.Count; j++) {
@@ -147,7 +147,7 @@ public static class RecipePatcher {
     private static void ProcessCombination(HashSet<string> entriesToReplace, VariantData variantData, List<IAsset> allCollectibleRecipes, GridRecipeLoader gridRecipeLoader, string debugCode) {
         // Find entries from RecipeVariantData that are NOT in the current combination
         // These will be used for modded variant fallbacks
-        Dictionary<string, SwitchData[]> moddedFallback = new();
+        Dictionary<string, SwitchData[]> moddedFallback = [];
         foreach (var entry in variantData.RecipeVariantData) {
             if (!entriesToReplace.Contains(entry.Key)) {
                 moddedFallback.Add(entry.Key, entry.Value);
@@ -159,7 +159,7 @@ public static class RecipePatcher {
                 continue;
 
             var contextData = new RecipeProcessingContext(collectibleRecipes, entriesToReplace, variantData, gridRecipeLoader);
-            ProcessRecipeCollection(contextData, new() /* return this upon performance upgrade */, debugCode);
+            ProcessRecipeCollection(contextData, [] /* return this upon performance upgrade */, debugCode);
         }
     }
 
@@ -191,12 +191,12 @@ public static class RecipePatcher {
     }
 
     private static void ProcessStandardFallback(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, bool> ingredientsChanged) {
-        ApplyRecipeVariant(contextData, recipe, new(), ingredientsChanged); // Empty Dictionary for standard fallback
+        ApplyRecipeVariant(contextData, recipe, [], ingredientsChanged); // Empty Dictionary for standard fallback
     }
 
     private static void ProcessModdedVariants(RecipeProcessingContext contextData, GridRecipe recipe, Dictionary<string, SwitchData[]> moddedFallback) {
         // Generate all combinations of modded variants
-        GenerateAndApplyModdedVariants(contextData, moddedFallback.Keys.ToList(), 0, new(), recipe);
+        GenerateAndApplyModdedVariants(contextData, [.. moddedFallback.Keys], 0, [], recipe);
     }
 
     private static void GenerateAndApplyModdedVariants(
@@ -271,7 +271,7 @@ public static class RecipePatcher {
 
         JToken jTokenAttributes = recipe.Output.Attributes.AsObject<JToken>();
         var attributes = jTokenAttributes.First.First.Children().ToList();
-        List<JToken> attributesToRemove = new();
+        List<JToken> attributesToRemove = [];
 
         // Find attributes related to this ingredient
         foreach (var item in attributes) {
@@ -300,7 +300,7 @@ public static class RecipePatcher {
 
     private static Dictionary<string, bool> GetChangedIngredientsDictionary(HashSet<string> entriesToReplace, GridRecipe recipe) {
         // Only load recipe if all ingredients are changed, to avoid duplicates.
-        Dictionary<string, bool> ingredientsChanged = new();
+        Dictionary<string, bool> ingredientsChanged = [];
         foreach (string entry in entriesToReplace) {
             ingredientsChanged.Add(entry, false);
         }
