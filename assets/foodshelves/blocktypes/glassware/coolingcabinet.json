@@ -58,8 +58,8 @@
   },
   "sideopaque": { "all": false },
   "guiTransform": {
-		"origin": { "x": 0.1, "y": 1.2, "z": 0.5 },
-		"scale": 0.55
+		"origin": { "x": 0.5, "y": 1, "z": 1 },
+		"scale": 0.6
 	},
   "tpHandTransform": {
 	  "translation": { "x": -0.7, "y": -2.18, "z": -1.11 },

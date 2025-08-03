@@ -115,7 +115,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
         string blockKey = base.GetMeshCacheKey(itemstack);
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        int hashcode = GetStackCacheHashCodeFNV(contents);
+        int hashcode = contents.GetStackCacheHashCodeFNV();
 
         return $"{blockKey}-{hashcode}";
     }

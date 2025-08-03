@@ -44,7 +44,7 @@ public class BESeedBins : BEBaseFSContainer {
             }
         }
 
-        blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), [.. dontRender]);
+        blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), [.. dontRender]);
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
@@ -90,7 +90,7 @@ public class BESeedBins : BEBaseFSContainer {
             if (contentMeshes[i] == null) continue;
             MeshData contentMesh = contentMeshes[i].Clone();
 
-            switch (GetRotationAngle(block)) {
+            switch (block.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
                 case 90: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
                 case 180: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;

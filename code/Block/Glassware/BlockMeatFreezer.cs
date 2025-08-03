@@ -160,7 +160,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 freezerDoor.Y1 += 0.3125f;
                 freezerDoor.Y2 += 0.7f;
                 
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: freezerDoor.Z2 -= 0.7f; break;
@@ -171,7 +171,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             }
 
             if (be.DrawerOpen) {
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: drawerSelBox.Z2 += .5575f; break;

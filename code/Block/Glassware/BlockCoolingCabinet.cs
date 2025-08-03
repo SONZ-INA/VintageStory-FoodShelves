@@ -97,7 +97,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
 
         if (be != null) {
             if (be.DrawerOpen) {
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: drawerSelBox.Z2 += .3125f; break;
@@ -136,7 +136,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             drawerSelBox.MBNormalizeSelectionBox(offset);
 
             if (be.DrawerOpen) {
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: drawerSelBox.Z2 += .3125f; break;

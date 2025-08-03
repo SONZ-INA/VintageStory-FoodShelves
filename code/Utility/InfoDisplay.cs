@@ -73,7 +73,7 @@ public static class InfoDisplay {
             float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
 
             if (stack.Collectible.TransitionableProps?.Length > 0) {
-                if (IsSmallItem(stack)) {
+                if (stack.IsSmallItem()) {
                     sb.Append(PerishableInfoGrouped(inv, world, i, end));
                     return;
                 }

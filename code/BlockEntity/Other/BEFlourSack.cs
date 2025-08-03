@@ -18,7 +18,7 @@ public class BEFlourSack : BEBaseFSContainer {
             base.InitMesh();
         }
         else {
-            blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), ["sackicon"]);
+            blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), ["sackicon"]);
         }
 
         MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);

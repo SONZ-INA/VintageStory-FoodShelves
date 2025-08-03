@@ -351,7 +351,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
             if (contentMeshes[i] == null) continue;
 
             MeshData contentMesh = contentMeshes[i].Clone();
-            switch (GetRotationAngle(block)) {
+            switch (block.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i * 0.4375f, 0, 0); break;
                 case 90: contentMesh.Translate(0, 0, -i * 0.4375f); break;
                 case 180: contentMesh.Translate(-i * 0.4375f, 0, 0); break;

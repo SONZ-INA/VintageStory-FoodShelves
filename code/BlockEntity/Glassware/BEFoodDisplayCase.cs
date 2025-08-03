@@ -46,7 +46,7 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
                 return true;
             }
         }
-        else if (!IsLargeItem(inv[startIndex].Itemstack) && !IsLargeItem(slot.Itemstack)) {
+        else if (!inv[startIndex].Itemstack.IsLargeItem() && !slot.Itemstack.IsLargeItem()) {
             for (int i = startIndex + 1; i < endIndex; i++) {
                 if (inv[i].Empty) {
                     int moved = slot.TryPutInto(Api.World, inv[i]);
@@ -71,7 +71,7 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
         float[][] tfMatrices = new float[SlotCount][];
 
         for (int i = 0; i < SlotCount; i++) {
-            if ((i < ItemsPerSegment && IsLargeItem(inv[i].Itemstack)) || (i >= ItemsPerSegment && IsLargeItem(inv[i].Itemstack))) {
+            if ((i < ItemsPerSegment && inv[i].Itemstack.IsLargeItem()) || (i >= ItemsPerSegment && inv[i].Itemstack.IsLargeItem())) {
                 tfMatrices[i] =
                     new Matrixf()
                     .Translate(0.5f, 0, 0.5f)

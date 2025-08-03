@@ -1,12 +1,11 @@
-﻿using static FoodShelves.Patches;
+﻿using System.Linq;
+using static FoodShelves.Patches;
 
 [assembly: ModInfo(name: "Food Shelves", modID: "foodshelves")]
 
 namespace FoodShelves;
 
 public class Core : ModSystem {
-    public override double ExecuteOrder() => 1.01; // For the dynamic recipes to load, this must be after 1
-
     private readonly Dictionary<string, RestrictionData> restrictions = [];
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = [];
 
@@ -38,8 +37,10 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BaseFSContainer));
         // ------------------------
 
+        // Block Behaviors---------
         api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
         api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
+        // ------------------------
 
         // Block Classes----------
         api.RegisterBlockClass("FoodShelves.BlockBarrelRack", typeof(BlockBarrelRack));
@@ -94,17 +95,7 @@ public class Core : ModSystem {
         base.AssetsLoaded(api);
 
         if (api.Side == EnumAppSide.Server) {
-            RecipePatcher.SupportModdedIngredients(api);
-
-            Dictionary<string, string[]> restrictionGroupsServer = new() {
-                ["barrels"] = ["barrelrack", "tunrack"],
-                ["baskets"] = ["eggbasket", "vegetablebasket", "fruitbasket"],
-                ["general"] = ["fooduniversal", "holderuniversal", "liquidystuff", "coolingonly"],
-                ["glassware"] = ["meatfreezer", "seedbins"],
-                ["other"] = ["floursack", "pumpkincase", "buckethook"],
-                ["shelves"] = ["barshelf", "breadshelf", "eggshelf", "pieshelf", "seedshelf", "sushishelf", "glassjarshelf"]
-            };
-
+            var restrictionGroupsServer = DiscoverRestrictionGroups(api);
             LoadData(api, restrictionGroupsServer);
         }
 
@@ -130,6 +121,50 @@ public class Core : ModSystem {
         }
     }
 
+    #region CoreFunctions
+
+    private Dictionary<string, string[]> DiscoverRestrictionGroups(ICoreAPI api) {
+        var restrictionGroups = new Dictionary<string, string[]>();
+        string basePath = "config/restrictions/";
+
+        var restrictionAssets = api.Assets.GetMany("config/restrictions", "foodshelves", false);
+
+        foreach (var asset in restrictionAssets) {
+            string fullPath = asset.Location.Path;
+
+            string relativePath = fullPath[basePath.Length..];
+            string[] pathParts = relativePath.Split('/');
+
+            if (pathParts.Length >= 2) {
+                string folderName = pathParts[0];
+                string fileName = pathParts[1];
+
+                if (fileName.EndsWith(".json")) {
+                    fileName = fileName[..^5];
+                }
+
+                if (!restrictionGroups.TryGetValue(folderName, out string[] value)) {
+                    value = [];
+                    restrictionGroups[folderName] = value;
+                }
+
+                var currentFiles = value.ToList();
+                if (!currentFiles.Contains(fileName)) {
+                    currentFiles.Add(fileName);
+                    restrictionGroups[folderName] = [.. currentFiles];
+                }
+            }
+        }
+
+        // Remove folders that have no files
+        var foldersToRemove = restrictionGroups.Where(kvp => kvp.Value.Length == 0).Select(kvp => kvp.Key).ToList();
+        foreach (var folder in foldersToRemove) {
+            restrictionGroups.Remove(folder);
+        }
+
+        return restrictionGroups;
+    }
+
     private void LoadData(ICoreAPI api, Dictionary<string, string[]> restrictionGroups) {
         foreach (var (category, names) in restrictionGroups) {
             foreach (var name in names) {
@@ -144,4 +179,6 @@ public class Core : ModSystem {
             }
         }
     }
+
+    #endregion
 }

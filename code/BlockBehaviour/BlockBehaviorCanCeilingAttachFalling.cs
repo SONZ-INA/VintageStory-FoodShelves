@@ -5,21 +5,13 @@ namespace FoodShelves;
 
 public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(block) {
     private bool ignorePlaceTest;
-
     private AssetLocation[] exceptions;
-
     public bool fallSideways;
-
     private float dustIntensity;
-
     private float fallSidewaysChance = 0.3f;
-
     private AssetLocation fallSound;
-
     private float impactDamageMul;
-
     private Cuboidi[] attachmentAreas;
-
     private BlockFacing[] attachableFaces;
 
     public override void Initialize(JsonObject properties) {

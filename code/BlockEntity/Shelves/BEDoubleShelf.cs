@@ -19,14 +19,15 @@ public class BEDoubleShelf : BEBaseFSContainer {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
 
         if (!inv[startIndex].Empty) {
-            if (!IsSolitaryMatch(inv[startIndex].Itemstack, slot.Itemstack)) return false;
-            if (IsLargeItem(slot.Itemstack) || IsLargeItem(inv[startIndex].Itemstack)) return false;
-            if (IsSmallItem(inv[startIndex].Itemstack) != IsSmallItem(slot.Itemstack)) return false;
+            ItemStack firstItemInSegment = inv[startIndex].Itemstack;
+            if (!firstItemInSegment.IsSolitaryMatch(slot.Itemstack)) return false;
+            if (slot.Itemstack.IsLargeItem() || firstItemInSegment.IsLargeItem()) return false;
+            if (firstItemInSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false;
         }
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !IsSmallItem(slot.Itemstack)) return false;
+            if (currentIndex == startIndex + 4 && !slot.Itemstack.IsSmallItem()) return false;
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
@@ -50,11 +51,11 @@ public class BEDoubleShelf : BEBaseFSContainer {
                     float x, y = 0f, z;
                     float scale = 0.95f;
 
-                    if (IsLargeItem(inv[index].Itemstack)) {
+                    if (inv[index].Itemstack.IsLargeItem()) {
                         x = segment * 0.65f;
                         z = item * 0.65f;
                     }
-                    else if (!IsSmallItem(inv[index].Itemstack)) {
+                    else if (!inv[index].Itemstack.IsSmallItem()) {
                         x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
                         z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
                     }

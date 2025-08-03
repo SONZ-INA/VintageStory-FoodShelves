@@ -41,7 +41,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     protected virtual void InitMesh() {
-        blockMesh = GenBlockVariantMesh(Api, GetVariantStack(this));
+        blockMesh = GenBlockVariantMesh(Api, this.GetVariantStack());
     }
 
     public override void OnBlockPlaced(ItemStack byItemStack = null) {
