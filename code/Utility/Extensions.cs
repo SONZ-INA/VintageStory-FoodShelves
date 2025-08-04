@@ -153,26 +153,34 @@ public static class Extensions {
         }
     }
 
-    public static void ApplyModelTransformToMatrixF(this Matrixf mat, ModelTransform transformation) {
+    public static void ApplyModelTransformToMatrixF(this Matrixf mat, ModelTransform transformation)
+    {
         if (transformation == null) return;
-
         mat.Translate(0.5f, 0, 0.5f);
-
-        if (transformation.Translation != null) {
+        // Check if Translation is not a zero vector
+        if (!IsZero(transformation.Translation))
+        {
             mat.Translate(transformation.Translation.X, transformation.Translation.Y, transformation.Translation.Z);
         }
-        
-        if (transformation.Rotation != null) {
+
+        // Check if Rotation is not a zero vector
+        if (!IsZero(transformation.Rotation))
+        {
             mat.RotateXDeg(transformation.Rotation.X);
             mat.RotateYDeg(transformation.Rotation.Y);
             mat.RotateZDeg(transformation.Rotation.Z);
         }
-
-        if (transformation.ScaleXYZ != null) {
+        // Check if ScaleXYZ is not a zero vector
+        if (!IsZero(transformation.ScaleXYZ))
+        {
             mat.Scale(transformation.ScaleXYZ.X, transformation.ScaleXYZ.Y, transformation.ScaleXYZ.Z);
         }
-
         mat.Translate(-0.5f, 0, -0.5f);
+    }
+    // Method to check if a FastVec3f is a zero vector
+    private static bool IsZero(FastVec3f vec)
+    {
+        return vec.X == 0 && vec.Y == 0 && vec.Z == 0;
     }
 
     /// <summary>
