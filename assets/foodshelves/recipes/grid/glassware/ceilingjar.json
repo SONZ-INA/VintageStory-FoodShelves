@@ -18,5 +18,24 @@
         }
       }
     }
+  }, 
+  {
+    "ingredientPattern": "PRP,SGS,P_P",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
+      "R": { "type": "item", "code": "game:rope" },
+      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "ceilingjar-normal",
+      "attributes": {
+        "FSAttributes": {
+          "glass": "{glass}"
+        }
+      }
+    }
   }
 ]

@@ -4,7 +4,7 @@
     "ingredients": {
       "S": { "type": "item", "code": "game:stick", "quantity": 8 },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*" },
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 8, "name": "wood" }
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 8 }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -16,6 +16,16 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PSP,SNS,PSP",
+    "ingredients": {
+      "S": { "type": "item", "code": "game:stick", "quantity": 8 },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*" },
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 8 }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "tunrack-normal-north" }
   },
   {
     "ingredientPattern": "B",

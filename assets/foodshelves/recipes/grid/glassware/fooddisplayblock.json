@@ -19,6 +19,24 @@
     }
   },
   {
+    "ingredientPattern": "PPP,SGS,PPP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick" },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "fooddisplayblock-normal",
+      "attributes": {
+        "FSAttributes": {
+          "glass": "{glass}"
+        }
+      }
+    }
+  },
+  {
     "ingredientPattern": "_P_,SGS,P_P",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
@@ -32,6 +50,24 @@
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
+          "glass": "{glass}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "_P_,SGS,P_P",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick" },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 2,
+    "output": {
+      "type": "block",
+      "code": "fooddisplayblock-top",
+      "attributes": {
+        "FSAttributes": {
           "glass": "{glass}"
         }
       }

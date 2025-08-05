@@ -2,7 +2,7 @@
   {
     "ingredientPattern": "PS,P_",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}" },
       "S": { "type": "item", "code": "game:stick", "quantity": 2 }
     },
     "width": 2, "height": 2, "recipeGroup": 1,
@@ -15,5 +15,14 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PS,P_",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick", "quantity": 2 }
+    },
+    "width": 2, "height": 2, "recipeGroup": 1,
+    "output": { "type": "block", "code": "buckethook-normal-east" }
   }
 ]

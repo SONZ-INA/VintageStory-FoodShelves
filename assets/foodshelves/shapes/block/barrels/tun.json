@@ -9,8 +9,8 @@
 	"textureSizes": {},
 	"textures": {
 		"wood": "game:block/wood/debarked/aged",
-		"bottom": "block/wood/horizontalbarrelbig/bottom",
-		"top": "block/wood/horizontalbarrelbig/top",
+		"bottom": "block/wood/tun/bottom",
+		"top": "block/wood/tun/top",
 		"blackbronze4": "game:block/metal/sheet/blackbronze4"
 	},
 	"elements": [

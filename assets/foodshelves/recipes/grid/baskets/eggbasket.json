@@ -3,7 +3,7 @@
     "ingredientPattern": "__,_S,_P",
     "ingredients": {
       "S": { "type": "item", "code": "game:stick", "quantity": 2 },
-      "P": { "type": "item", "code": "game:plank-*", "name": "wood" }
+      "P": { "type": "item", "code": "game:plank-{wood}" }
     },
     "width": 2, "height": 3, "recipeGroup": 1,
     "output": {
