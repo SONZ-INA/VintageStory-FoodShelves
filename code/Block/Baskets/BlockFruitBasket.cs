@@ -15,7 +15,7 @@ public class BlockFruitBasket : BaseFSBasket {
 
     protected override MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 0.5f, Transformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 0.5f, Transformations);
 
         return contentMesh;
     }

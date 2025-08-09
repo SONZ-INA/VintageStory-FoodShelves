@@ -118,6 +118,7 @@
   <None Remove="assets\foodshelves\patches\floralzones.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
   <None Remove="assets\foodshelves\patches\longtermfood.json" />
+  <None Remove="assets\foodshelves\patches\moreanimals.json" />
   <None Remove="assets\foodshelves\patches\mushroom.json" />
   <None Remove="assets\foodshelves\patches\pewter.json" />
   <None Remove="assets\foodshelves\patches\primitivesurvival.json" />

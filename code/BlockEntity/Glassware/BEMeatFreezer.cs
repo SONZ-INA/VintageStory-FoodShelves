@@ -9,6 +9,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     [TreeSerializable(false)] public bool FreezerOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
 
+    protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
     private readonly string CoolingOnly = "fsCoolingOnly";
     private float perishMultiplierBuffed = 0.65f;
     private float perishMultiplierUnBuffed = 0.65f;
@@ -86,19 +87,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         switch (blockSel.SelectionBoxIndex) {
             case 0: case 1: case 2: case 3:
                 if (!FreezerOpen) return false;
-                if (slot.Empty) {
-                    return TryTake(byPlayer, blockSel);
-                }
-                else if (slot.CanStoreInSlot(AttributeCheck)) {
-                    AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
-
-                    if (TryPut(byPlayer, slot, blockSel)) {
-                        Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                        return true;
-                    }
-                }
-                (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:Only raw meat can be placed in this freezer."));
-                break;
+                return base.OnInteract(byPlayer, blockSel);
             case 4:
                 if (!FreezerOpen) ToggleFreezerDoor(true, byPlayer);
                 else ToggleFreezerDoor(false, byPlayer);
@@ -137,10 +126,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         if (blockSel.SelectionBoxIndex > 3) return false; // If it's freezer or drawer selection box, return
-        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Invert shift to bulk-place by default
-        bool result = base.TryPut(byPlayer, slot, blockSel);
-        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Restore original value
-        return result;
+        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {

@@ -6,6 +6,23 @@ public class BlockWallCabinet : BaseFSContainer {
     public readonly AssetLocation soundCabinetOpen = new(SoundReferences.WallCabinetOpen);
     public readonly AssetLocation soundCabinetClose = new(SoundReferences.WallCabinetClose);
 
+    private WorldInteraction openCloseDoor;
+
+    public override void OnLoaded(ICoreAPI api) {
+        base.OnLoaded(api);
+
+        openCloseDoor = new() {
+            ActionLangCode = "blockhelp-door-openclose",
+            MouseButton = EnumMouseButton.Right,
+            HotKeyCode = "shift"
+        };
+    }
+
+    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
+            .Append(openCloseDoor);
+    }
+
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BEWallCabinet be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
 

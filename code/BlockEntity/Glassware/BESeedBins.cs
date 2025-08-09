@@ -47,40 +47,6 @@ public class BESeedBins : BEBaseFSContainer {
         blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), [.. dontRender]);
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int index = blockSel.SelectionBoxIndex * ItemsPerSegment;
-
-        if (inv[index].Empty || inv[index].Itemstack.Collectible.Equals(slot.Itemstack.Collectible)) {
-            int moved = 0;
-
-            if (byPlayer.Entity.Controls.ShiftKey) {
-                for (int i = index; i < index + ItemsPerSegment; i++) {
-                    int availableSpace = inv[i].MaxSlotStackSize - inv[i].StackSize;
-                    moved += slot.TryPutInto(Api.World, inv[i], availableSpace);
-
-                    if (slot.StackSize == 0) break;
-                }
-            }
-            else {
-                for (int i = index; i < index + ItemsPerSegment; i++) {
-                    if (inv[i].StackSize < inv[i].MaxSlotStackSize) {
-                        moved = slot.TryPutInto(Api.World, inv[i], 1);
-                        if (moved > 0) break;
-                    }
-                }
-            }
-
-            if (moved > 0) {
-                InitMesh();
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     protected override float[][] genTransformationMatrices() { return null; } // Unneeded
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {

@@ -39,7 +39,8 @@ public abstract class BaseFSBasket : BaseFSContainer {
     }
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
+            .Append(interactions);
     }
 
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
@@ -102,7 +103,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
 
     protected virtual MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 1f, Transformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 1f, Transformations);
 
         return contentMesh;
     }

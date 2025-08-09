@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Vintagestory.ServerMods;
 
 namespace FoodShelves;
 
@@ -64,7 +65,7 @@ public static class Meshing {
     /// <summary>
     /// Generates the content mesh of the block's inventory. Mainly used for generating basket contents.
     /// </summary>
-    public static MeshData GenContentMesh(ICoreClientAPI capi, ITextureAtlasAPI targetAtlas, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {
+    public static MeshData GenContentMesh(ICoreClientAPI capi, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {
         if (capi == null) return null;
 
         MeshData nestedContentMesh = null;
@@ -75,10 +76,36 @@ public static class Meshing {
             if (shapeLocation == null) continue;
 
             Shape shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
-            //AssetLocation assetLoc = contents[i].Item.Shape?.Base.Clone();
-            //string shapeLocation = assetLoc.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
-            //Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
             if (shape == null) continue;
+
+            // Handle overlays if present
+            //CompositeShape compositeShape = contents[i].Item.Shape.Clone();
+            //if (compositeShape?.Overlays != null && compositeShape.Overlays.Length > 0) {
+            //    string overlayPrefix = $"ov_{i}_";
+            //    shape.SubclassForStepParenting(overlayPrefix);
+
+            //    // Prefix existing textures
+            //    var originalTextures = new Dictionary<string, AssetLocation>(shape.Textures);
+            //    shape.Textures.Clear();
+            //    foreach (var entry in originalTextures) {
+            //        shape.Textures[overlayPrefix + entry.Key] = entry.Value;
+            //    }
+
+            //    // Add overlays
+            //    foreach (var overlay in compositeShape.Overlays) {
+            //        var overlayBase = overlay.Base.Clone().WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
+            //        Shape overlayShape = capi.Assets.TryGet(overlayBase)?.ToObject<Shape>();
+            //        if (overlayShape == null) continue;
+
+            //        overlayShape.WalkElements("*", (e) => {
+            //            if (!string.IsNullOrEmpty(e.StepParentName)) {
+            //                e.StepParentName = overlayPrefix + e.StepParentName;
+            //            }
+            //        });
+
+            //        shape.StepParentShape(overlayShape, overlayBase.ToString(), compositeShape.Base.ToString(), capi.Logger, null);
+            //    }
+            //}
 
             if (shape.Textures.Count == 0) {
                 foreach (var texture in contents[i].Item.Textures) {
@@ -86,8 +113,7 @@ public static class Meshing {
                 }
             }
 
-            UniversalShapeTextureSource texSource = new(capi, targetAtlas, shape, "FS-ContentTextureSource");
-
+            var texSource = new ShapeTextureSource(capi, shape, "FS-ShapeTextureSource");
             foreach (var textureDict in shape.Textures) {
                 CompositeTexture cTex = new(textureDict.Value);
                 cTex.Bake(capi.Assets);

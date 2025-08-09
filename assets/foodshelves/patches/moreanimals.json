@@ -1,0 +1,14 @@
+[
+  {
+    "file": "moreanimals:itemtypes/egg.json",
+    "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "moreanimals" } ]
+  },
+  {
+    "file": "moreanimals:itemtypes/egg.json",
+    "op": "addmerge", "path": "/attributes/fsEggShelf", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "moreanimals" } ]
+  }
+]

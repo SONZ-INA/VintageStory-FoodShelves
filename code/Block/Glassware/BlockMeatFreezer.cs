@@ -3,7 +3,6 @@
 namespace FoodShelves;
 
 public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
-    private WorldInteraction[] itemSlottableInteractions;
     private WorldInteraction[] freezerInteractions;
     private WorldInteraction[] drawerInteractions;
     private WorldInteraction[] drawerOpenClose;
@@ -15,39 +14,6 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
-
-        itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, "meatFreezerItemInteractions", () => {
-            List<ItemStack> meatFreezerStackList = [];
-
-            foreach (var obj in api.World.Collectibles) {
-                if (obj.CanStoreInSlot("fsMeatFreezer")) {
-                    meatFreezerStackList.Add(new ItemStack(obj));
-                }
-            }
-
-            return new WorldInteraction[] {
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-addbulk",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = [.. meatFreezerStackList]
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-add",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = [.. meatFreezerStackList],
-                    HotKeyCode = "shift"
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-remove",
-                    MouseButton = EnumMouseButton.Right
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-removebulk",
-                    MouseButton = EnumMouseButton.Right,
-                    HotKeyCode = "shift"
-                }
-            };
-        });
 
         freezerInteractions = ObjectCacheUtil.GetOrCreate(api, "meatFreezerDoorInteractions", () => {
             return new WorldInteraction[] {
@@ -96,13 +62,13 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         switch (selection.SelectionBoxIndex) {
             case 0: case 1: case 2: case 3:
-                return itemSlottableInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+                return itemSlottableInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
             case 4:
-                return freezerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+                return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
             case 5:
                 if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEMeatFreezer bemf && bemf.DrawerOpen) {
                     if (bemf.Inventory?[bemf.cutIceSlot].Empty == true || bemf.Inventory?[bemf.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
-                        return drawerOpenClose.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
+                        return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                     }
                 }
                 else {

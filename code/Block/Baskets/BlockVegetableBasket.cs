@@ -54,7 +54,7 @@ public class BlockVegetableBasket : BaseFSBasket {
             itemPath = contents[0].Collectible.Code;
         }
 
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
 
         return contentMesh;
     }

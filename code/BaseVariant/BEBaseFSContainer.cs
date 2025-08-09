@@ -80,10 +80,14 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public virtual bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        if (slot.Empty) {
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+        bool hasAttrCheck = block.WorldInteractionAttributeCheck != null;
+
+        if ((hasAttrCheck && !shift) || (!hasAttrCheck && slot.Empty)) {
             return TryTake(byPlayer, blockSel);
         }
         else {
+            if (slot.Empty) return false;
             if (slot.CanStoreInSlot(AttributeCheck)) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
@@ -106,22 +110,53 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
         if (startIndex >= inv.Count) return false;
 
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
-            ItemStack currentStack = inv[currentIndex].Itemstack;
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+        int moved = 0;
 
-            if (inv[currentIndex].Empty || (currentStack.Collectible.Equals(slot.Itemstack.Collectible) && currentStack.StackSize < currentStack.Collectible.MaxStackSize)) {
-                int moved = byPlayer.Entity.Controls.ShiftKey
-                    ? slot.TryPutInto(Api.World, inv[currentIndex], inv[currentIndex].MaxSlotStackSize - inv[currentIndex].Itemstack?.StackSize ?? 64)
-                    : slot.TryPutInto(Api.World, inv[currentIndex]);
+        if (block.UnifyItemSlots) {
+            // ItemSlots act as one
+            if (!inv[startIndex].Empty && !inv[startIndex].Itemstack.Collectible.Equals(slot.Itemstack.Collectible))
+                return false;
 
-                if (moved > 0) {
-                    InitMesh();
-                    MarkDirty();
-                    (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                    return true;
+            for (int i = startIndex; i < startIndex + ItemsPerSegment; i++) {
+                int availableSpace = inv[i].MaxSlotStackSize - inv[i].StackSize;
+
+                if (ctrl) {
+                    moved += slot.TryPutInto(Api.World, inv[i], availableSpace);
+                    if (slot.StackSize == 0) break;
+                }
+                else if (inv[i].StackSize < inv[i].MaxSlotStackSize) {
+                    moved = slot.TryPutInto(Api.World, inv[i], 1);
+                    break;
                 }
             }
+        }
+        else {
+            // ItemSlots are separate
+            for (int i = 0; i < ItemsPerSegment; i++) {
+                int idx = startIndex + i;
+                var stack = inv[idx].Itemstack;
+
+                if (inv[idx].Empty || (stack?.Collectible.Equals(slot.Itemstack.Collectible) == true &&
+                                       stack.StackSize < stack.Collectible.MaxStackSize)) {
+                    int availableSpace = inv[idx].MaxSlotStackSize - (stack?.StackSize ?? 0);
+
+                    if (block.WorldInteractionAttributeCheck == null || shift) {
+                        moved = ctrl
+                            ? slot.TryPutInto(Api.World, inv[idx], availableSpace)
+                            : slot.TryPutInto(Api.World, inv[idx]);
+                    }
+                    if (moved > 0) break;
+                }
+            }
+        }
+
+        if (moved > 0) {
+            InitMesh();
+            MarkDirty();
+            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+            return true;
         }
 
         return false;
@@ -134,7 +169,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         for (int i = ItemsPerSegment - 1; i >= 0; i--) {
             int currentIndex = startIndex + i;
             if (!inv[currentIndex].Empty) {
-                ItemStack stack = byPlayer.Entity.Controls.ShiftKey
+                ItemStack stack = byPlayer.Entity.Controls.CtrlKey
                     ? inv[currentIndex].TakeOutWhole()
                     : inv[currentIndex].TakeOut(1);
 

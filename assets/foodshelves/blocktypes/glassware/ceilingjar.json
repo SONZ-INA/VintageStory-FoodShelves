@@ -19,7 +19,8 @@
           "text": "foodshelves:blockdesc-liquidystuff-text"
         }
       ]
-    }
+    },
+    "unifyItemSlots": true
   },
   "behaviors": [
     { "name": "FoodShelves.CeilingAttachable" }
