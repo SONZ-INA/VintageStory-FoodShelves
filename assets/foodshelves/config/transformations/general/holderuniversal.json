@@ -1,9 +1,4 @@
 {
-  "game:claypot-burned": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
-  "game:claypot-cooked": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
-  "game:bowl-fired": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
-  "game:bowl-meal": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
-
   "*vegetable-pumpkin": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 90, "z": 0 }, "scalexyz": { "x": 1, "y": 1.6, "z": 0.75 } },
 
   "foodshelves:fruitbasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },

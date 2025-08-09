@@ -42,7 +42,7 @@
   "sideopaque": { "all": false },
   "guiTransform": {
     "origin": { "x": 0.5, "y": 0.3, "z": 0.5 },
-    "scale": 1.5
+    "scale": 1.6
   },
 	"tpHandTransform": {
 		"translation": { "x": -0.65, "y": -0.55, "z": -0.625 },

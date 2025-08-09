@@ -34,6 +34,8 @@ public static class CheckExtensions {
         if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
 
         if (stack?.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
+        if (stack?.Collectible?.Code.Path.StartsWith("claypot-") == true) return true;
+        
         string[] validTypes = ["BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket"];
         if (validTypes.Contains(stack?.Collectible?.GetType().Name)) return true;
 

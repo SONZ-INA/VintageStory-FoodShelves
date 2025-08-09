@@ -65,7 +65,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 32 days which is 8 ice blocks
-            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 4;
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
         }
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -448,7 +448,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         // Cycle segments when cabinet is closed
         if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == 10) {
             int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
-            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + currentSegment);
+            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + Lang.Get("foodshelves:segmentnum-" + currentSegment));
 
             if (inv[currentSegment * ItemsPerSegment].Empty) {
                 sb.AppendLine(Lang.Get("foodshelves:Empty."));

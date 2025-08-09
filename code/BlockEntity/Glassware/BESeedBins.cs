@@ -68,4 +68,11 @@ public class BESeedBins : BEBaseFSContainer {
 
         return true;
     }
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
+        base.GetBlockInfo(forPlayer, sb);
+
+        int index = forPlayer.CurrentBlockSelection.SelectionBoxIndex * ItemsPerSegment;
+        sb.AppendLine(GetNutrientRequirement(Api.World, inv[index].Itemstack));
+    }
 }

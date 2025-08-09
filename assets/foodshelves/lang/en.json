@@ -136,5 +136,15 @@
   "will perish in {0} days": "will perish in {0} days",
   "will perish in {0} hours": "will perish in {0} hours",
   "Items inside {0}": "Items inside: {0}",
-  "No item will perish soon.": "No item will perish soon."
+  "No item will perish soon.": "No item will perish soon.",
+
+  "segmentnum-0": "Bottom left",
+  "segmentnum-1": "Bottom center",
+  "segmentnum-2": "Bottom right",
+  "segmentnum-3": "Middle left",
+  "segmentnum-4": "Middle center",
+  "segmentnum-5": "Middle right",
+  "segmentnum-6": "Top left",
+  "segmentnum-7": "Top center",
+  "segmentnum-8": "Top right"
 }

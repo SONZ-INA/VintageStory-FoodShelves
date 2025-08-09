@@ -18,6 +18,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected virtual string CantPlaceMessage => "";
     protected abstract InfoDisplayOptions InfoDisplay { get; }
     protected virtual bool RipeningSpot => false;
+    protected virtual bool OverrideMergeStacks => false;
 
     protected virtual float PerishMultiplier { get; set; } = 1;
     protected virtual float CuringMultiplier { get; set; } = 1;
@@ -130,6 +131,16 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     moved = slot.TryPutInto(Api.World, inv[i], 1);
                     break;
                 }
+
+                // Force merge freshness disparity if enabled
+                if (OverrideMergeStacks && moved == 0 && slot.Itemstack != null && inv[i].Itemstack != null) {
+                    var stack = inv[i].Itemstack;
+                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, availableSpace) {
+                        SourceSlot = new DummySlot(slot.Itemstack),
+                        SinkSlot = new DummySlot(stack)
+                    };
+                    stack.Collectible.TryMergeStacks(op);
+                }
             }
         }
         else {
@@ -138,8 +149,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                 int idx = startIndex + i;
                 var stack = inv[idx].Itemstack;
 
-                if (inv[idx].Empty || (stack?.Collectible.Equals(slot.Itemstack.Collectible) == true &&
-                                       stack.StackSize < stack.Collectible.MaxStackSize)) {
+                if (inv[idx].Empty
+                    || (stack?.Collectible.Equals(slot.Itemstack.Collectible) == true
+                        && stack.StackSize < stack.Collectible.MaxStackSize)) {
                     int availableSpace = inv[idx].MaxSlotStackSize - (stack?.StackSize ?? 0);
 
                     if (block.WorldInteractionAttributeCheck == null || shift) {
@@ -147,6 +159,21 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                             ? slot.TryPutInto(Api.World, inv[idx], availableSpace)
                             : slot.TryPutInto(Api.World, inv[idx]);
                     }
+
+                    // Force merge freshness disparity if enabled
+                    if (OverrideMergeStacks && moved == 0 && slot.Itemstack != null && stack != null) {
+                        int amount = ctrl ? availableSpace : 1;
+                        moved = slot.StackSize;
+
+                        ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, amount) {
+                            SourceSlot = new DummySlot(slot.Itemstack),
+                            SinkSlot = new DummySlot(stack)
+                        };
+                        stack.Collectible.TryMergeStacks(op);
+
+                        moved -= slot.StackSize; // Populate moved so we know how much it transfered
+                    }
+
                     if (moved > 0) break;
                 }
             }

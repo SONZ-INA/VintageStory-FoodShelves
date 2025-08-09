@@ -123,7 +123,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             drawerSelBox.MBNormalizeSelectionBox(offset);
 
             if (be.FreezerOpen) {
-                freezerDoor.Y1 += 0.3125f;
+                freezerDoor.Y1 += 0.1325f;
                 freezerDoor.Y2 += 0.7f;
                 
                 int rotAngle = this.GetRotationAngle();

@@ -5,7 +5,7 @@
       "P": { "type": "item", "code": "game:plank-*", "quantity": 2, "name": "wood" },
       "R": { "type": "item", "code": "game:rope" },
       "S": { "type": "item", "code": "game:stick", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -25,7 +25,7 @@
       "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
       "R": { "type": "item", "code": "game:rope" },
       "S": { "type": "item", "code": "game:stick", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass" }
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -37,5 +37,16 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PRP,SGS,P_P",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
+      "R": { "type": "item", "code": "game:rope" },
+      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "G": { "type": "block", "code": "*:glass-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "ceilingjar-normal" }
   }
 ]

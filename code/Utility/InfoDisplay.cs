@@ -485,4 +485,20 @@ public static class InfoDisplay {
             return prefix + Lang.Get($"{actionVerb} {{0}} hours", Math.Round(hoursLeft, 1));
         }
     }
+
+    public static string GetNutrientRequirement(IWorldAccessor world, ItemStack itemStack, bool withTranslation = true) {
+        if (itemStack?.Collectible == null) return null;
+
+        string type = itemStack.Collectible.Variant.TryGetValue("type");
+        if (string.IsNullOrEmpty(type)) return null;
+
+        Block cropBlock = world.GetBlock(new AssetLocation(itemStack.Collectible.Code.Domain, "crop-" + type + "-1"));
+        if (cropBlock?.CropProps == null) return null;
+
+        // "N", "P", or "K"
+        return "<font color=lightgreen>"
+            + (withTranslation ? Lang.Get("soil-nutrition-requirement") : "")
+            + cropBlock.CropProps.RequiredNutrient
+            + "</font>";
+    }
 }

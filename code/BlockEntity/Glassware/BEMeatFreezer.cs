@@ -4,14 +4,15 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     protected new BlockMeatFreezer block;
     private readonly MeshData[] contentMeshes = new MeshData[4];
 
+    protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
+    protected override bool OverrideMergeStacks => true;
 
     [TreeSerializable(false)] public bool FreezerOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
-
-    protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
+    
     private readonly string CoolingOnly = "fsCoolingOnly";
-    private float perishMultiplierBuffed = 0.65f;
+    private float perishMultiplierBuffed = 0.6f;
     private float perishMultiplierUnBuffed = 0.65f;
     public readonly int cutIceSlot = 4;
 
@@ -73,7 +74,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 32 days which is 8 ice blocks
-            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 4;
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
         }
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -139,7 +140,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
             int moved = slot.TryPutInto(Api.World, inv[cutIceSlot], quantity);
 
             if (moved == 0 && slot.Itemstack != null) { // Attempt to merge if it fails
-                ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, quantity) {
+                ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity) {
                     SourceSlot = new DummySlot(slot.Itemstack),
                     SinkSlot = new DummySlot(stack)
                 };
