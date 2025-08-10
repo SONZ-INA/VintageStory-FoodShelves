@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BlockEggBasket : BaseFSBasket {
+public class BlockMushroomBasket : BaseFSBasket {
     protected override Dictionary<string, ModelTransform> Transformations => []; // No custom transformations
 
     public override float[,] GetTransformationMatrix(string path = null) {

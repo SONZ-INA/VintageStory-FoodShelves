@@ -5,6 +5,7 @@
     "foodshelves:BlockFruitBasket",
     "foodshelves:BlockVegetableBasket",
     "foodshelves:BlockEggBasket",
+    "foodshelves:BlockMushroomBasket",
     "foodshelves:BlockGlassJar"
   ],
   "CollectibleCodes": [

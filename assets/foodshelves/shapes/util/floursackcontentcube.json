@@ -1,17 +1,11 @@
 {
 	"editor": {
-		"collapsedPaths": "Root/originsack/originsack1,Root/originsack,Root/originsack/originsack2,Root/originsack/originsack3,Root/originsack/originsack4,Root/Leg1,Root/WoodEdge1",
 		"allAngles": false,
 		"entityTextureMode": false
 	},
 	"textureWidth": 16,
 	"textureHeight": 16,
-	"textureSizes": {
-		"normal": [16,16],
-		"seed": [8,8],
-		"amaranth": [8,8],
-		"reedrope": [16,16]
-	},
+	"textureSizes": {},
 	"textures": {
 		"cassava-flour": "cassava-flour"
 	},

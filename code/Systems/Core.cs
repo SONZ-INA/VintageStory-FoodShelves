@@ -49,10 +49,12 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockFruitBasket", typeof(BlockFruitBasket));
         api.RegisterBlockClass("FoodShelves.BlockVegetableBasket", typeof(BlockVegetableBasket));
         api.RegisterBlockClass("FoodShelves.BlockEggBasket", typeof(BlockEggBasket));
+        api.RegisterBlockClass("FoodShelves.BlockMushroomBasket", typeof(BlockMushroomBasket));
 
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
         api.RegisterBlockClass("FoodShelves.BlockMeatFreezer", typeof(BlockMeatFreezer));
         api.RegisterBlockClass("FoodShelves.BlockWallCabinet", typeof(BlockWallCabinet));
+        api.RegisterBlockClass("FoodShelves.BlockFruitCooler", typeof(BlockFruitCooler));
         //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
 
         api.RegisterBlockClass("FoodShelves.BlockDoubleShelf", typeof(BlockDoubleShelf));
@@ -65,6 +67,7 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEEggBasket", typeof(BEEggBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEFruitBasket", typeof(BEFruitBasket));
         api.RegisterBlockEntityClass("FoodShelves.BEVegetableBasket", typeof(BEVegetableBasket));
+        api.RegisterBlockEntityClass("FoodShelves.BEMushroomBasket", typeof(BEMushroomBasket));
 
         api.RegisterBlockEntityClass("FoodShelves.BECeilingJar", typeof(BECeilingJar));
         api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
@@ -73,6 +76,7 @@ public class Core : ModSystem {
         api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
         api.RegisterBlockEntityClass("FoodShelves.BEWallCabinet", typeof(BEWallCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BESeedBins", typeof(BESeedBins));
+        api.RegisterBlockEntityClass("FoodShelves.BEFruitCooler", typeof(BEFruitCooler));
         //api.RegisterBlockEntityClass("FoodShelves.BEGlassJar", typeof(BEGlassJar));
 
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));

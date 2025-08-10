@@ -49,6 +49,8 @@
   "block-doubleshelf-*": "Double Shelf",
   "block-buckethook-*": "Bucket Hook",
   "block-seedbins-*": "Seed Bins",
+  "block-mushroombasket-*": "Mushroom Basket",
+  "block-fruitcooler-*": "Fruit Cooler",
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
@@ -73,6 +75,8 @@
   "blockdesc-floursack-text": "  -All types of flour.",
   "blockdesc-buckethook-text": "  -Buckets.",
   "blockdesc-seedbins-text": "  -All seedbags.",
+  "blockdesc-mushroombasket-text": "  -All mushrooms.",
+  "blockdesc-fruitcooler-text": "  -All fruit.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 50% longer and cure 20% slower.",
@@ -83,6 +87,7 @@
   "helddesc-meatfreezer": "Raw meat stored in this freezer stays fresh 60% longer, or up to 5x longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-wallcabinet": "Stuff placed in this cabinet lasts up to 25% longer.<br>Make sure to keep it closed!",
   "helddesc-floursack": "Flour placed in this sack lasts up to 4x longer.",
+  "helddesc-fruitcooler": "Fruit placed in this cooler lasts up to 30% longer, or up to 3x longer when ice is added.<br>Make sure to keep it closed!",
 
   "This item cannot be placed in this container.": "This item cannot be placed in this container.",
   "Only pies or cheese can be placed on this shelf.": "Only pies or cheese can be placed on this shelf.",
@@ -101,6 +106,8 @@
   "Only flour can be placed in this sack.": "Only flour can be placed in this sack.",
   "Only buckets can be placed on this hook.": "Only buckets can be placed on this hook.",
   "Only seeds can be placed in these jars.": "Only seeds can be placed in these jars.",
+  "Only mushrooms can be placed in this basket.": "Only mushrooms can be placed in this basket.",
+  "Only fruit can be placed in this cooler.": "Only fruit can be placed in this cooler.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",

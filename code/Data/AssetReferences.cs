@@ -6,10 +6,12 @@ public static class ShapeReferences {
     public const string MeatFreezer = "foodshelves:shapes/block/glassware/meatfreezer.json";
     public const string WallCabinet = "foodshelves:shapes/block/glassware/wallcabinet.json";
     public const string SeedBins = "foodshelves:shapes/block/glassware/seedbins.json";
+    public const string FruitCooler = "foodshelves:shapes/block/glassware/fruitcooler.json";
 
     public const string utilFruitBasket = "foodshelves:shapes/util/fruitbasketrope.json";
     public const string utilVegetableBasket = "foodshelves:shapes/util/vegetablebasketrope.json";
     public const string utilEggBasket = "foodshelves:shapes/util/eggbasketrope.json";
+    public const string utilMushroomBasket = "foodshelves:shapes/util/mushroombasketrope.json";
 
     public const string utilFlourSack = "foodshelves:shapes/util/floursackcontentcube.json";
 
@@ -17,6 +19,7 @@ public static class ShapeReferences {
     public const string utilCeilingJar = "foodshelves:shapes/util/ceilingjarcontentcube.json";
     public const string utilMeatFreezer = "foodshelves:shapes/util/meatfreezercontentcube.json";
     public const string utilSeedBins = "foodshelves:shapes/util/seedbinscontentcube.json";
+    public const string utilFruitCooler = "foodshelves:shapes/util/fruitcoolercontentcube.json";
 }
 
 public static class SoundReferences {
