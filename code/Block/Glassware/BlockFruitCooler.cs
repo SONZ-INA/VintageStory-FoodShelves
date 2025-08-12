@@ -7,10 +7,10 @@ public class BlockFruitCooler : BaseFSContainer {
     private WorldInteraction[] drawerInteractions;
     private WorldInteraction[] drawerOpenClose;
 
-    public readonly AssetLocation soundCoolerOpen = new(SoundReferences.CoolingCabinetOpen);
-    public readonly AssetLocation soundCoolerClose = new(SoundReferences.CoolingCabinetClose);
-    public readonly AssetLocation soundDrawerOpen = new(SoundReferences.IceDrawerOpen);
-    public readonly AssetLocation soundDrawerClose = new(SoundReferences.IceDrawerClose);
+    public readonly AssetLocation soundCoolerOpen = new(SoundReferences.FruitCoolerOpen);
+    public readonly AssetLocation soundCoolerClose = new(SoundReferences.FruitCoolerClose);
+    public readonly AssetLocation soundDrawerOpen = new(SoundReferences.FruitDrawerOpen);
+    public readonly AssetLocation soundDrawerClose = new(SoundReferences.FruitDrawerClose);
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -66,7 +66,7 @@ public class BlockFruitCooler : BaseFSContainer {
             case 4:
                 return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
             case 5:
-                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEMeatFreezer bemf && bemf.DrawerOpen) {
+                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEFruitCooler bemf && bemf.DrawerOpen) {
                     if (bemf.Inventory?[bemf.cutIceSlot].Empty == true || bemf.Inventory?[bemf.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
                         return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                     }

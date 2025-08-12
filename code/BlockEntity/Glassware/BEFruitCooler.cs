@@ -8,19 +8,19 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool OverrideMergeStacks => true;
 
+    protected override float PerishMultiplier => 0.65f;
+    public override int ShelfCount => 4;
+    public override int AdditionalSlots => 1;
+
     [TreeSerializable(false)] public bool CoolerOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
-    
+
     private readonly string CoolingOnly = "fsCoolingOnly";
     private float perishMultiplierBuffed = 0.9f;
     private float perishMultiplierUnBuffed = 0.65f;
     public readonly int cutIceSlot = 4;
 
     public BEFruitCooler() {
-        ShelfCount = 4;
-        AdditionalSlots = 1;
-        PerishMultiplier = 0.65f;
-
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
@@ -220,7 +220,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerOpen, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerOpen, byPlayer.Entity, byPlayer, false, 16, 1f);
             PerishMultiplier = 1f;
         }
         else {
@@ -232,7 +232,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
             if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
                 PerishMultiplier = perishMultiplierBuffed;
             
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerClose, byPlayer.Entity, byPlayer, false, 16, 1f);
         }
 
         CoolerOpen = open;
@@ -248,7 +248,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                 animUtil.StartAnimation(new AnimationMetaData() {
                     Animation = "draweropen",
                     Code = "draweropen",
-                    AnimationSpeed = 2f,
+                    AnimationSpeed = 4f,
                     EaseOutSpeed = 1,
                     EaseInSpeed = 2
                 });

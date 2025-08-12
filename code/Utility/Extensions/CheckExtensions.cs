@@ -10,22 +10,16 @@ public static class CheckExtensions {
         => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
 
     /// <summary>
-    /// Determines whether the collectible in the given slot has the specified attribute set to true,
-    /// indicating that it is allowed to be stored.<br/> Prevents storage if the slot belongs to a hopper.
+    /// Determines whether the collectible in the given slot has the specified attribute set to true, indicating that it is allowed to be stored.
     /// </summary>
-    public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist) {
-        if (slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == false) return false;
-        if (slot?.Inventory?.ClassName == "hopper") return false;
-        return true;
-    }
+    public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist)
+        => slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
-    /// Determines whether the collectible has the specified attribute set to true,
-    /// allowing it to be stored in compatible containers.
+    /// Determines whether the collectible has the specified attribute set to true, allowing it to be stored in compatible containers.
     /// </summary>
-    public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) {
-        return obj?.Attributes?[attributeWhitelist].AsBool() == true;
-    }
+    public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) 
+        => obj?.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines if the item is considered a large item, based on baking properties, "shelvable" attribute, or specific known basket block types.

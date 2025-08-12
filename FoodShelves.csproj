@@ -103,6 +103,7 @@
   <None Remove="assets\foodshelves\config\restrictions\shelves\sushishelf.json" />
   <None Remove="assets\foodshelves\config\transformations\barrelbig.json" />
   <None Remove="assets\foodshelves\config\transformations\baskets\fruitbasket.json" />
+  <None Remove="assets\foodshelves\config\transformations\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\config\transformations\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\config\transformations\fooduniversal.json" />
   <None Remove="assets\foodshelves\config\transformations\general\holderuniversal.json" />
@@ -135,6 +136,7 @@
   <None Remove="assets\foodshelves\recipes\grid\barrelrack.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrackbig.json" />
   <None Remove="assets\foodshelves\recipes\grid\baskets\eggbasket.json" />
+  <None Remove="assets\foodshelves\recipes\grid\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\recipes\grid\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\recipes\grid\cutice.json" />
   <None Remove="assets\foodshelves\recipes\grid\fruitbasket.json" />
@@ -142,6 +144,7 @@
   <None Remove="assets\foodshelves\recipes\grid\glassware\coolingcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplaycase.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\fruitcooler.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\seedbins.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\wallcabinet.json" />
@@ -193,6 +196,10 @@
   <None Remove="assets\foodshelves\shapes\util\GlassJarContentCube.json" />
   <None Remove="assets\foodshelves\shapes\util\MushroomBasketRope.json" />
   <None Remove="assets\foodshelves\shapes\util\SeedBinsContentCube.json" />
+  <None Remove="assets\foodshelves\sounds\block\coolerclose.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\cooleropen.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\fruitdrawerclose.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\fruitdraweropen.ogg" />
   <None Remove="assets\foodshelves\sounds\block\glasscabinetclose.ogg" />
   <None Remove="assets\foodshelves\sounds\block\glassCabinetOpen.ogg" />
   <None Remove="assets\foodshelves\sounds\block\icedrawerclose.ogg" />

@@ -44,7 +44,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
                     stack = inv[i].TakeOut(1);
                 }
                 else {
-                    if (inv[i].Itemstack?.Item.Code == stack.Item.Code) {
+                    if (inv[i].Itemstack?.Item?.Code == stack.Item?.Code || inv[i].Itemstack?.Block?.Code == stack.Block?.Code) {
                         inv[i].TakeOut(1); // To remove the item from the basket.
                         stack.StackSize += 1;
                     }

@@ -7,7 +7,7 @@
 	"textureHeight": 16,
 	"textureSizes": {},
 	"textures": {
-		"sunflower": "sunflower"
+		"sunflower": "game:block/food/grain/sunflower"
 	},
 	"elements": [
 		{

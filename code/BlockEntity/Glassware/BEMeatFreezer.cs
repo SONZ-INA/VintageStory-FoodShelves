@@ -8,6 +8,10 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool OverrideMergeStacks => true;
 
+    protected override float PerishMultiplier => 0.65f;
+    public override int ShelfCount => 4;
+    public override int AdditionalSlots => 1;
+
     [TreeSerializable(false)] public bool FreezerOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
     
@@ -17,10 +21,6 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     public readonly int cutIceSlot = 4;
 
     public BEMeatFreezer() {
-        ShelfCount = 4;
-        AdditionalSlots = 1;
-        PerishMultiplier = 0.65f;
-
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);

@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Vintagestory.ServerMods;
 
 namespace FoodShelves;
 
@@ -70,9 +69,13 @@ public static class Meshing {
 
         MeshData nestedContentMesh = null;
         for (int i = 0; i < contents.Length; i++) {
-            if (contents[i] == null || contents[i].Item == null) continue;
+            if (contents[i] == null || (contents[i].Item == null && contents[i].Block == null)) continue;
 
-            string shapeLocation = contents[i].Item.Shape?.Base;
+            bool isItem = contents[i].Item != null;
+
+            string shapeLocation = contents[i].Item?.Shape?.Base
+                ?? contents[i].ItemAttributes?["displayedShape"]?.Token?.ToObject<CompositeShape>()?.Base
+                ?? contents[i].Block.Shape?.Base;
             if (shapeLocation == null) continue;
 
             Shape shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
@@ -108,8 +111,15 @@ public static class Meshing {
             //}
 
             if (shape.Textures.Count == 0) {
-                foreach (var texture in contents[i].Item.Textures) {
-                    shape.Textures.Add(texture.Key, texture.Value.Base);
+                if (isItem) {
+                    foreach (var texture in contents[i].Item.Textures) {
+                        shape.Textures.Add(texture.Key, texture.Value.Base);
+                    }
+                }
+                else {
+                    foreach (var texture in contents[i].Block.Textures) {
+                        shape.Textures.Add(texture.Key, texture.Value.Base);
+                    }
                 }
             }
 
@@ -125,7 +135,9 @@ public static class Meshing {
             int offset = transformationMatrix.GetLength(1);
             if (i < offset) {
                 if (modelTransformations != null) {
-                    ModelTransform transformation = contents[i].Item.GetTransformation(modelTransformations);
+                    ModelTransform transformation = isItem
+                        ? contents[i].Item.GetTransformation(modelTransformations)
+                        : contents[i].Block.GetTransformation(modelTransformations);
                     if (transformation != null) collectibleMesh.ModelTransform(transformation);
                 }
 

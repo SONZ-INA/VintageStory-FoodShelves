@@ -1,0 +1,12 @@
+[
+  {
+    "ingredientPattern": "PBP",
+    "ingredients": {
+      "B": { "type": "block", "code": "foodshelves:eggbasket-normal" },
+      "P": { "type": "item", "code": "*:plank-*" }
+    },
+    "width": 3, "height": 1, "recipeGroup": 1,
+    "copyAttributesFrom": "B",
+    "output": { "type": "block", "code": "mushroombasket-normal" }
+  }
+]

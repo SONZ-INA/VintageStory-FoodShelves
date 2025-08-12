@@ -8,6 +8,12 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool RipeningSpot => true;
 
+    protected override float PerishMultiplier => 0.75f;
+    public override int ShelfCount => 3;
+    public override int SegmentsPerShelf => 3;
+    public override int ItemsPerSegment => 24;
+    public override int AdditionalSlots => 1;
+
     [TreeSerializable(false)] public bool CabinetOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
 
@@ -17,12 +23,6 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     public readonly int cutIceSlot = 216;
 
     public BECoolingCabinet() {
-        ShelfCount = 3;
-        SegmentsPerShelf = 3;
-        ItemsPerSegment = 24;
-        AdditionalSlots = 1;
-        PerishMultiplier = 0.75f;
-
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);

@@ -25,8 +25,16 @@ public static class ShapeReferences {
 public static class SoundReferences {
     public const string CoolingCabinetOpen = "foodshelves:sounds/block/glasscabinetopen.ogg";
     public const string CoolingCabinetClose = "foodshelves:sounds/block/glasscabinetclose.ogg";
+
     public const string IceDrawerOpen = "foodshelves:sounds/block/icedraweropen.ogg";
     public const string IceDrawerClose = "foodshelves:sounds/block/icedrawerclose.ogg";
+
     public const string WallCabinetOpen = "foodshelves:sounds/block/wallcabinetopen.ogg";
     public const string WallCabinetClose = "foodshelves:sounds/block/wallcabinetclose.ogg";
+
+    public const string FruitCoolerOpen = "foodshelves:sounds/block/cooleropen.ogg";
+    public const string FruitCoolerClose = "foodshelves:sounds/block/coolerclose.ogg";
+
+    public const string FruitDrawerOpen = "foodshelves:sounds/block/fruitdraweropen.ogg";
+    public const string FruitDrawerClose = "foodshelves:sounds/block/fruitdrawerclose.ogg";
 }

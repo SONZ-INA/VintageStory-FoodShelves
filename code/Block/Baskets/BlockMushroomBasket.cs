@@ -1,8 +1,6 @@
 ﻿namespace FoodShelves;
 
 public class BlockMushroomBasket : BaseFSBasket {
-    protected override Dictionary<string, ModelTransform> Transformations => []; // No custom transformations
-
     public override float[,] GetTransformationMatrix(string path = null) {
         float[] x = [ .25f, .36f, .25f, .42f,  .4f, .37f,  .23f, .23f, .45f, .42f ];  
         float[] y = [ .01f, .01f, .01f, .01f, .05f, .09f, -.08f, .04f, .05f, .07f ];
