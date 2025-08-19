@@ -8,7 +8,6 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool RipeningSpot => true;
 
-    protected override float PerishMultiplier => 0.75f;
     public override int ShelfCount => 3;
     public override int SegmentsPerShelf => 3;
     public override int ItemsPerSegment => 24;
@@ -23,6 +22,8 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     public readonly int cutIceSlot = 216;
 
     public BECoolingCabinet() {
+        PerishMultiplier = 0.75f; // Needs to be change-able so it's set from within the constructor
+
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);

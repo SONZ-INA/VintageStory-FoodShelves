@@ -8,7 +8,6 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool OverrideMergeStacks => true;
 
-    protected override float PerishMultiplier => 0.65f;
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
 
@@ -21,6 +20,8 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     public readonly int cutIceSlot = 4;
 
     public BEMeatFreezer() {
+        PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
+
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
@@ -101,7 +102,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
                 }
 
                 if (!slot.Empty) {
-                    if (slot.CanStoreInSlot(CoolingOnly)) {
+                    if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
                         AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                         if (TryPutIce(byPlayer, slot, blockSel)) {
@@ -112,7 +113,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
                 }
-                else {
+                else if (DrawerOpen) {
                     return TryTakeIceOrSlush(byPlayer);
                 }
                 break;

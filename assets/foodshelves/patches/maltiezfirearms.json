@@ -1,0 +1,20 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/general/liquidystuff.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "maltiezfirearms:gunpowder-coarse",
+      "maltiezfirearms:gunpowder-wet",
+      "maltiezfirearms:gunpowder-fine"
+    ],
+    "dependsOn": [ { "modid": "maltiezfirearms" } ]
+  },
+  {
+    "file": "maltiezfirearms:itemtypes/ammunition/gunpowder.json",
+    "op": "addmerge", "path": "/attributes/inContainerTexture", "side": "server",
+    "value": {
+      "base": "game:item/resource/blastingpowder"
+    },
+    "dependsOn": [ { "modid": "maltiezfirearms" } ]
+  }
+]

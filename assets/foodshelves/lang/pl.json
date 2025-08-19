@@ -23,7 +23,6 @@
   "blockdesc-fruitbasket-text": "  - Wszystkie rodzaje owoców",
   "blockdesc-vegetablebasket-text": "  - Większość warzyw",
   "game:tabname-foodshelves": "Food Shelves",
-  "block-glassjarshelf-*": "Półka na słoiki",
   "block-tablewshelf-whitemarble-*": "Stół z blatem z białego marmuru i półką",
   "block-pumpkincase-*": "Skrzynka na dynie",
   "blockdesc-sushishelf-text": "Expanded Foods:<br>  - Wszystkie rodzaje sushi",
@@ -31,7 +30,6 @@
   "blockdesc-barrelrack-text": "  - Beczki. Te beczki mogą przechowywać wyłącznie płyny.",
   "block-shortshelf-*": "Krótka półka",
   "block-tun-*": "Wielka beczka",
-  "block-tunrack-*": "Stojak na wielkie beczki",
   "blockdesc-tunrack-text": "  - Wielkie beczki. Mogą one przechowywać wyłącznie płyny.",
   "This tun needs to be placed in a tun rack.": "Tę wielką beczkę można umieścić tylko w stojaku na wielkie beczki.",
   "Missing tun.": "<font color=\"orange\">Brakuje wielkiej beczki.</font>",
@@ -55,7 +53,7 @@
   "Soonest": "Zepsuje się najszybciej:",
   "Displaying segment": "<font color=\"#7b7b7b\">Miejsce:</font>",
   "Missing barrel.": "<font color=\"orange\">Brakuje beczki.</font>",
-  "blockdesc-liquidystuff-text": "  - Zboże, żywica, wosk pszczeli, tłuszcz zwierzęcy<br>Expanded Foods:<br>  - Wszystkie suszone owoce",
+  "blockdesc-liquidystuff-text": "  - Zboże, żywica, wosk pszczeli, tłuszcz zwierzęcy, orzeszki ziemne<br>Expanded Foods:<br>  - Wszystkie suszone owoce<br>  - Gotowane/łuskane orzeszki ziemne<br>Wildcraft:Fruits and Nuts:<br>  - Zmielone orzeszki ziemne",
   "blockdesc-pumpkincase-text": "  - Dynie.",
   "blockdesc-fooduniversal-text": "  - Placki, sery, wszystkie rodzaje chleba<br>Expanded Foods:<br>  - Muffinki<br>  - Pierogi<br>  - Miękki chleb",
   "helddesc-breadshelf": "Chleb umieszczony na tej półce zachowuje świeżość o 100% dłużej.",
@@ -117,5 +115,11 @@
   "blockdesc-floursack-text": "  - Wszystkie rodzaje mąki.",
   "Only raw meat can be placed in this freezer.": "W tej zamrażarce można umieścić tylko surowe mięso.",
   "helddesc-meatfreezer": "Surowe mięso przechowywane w tej zamrażarce zachowuje świeżość o 60% dłużej, a nawet do 5 razy dłużej po dodaniu lodu.<br>Pamiętaj, by trzymać ją zamkniętą!",
-  "block-tunrack-top-*": "Stojak na wielkie beczki (górna część)"
+  "block-tunrack-top-*": "Stojak na wielkie beczki (górna część)",
+  "block-buckethook-*": "Hak na wiadro",
+  "blockdesc-buckethook-text": "  - Wiadra",
+  "blockdesc-seedbins-text": "  - Wszystkie torby z nasionami",
+  "Only buckets can be placed on this hook.": "Na tym haku można zawiesić tylko wiadra.",
+  "block-seedbins-*": "Pojemniki na nasiona",
+  "Only seeds can be placed in these jars.": "W tych pojemnikach można umieścić tylko nasiona."
 }

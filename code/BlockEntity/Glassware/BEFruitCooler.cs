@@ -8,7 +8,6 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool OverrideMergeStacks => true;
 
-    protected override float PerishMultiplier => 0.65f;
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
 
@@ -16,11 +15,13 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
 
     private readonly string CoolingOnly = "fsCoolingOnly";
-    private float perishMultiplierBuffed = 0.9f;
+    private float perishMultiplierBuffed = 0.4f;
     private float perishMultiplierUnBuffed = 0.65f;
     public readonly int cutIceSlot = 4;
 
     public BEFruitCooler() {
+        PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
+
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
@@ -100,7 +101,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                 }
 
                 if (!slot.Empty) {
-                    if (slot.CanStoreInSlot(CoolingOnly)) {
+                    if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
                         AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                         if (TryPutIce(byPlayer, slot, blockSel)) {
@@ -111,7 +112,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
                 }
-                else {
+                else if (DrawerOpen) {
                     return TryTakeIceOrSlush(byPlayer);
                 }
                 break;

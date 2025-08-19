@@ -5,7 +5,7 @@ public class BEMushroomBasket : BEBaseFSBasket {
     protected override string CantPlaceMessage => "foodshelves:Only mushrooms can be placed in this basket.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockAverageAndSoonest;
 
-    public override int SlotCount => 10;
+    public override int SlotCount => 18;
 
     public BEMushroomBasket() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 

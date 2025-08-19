@@ -495,10 +495,18 @@ public static class InfoDisplay {
         Block cropBlock = world.GetBlock(new AssetLocation(itemStack.Collectible.Code.Domain, "crop-" + type + "-1"));
         if (cropBlock?.CropProps == null) return null;
 
-        // "N", "P", or "K"
-        return "<font color=lightgreen>"
-            + (withTranslation ? Lang.Get("soil-nutrition-requirement") : "")
-            + cropBlock.CropProps.RequiredNutrient
+        // Required nutrient (N, P, K)
+        string label = withTranslation 
+            ? ("<font color=#a3a3a3>" + Lang.Get("soil-nutrition-requirement") + "</font>") 
+            : "";
+        
+        string information = 
+            "<font color=lightgreen>"
+            + cropBlock.CropProps.RequiredNutrient + " ("
+            + cropBlock.CropProps.ColdDamageBelow + "°C / "
+            + cropBlock.CropProps.HeatDamageAbove + "°C)"
             + "</font>";
+
+        return label + information;
     }
 }
