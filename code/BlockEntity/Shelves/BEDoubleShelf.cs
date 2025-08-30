@@ -15,6 +15,48 @@ public class BEDoubleShelf : BEBaseFSContainer {
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); 
     }
 
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+        // Crock sealing interactions
+        ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        if (!slot.Empty && TryUse(byPlayer, slot, blockSel)) {
+            return true;
+        }
+
+        return base.OnInteract(byPlayer, blockSel);
+    }
+
+    protected bool TryUse(IPlayer player, ItemSlot slot, BlockSelection blockSel) {
+        if (blockSel.SelectionBoxIndex > 8) return false; // If it's cabinet or drawer selection box, return
+
+        int segmentIndex = blockSel.SelectionBoxIndex;
+        int startIndex = segmentIndex * ItemsPerSegment;
+        int endIndex = startIndex + ItemsPerSegment - 20; // Offset of 20 since the crocks can only fit 4 in a segment.
+
+        // If it's empty, shift the check further down - crocks in the back can be reached.
+        if (inv[endIndex - 1].Empty) endIndex--;
+        if (inv[endIndex - 1].Empty) endIndex--;
+
+        // Only check last 2 slots (visually front crocks)
+        for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
+            var stack = inv[i]?.Itemstack;
+            var stackSize = slot?.Itemstack?.StackSize ?? 0;
+            if (stack?.Collectible is IContainedInteractable ici) {
+                if (ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
+                    int afterSize = slot?.Itemstack?.StackSize ?? 0;
+
+                    // If item is consumed for sealing, stop.
+                    if (stackSize != afterSize) {
+                        MarkDirty();
+                        return true;
+                    }
+                    // Otherwise, keep looping to check the crock behind
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
 

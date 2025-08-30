@@ -30,8 +30,7 @@ public static class CheckExtensions {
         if (stack?.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
         if (stack?.Collectible?.Code.Path.StartsWith("claypot-") == true) return true;
         
-        string[] validTypes = ["BlockFruitBasket", "BlockVegetableBasket", "BlockEggBasket"];
-        if (validTypes.Contains(stack?.Collectible?.GetType().Name)) return true;
+        if (stack?.Collectible is BaseFSBasket) return true;
 
         return false;
     }

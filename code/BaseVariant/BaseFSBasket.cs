@@ -1,6 +1,8 @@
-﻿namespace FoodShelves;
+﻿using System.Linq;
 
-public abstract class BaseFSBasket : BaseFSContainer {
+namespace FoodShelves;
+
+public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     private WorldInteraction[] interactions;
     
     protected virtual Dictionary<string, ModelTransform> Transformations { get; set; }
@@ -119,5 +121,57 @@ public abstract class BaseFSBasket : BaseFSContainer {
         int hashcode = contents.GetStackCacheHashCodeFNV();
 
         return $"{blockKey}-{hashcode}";
+    }
+
+    public bool OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        var targetSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        if (targetSlot == null) return false;
+
+        // Case 1: Player holding something that can go into basket
+        if (!targetSlot.Empty && targetSlot.CanStoreInSlot("fs" + InteractionsName)) {
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack);
+
+            // Try to add 1 item from player's hand
+            ItemStack itemToAdd = targetSlot.TakeOut(1);
+            if (itemToAdd != null) {
+                // Add to basket contents
+                contents = [.. contents, itemToAdd];
+                InventoryExtensions.SetContents(slot.Itemstack, contents);
+
+                targetSlot.MarkDirty();
+                be.MarkDirty(true);
+                return true;
+            }
+
+            return false;
+        }
+
+        // Case 2: Player empty hand → try to take one item out
+        if (targetSlot.Empty) {
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack);
+            if (contents.Length == 0) return false;
+
+            // Take the last (front-most) item
+            ItemStack taken = contents.Last();
+            contents = contents.Take(contents.Length - 1).ToArray();
+
+            if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true)) {
+                api.World.SpawnItemEntity(taken, byPlayer.Entity.ServerPos.XYZ);
+            }
+
+            InventoryExtensions.SetContents(slot.Itemstack, contents);
+            be.MarkDirty(true);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        return false;
+    }
+
+    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        // Do nothing
     }
 }

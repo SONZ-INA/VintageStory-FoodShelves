@@ -3,6 +3,7 @@
 
   "foodshelves:fruitbasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "foodshelves:vegetablebasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
+  "foodshelves:mushroombasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "foodshelves:glassjar-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
 
   "pewter:bowl-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },

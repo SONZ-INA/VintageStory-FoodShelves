@@ -94,6 +94,12 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             return true;
         }
 
+        // TODO: MOVE THIS.
+        // In-container interactions
+        if (TryUse(byPlayer, slot, blockSel)) {
+            return true;
+        }
+
         // Take/Put items
         if (slot.Empty) {
             if (CabinetOpen && blockSel.SelectionBoxIndex <= 8) {
@@ -129,6 +135,51 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
             return false;
         }
+    }
+
+    protected bool TryUse(IPlayer player, ItemSlot slot, BlockSelection blockSel) {
+        if (blockSel.SelectionBoxIndex > 8) return false; // If it's cabinet or drawer selection box, return
+
+        int segmentIndex = blockSel.SelectionBoxIndex;
+        int startIndex = segmentIndex * ItemsPerSegment;
+        int endIndex = startIndex + ItemsPerSegment - 20; // Offset of 20 since the crocks can only fit 4 in a segment.
+
+        // TODO: Modify this so it works correctly, and follows the inventory limits of the container.
+
+        // If it's empty, shift the check further down - crocks in the back can be reached.
+        if (inv[endIndex - 1].Empty) endIndex--;
+        if (inv[endIndex - 1].Empty) endIndex--;
+
+        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket
+            && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic
+        ) {
+            ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
+        }
+
+        // Only check last 2 slots (visually front crocks)
+        for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
+            var stack = inv[i]?.Itemstack;
+            var stackSize = slot?.Itemstack?.StackSize ?? 0;
+            if (stack?.Collectible is IContainedInteractable ici) {
+                if (ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
+                    // If it's a meal container, don't check for "sealing" behavior
+                    if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
+                        MarkDirty();
+                        return true;
+                    }
+
+                    // If item is consumed for sealing, stop.
+                    int afterSize = slot?.Itemstack?.StackSize ?? 0;
+                    if (stackSize != afterSize) {
+                        MarkDirty();
+                        return true;
+                    }
+                    // Otherwise, keep looping to check the crock behind
+                }
+            }
+        }
+
+        return false;
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
