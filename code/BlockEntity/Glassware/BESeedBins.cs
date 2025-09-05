@@ -14,12 +14,6 @@ public class BESeedBins : BEBaseFSContainer {
     public override int ShelfCount => 4;
     public override int ItemsPerSegment => 6;
 
-    // No TreeSerializable fields - only client should see the animations.
-    public bool Section1Open { get; set; }
-    public bool Section2Open { get; set; }
-    public bool Section3Open { get; set; }
-    public bool Section4Open { get; set; }
-
     public BESeedBins() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
 
     public override void Initialize(ICoreAPI api) {
@@ -31,7 +25,7 @@ public class BESeedBins : BEBaseFSContainer {
         base.InitMesh();
 
         var stacks = GetContentStacks();
-        List<string> dontRender = new();
+        List<string> dontRender = [];
 
         for (int i = 0; i < 4; i++) {
             // Content
@@ -50,41 +44,7 @@ public class BESeedBins : BEBaseFSContainer {
             }
         }
 
-        blockMesh = GenBlockVariantMesh(capi, GetVariantStack(this), dontRender.ToArray());
-    }
-
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int index = blockSel.SelectionBoxIndex * ItemsPerSegment;
-
-        if (inv[index].Empty || inv[index].Itemstack.Collectible.Equals(slot.Itemstack.Collectible)) {
-            int moved = 0;
-
-            if (byPlayer.Entity.Controls.ShiftKey) {
-                for (int i = index; i < index + ItemsPerSegment; i++) {
-                    int availableSpace = inv[i].MaxSlotStackSize - inv[i].StackSize;
-                    moved += slot.TryPutInto(Api.World, inv[i], availableSpace);
-
-                    if (slot.StackSize == 0) break;
-                }
-            }
-            else {
-                for (int i = index; i < index + ItemsPerSegment; i++) {
-                    if (inv[i].StackSize < inv[i].MaxSlotStackSize) {
-                        moved = slot.TryPutInto(Api.World, inv[i], 1);
-                        if (moved > 0) break;
-                    }
-                }
-            }
-
-            if (moved > 0) {
-                InitMesh();
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return true;
-            }
-        }
-
-        return false;
+        blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), [.. dontRender]);
     }
 
     protected override float[][] genTransformationMatrices() { return null; } // Unneeded
@@ -96,7 +56,7 @@ public class BESeedBins : BEBaseFSContainer {
             if (contentMeshes[i] == null) continue;
             MeshData contentMesh = contentMeshes[i].Clone();
 
-            switch (GetRotationAngle(block)) {
+            switch (block.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
                 case 90: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
                 case 180: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
@@ -107,5 +67,12 @@ public class BESeedBins : BEBaseFSContainer {
         }
 
         return true;
+    }
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
+        base.GetBlockInfo(forPlayer, sb);
+
+        int index = forPlayer.CurrentBlockSelection.SelectionBoxIndex * ItemsPerSegment;
+        sb.AppendLine(GetNutrientRequirement(Api.World, inv[index].Itemstack));
     }
 }

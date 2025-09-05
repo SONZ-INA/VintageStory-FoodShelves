@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)\Mods\mod</OutputPath>
+	<MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -57,12 +58,14 @@
   <None Remove="assets\foodshelves\blocktypes\barrels\firkin.json" />
   <None Remove="assets\foodshelves\blocktypes\barrels\firkinrack.json" />
   <None Remove="assets\foodshelves\blocktypes\baskets\eggbasket.json" />
+  <None Remove="assets\foodshelves\blocktypes\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\blocktypes\coolingcabinet.json" />
   <None Remove="assets\foodshelves\blocktypes\eggshelf.json" />
   <None Remove="assets\foodshelves\blocktypes\fruitbasket.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\ceilingjar.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\fooddisplaycase.json" />
+  <None Remove="assets\foodshelves\blocktypes\glassware\fruitcooler.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\blocktypes\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\blocktypes\horizontalbarrelbig.json" />
@@ -76,16 +79,19 @@
   <None Remove="assets\foodshelves\blocktypes\shelves\pieshelfattr.json" />
   <None Remove="assets\foodshelves\blocktypes\shelves\shelfshort.json" />
   <None Remove="assets\foodshelves\blocktypes\vegetablebasket.json" />
+  <None Remove="assets\foodshelves\config\handbook\31-foodshelvesguide.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\barrelrack.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\firkinrack.json" />
   <None Remove="assets\foodshelves\config\restrictions\barrels\tunrack.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\fruitbasket.json" />
+  <None Remove="assets\foodshelves\config\restrictions\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\config\restrictions\fooduniversal.json" />
   <None Remove="assets\foodshelves\config\restrictions\general\coolingonly.json" />
   <None Remove="assets\foodshelves\config\restrictions\general\holderuniversal.json" />
   <None Remove="assets\foodshelves\config\restrictions\general\liquidystuff.json" />
+  <None Remove="assets\foodshelves\config\restrictions\glassware\fruitcooler.json" />
   <None Remove="assets\foodshelves\config\restrictions\glassware\meatfreezer.json" />
   <None Remove="assets\foodshelves\config\restrictions\glassware\seedbins.json" />
   <None Remove="assets\foodshelves\config\restrictions\other\buckethook.json" />
@@ -98,6 +104,7 @@
   <None Remove="assets\foodshelves\config\restrictions\shelves\sushishelf.json" />
   <None Remove="assets\foodshelves\config\transformations\barrelbig.json" />
   <None Remove="assets\foodshelves\config\transformations\baskets\fruitbasket.json" />
+  <None Remove="assets\foodshelves\config\transformations\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\config\transformations\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\config\transformations\fooduniversal.json" />
   <None Remove="assets\foodshelves\config\transformations\general\holderuniversal.json" />
@@ -108,6 +115,8 @@
   <None Remove="assets\foodshelves\lang\fr.json" />
   <None Remove="assets\foodshelves\lang\pl.json" />
   <None Remove="assets\foodshelves\lang\pt-br.json" />
+  <None Remove="assets\foodshelves\lang\ru.json" />
+  <None Remove="assets\foodshelves\patches\artofcooking.json" />
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
   <None Remove="assets\foodshelves\patches\butchering.json" />
   <None Remove="assets\foodshelves\patches\carryon.json" />
@@ -115,7 +124,10 @@
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\floralzones.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
+  <None Remove="assets\foodshelves\patches\icyexc.json" />
   <None Remove="assets\foodshelves\patches\longtermfood.json" />
+  <None Remove="assets\foodshelves\patches\maltiezfirearms.json" />
+  <None Remove="assets\foodshelves\patches\moreanimals.json" />
   <None Remove="assets\foodshelves\patches\mushroom.json" />
   <None Remove="assets\foodshelves\patches\pewter.json" />
   <None Remove="assets\foodshelves\patches\primitivesurvival.json" />
@@ -128,6 +140,7 @@
   <None Remove="assets\foodshelves\recipes\grid\barrelrack.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrackbig.json" />
   <None Remove="assets\foodshelves\recipes\grid\baskets\eggbasket.json" />
+  <None Remove="assets\foodshelves\recipes\grid\baskets\mushroombasket.json" />
   <None Remove="assets\foodshelves\recipes\grid\baskets\vegetablebasket.json" />
   <None Remove="assets\foodshelves\recipes\grid\cutice.json" />
   <None Remove="assets\foodshelves\recipes\grid\fruitbasket.json" />
@@ -135,7 +148,9 @@
   <None Remove="assets\foodshelves\recipes\grid\glassware\coolingcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\fooddisplaycase.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\fruitcooler.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\meatfreezer.json" />
+  <None Remove="assets\foodshelves\recipes\grid\glassware\seedbins.json" />
   <None Remove="assets\foodshelves\recipes\grid\glassware\wallcabinet.json" />
   <None Remove="assets\foodshelves\recipes\grid\horizontalbarel.json" />
   <None Remove="assets\foodshelves\recipes\grid\other\buckethook.json" />
@@ -152,12 +167,14 @@
   <None Remove="assets\foodshelves\shapes\block\barrels\tunracktop.json" />
   <None Remove="assets\foodshelves\shapes\block\baskets\eggbasket.json" />
   <None Remove="assets\foodshelves\shapes\block\baskets\FruitBasketHanged.json" />
+  <None Remove="assets\foodshelves\shapes\block\baskets\MushroomBasket.json" />
   <None Remove="assets\foodshelves\shapes\block\baskets\vegetablebasketrope.json" />
   <None Remove="assets\foodshelves\shapes\block\baskets\vegetablestoragebasket.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\CeilingJar.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplayblock.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplayblocktop.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\fooddisplaycase.json" />
+  <None Remove="assets\foodshelves\shapes\block\glassware\FruitCooler.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\GlassJar.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\MeatFreezer.json" />
   <None Remove="assets\foodshelves\shapes\block\glassware\seedbins.json" />
@@ -179,8 +196,14 @@
   <None Remove="assets\foodshelves\shapes\util\CeilingJarContentCube.json" />
   <None Remove="assets\foodshelves\shapes\util\eggbasketrope.json" />
   <None Remove="assets\foodshelves\shapes\util\FlourSackContentCube.json" />
+  <None Remove="assets\foodshelves\shapes\util\FruitCoolerContentCube.json" />
   <None Remove="assets\foodshelves\shapes\util\GlassJarContentCube.json" />
+  <None Remove="assets\foodshelves\shapes\util\MushroomBasketRope.json" />
   <None Remove="assets\foodshelves\shapes\util\SeedBinsContentCube.json" />
+  <None Remove="assets\foodshelves\sounds\block\coolerclose.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\cooleropen.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\fruitdrawerclose.ogg" />
+  <None Remove="assets\foodshelves\sounds\block\fruitdraweropen.ogg" />
   <None Remove="assets\foodshelves\sounds\block\glasscabinetclose.ogg" />
   <None Remove="assets\foodshelves\sounds\block\glassCabinetOpen.ogg" />
   <None Remove="assets\foodshelves\sounds\block\icedrawerclose.ogg" />
@@ -189,8 +212,8 @@
   <None Remove="assets\foodshelves\sounds\block\wallcabinetopen.ogg" />
   <None Remove="assets\foodshelves\textures\block\wood\coolingcabinet\surface_long.png" />
   <None Remove="assets\foodshelves\textures\block\wood\fruitbasket\top.png" />
-  <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\bottom.png" />
-  <None Remove="assets\foodshelves\textures\block\wood\horizontalbarrelbig\top.png" />
+  <None Remove="assets\foodshelves\textures\block\wood\tun\bottom.png" />
+  <None Remove="assets\foodshelves\textures\block\wood\tun\top.png" />
   <None Remove="assets\foodshelves\textures\block\wood\vegetablebasket\top.png" />
   <None Remove="assets\foodshelves\textures\variants\wood\acacia.png" />
   <None Remove="assets\foodshelves\textures\variants\wood\baldcypress.png" />

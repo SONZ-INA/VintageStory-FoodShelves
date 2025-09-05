@@ -1,0 +1,10 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/general/holderuniversal.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "artofcooking:shawarma*"
+    ],
+    "dependsOn": [ { "modid": "artofcooking" } ]
+  }
+]

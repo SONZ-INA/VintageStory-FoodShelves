@@ -8,6 +8,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
     protected override bool RipeningSpot => true;
 
+    public override int ShelfCount => 3;
+    public override int SegmentsPerShelf => 3;
+    public override int ItemsPerSegment => 24;
+    public override int AdditionalSlots => 1;
+
     [TreeSerializable(false)] public bool CabinetOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
 
@@ -17,11 +22,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     public readonly int cutIceSlot = 216;
 
     public BECoolingCabinet() {
-        ShelfCount = 3;
-        SegmentsPerShelf = 3;
-        ItemsPerSegment = 24;
-        AdditionalSlots = 1;
-        PerishMultiplier = 0.75f;
+        PerishMultiplier = 0.75f; // Needs to be change-able so it's set from within the constructor
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
@@ -65,7 +66,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 32 days which is 8 ice blocks
-            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 4;
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
         }
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -76,8 +77,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+
         // Open/Close cabinet or drawer
-        if (byPlayer.Entity.Controls.ShiftKey) {
+        if (shift) {
             switch (blockSel.SelectionBoxIndex) {
                 case 9:
                     if (!DrawerOpen) ToggleCabinetDrawer(true, byPlayer);
@@ -96,6 +100,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         // Take/Put items
         if (slot.Empty) {
             if (CabinetOpen && blockSel.SelectionBoxIndex <= 8) {
+                // In-container interactions
+                if (ctrl && TryUse(byPlayer, slot, blockSel)) {
+                    return true;
+                }
+
                 return TryTake(byPlayer, blockSel);
             }
             else if (DrawerOpen && blockSel.SelectionBoxIndex == 9) {
@@ -105,6 +114,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             return false;
         }
         else {
+            // In-container interactions
+            if (CabinetOpen && TryUse(byPlayer, slot, blockSel)) { 
+                return true;
+            }
+
             if (CabinetOpen && slot.CanStoreInSlot(AttributeCheck)) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
@@ -130,20 +144,61 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         }
     }
 
+    protected bool TryUse(IPlayer player, ItemSlot slot, BlockSelection blockSel) {
+        if (blockSel.SelectionBoxIndex > 8) return false; // If it's cabinet or drawer selection box, return
+
+        int segmentIndex = blockSel.SelectionBoxIndex;
+        int startIndex = segmentIndex * ItemsPerSegment;
+        int endIndex = startIndex + ItemsPerSegment - 20; // Offset of 20 since the crocks can only fit 4 in a segment.
+
+        // If it's empty, shift the check further down - crocks in the back can be reached.
+        if (inv[endIndex - 1].Empty) endIndex--;
+        if (inv[endIndex - 1].Empty) endIndex--;
+
+        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic) {
+            return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
+        }
+
+        // Only check last 2 slots (visually front crocks)
+        for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
+            var stack = inv[i]?.Itemstack;
+            var stackSize = slot?.Itemstack?.StackSize ?? 0;
+
+            if (stack?.Collectible is IContainedInteractable ici && ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
+                // If it's a meal container, don't check for "sealing" behavior
+                if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
+                    MarkDirty();
+                    return true;
+                }
+
+                // If item is consumed for sealing, stop.
+                int afterSize = slot?.Itemstack?.StackSize ?? 0;
+                if (stackSize != afterSize) {
+                    MarkDirty();
+                    return true;
+                }
+                // Otherwise, keep looping to check the crock behind
+            }
+        }
+
+        return false;
+    }
+
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex;
         if (startIndex > 8) return false; // If it's cabinet or drawer selection box, return
 
         startIndex *= ItemsPerSegment;
         if (!inv[startIndex].Empty) {
-            if (!IsSolitaryMatch(inv[startIndex].Itemstack, slot.Itemstack)) return false;
-            if (IsLargeItem(slot.Itemstack) || IsLargeItem(inv[startIndex].Itemstack)) return false;
-            if (IsSmallItem(inv[startIndex].Itemstack) != IsSmallItem(slot.Itemstack)) return false; 
+            ItemStack firstItemOnSegment = inv[startIndex].Itemstack;
+            if (!firstItemOnSegment.IsSolitaryMatch(slot.Itemstack)) return false;
+            if (slot.Itemstack.IsLargeItem() || firstItemOnSegment.IsLargeItem()) return false;
+            if (firstItemOnSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false; 
         }
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !IsSmallItem(slot.Itemstack)) return false;
+            if (currentIndex == startIndex + 4 && !slot.Itemstack.IsSmallItem()) return false;
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
@@ -333,7 +388,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     }
 
     private void SetIceHeight(int heightLevel) {
-        string[] iceAnimations = { "iceheight1", "iceheight2", "iceheight3" };
+        string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
 
         foreach (string anim in iceAnimations) {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey(anim) == true) {
@@ -395,11 +450,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                     float x, y = shelf * 0.4921875f, z;
                     float scale = 0.95f;
 
-                    if (IsLargeItem(inv[index].Itemstack)) {
+                    if (inv[index].Itemstack.IsLargeItem()) {
                         x = segment * 0.65f;
                         z = item * 0.65f;
                     }
-                    else if (!IsSmallItem(inv[index].Itemstack)) {
+                    else if (!inv[index].Itemstack.IsSmallItem()) {
                         x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
                         z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
                     }
@@ -447,7 +502,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         // Cycle segments when cabinet is closed
         if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == 10) {
             int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
-            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + currentSegment);
+            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + Lang.Get("foodshelves:segmentnum-" + currentSegment));
 
             if (inv[currentSegment * ItemsPerSegment].Empty) {
                 sb.AppendLine(Lang.Get("foodshelves:Empty."));

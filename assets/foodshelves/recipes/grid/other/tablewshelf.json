@@ -2,8 +2,11 @@
   {
     "ingredientPattern": "TP",
     "ingredients": {
-      "T": { "type": "block", "code": "game:table-*", "name": "type", "skipVariants": ["aged"] },
+      "T": { "type": "block", "code": "game:table-{type}" },
       "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "skipVariants": {
+      "type": [ "aged" ]
     },
     "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
     "output": { "type": "block", "code": "tablewshelf-{type}-east" }
@@ -45,8 +48,11 @@
     "enabled": false,
     "ingredientPattern": "TP",
     "ingredients": {
-      "T": { "type": "block", "code": "vanvar:table-*-normal", "name": "wood", "skipVariants": ["aged"] },
+      "T": { "type": "block", "code": "vanvar:table-{wood}-normal" },
       "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "skipVariants": {
+      "wood": [ "aged" ]
     },
     "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
     "output": {
@@ -63,8 +69,11 @@
     "enabled": false,
     "ingredientPattern": "TP",
     "ingredients": {
-      "T": { "type": "block", "code": "vanvar:table-*-whitemarble", "name": "wood", "skipVariants": ["aged"] },
+      "T": { "type": "block", "code": "vanvar:table-{wood}-whitemarble" },
       "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "skipVariants": {
+      "wood": [ "aged" ]
     },
     "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
     "output": {
@@ -81,8 +90,11 @@
     "enabled": false,
     "ingredientPattern": "TP",
     "ingredients": {
-      "T": { "type": "block", "code": "vanvar:table-*-redmarble", "name": "wood", "skipVariants": ["aged"] },
+      "T": { "type": "block", "code": "vanvar:table-{wood}-redmarble" },
       "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "skipVariants": {
+      "wood": [ "aged" ]
     },
     "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
     "output": {
@@ -99,8 +111,11 @@
     "enabled": false,
     "ingredientPattern": "TP",
     "ingredients": {
-      "T": { "type": "block", "code": "vanvar:table-*-greenmarble", "name": "wood", "skipVariants": ["aged"] },
+      "T": { "type": "block", "code": "vanvar:table-{wood}-greenmarble" },
       "P": { "type": "item", "code": "game:plank-*" }
+    },
+    "skipVariants": {
+      "wood": [ "aged" ]
     },
     "width": 1, "height": 2, "recipeGroup": 1, "shapeless": true,
     "output": {

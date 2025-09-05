@@ -8,7 +8,7 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"surface": "block/wood/shelf/surface"
+		"surface": "surface"
 	},
 	"elements": [
 		{

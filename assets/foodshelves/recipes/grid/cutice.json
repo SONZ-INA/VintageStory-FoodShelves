@@ -9,6 +9,7 @@
     "output": { "type": "item", "code": "cutice", "quantity": 8 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "IS",
     "ingredients": {
       "I": { "type": "block", "code": "game:lakeice" },

@@ -1,13 +1,9 @@
 {
-  "game:claypot-burned": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
-  "game:claypot-cooked": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
-  "game:bowl-fired": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
-  "game:bowl-meal": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
-
   "*vegetable-pumpkin": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 90, "z": 0 }, "scalexyz": { "x": 1, "y": 1.6, "z": 0.75 } },
 
   "foodshelves:fruitbasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "foodshelves:vegetablebasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
+  "foodshelves:mushroombasket-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
   "foodshelves:glassjar-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.8 },
 
   "pewter:bowl-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
@@ -25,5 +21,7 @@
 
   "pemmican:pemmican-pack": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0.29, "y": 0, "z": -0.1 }, "rotation": { "x": 0, "y": 90, "z": 0 }, "scale": 1.15 },
   "pemmican:pemmican-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scalexyz": { "x": 1, "y": 0.8, "z": 1 } },
-  "pemmican:mushroompatebar": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scalexyz": { "x": 1, "y": 0.8, "z": 1 } }
+  "pemmican:mushroompatebar": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scalexyz": { "x": 1, "y": 0.8, "z": 1 } },
+
+  "artofcooking:shawarma*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 60, "z": 0 }, "scale": 0.9 }
 }

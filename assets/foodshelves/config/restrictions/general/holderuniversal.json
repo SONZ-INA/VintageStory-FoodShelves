@@ -5,14 +5,15 @@
     "foodshelves:BlockFruitBasket",
     "foodshelves:BlockVegetableBasket",
     "foodshelves:BlockEggBasket",
+    "foodshelves:BlockMushroomBasket",
     "foodshelves:BlockGlassJar"
   ],
   "CollectibleCodes": [
-    "game:crock-burned*",
-    "game:claypot-burned",
-    "game:claypot-cooked",
-    "game:bowl-fired",
-    "game:bowl-meal",
+    "game:crock-*-fired",
+    "game:claypot-*-fired",
+    "game:claypot-*-cooked",
+    "game:bowl-*-fired",
+    "game:bowl-*-meal",
     "game:vegetable-pumpkin",
     "game:pickledvegetable-pumpkin",
 

@@ -7,6 +7,12 @@ public static class Patches {
         string token = restrictionData.Key;
         RestrictionData data = restrictionData.Value;
 
+        if (data.BlacklistedCodes != null) {
+            if (WildcardUtil.Match(data.BlacklistedCodes, obj.Code.ToString())) {
+                return;
+            }
+        }
+
         if (data.GroupingCodes != null && data.GroupingCodes.Count > 0) {
             foreach (var group in data.GroupingCodes.Values) {
                 foreach (var code in group) {

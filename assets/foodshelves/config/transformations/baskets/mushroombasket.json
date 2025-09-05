@@ -1,0 +1,9 @@
+{
+  "game:mushroom-chickenofthewoods-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.5 },
+  "game:mushroom-beardedtooth-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.5 },
+  "game:mushroom-pinkbonnmet-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.3 },
+  "game:mushroom-commonmorrel-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.2 },
+  "game:mushroom-devilstooth-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
+  "game:mushroom-witchhat-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.9 },
+  "*:mushroom-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 0.7 }
+}

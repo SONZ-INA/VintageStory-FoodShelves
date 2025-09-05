@@ -2,7 +2,7 @@
   {
     "ingredientPattern": "PSP,SGS,PSP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}" },
       "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "game:glassslab-*-down-free" }
     },
@@ -16,5 +16,15 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PSP,SGS,PSP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick" },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "wallcabinet-normal-east" }
   }
 ]

@@ -1,0 +1,8 @@
+[
+  {
+    "file": "foodshelves:recipes/grid/cutice.json",
+    "op": "replace", "path": "/1/enabled", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "icyexc" } ]
+  }
+]

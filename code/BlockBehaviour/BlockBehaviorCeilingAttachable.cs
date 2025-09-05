@@ -1,8 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BlockBehaviorCeilingAttachable : BlockBehavior {
-    public BlockBehaviorCeilingAttachable(Block block) : base(block) { }
-
+public class BlockBehaviorCeilingAttachable(Block block) : BlockBehavior(block) {
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref EnumHandling handling, ref string failureCode) {
         handling = EnumHandling.PreventDefault;
 

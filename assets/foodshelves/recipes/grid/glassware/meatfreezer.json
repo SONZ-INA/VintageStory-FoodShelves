@@ -1,11 +1,12 @@
 [
   {
-    "ingredientPattern": "PGP,PCP,HPN",
+    "ingredientPattern": "PGP,PCP,HZN",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 5, "name": "wood" },
       "N": { "type": "item", "code": "game:resin", "quantity": 8 },
       "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 20 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass" },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 4, "name": "rock" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
@@ -20,5 +21,40 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PGP,PCP,HZN",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 5 },
+      "N": { "type": "item", "code": "game:resin", "quantity": 8 },
+      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 20 },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
+      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 4, "name": "rock" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "meatfreezer-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "glass": "{glass}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "PGP,PCP,HZN",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 5 },
+      "N": { "type": "item", "code": "game:resin", "quantity": 8 },
+      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 20 },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "*:glass-*" },
+      "C": { "type": "block", "code": "*:rockpolished-*", "quantity": 4 }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "meatfreezer-normal-east" }
   }
 ]

@@ -67,7 +67,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
-            ItemStack[] array = new ItemStack[1] { OnPickBlock(world, pos) };
+            ItemStack[] array = [OnPickBlock(world, pos)];
             for (int j = 0; j < array.Length; j++) {
                 world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
             }
@@ -82,7 +82,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
     public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         if (Variant["type"] == "top") {
             if (blockAccessor.GetBlockEntity(pos) is BEBarrelRack be && be.Inventory.Empty) {
-                return new Cuboidf[] { new(0, 0, 0, 1f, 0.3f, 1f) };
+                return [new(0, 0, 0, 1f, 0.3f, 1f)];
             }
         }
 
@@ -128,7 +128,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
     }
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        return new ItemStack[] { OnPickBlock(world, pos) };
+        return [OnPickBlock(world, pos)];
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
@@ -150,7 +150,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
     public virtual string GetMeshCacheKey(ItemStack itemstack) {
         if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree) return Code;
 
-        List<string> parts = new();
+        List<string> parts = [];
         foreach (var pair in tree) {
             parts.Add($"{pair.Key}-{pair.Value}");
         }

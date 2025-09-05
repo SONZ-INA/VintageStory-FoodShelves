@@ -1,7 +1,0 @@
-{
-  "RecipeVariantData": {},
-  "DefaultFallback": {
-    "game:plank-*": { "*:plank-*": [ "eggbasket", "fruitbasket", "barshelf", "eggshelf", "seedshelf", "sushishelf" ] },
-    "game:glass-*": { "*:glass-*": [] }
-  }
-}

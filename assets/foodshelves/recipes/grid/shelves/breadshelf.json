@@ -2,7 +2,7 @@
   {
     "ingredientPattern": "PP,P_,P_",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 2, "name": "wood" }
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 2 }
     },
     "width": 2, "height": 3, "recipeGroup": 1,
     "output": {
@@ -14,6 +14,14 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "PP,P_,P_",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 }
+    },
+    "width": 2, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "breadshelf-normal-east" }
   },
   {
     "ingredientPattern": "ST",

@@ -55,7 +55,7 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
         string meshKey = blockName + "Anim" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
         if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
             if (animUtil != null && animUtil.renderer == null) {
-                animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, GetRotationAngle(block), 0));
+                animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, block.GetRotationAngle(), 0));
             }
 
             return mesh;
@@ -66,7 +66,7 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
                 shape.ApplyVariantTextures(this);
 
                 ITexPositionSource texSource = new ShapeTextureSource(capi, shape, $"FS-{blockName}Animation");
-                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, GetRotationAngle(block), 0));
+                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, block.GetRotationAngle(), 0));
             }
 
             return meshes[meshKey] = mesh;

@@ -64,29 +64,66 @@ public static class Meshing {
     /// <summary>
     /// Generates the content mesh of the block's inventory. Mainly used for generating basket contents.
     /// </summary>
-    public static MeshData GenContentMesh(ICoreClientAPI capi, ITextureAtlasAPI targetAtlas, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {
+    public static MeshData GenContentMesh(ICoreClientAPI capi, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform> modelTransformations = null) {
         if (capi == null) return null;
 
         MeshData nestedContentMesh = null;
         for (int i = 0; i < contents.Length; i++) {
-            if (contents[i] == null || contents[i].Item == null) continue;
+            if (contents[i] == null || (contents[i].Item == null && contents[i].Block == null)) continue;
 
-            string shapeLocation = contents[i].Item.Shape?.Base;
+            bool isItem = contents[i].Item != null;
+
+            string shapeLocation = contents[i].Item?.Shape?.Base
+                ?? contents[i].ItemAttributes?["displayedShape"]?.Token?.ToObject<CompositeShape>()?.Base
+                ?? contents[i].Block.Shape?.Base;
             if (shapeLocation == null) continue;
 
             Shape shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
-            //string shapeLocation = contents[i].Item.Shape?.Base.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json").ToString();
-            //Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
             if (shape == null) continue;
 
+            // Handle overlays if present
+            //CompositeShape compositeShape = contents[i].Item.Shape.Clone();
+            //if (compositeShape?.Overlays != null && compositeShape.Overlays.Length > 0) {
+            //    string overlayPrefix = $"ov_{i}_";
+            //    shape.SubclassForStepParenting(overlayPrefix);
+
+            //    // Prefix existing textures
+            //    var originalTextures = new Dictionary<string, AssetLocation>(shape.Textures);
+            //    shape.Textures.Clear();
+            //    foreach (var entry in originalTextures) {
+            //        shape.Textures[overlayPrefix + entry.Key] = entry.Value;
+            //    }
+
+            //    // Add overlays
+            //    foreach (var overlay in compositeShape.Overlays) {
+            //        var overlayBase = overlay.Base.Clone().WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
+            //        Shape overlayShape = capi.Assets.TryGet(overlayBase)?.ToObject<Shape>();
+            //        if (overlayShape == null) continue;
+
+            //        overlayShape.WalkElements("*", (e) => {
+            //            if (!string.IsNullOrEmpty(e.StepParentName)) {
+            //                e.StepParentName = overlayPrefix + e.StepParentName;
+            //            }
+            //        });
+
+            //        shape.StepParentShape(overlayShape, overlayBase.ToString(), compositeShape.Base.ToString(), capi.Logger, null);
+            //    }
+            //}
+
             if (shape.Textures.Count == 0) {
-                foreach (var texture in contents[i].Item.Textures) {
-                    shape.Textures.Add(texture.Key, texture.Value.Base);
+                if (isItem) {
+                    foreach (var texture in contents[i].Item.Textures) {
+                        shape.Textures.Add(texture.Key, texture.Value.Base);
+                    }
+                }
+                else {
+                    foreach (var texture in contents[i].Block.Textures) {
+                        shape.Textures.Add(texture.Key, texture.Value.Base);
+                    }
                 }
             }
 
-            UniversalShapeTextureSource texSource = new(capi, targetAtlas, shape, "FS-ContentTextureSource");
-
+            var texSource = new ShapeTextureSource(capi, shape, "FS-ShapeTextureSource");
             foreach (var textureDict in shape.Textures) {
                 CompositeTexture cTex = new(textureDict.Value);
                 cTex.Bake(capi.Assets);
@@ -98,7 +135,9 @@ public static class Meshing {
             int offset = transformationMatrix.GetLength(1);
             if (i < offset) {
                 if (modelTransformations != null) {
-                    ModelTransform transformation = contents[i].Item.GetTransformation(modelTransformations);
+                    ModelTransform transformation = isItem
+                        ? contents[i].Item.GetTransformation(modelTransformations)
+                        : contents[i].Block.GetTransformation(modelTransformations);
                     if (transformation != null) collectibleMesh.ModelTransform(transformation);
                 }
 
@@ -133,9 +172,8 @@ public static class Meshing {
 
         // Shape location of a simple cube, meant as "filling"
         AssetLocation shapeLocation = new(pathToFillShape);
-        Shape shape = Shape.TryGet(capi, shapeLocation);
+        Shape shape = Shape.TryGet(capi, shapeLocation)?.Clone();
         if (shape == null) return null;
-        Shape shapeClone = shape.Clone();
         string itemPath = contents[0].Item.Code.Path;
 
         // Handle textureSource
@@ -153,10 +191,10 @@ public static class Meshing {
                     textureRerouteLocation = textureRerouteLocation.ToString().Replace("ground", "");
                 }
 
-                shapeClone.Textures.Clear();
-                shapeClone.Textures.Add("surface", textureRerouteLocation);
+                shape.Textures.Clear();
+                shape.Textures.Add("surface", textureRerouteLocation);
 
-                texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
+                texSource = new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
             }
             else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
                 var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
@@ -169,7 +207,7 @@ public static class Meshing {
             }
         }
         else {
-            texSource = new ShapeTextureSource(capi, shapeClone, "FS-LiquidyTextureSource");
+            texSource = new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
         }
 
         // Calculate the total content amount
@@ -180,24 +218,24 @@ public static class Meshing {
 
         // Calculating new height
         int stackSizeDiv = contents[0].Collectible.MaxStackSize / 32;
-        float baseY = (float)shapeClone.Elements[0].From[1];
+        float baseY = (float)shape.Elements[0].From[1];
         float step = maxHeight / (contents.Length * 32 * stackSizeDiv);
         double shapeHeight = contentAmount * step + baseY;
 
         // Adjusting the "topping" position
-        foreach (var child in shapeClone.Elements[0].Children) {
-            child.To[1] = shapeHeight - shapeClone.Elements[0].From[1] - (child.From[1] - child.To[1]);
-            child.From[1] = shapeHeight - shapeClone.Elements[0].From[1];
+        foreach (var child in shape.Elements[0].Children) {
+            child.To[1] = shapeHeight - shape.Elements[0].From[1] - (child.From[1] - child.To[1]);
+            child.From[1] = shapeHeight - shape.Elements[0].From[1];
         }
 
-        shapeClone.Elements[0].To[1] = shapeHeight;
+        shape.Elements[0].To[1] = shapeHeight;
 
         // Re-sizing the textures
         for (int i = 0; i < 4; i++) {
-            shapeClone.Elements[0].FacesResolved[i].Uv[3] = (float)shapeHeight;
+            shape.Elements[0].FacesResolved[i].Uv[3] = (float)shapeHeight;
         }
 
-        capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shapeClone, out MeshData contentMesh, texSource);
+        capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shape, out MeshData contentMesh, texSource);
         return contentMesh;
     }
 }

@@ -1,18 +1,22 @@
-﻿namespace FoodShelves;
+﻿using System.Linq;
 
-public abstract class BaseFSBasket : BaseFSContainer {
+namespace FoodShelves;
+
+public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     private WorldInteraction[] interactions;
-    
+
     protected virtual Dictionary<string, ModelTransform> Transformations { get; set; }
     protected virtual string InteractionsName => GetType().Name.Replace("Block", "");
 
-    public override void OnLoaded(ICoreAPI api) {
+    public virtual int InnerSlotCount { get; protected set; } // Separate property since stuff can be put inside when within a Cooling Cabinet
+
+    public override void OnLoaded(ICoreAPI api) {;
         base.OnLoaded(api);
 
         Transformations ??= api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
 
         interactions = ObjectCacheUtil.GetOrCreate(api, InteractionsName + "BlockInteractions", () => {
-            List<ItemStack> stackList = new();
+            List<ItemStack> stackList = [];
 
             foreach (Item item in api.World.Items) {
                 if (item.Code == null) continue;
@@ -27,7 +31,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
                     ActionLangCode = "blockhelp-groundstorage-add",
                     MouseButton = EnumMouseButton.Right,
                     HotKeyCode = "shift",
-                    Itemstacks = stackList.ToArray()
+                    Itemstacks = [.. stackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-remove",
@@ -39,7 +43,8 @@ public abstract class BaseFSBasket : BaseFSContainer {
     }
 
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        return interactions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
+            .Append(interactions);
     }
 
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
@@ -102,7 +107,7 @@ public abstract class BaseFSBasket : BaseFSContainer {
 
     protected virtual MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, targetAtlas, contents, GetTransformationMatrix(), 1f, Transformations);
+        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 1f, Transformations);
 
         return contentMesh;
     }
@@ -115,8 +120,74 @@ public abstract class BaseFSBasket : BaseFSContainer {
         string blockKey = base.GetMeshCacheKey(itemstack);
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        int hashcode = GetStackCacheHashCodeFNV(contents);
+        int hashcode = contents.GetStackCacheHashCodeFNV();
 
         return $"{blockKey}-{hashcode}";
+    }
+
+    // Method used for a bit more complex checking, like how the vegetable basket has "groups"
+    public virtual bool CanAddToContents(ItemStack[] contents, ItemStack incoming, out int capacity) {
+        capacity = InnerSlotCount;
+        return contents.Length < capacity;
+    }
+
+    public virtual bool OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        var targetSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        if (targetSlot == null) return false;
+
+        // Putting stuff in
+        if (!targetSlot.Empty && targetSlot.CanStoreInSlot("fs" + InteractionsName)) {
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
+
+            if (!CanAddToContents(contents, targetSlot.Itemstack, out int capacity) || contents.Length >= capacity)
+                return false;
+
+            // CTRL behavior to fill the basket
+            int maxAdd = capacity - contents.Length;
+            int amountToMove = byPlayer.Entity.Controls.CtrlKey ? Math.Min(maxAdd, targetSlot.StackSize) : 1;
+
+            int moved = 0;
+            for (int i = 0; i < amountToMove; i++) {
+                ItemStack one = targetSlot.TakeOut(1);
+                if (one == null) break;
+
+                contents = [.. contents, one];
+                moved++;
+            }
+
+            if (moved > 0) {
+                InventoryExtensions.SetContents(slot.Itemstack, contents);
+                targetSlot.MarkDirty();
+                be.MarkDirty();
+                return true;
+            }
+            return false;
+        }
+
+        // Taking stuff out
+        if (targetSlot.Empty) {
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
+            if (contents.Length == 0) return false;
+
+            ItemStack taken = contents[^1];
+            Array.Resize(ref contents, contents.Length - 1);
+
+            if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true))
+                api.World.SpawnItemEntity(taken, byPlayer.Entity.ServerPos.XYZ);
+
+            InventoryExtensions.SetContents(slot.Itemstack, contents);
+            be.MarkDirty();
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        return false;
+    }
+
+    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+        // Do nothing
     }
 }

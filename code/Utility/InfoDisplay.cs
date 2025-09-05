@@ -25,17 +25,14 @@ public static class InfoDisplay {
 
         IWorldAccessor world = inv.Api.World;
 
-        List<ItemSlot> itemSlotList = new();
-        foreach (var slot in inv) {
-            itemSlotList.Add(slot);
-        }
+        List<ItemSlot> itemSlotList = [.. inv];
         
         switch (displaySelection) {
             case InfoDisplayOptions.ByBlockAverageAndSoonest:
-                sb.Append(PerishableInfoAverageAndSoonest(itemSlotList.ToArray(), world));
+                sb.Append(PerishableInfoAverageAndSoonest([.. itemSlotList], world));
                 return;
             case InfoDisplayOptions.ByBlockMerged:
-                ByBlockMerged(itemSlotList.ToArray(), sb, world);
+                ByBlockMerged([.. itemSlotList], sb, world);
                 return;
             case InfoDisplayOptions.BySegmentGrouped:
                 int fromSlot = forPlayer.CurrentBlockSelection.SelectionBoxIndex * itemsPerSegment;
@@ -76,7 +73,7 @@ public static class InfoDisplay {
             float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
 
             if (stack.Collectible.TransitionableProps?.Length > 0) {
-                if (IsSmallItem(stack)) {
+                if (stack.IsSmallItem()) {
                     sb.Append(PerishableInfoGrouped(inv, world, i, end));
                     return;
                 }
@@ -171,7 +168,7 @@ public static class InfoDisplay {
         if (inv.Empty) return "";
 
         StringBuilder dsc = new();
-        Dictionary<string, List<ItemSlot>> grouped = new();
+        Dictionary<string, List<ItemSlot>> grouped = [];
 
         // Group items by their name
         for (int i = start; i < end; i++) {
@@ -183,7 +180,7 @@ public static class InfoDisplay {
             string itemKey = stack.GetName();
 
             if (!grouped.TryGetValue(itemKey, out List<ItemSlot> value)) {
-                value = new List<ItemSlot>();
+                value = [];
                 grouped[itemKey] = value;
             }
 
@@ -206,7 +203,7 @@ public static class InfoDisplay {
             if (slots.Count > 0 && slots[0].Itemstack.Collectible.TransitionableProps != null &&
                 slots[0].Itemstack.Collectible.TransitionableProps.Length > 0) {
 
-                Dictionary<EnumTransitionType, List<double>> timeLeftByType = new();
+                Dictionary<EnumTransitionType, List<double>> timeLeftByType = [];
 
                 foreach (var slot in slots) {
                     TransitionState[] states = slot.Itemstack.Collectible.UpdateAndGetTransitionStates(world, slot);
@@ -222,7 +219,7 @@ public static class InfoDisplay {
                             float freshHoursLeft = state.FreshHoursLeft / perishRate;
 
                             if (!timeLeftByType.TryGetValue(prop.Type, out List<double> value)) {
-                                value = new List<double>();
+                                value = [];
                                 timeLeftByType[prop.Type] = value;
                             }
 
@@ -487,5 +484,29 @@ public static class InfoDisplay {
         else {
             return prefix + Lang.Get($"{actionVerb} {{0}} hours", Math.Round(hoursLeft, 1));
         }
+    }
+
+    public static string GetNutrientRequirement(IWorldAccessor world, ItemStack itemStack, bool withTranslation = true) {
+        if (itemStack?.Collectible == null) return null;
+
+        string type = itemStack.Collectible.Variant.TryGetValue("type");
+        if (string.IsNullOrEmpty(type)) return null;
+
+        Block cropBlock = world.GetBlock(new AssetLocation(itemStack.Collectible.Code.Domain, "crop-" + type + "-1"));
+        if (cropBlock?.CropProps == null) return null;
+
+        // Required nutrient (N, P, K)
+        string label = withTranslation 
+            ? ("<font color=#a3a3a3>" + Lang.Get("soil-nutrition-requirement") + "</font>") 
+            : "";
+        
+        string information = 
+            "<font color=lightgreen>"
+            + cropBlock.CropProps.RequiredNutrient + " ("
+            + cropBlock.CropProps.ColdDamageBelow + "°C / "
+            + cropBlock.CropProps.HeatDamageAbove + "°C)"
+            + "</font>";
+
+        return label + information;
     }
 }

@@ -1,0 +1,62 @@
+{
+  "code": "mushroombasket",
+  "class": "FoodShelves.BlockMushroomBasket",
+  "entityclass": "FoodShelves.BEMushroomBasket",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "sides": [ "game:block/wood/debarked/{wood}" ],
+      "top": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ]
+    },
+    "handbook": {
+      "groupBy": [ "mushroombasket-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-mushroombasket-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "RightClickPickup" },
+    { "name": "FoodShelves.CanCeilingAttachFalling" }
+  ],
+  "shape": {
+    "base": "block/baskets/mushroombasket",
+    "scale": 0.8
+  },
+  "heldTpIdleAnimation": "holdbothhandslarge",
+  "heldRightReadyAnimation": "heldblockready", 
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 0,
+  "maxStackSize": 4,
+  "replaceable": 900,
+  "faceCullMode": "NeverCull",
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "emitSideAo": { "all": false },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
+  "guiTransform": {
+    "origin": { "x": 0.5, "y": 0.2, "z": 0.5 },
+    "scale": 1.65
+  },
+  "tpHandTransform": {
+	  "translation": { "x": -1.175, "y": -0.5, "z": -0.225 },
+	  "rotation": { "x": 20, "y": 11, "z": -81 },
+	  "scale": 0.8
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionSelectionBoxes": [
+    { "x1": 0.15, "y1": 0, "z1": 0.15, "x2": 0.85, "y2": 0.225, "z2": 0.85 }
+  ]
+}

@@ -3,7 +3,6 @@
 namespace FoodShelves;
 
 public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
-    private WorldInteraction[] itemSlottableInteractions;
     private WorldInteraction[] cabinetInteractions;
     private WorldInteraction[] drawerInteractions;
 
@@ -16,7 +15,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         base.OnLoaded(api);
 
         itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, "coolingCabinetItemInteractions", () => {
-            List<ItemStack> holderUniversalStackList = new();
+            List<ItemStack> holderUniversalStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
                 if (obj.CanStoreInSlot("fsHolderUniversal")) {
@@ -28,7 +27,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-add",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = holderUniversalStackList.ToArray()
+                    Itemstacks = [.. holderUniversalStackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-remove",
@@ -48,7 +47,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         });
 
         drawerInteractions = ObjectCacheUtil.GetOrCreate(api, "coolingCabinetDrawerInteractions", () => {
-            List<ItemStack> coolingOnlyStackList = new();
+            List<ItemStack> coolingOnlyStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
                 if (obj.CanStoreInSlot("fsCoolingOnly")) {
@@ -60,12 +59,12 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-addone",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = coolingOnlyStackList.ToArray()
+                    Itemstacks = [.. coolingOnlyStackList]
                 },
                 new() {
                     ActionLangCode = "blockhelp-groundstorage-addbulk",
                     MouseButton = EnumMouseButton.Right,
-                    Itemstacks = coolingOnlyStackList.ToArray(),
+                    Itemstacks = [.. coolingOnlyStackList],
                     HotKeyCode = "ctrl",
                 }
             };
@@ -97,7 +96,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
 
         if (be != null) {
             if (be.DrawerOpen) {
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: drawerSelBox.Z2 += .3125f; break;
@@ -111,10 +110,10 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 Cuboidf bottomShelfL = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
                 Cuboidf bottomShelfM = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
 
-                return new Cuboidf[] { bottomShelfL, bottomShelfM, skip, skip, skip, skip, skip, skip, skip, drawerSelBox };
+                return [bottomShelfL, bottomShelfM, skip, skip, skip, skip, skip, skip, skip, drawerSelBox];
             }
 
-            return new Cuboidf[] { skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox };
+            return [skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox];
         }
 
         return base.GetSelectionBoxes(blockAccessor, pos);
@@ -136,7 +135,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             drawerSelBox.MBNormalizeSelectionBox(offset);
 
             if (be.DrawerOpen) {
-                int rotAngle = GetRotationAngle(this);
+                int rotAngle = this.GetRotationAngle();
 
                 switch (rotAngle) {
                     case 0: drawerSelBox.Z2 += .3125f; break;
@@ -150,10 +149,10 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
                 cabinetSelBox.MBNormalizeSelectionBox(offset);
 
-                return new Cuboidf[] { skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox };
+                return [skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox];
             }
             else {
-                List<Cuboidf> sBs = new();
+                List<Cuboidf> sBs = [];
 
                 for (int i = 0; i < 9; i++) {
                     sBs.Add(base.GetSelectionBoxes(blockAccessor, pos).ElementAt(i).Clone());
@@ -162,10 +161,10 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
                 sBs.Add(drawerSelBox);
 
                 if (offset.Y != 0) {
-                    return new Cuboidf[] { skip, skip, skip, sBs[3], sBs[4], sBs[5], sBs[6], sBs[7], sBs[8] };
+                    return [skip, skip, skip, sBs[3], sBs[4], sBs[5], sBs[6], sBs[7], sBs[8]];
                 }
 
-                return new Cuboidf[] { skip, sBs[1], sBs[2], skip, skip, skip, skip, skip, skip, sBs[9] };
+                return [skip, sBs[1], sBs[2], skip, skip, skip, skip, skip, skip, sBs[9]];
             }
         }
 

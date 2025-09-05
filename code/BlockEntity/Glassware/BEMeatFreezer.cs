@@ -4,22 +4,23 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     protected new BlockMeatFreezer block;
     private readonly MeshData[] contentMeshes = new MeshData[4];
 
+    protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
+    protected override bool OverrideMergeStacks => true;
+
+    public override int ShelfCount => 4;
+    public override int AdditionalSlots => 1;
 
     [TreeSerializable(false)] public bool FreezerOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
-
+    
     private readonly string CoolingOnly = "fsCoolingOnly";
-    private float perishMultiplierBuffed = 0.65f;
+    private float perishMultiplierBuffed = 0.6f;
     private float perishMultiplierUnBuffed = 0.65f;
     public readonly int cutIceSlot = 4;
 
     public BEMeatFreezer() {
-        ShelfCount = 4;
-        SegmentsPerShelf = 1;
-        ItemsPerSegment = 1;
-        AdditionalSlots = 1;
-        PerishMultiplier = 0.65f;
+        PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != cutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
@@ -43,9 +44,9 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         base.InitMesh();
 
         for (int i = 0; i < 3; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, new[] { inv[i].Itemstack }, ShapeReferences.utilMeatFreezer, 13f).BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilMeatFreezer, 13f).BlockYRotation(block);
         }
-        contentMeshes[3] = GenLiquidyMesh(capi, new[] { inv[3].Itemstack }, ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
+        contentMeshes[3] = GenLiquidyMesh(capi, [inv[3].Itemstack], ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
     }
 
     protected override float GetPerishRate() {
@@ -72,7 +73,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 32 days which is 8 ice blocks
-            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 4;
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
         }
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -86,19 +87,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         switch (blockSel.SelectionBoxIndex) {
             case 0: case 1: case 2: case 3:
                 if (!FreezerOpen) return false;
-                if (slot.Empty) {
-                    return TryTake(byPlayer, blockSel);
-                }
-                else if (slot.CanStoreInSlot(AttributeCheck)) {
-                    AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
-
-                    if (TryPut(byPlayer, slot, blockSel)) {
-                        Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                        return true;
-                    }
-                }
-                (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:Only raw meat can be placed in this freezer."));
-                break;
+                return base.OnInteract(byPlayer, blockSel);
             case 4:
                 if (!FreezerOpen) ToggleFreezerDoor(true, byPlayer);
                 else ToggleFreezerDoor(false, byPlayer);
@@ -113,7 +102,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
                 }
 
                 if (!slot.Empty) {
-                    if (slot.CanStoreInSlot(CoolingOnly)) {
+                    if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
                         AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
                         if (TryPutIce(byPlayer, slot, blockSel)) {
@@ -124,7 +113,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
                 }
-                else {
+                else if (DrawerOpen) {
                     return TryTakeIceOrSlush(byPlayer);
                 }
                 break;
@@ -137,10 +126,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         if (blockSel.SelectionBoxIndex > 3) return false; // If it's freezer or drawer selection box, return
-        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Invert shift to bulk-place by default
-        bool result = base.TryPut(byPlayer, slot, blockSel);
-        byPlayer.Entity.Controls.ShiftKey = !byPlayer.Entity.Controls.ShiftKey; // Restore original value
-        return result;
+        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
@@ -153,7 +139,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
             int moved = slot.TryPutInto(Api.World, inv[cutIceSlot], quantity);
 
             if (moved == 0 && slot.Itemstack != null) { // Attempt to merge if it fails
-                ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, quantity) {
+                ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity) {
                     SourceSlot = new DummySlot(slot.Itemstack),
                     SinkSlot = new DummySlot(stack)
                 };
@@ -293,7 +279,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
     }
 
     private void SetIceHeight(int heightLevel) {
-        string[] iceAnimations = { "iceheight1", "iceheight2", "iceheight3" };
+        string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
 
         foreach (string anim in iceAnimations) {
             if (animUtil?.activeAnimationsByAnimCode.ContainsKey(anim) == true) {
@@ -351,7 +337,7 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
             if (contentMeshes[i] == null) continue;
 
             MeshData contentMesh = contentMeshes[i].Clone();
-            switch (GetRotationAngle(block)) {
+            switch (block.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i * 0.4375f, 0, 0); break;
                 case 90: contentMesh.Translate(0, 0, -i * 0.4375f); break;
                 case 180: contentMesh.Translate(-i * 0.4375f, 0, 0); break;

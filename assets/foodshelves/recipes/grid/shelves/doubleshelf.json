@@ -2,7 +2,7 @@
   {
     "ingredientPattern": "___,PPP,SSS",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 2, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 2 },
       "S": { "type": "item", "code": "game:stick" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
@@ -15,5 +15,14 @@
         }
       }
     }
+  },
+  {
+    "ingredientPattern": "___,PPP,SSS",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
+      "S": { "type": "item", "code": "game:stick" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "doubleshelf-normal-east" }
   }
 ]

@@ -12,8 +12,11 @@
     "enabled": false,
     "ingredientPattern": "ST",
     "ingredients": {
-      "S": { "type": "block", "code": "vanvar:shelf-*-east", "name": "wood", "skipVariants": ["aged"] },
+      "S": { "type": "block", "code": "vanvar:shelf-{wood}-east" },
       "T": { "type": "item", "code": "game:saw-*", "isTool": true }
+    },
+    "skipVariants": {
+      "wood": [ "aged" ]
     },
     "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
     "output": {

@@ -21,7 +21,8 @@
           "text": "foodshelves:blockdesc-meatfreezer-text"
         }
       ]
-    }
+    },
+    "worldInteractionAttributeCheck": "fsMeatFreezer"
   },
   "behaviors": [
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },
@@ -52,7 +53,8 @@
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
   "guiTransform": {
-		"origin": { "x": 0, "y": 0.9, "z": 0.5 },
+		"origin": { "x": 0.5, "y": 1, "z": 1 },
+    "translation": { "x": 0, "y": -5, "z": 0 },
 		"scale": 0.67
 	},
   "tpHandTransform": {

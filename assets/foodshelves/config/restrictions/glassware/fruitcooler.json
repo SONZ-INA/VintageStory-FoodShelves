@@ -1,0 +1,25 @@
+{
+  "CollectibleTypes": [],
+  "CollectibleCodes": [
+    "game:fruit-*",
+
+    "expandedfoods:dehydratedfruit-*",
+    "expandedfoods:dryfruit-*",
+    "expandedfoods:candiedfruit-*",
+    "expandedfoods:wilddehydratedfruit-*",
+    "expandedfoods:wilddryfruit-*",
+    "expandedfoods:wildtreedryfruit-*",
+    "expandedfoods:wildtreecandiedfruit-*",
+    "expandedfoods:wildcandiedfruit-*",
+
+    "wildcraftfruit:fruit-*",
+    "wildcraftfruit:nut-marita",
+    "wildcraftfruit:nut-pandan",
+
+    "expandedfoods:dehydratedfruit-*",
+    "expandedfoods:dryfruit-*",
+    "expandedfoods:wilddehydratedfruit-*",
+    "expandedfoods:wilddryfruit-*",
+    "expandedfoods:wildtreedryfruit-*"
+  ]
+}

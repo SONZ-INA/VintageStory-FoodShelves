@@ -4,8 +4,10 @@
     "game:resin",
     "game:beeswax",
     "game:fat",
+    "game:salt",
     "game:grain-*",
     "game:legume-peanut",
+    "game:blastingpowder",
 
     "expandedfoods:dehydratedfruit-*",
     "expandedfoods:dryfruit-*",
