@@ -3,7 +3,6 @@
 namespace FoodShelves;
 
 public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
-    private WorldInteraction[] itemSlottableInteractions;
     private WorldInteraction[] cabinetInteractions;
     private WorldInteraction[] drawerInteractions;
 

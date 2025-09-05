@@ -4,11 +4,13 @@ namespace FoodShelves;
 
 public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     private WorldInteraction[] interactions;
-    
+
     protected virtual Dictionary<string, ModelTransform> Transformations { get; set; }
     protected virtual string InteractionsName => GetType().Name.Replace("Block", "");
 
-    public override void OnLoaded(ICoreAPI api) {
+    public virtual int InnerSlotCount { get; protected set; } // Separate property since stuff can be put inside when within a Cooling Cabinet
+
+    public override void OnLoaded(ICoreAPI api) {;
         base.OnLoaded(api);
 
         Transformations ??= api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
@@ -123,44 +125,58 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         return $"{blockKey}-{hashcode}";
     }
 
-    public bool OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
+    // Method used for a bit more complex checking, like how the vegetable basket has "groups"
+    public virtual bool CanAddToContents(ItemStack[] contents, ItemStack incoming, out int capacity) {
+        capacity = InnerSlotCount;
+        return contents.Length < capacity;
+    }
+
+    public virtual bool OnContainedInteractStart(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
         var targetSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
         if (targetSlot == null) return false;
 
-        // Case 1: Player holding something that can go into basket
+        // Putting stuff in
         if (!targetSlot.Empty && targetSlot.CanStoreInSlot("fs" + InteractionsName)) {
-            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack);
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
 
-            // Try to add 1 item from player's hand
-            ItemStack itemToAdd = targetSlot.TakeOut(1);
-            if (itemToAdd != null) {
-                // Add to basket contents
-                contents = [.. contents, itemToAdd];
-                InventoryExtensions.SetContents(slot.Itemstack, contents);
+            if (!CanAddToContents(contents, targetSlot.Itemstack, out int capacity) || contents.Length >= capacity)
+                return false;
 
-                targetSlot.MarkDirty();
-                be.MarkDirty(true);
-                return true;
+            // CTRL behavior to fill the basket
+            int maxAdd = capacity - contents.Length;
+            int amountToMove = byPlayer.Entity.Controls.CtrlKey ? Math.Min(maxAdd, targetSlot.StackSize) : 1;
+
+            int moved = 0;
+            for (int i = 0; i < amountToMove; i++) {
+                ItemStack one = targetSlot.TakeOut(1);
+                if (one == null) break;
+
+                contents = [.. contents, one];
+                moved++;
             }
 
+            if (moved > 0) {
+                InventoryExtensions.SetContents(slot.Itemstack, contents);
+                targetSlot.MarkDirty();
+                be.MarkDirty();
+                return true;
+            }
             return false;
         }
 
-        // Case 2: Player empty hand → try to take one item out
+        // Taking stuff out
         if (targetSlot.Empty) {
-            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack);
+            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
             if (contents.Length == 0) return false;
 
-            // Take the last (front-most) item
-            ItemStack taken = contents.Last();
-            contents = contents.Take(contents.Length - 1).ToArray();
+            ItemStack taken = contents[^1];
+            Array.Resize(ref contents, contents.Length - 1);
 
-            if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true)) {
+            if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true))
                 api.World.SpawnItemEntity(taken, byPlayer.Entity.ServerPos.XYZ);
-            }
 
             InventoryExtensions.SetContents(slot.Itemstack, contents);
-            be.MarkDirty(true);
+            be.MarkDirty();
             return true;
         }
 

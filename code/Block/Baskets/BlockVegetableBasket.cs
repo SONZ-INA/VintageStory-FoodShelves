@@ -4,6 +4,8 @@ namespace FoodShelves;
 
 public class BlockVegetableBasket : BaseFSBasket {
     public static RestrictionData VegetableBasketData { get; set; } = new();
+    
+    public override int InnerSlotCount => 36;
 
     public override float[,] GetTransformationMatrix(string path) {
         float[] x = [.75f], y = [0], z = [-.03f], rX = [-2], rY = [4], rZ = [1];
@@ -57,5 +59,22 @@ public class BlockVegetableBasket : BaseFSBasket {
         MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
 
         return contentMesh;
+    }
+
+    public override bool CanAddToContents(ItemStack[] contents, ItemStack incoming, out int capacity) {
+        // Capacity is dynamic based on transformation matrix
+        string itemPath = contents.Length > 0 && contents[0] != null
+            ? contents[0].Collectible.Code
+            : incoming?.Collectible?.Code;
+
+        float[,] tm = GetTransformationMatrix(itemPath);
+        capacity = Math.Min(InnerSlotCount, tm.GetLength(1));
+
+        // Only identical items can be put inside
+        if (contents.Length > 0 && incoming?.Collectible?.Code != contents[0]?.Collectible?.Code) {
+            return false;
+        }
+
+        return contents.Length < capacity;
     }
 }

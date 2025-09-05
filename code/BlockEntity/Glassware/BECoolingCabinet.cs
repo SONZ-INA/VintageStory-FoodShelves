@@ -77,8 +77,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+
         // Open/Close cabinet or drawer
-        if (byPlayer.Entity.Controls.ShiftKey) {
+        if (shift) {
             switch (blockSel.SelectionBoxIndex) {
                 case 9:
                     if (!DrawerOpen) ToggleCabinetDrawer(true, byPlayer);
@@ -94,15 +97,14 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             return true;
         }
 
-        // TODO: MOVE THIS.
-        // In-container interactions
-        if (TryUse(byPlayer, slot, blockSel)) {
-            return true;
-        }
-
         // Take/Put items
         if (slot.Empty) {
             if (CabinetOpen && blockSel.SelectionBoxIndex <= 8) {
+                // In-container interactions
+                if (ctrl && TryUse(byPlayer, slot, blockSel)) {
+                    return true;
+                }
+
                 return TryTake(byPlayer, blockSel);
             }
             else if (DrawerOpen && blockSel.SelectionBoxIndex == 9) {
@@ -112,6 +114,11 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             return false;
         }
         else {
+            // In-container interactions
+            if (CabinetOpen && TryUse(byPlayer, slot, blockSel)) { 
+                return true;
+            }
+
             if (CabinetOpen && slot.CanStoreInSlot(AttributeCheck)) {
                 AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
 
@@ -144,38 +151,33 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         int startIndex = segmentIndex * ItemsPerSegment;
         int endIndex = startIndex + ItemsPerSegment - 20; // Offset of 20 since the crocks can only fit 4 in a segment.
 
-        // TODO: Modify this so it works correctly, and follows the inventory limits of the container.
-
         // If it's empty, shift the check further down - crocks in the back can be reached.
         if (inv[endIndex - 1].Empty) endIndex--;
         if (inv[endIndex - 1].Empty) endIndex--;
 
-        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket
-            && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic
-        ) {
-            ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
+        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic) {
+            return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
         }
 
         // Only check last 2 slots (visually front crocks)
         for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
             var stack = inv[i]?.Itemstack;
             var stackSize = slot?.Itemstack?.StackSize ?? 0;
-            if (stack?.Collectible is IContainedInteractable ici) {
-                if (ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
-                    // If it's a meal container, don't check for "sealing" behavior
-                    if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
-                        MarkDirty();
-                        return true;
-                    }
 
-                    // If item is consumed for sealing, stop.
-                    int afterSize = slot?.Itemstack?.StackSize ?? 0;
-                    if (stackSize != afterSize) {
-                        MarkDirty();
-                        return true;
-                    }
-                    // Otherwise, keep looping to check the crock behind
+            if (stack?.Collectible is IContainedInteractable ici && ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
+                // If it's a meal container, don't check for "sealing" behavior
+                if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
+                    MarkDirty();
+                    return true;
                 }
+
+                // If item is consumed for sealing, stop.
+                int afterSize = slot?.Itemstack?.StackSize ?? 0;
+                if (stackSize != afterSize) {
+                    MarkDirty();
+                    return true;
+                }
+                // Otherwise, keep looping to check the crock behind
             }
         }
 
