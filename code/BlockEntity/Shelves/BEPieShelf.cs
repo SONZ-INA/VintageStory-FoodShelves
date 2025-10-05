@@ -13,8 +13,7 @@ public class BEPieShelf : BEBaseFSContainer {
         float[][] tfMatrices = new float[SlotCount][];
 
         for (int i = 0; i < SlotCount; i++) {
-            tfMatrices[i] =
-                new Matrixf()
+            tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY)
                 .Translate(- 0.5f, i * 0.313f + 0.0525f, - 0.5f)

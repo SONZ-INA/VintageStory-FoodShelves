@@ -161,6 +161,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
                 be.MarkDirty();
                 return true;
             }
+
             return false;
         }
 

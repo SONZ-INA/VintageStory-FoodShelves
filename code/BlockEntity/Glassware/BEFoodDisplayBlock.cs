@@ -81,8 +81,7 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
 
         for (int i = 0; i < SlotCount; i++) {
             if ((i < ItemsPerSegment && inv[i].Itemstack.IsLargeItem()) || (i >= ItemsPerSegment && inv[i].Itemstack.IsLargeItem())) {
-                tfMatrices[i] =
-                    new Matrixf()
+                tfMatrices[i] = new Matrixf()
                     .Translate(0.5f, 0, 0.5f)
                     .RotateYDeg(block.Shape.rotateY)
                     .Translate(-0.5f, i % (ItemsPerSegment - 1) * 0.3725f + 0.2525f, -0.5f)
@@ -92,8 +91,7 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
                 float x = i % (ItemsPerSegment / 2) == 0 ? 0.18f : -0.18f;
                 float z = (i / (ItemsPerSegment / 2)) % 2 == 0 ? 0.18f : -0.18f;
 
-                tfMatrices[i] =
-                    new Matrixf()
+                tfMatrices[i] = new Matrixf()
                     .Translate(0.5f, 0, 0.5f)
                     .RotateYDeg(block.Shape.rotateY)
                     .Translate(x - 0.5f, i / ItemsPerSegment * 0.3725f + 0.2525f, z - 0.5f)

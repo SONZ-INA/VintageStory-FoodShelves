@@ -23,6 +23,7 @@ public class BlockVegetableBasket : BaseFSBasket {
                         rY = [   4,   -2,   15,  -4,   10,   12,   30,   4,   -5,   -2,  20,   15 ];
                         rZ = [   1,   -1,    0,  45,    1,   41,    5,  17,   -2,  -20,  16,    8 ];
                         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
+
                     case "group2":
                         x = [ .75f, .3f, .19f,  .3f, .51f, .35f,  .05f,  .85f,   .7f,  .9f, .58f,   .4f ];
                         y = [    0,   0,    0, .25f,    0, .35f,   .2f, -.25f, -.35f, .15f,  .4f, -.35f ];
@@ -32,6 +33,7 @@ public class BlockVegetableBasket : BaseFSBasket {
                         rY = [   4,  -2,   15,   -4,   10,   12,    30,     0,     0,    4,   -2,     0 ];
                         rZ = [   1,  -1,    0,   45,    1,   41,     5,    12,    83,   17,  -20,    83 ];
                         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
+
                     case "group3":
                         x = [ .75f, .74f,  .73f, .72f,  .71f, .70f, .15f, .15f, .15f, .15f, .15f, .15f, .75f, .74f, .73f, .72f, .71f, .70f, .15f, .15f, .15f, .15f, .15f, .15f, .75f, .74f, .73f, .72f, .71f, .70f, .15f, .15f, .15f, .15f, .15f, .15f ];
                         y = [    0,    0,     0,    0,     0,    0,    0,    0,    0,    0,    0,    0, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .15f, .30f, .30f, .30f, .30f, .30f, .30f, .30f, .30f, .30f, .30f, .30f, .30f ];

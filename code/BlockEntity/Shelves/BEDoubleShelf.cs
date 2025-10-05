@@ -97,15 +97,21 @@ public class BEDoubleShelf : BEBaseFSContainer {
             for (int segment = 0; segment < SegmentsPerShelf; segment++) {
                 for (int item = 0; item < ItemsPerSegment; item++) {
                     int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
+                    if (inv[index].Empty) {
+                        tfMatrices[index] = new Matrixf().Values;
+                        continue;
+                    }
+
+                    var itemStack = inv[index].Itemstack;
 
                     float x, y = 0f, z;
                     float scale = 0.95f;
 
-                    if (inv[index].Itemstack.IsLargeItem()) {
+                    if (itemStack.IsLargeItem()) {
                         x = segment * 0.65f;
                         z = item * 0.65f;
                     }
-                    else if (!inv[index].Itemstack.IsSmallItem()) {
+                    else if (!itemStack.IsSmallItem()) {
                         x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
                         z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
                     }
@@ -116,13 +122,23 @@ public class BEDoubleShelf : BEBaseFSContainer {
                         scale = 0.82f;
                     }
 
-                    if (inv[index].Itemstack?.Collectible.Code == "pemmican:pemmican-pack") {
+                    // Exceptions I have to hardcode -----
+                    if (!itemStack.IsLargeItem()) {
+                        string itemPath = itemStack.Collectible.Code.Path;
+
+                        if (itemPath.Contains("pie") == true || itemPath.Contains("cheese")) {
+                            x += 0.15f;
+                            z += 0.1f;
+                        }
+                    }
+
+                    if (itemStack.Collectible.Code == "pemmican:pemmican-pack") {
                         y += item / 2 * 0.13f;
                         z = -0.18f;
                     }
+                    // -----------------------------------
 
-                    tfMatrices[index] =
-                        new Matrixf()
+                    tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
                         .RotateYDeg(block.Shape.rotateY)
                         .Scale(scale, scale, scale)

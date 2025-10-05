@@ -25,9 +25,11 @@ public static class CheckExtensions {
     /// Determines if the item is considered a large item, based on baking properties, "shelvable" attribute, or specific known basket block types.
     /// </summary>
     public static bool IsLargeItem(this ItemStack stack) {
-        if (BakingProperties.ReadFrom(stack)?.LargeItem == true) return true;
-
+        if (stack?.Collectible?.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
+        if (stack?.Collectible?.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
         if (stack?.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
+        if (stack?.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
+
         if (stack?.Collectible?.Code.Path.StartsWith("claypot-") == true) return true;
         
         if (stack?.Collectible is BaseFSBasket) return true;
@@ -43,11 +45,13 @@ public static class CheckExtensions {
 
         if (WildcardUtil.Match("wildcraftfruit:nut-*bar", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
-        if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
-        if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
-        if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
-        if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:cookedveggie-*", stackCode)) return true;
+
+        if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
+        if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
+        
+        if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
+        if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
 
         return false;
     }
@@ -59,7 +63,7 @@ public static class CheckExtensions {
     public static bool IsSolitaryMatch(this ItemStack checkSlot, ItemStack currSlot) {
         if (checkSlot?.Collectible == null || currSlot?.Collectible == null) return true;
 
-        string[] solitaryItems = ["pemmican:pemmican-pack"];
+        string[] solitaryItems = ["pemmican:pemmican-pack", "pemmican:chips-pack"];
 
         bool solitary = false;
         foreach (string item in solitaryItems) {

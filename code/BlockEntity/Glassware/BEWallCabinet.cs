@@ -34,7 +34,27 @@ public class BEWallCabinet : BEBaseFSAnimatable {
             return true;
         }
 
+        if (!CabinetOpen) return false;
+
+        // Crock sealing interactions
+        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+        ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel)) {
+            return true;
+        }
+
         return base.OnInteract(byPlayer, blockSel);
+    }
+
+    protected bool TryUse(IPlayer player, BlockSelection blockSel) {
+        int index = blockSel.SelectionBoxIndex;
+
+        if (inv[index].Itemstack?.Collectible is IContainedInteractable ic) {
+            MarkDirty();
+            return ic.OnContainedInteractStart(this, inv[index], player, blockSel);
+        }
+
+        return false;
     }
 
     #region Animations
@@ -83,8 +103,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
             float y = index >= 2 ? 0.5625f : 0.0625f;
             float z = 0.25f;
 
-            tfMatrices[index] =
-                new Matrixf()
+            tfMatrices[index] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY)
                 .Translate(x - 0.5f, y, z - 0.5f)

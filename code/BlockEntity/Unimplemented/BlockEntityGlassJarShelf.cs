@@ -114,8 +114,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             float z = i / 2 % 2 == 0 ? 0.24f : -0.24f;
             if (shelfCount == 2) z = -0.24f;
 
-            tfMatrices[i] =
-                new Matrixf()
+            tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY)
                 .Translate(x - 0.5f, i / 2 * 0.313f + 0.0525f, z - 0.5f)

@@ -8,10 +8,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="Vintagestory">
-			<HintPath>$(VINTAGE_STORY)\Vintagestory.exe</HintPath>
-			<Private>false</Private>
-		</Reference>
 		<Reference Include="VintagestoryAPI">
 			<HintPath>$(VINTAGE_STORY)\VintagestoryAPI.dll</HintPath>
 			<Private>false</Private>
@@ -112,6 +108,7 @@
   <None Remove="assets\foodshelves\config\transformations\shelves\barshelf.json" />
   <None Remove="assets\foodshelves\config\transformations\shelves\breadshelf.json" />
   <None Remove="assets\foodshelves\itemtypes\cutice.json" />
+  <None Remove="assets\foodshelves\lang\cs.json" />
   <None Remove="assets\foodshelves\lang\fr.json" />
   <None Remove="assets\foodshelves\lang\pl.json" />
   <None Remove="assets\foodshelves\lang\pt-br.json" />
@@ -134,7 +131,6 @@
   <None Remove="assets\foodshelves\patches\theworkingclasses.json" />
   <None Remove="assets\foodshelves\patches\vanvar.json" />
   <None Remove="assets\foodshelves\patches\wildcraftfruit.json" />
-  <None Remove="assets\foodshelves\patches\wildcrafttree.json" />
   <None Remove="assets\foodshelves\patches\wool.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelbig.json" />
   <None Remove="assets\foodshelves\recipes\grid\barrelrack.json" />
@@ -215,6 +211,10 @@
   <None Remove="assets\foodshelves\textures\block\wood\tun\bottom.png" />
   <None Remove="assets\foodshelves\textures\block\wood\tun\top.png" />
   <None Remove="assets\foodshelves\textures\block\wood\vegetablebasket\top.png" />
+  <None Remove="assets\foodshelves\textures\compatibility\floralzones\acorn.png" />
+  <None Remove="assets\foodshelves\textures\compatibility\floralzones\coconut.png" />
+  <None Remove="assets\foodshelves\textures\compatibility\floralzones\kudzu.png" />
+  <None Remove="assets\foodshelves\textures\compatibility\floralzones\palmetto.png" />
   <None Remove="assets\foodshelves\textures\variants\wood\acacia.png" />
   <None Remove="assets\foodshelves\textures\variants\wood\baldcypress.png" />
   <None Remove="assets\foodshelves\textures\variants\wood\birch.png" />

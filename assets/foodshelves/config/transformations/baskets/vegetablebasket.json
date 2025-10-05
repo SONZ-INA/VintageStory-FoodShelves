@@ -12,5 +12,9 @@
   "artofgrowing:vegetable-*-carrot": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.4, "translation": { "x": 0.25, "y": 0.15, "z": 0 }, "rotation": { "x": 0, "y": 0, "z": 90 } },
   "artofgrowing:vegetable-*-onion": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.7, "translation": { "x": 0, "y": 0.15, "z": 0 } },
   "artofgrowing:vegetable-*-turnip": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.3 },
-  "artofgrowing:vegetable-*-parsnip": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.35, "translation": { "x": 0.25, "y": 0.15, "z": 0 }, "rotation": { "x": 0, "y": 0, "z": 90 } }
+  "artofgrowing:vegetable-*-parsnip": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.35, "translation": { "x": 0.25, "y": 0.15, "z": 0 }, "rotation": { "x": 0, "y": 0, "z": 90 } },
+
+  "pemmican:vegetable-corn-raw": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.35, "translation": { "x": 0, "y": 0.1, "z": 0.05 } },
+  "pemmican:vegetable-potato-raw": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scale": 1.55, "translation": { "x": 0, "y": 0.1, "z": 0 } },
+  "pemmican:vegetable-sugarbeet-raw": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "scaleXYZ": { "x": 1.35, "y": 1.05, "z": 1.35 } }
 }

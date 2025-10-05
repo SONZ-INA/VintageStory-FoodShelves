@@ -1,6 +1,6 @@
 {
   "CollectibleTypes": [],
   "CollectibleCodes": [
-    "game:flour-*"
+    "*:flour-*"
   ]
 }

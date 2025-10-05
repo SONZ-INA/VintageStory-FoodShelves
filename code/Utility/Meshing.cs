@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public static class Meshing {
     /// <summary>
@@ -14,17 +12,7 @@ public static class Meshing {
         var variantData = GetBlockVariantData(capi, stackWithAttributes);
 
         if (skipElements?.Length > 0) {
-            ShapeElement[] RemoveElements(ShapeElement[] elementArray) {
-                var remainingElements = elementArray.Where(e => !skipElements.Contains(e.Name)).ToArray();
-                foreach (var element in remainingElements) {
-                    if (element.Children != null && element.Children.Length > 0) {
-                        element.Children = RemoveElements(element.Children); // Recursively filter children
-                    }
-                }
-                return remainingElements;
-            }
-
-            variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements);
+            variantData.Item1.Elements = RemoveElements(variantData.Item1.Elements, skipElements);
         }
 
         capi.Tesselator.TesselateShape("FS-TesselateShape", variantData.Item1, out MeshData blockMesh, variantData.Item2);
@@ -141,8 +129,7 @@ public static class Meshing {
                     if (transformation != null) collectibleMesh.ModelTransform(transformation);
                 }
 
-                float[] matrixTransform =
-                    new Matrixf()
+                float[] matrixTransform = new Matrixf()
                     .Translate(0.5f, 0, 0.5f)
                     .RotateXDeg(transformationMatrix[3, i])
                     .RotateYDeg(transformationMatrix[4, i])
@@ -168,47 +155,22 @@ public static class Meshing {
     public static MeshData GenLiquidyMesh(ICoreClientAPI capi, ItemStack[] contents, string pathToFillShape, float maxHeight, bool inheritTextures = true) {
         if (capi == null) return null;
         if (contents == null || contents.Length == 0 || contents[0] == null) return null;
-        if (pathToFillShape == null || pathToFillShape == "") return null;
+        if (string.IsNullOrEmpty(pathToFillShape)) return null;
 
         // Shape location of a simple cube, meant as "filling"
         AssetLocation shapeLocation = new(pathToFillShape);
         Shape shape = Shape.TryGet(capi, shapeLocation)?.Clone();
-        if (shape == null) return null;
+        if (shape == null) 
+            return null;
+        
         string itemPath = contents[0].Item.Code.Path;
 
         // Handle textureSource
-        ITexPositionSource texSource;
-
-        if (inheritTextures) {
-            if (contents[0].ItemAttributes?["inPieProperties"].Exists == true) { // First try pie textures
-                AssetLocation textureRerouteLocation;
-
-                // Exceptions
-                if (itemPath.EndsWith("-beachalmondwhole")) textureRerouteLocation = new("wildcraftfruit:block/food/pie/fill-beachalmond");
-                else textureRerouteLocation = new(contents[0].ItemAttributes["inPieProperties"].Token["texture"].ToString());
-
-                if (textureRerouteLocation.ToString().Contains("peanutground")) {
-                    textureRerouteLocation = textureRerouteLocation.ToString().Replace("ground", "");
-                }
-
-                shape.Textures.Clear();
-                shape.Textures.Add("surface", textureRerouteLocation);
-
-                texSource = new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
-            }
-            else if (contents[0].ItemAttributes?["inContainerTexture"].Exists == true) { // Then try container textures
-                var texture = contents[0].ItemAttributes?["inContainerTexture"].AsObject<CompositeTexture>();
-                texSource = new ContainerTextureSource(capi, contents[0], texture);
-            }
-            else { // If all else fails, take the item's own texture
-                // For some reason, ITexPositionSource is throwing a null error when getting it with a simple fucking method, so this is needed
-                var textures = contents[0].Item.Textures;
-                texSource = new ContainerTextureSource(capi, contents[0], textures.Values.FirstOrDefault());
-            }
-        }
-        else {
-            texSource = new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
-        }
+        ITexPositionSource texSource = inheritTextures
+            ? GetPieTexture(capi, contents, shape, itemPath)
+                ?? GetContainerTextureSource(capi, contents)
+                ?? GetItemTextureSource(capi, contents)
+            : new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
 
         // Calculate the total content amount
         float contentAmount = 0;

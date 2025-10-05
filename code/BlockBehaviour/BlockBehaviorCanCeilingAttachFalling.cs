@@ -119,7 +119,10 @@ public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(b
     private bool IsReplacableBeneathAndSideways(IWorldAccessor world, BlockPos pos) {
         for (int i = 0; i < 4; i++) {
             BlockFacing blockFacing = BlockFacing.HORIZONTALS[i];
+            
+            #pragma warning disable CS0618 // Type or member is obsolete, to suppress warnings
             Block blockOrNull = world.BlockAccessor.GetBlockOrNull(pos.X + blockFacing.Normali.X, pos.Y + blockFacing.Normali.Y, pos.Z + blockFacing.Normali.Z);
+            
             if (blockOrNull != null && blockOrNull.Replaceable >= 6000) {
                 blockOrNull = world.BlockAccessor.GetBlockOrNull(pos.X + blockFacing.Normali.X, pos.Y + blockFacing.Normali.Y - 1, pos.Z + blockFacing.Normali.Z);
                 if (blockOrNull != null && blockOrNull.Replaceable >= 6000) {

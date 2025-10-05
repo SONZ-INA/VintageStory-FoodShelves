@@ -67,8 +67,7 @@ public class BETableWShelf : BEBaseFSContainer {
                 offset = 0.03f;
             }
 
-            tfMatrices[index] =
-                new Matrixf()
+            tfMatrices[index] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY)
                 .Scale(scaleValue, scaleValue, scaleValue)

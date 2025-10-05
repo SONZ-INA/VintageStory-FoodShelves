@@ -14,8 +14,7 @@ public class BEEggBasket : BEBaseFSBasket {
         float[][] tfMatrices = new float[SlotCount][];
 
         for (int item = 0; item < SlotCount; item++) {
-            tfMatrices[item] =
-                new Matrixf()
+            tfMatrices[item] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY + MeshAngle * GameMath.RAD2DEG)
                 .RotateXDeg(transformationMatrix[3, item])

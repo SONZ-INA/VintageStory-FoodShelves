@@ -32,8 +32,7 @@ public class BESushiShelf : BEBaseFSContainer {
                     float y = shelf * 0.28f;
                     float z = -(item / 3) * 0.37f;
 
-                    tfMatrices[index] =
-                        new Matrixf()
+                    tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
                         .RotateYDeg(block.Shape.rotateY - 180f)
                         .Scale(0.9f, 0.9f, 1f)

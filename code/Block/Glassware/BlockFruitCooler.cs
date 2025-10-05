@@ -63,8 +63,10 @@ public class BlockFruitCooler : BaseFSContainer {
         switch (selection.SelectionBoxIndex) {
             case 0: case 1: case 2: case 3:
                 return itemSlottableInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
+
             case 4:
                 return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
+            
             case 5:
                 if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEFruitCooler bemf && bemf.DrawerOpen) {
                     if (bemf.Inventory?[bemf.cutIceSlot].Empty == true || bemf.Inventory?[bemf.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {

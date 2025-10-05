@@ -88,11 +88,13 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
             case 0: case 1: case 2: case 3:
                 if (!FreezerOpen) return false;
                 return base.OnInteract(byPlayer, blockSel);
+            
             case 4:
                 if (!FreezerOpen) ToggleFreezerDoor(true, byPlayer);
                 else ToggleFreezerDoor(false, byPlayer);
                 MarkDirty(true);
                 return true;
+            
             case 5:
                 if (byPlayer.Entity.Controls.ShiftKey) {
                     if (!DrawerOpen) ToggleFreezerDrawer(true, byPlayer);
@@ -116,8 +118,6 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
                 else if (DrawerOpen) {
                     return TryTakeIceOrSlush(byPlayer);
                 }
-                break;
-            case 6:
                 break;
         }
 

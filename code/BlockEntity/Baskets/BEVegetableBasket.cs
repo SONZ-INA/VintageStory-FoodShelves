@@ -33,8 +33,7 @@ public class BEVegetableBasket : BEBaseFSBasket {
         int offset = transformationMatrix.GetLength(1);
 
         for (int i = 0; i < offset; i++) {
-            tfMatrices[i] =
-                new Matrixf()
+            tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(block.Shape.rotateY + MeshAngle * GameMath.RAD2DEG)
                 .RotateXDeg(transformationMatrix[3, i])

@@ -92,19 +92,25 @@ public static class GeneralBlockExtensions {
                 Type = EnumItemClass.Block,
                 Attributes = new JsonObject(JToken.Parse("{}"))
             };
+
             defaultBlock.Resolve(api.World, block.Code);
             stacks.Add(defaultBlock);
         }
 
         if (props != null && material != "") {
             foreach (var prop in props.Variants) {
-                string fsAttributesJson = $"{{ \"{material}\": \"{prop.Code.Path}\" }}";
-                string attributesJson = "{ \"FSAttributes\": " + fsAttributesJson + " }";
+                var fsAttributes = new JObject {
+                    [material] = prop.Code.Path
+                };
+
+                var attributes = new JObject {
+                    ["FSAttributes"] = fsAttributes
+                };
 
                 var jstack = new JsonItemStack() {
                     Code = block.Code,
                     Type = EnumItemClass.Block,
-                    Attributes = new JsonObject(JToken.Parse(attributesJson))
+                    Attributes = new JsonObject(attributes)
                 };
 
                 jstack.Resolve(api.World, block.Code);

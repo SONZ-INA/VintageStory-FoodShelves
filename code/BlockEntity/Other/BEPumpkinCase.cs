@@ -14,8 +14,7 @@ public class BEPumpkinCase : BEBaseFSContainer {
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 
-        tfMatrices[0] =
-            new Matrixf()
+        tfMatrices[0] = new Matrixf()
             .Translate(0.5f, 0, 0.5f)
             .RotateYDeg(block.Shape.rotateY)
             .Translate(-0.5f, 0.06f, -0.5f)

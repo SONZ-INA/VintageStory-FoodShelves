@@ -33,8 +33,7 @@ public class BEBreadShelf : BEBaseFSContainer {
                     float y = shelf * 0.25f;
                     float z = item * 0.4f;
 
-                    tfMatrices[index] =
-                        new Matrixf()
+                    tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
                         .RotateYDeg(block.Shape.rotateY)
                         .Translate(x - 0.79f, y + 0.06f, z - 0.75f)

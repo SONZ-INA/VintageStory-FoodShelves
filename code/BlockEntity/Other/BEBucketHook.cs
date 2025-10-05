@@ -12,8 +12,7 @@ public class BEBucketHook : BEBaseFSContainer {
     protected override float[][] genTransformationMatrices() {
         float[][] tfMatrices = new float[SlotCount][];
 
-        tfMatrices[0] =
-            new Matrixf()
+        tfMatrices[0] = new Matrixf()
             .Translate(0.5f, 0, 0.5f)
             .RotateYDeg(block.Shape.rotateY)
             .Translate(-.5f, .2f, -.54f)

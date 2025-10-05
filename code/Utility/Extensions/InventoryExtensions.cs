@@ -76,9 +76,8 @@ public static class InventoryExtensions {
 
             return stacksAsArray;
         }
-        else {
-            return [];
-        }
+
+        return [];
     }
 
     /// <summary>

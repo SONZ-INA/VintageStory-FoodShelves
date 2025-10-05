@@ -4,11 +4,5 @@
     "op": "addmerge", "path": "/attributes/variantTextures/cloth", "side": "server",
     "value": [ "wool:block/cloth/wool/{cloth}" ],
     "dependsOn": [ { "modid": "wool" } ]
-  },
-  {
-    "file": "foodshelves:config/variantdata/variantdata.json",
-    "op": "addmerge", "path": "/RecipeVariantData/game:cloth-*", "side": "server",
-    "value": [ { "name": "wool:cloth-wool-*" } ],
-    "dependsOn": [ { "modid": "wool" } ]
   }
 ]

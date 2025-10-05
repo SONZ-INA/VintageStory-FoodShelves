@@ -1,4 +1,6 @@
-﻿namespace FoodShelves;
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace FoodShelves;
 
 public class BECoolingCabinet : BEBaseFSAnimatable {
     protected new BlockCoolingCabinet block;
@@ -65,7 +67,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
 
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
-            // A stack should last about 32 days which is 8 ice blocks
+            // A stack should last about 24 days which is 8 ice blocks
             return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
         }
 
@@ -87,6 +89,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                     if (!DrawerOpen) ToggleCabinetDrawer(true, byPlayer);
                     else ToggleCabinetDrawer(false, byPlayer);
                     break;
+
                 default:
                     if (!CabinetOpen) ToggleCabinetDoor(true, byPlayer);
                     else ToggleCabinetDoor(false, byPlayer);
@@ -446,15 +449,21 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             for (int segment = 0; segment < SegmentsPerShelf; segment++) {
                 for (int item = 0; item < ItemsPerSegment; item++) {
                     int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
+                    if (inv[index].Empty) {
+                        tfMatrices[index] = new Matrixf().Values;
+                        continue;
+                    }
+
+                    var itemStack = inv[index].Itemstack;
 
                     float x, y = shelf * 0.4921875f, z;
                     float scale = 0.95f;
 
-                    if (inv[index].Itemstack.IsLargeItem()) {
+                    if (itemStack.IsLargeItem()) {
                         x = segment * 0.65f;
                         z = item * 0.65f;
                     }
-                    else if (!inv[index].Itemstack.IsSmallItem()) {
+                    else if (!itemStack.IsSmallItem()) {
                         x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
                         z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
                     }
@@ -464,11 +473,22 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                         z = ((item / 4) % 2) * 0.45f - 0.25f;
                         scale = 0.82f;
                     }
-                    
-                    if (inv[index].Itemstack?.Collectible.Code == "pemmican:pemmican-pack") {
+
+                    // Exceptions I have to hardcode -----
+                    if (!itemStack.IsLargeItem()) {
+                        string itemPath = itemStack.Collectible.Code.Path;
+
+                        if (itemPath.Contains("pie") == true || itemPath.Contains("cheese")) {
+                            x += 0.15f;
+                            z += 0.1f;
+                        }
+                    }
+
+                    if (itemStack.Collectible.Code == "pemmican:pemmican-pack" || itemStack.Collectible.Code == "pemmican:chips-pack") {
                         y += item / 2 * 0.13f;
                         z = -0.18f;
                     }
+                    // -----------------------------------
 
                     tfMatrices[index] =
                         new Matrixf()

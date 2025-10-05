@@ -124,8 +124,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
             float x = i % 2;
             float z = i / 2;
 
-            tfMatrices[i] =
-                new Matrixf()
+            tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
                 .RotateYDeg(this.Block.Shape.rotateY + 90)
                 .RotateZDeg(90)
