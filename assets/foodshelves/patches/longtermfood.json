@@ -93,7 +93,7 @@
   {
     "file": "foodshelves:blocktypes/glassware/seedbins.json",
     "op": "addmerge", "path": "/attributes/variantTextures/seed0/-", "side": "server",
-    "value": "pemmican:item/seeds/{seed}-label",
+    "value": "pemmican:item/seeds/{seed0}-label",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {

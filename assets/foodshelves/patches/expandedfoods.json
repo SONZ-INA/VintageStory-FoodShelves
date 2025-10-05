@@ -14,6 +14,8 @@
     "op": "replace", "path": "/1/enabled", "side": "server", "value": true,
     "dependsOn": [ { "modid": "expandedfoods" } ]
   },
+
+
   {
     "file": "foodshelves:blocktypes/shelves/sushishelf.json",
     "op": "addmerge", "path": "/enabled", "side": "server", "value": false,

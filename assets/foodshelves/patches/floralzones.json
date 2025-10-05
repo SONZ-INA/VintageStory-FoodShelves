@@ -10,5 +10,107 @@
     "op": "addmerge", "path": "/attributes/variantTextures/seed/-", "side": "server",
     "value": "foodshelves:compatibility/floralzones/{seed}",
     "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
+  },
+
+
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
+    "value": [
+      "floralzonescaribbeanregion:item/resource/seeds/{seed0}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
+    "value": [
+      "floralzonescaribbeanregion:item/resource/seeds/{seed1}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
+    "value": [
+      "floralzonescaribbeanregion:item/resource/seeds/{seed2}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
+    "value": [
+      "floralzonescaribbeanregion:item/resource/seeds/{seed3}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
+  },
+
+
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
+    "value": [
+      "floralzonescosmopolitanregion:item/resource/seeds/{seed0}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
+    "value": [
+      "floralzonescosmopolitanregion:item/resource/seeds/{seed1}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
+    "value": [
+      "floralzonescosmopolitanregion:item/resource/seeds/{seed2}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
+    "value": [
+      "floralzonescosmopolitanregion:item/resource/seeds/{seed3}"
+    ],
+    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
+  },
+
+
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
+    "value": [
+      "floralzoneseastasiaticregion:item/resource/seeds/{seed0}"
+    ],
+    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
+    "value": [
+      "floralzoneseastasiaticregion:item/resource/seeds/{seed1}"
+    ],
+    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
+    "value": [
+      "floralzoneseastasiaticregion:item/resource/seeds/{seed2}"
+    ],
+    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
+    "value": [
+      "floralzoneseastasiaticregion:item/resource/seeds/{seed3}"
+    ],
+    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
   }
 ]
