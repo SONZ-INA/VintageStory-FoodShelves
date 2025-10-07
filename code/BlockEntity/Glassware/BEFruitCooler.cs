@@ -19,6 +19,16 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     private float perishMultiplierUnBuffed = 0.65f;
     public readonly int cutIceSlot = 4;
 
+    private enum SlotType {
+        Segment1 = 0,
+        Segment2 = 1,
+        Segment3 = 2,
+        Segment4 = 3,
+        FreezerDoor = 4,
+        IceDrawer = 5,
+        FruitCooler = 6
+    }
+
     public BEFruitCooler() {
         PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
 
@@ -83,16 +93,20 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        switch (blockSel.SelectionBoxIndex) {
-            case 0: case 1: case 2: case 3:
+        SlotType aimedAt = (SlotType)blockSel.SelectionBoxIndex;
+
+        switch (aimedAt) {
+            case SlotType.Segment1: case SlotType.Segment2: case SlotType.Segment3: case SlotType.Segment4:
                 if (!CoolerOpen) return false;
                 return base.OnInteract(byPlayer, blockSel);
-            case 4:
+            
+            case SlotType.FreezerDoor:
                 if (!CoolerOpen) ToggleFreezerDoor(true, byPlayer);
                 else ToggleFreezerDoor(false, byPlayer);
                 MarkDirty(true);
                 return true;
-            case 5:
+            
+            case SlotType.IceDrawer:
                 if (byPlayer.Entity.Controls.ShiftKey) {
                     if (!DrawerOpen) ToggleFreezerDrawer(true, byPlayer);
                     else ToggleFreezerDrawer(false, byPlayer);
@@ -116,20 +130,18 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                     return TryTakeIceOrSlush(byPlayer);
                 }
                 break;
-            case 6:
-                break;
         }
 
         return false;
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex > 3) return false; // If it's freezer or drawer selection box, return
+        if (blockSel.SelectionBoxIndex > (int)SlotType.Segment4) return false; // If it's freezer or drawer selection box, return
         return base.TryPut(byPlayer, slot, blockSel);
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
-        if (selection.SelectionBoxIndex != 5) return false;
+        if (selection.SelectionBoxIndex != (int)SlotType.IceDrawer) return false;
         if (slot.Empty) return false;
         ItemStack stack = inv[cutIceSlot].Itemstack;
 
@@ -149,7 +161,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
             MarkDirty(true);
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
 
-            return moved > 0;
+            return true;
         }
 
         return false;
@@ -341,7 +353,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         base.GetBlockInfo(forPlayer, sb);
 
         // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 5 && !inv[cutIceSlot].Empty) {
+        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[cutIceSlot].Empty) {
             if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
@@ -351,7 +363,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         }
 
         // Display all segments if freezer is closed
-        if (!CoolerOpen && (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 4 || forPlayer.CurrentBlockSelection.SelectionBoxIndex == 6)) {
+        if (!CoolerOpen && (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.FreezerDoor || forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.FruitCooler)) {
             for (int i = 0; i < 4; i++) {
                 if (inv[i * ItemsPerSegment].Empty) {
                     sb.AppendLine(Lang.Get("foodshelves:Empty."));

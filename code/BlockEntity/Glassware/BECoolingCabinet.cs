@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BECoolingCabinet : BEBaseFSAnimatable {
     protected new BlockCoolingCabinet block;
@@ -22,6 +20,12 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     private float perishMultiplierBuffed = 0.3f;
     private float perishMultiplierUnBuffed = 0.75f;
     public readonly int cutIceSlot = 216;
+
+    private enum SlotType {
+        Segments = 8,
+        IceDrawer = 9,
+        ClosedCabinet = 10
+    }
 
     public BECoolingCabinet() {
         PerishMultiplier = 0.75f; // Needs to be change-able so it's set from within the constructor
@@ -85,7 +89,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         // Open/Close cabinet or drawer
         if (shift) {
             switch (blockSel.SelectionBoxIndex) {
-                case 9:
+                case (int)SlotType.IceDrawer:
                     if (!DrawerOpen) ToggleCabinetDrawer(true, byPlayer);
                     else ToggleCabinetDrawer(false, byPlayer);
                     break;
@@ -102,7 +106,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
 
         // Take/Put items
         if (slot.Empty) {
-            if (CabinetOpen && blockSel.SelectionBoxIndex <= 8) {
+            if (CabinetOpen && blockSel.SelectionBoxIndex <= (int)SlotType.Segments) {
                 // In-container interactions
                 if (ctrl && TryUse(byPlayer, slot, blockSel)) {
                     return true;
@@ -110,7 +114,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
 
                 return TryTake(byPlayer, blockSel);
             }
-            else if (DrawerOpen && blockSel.SelectionBoxIndex == 9) {
+            else if (DrawerOpen && blockSel.SelectionBoxIndex == (int)SlotType.IceDrawer) {
                 return TryTakeIceOrSlush(byPlayer);
             }
 
@@ -148,7 +152,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     }
 
     protected bool TryUse(IPlayer player, ItemSlot slot, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex > 8) return false; // If it's cabinet or drawer selection box, return
+        if (blockSel.SelectionBoxIndex > (int)SlotType.Segments) return false; // If it's cabinet or drawer selection box, return
 
         int segmentIndex = blockSel.SelectionBoxIndex;
         int startIndex = segmentIndex * ItemsPerSegment;
@@ -189,19 +193,22 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int startIndex = blockSel.SelectionBoxIndex;
-        if (startIndex > 8) return false; // If it's cabinet or drawer selection box, return
+        if (startIndex > (int)SlotType.Segments) return false; // If it's cabinet or drawer selection box, return
 
+        ItemStack stack = slot.Itemstack;
         startIndex *= ItemsPerSegment;
+
         if (!inv[startIndex].Empty) {
             ItemStack firstItemOnSegment = inv[startIndex].Itemstack;
-            if (!firstItemOnSegment.IsSolitaryMatch(slot.Itemstack)) return false;
-            if (slot.Itemstack.IsLargeItem() || firstItemOnSegment.IsLargeItem()) return false;
-            if (firstItemOnSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false; 
+            if (!firstItemOnSegment.BelongsToSameGroupAs(stack)) return false;
+            if (stack.IsLargeItem() || firstItemOnSegment.IsLargeItem()) return false;
+            if (firstItemOnSegment.IsSmallItem() != stack.IsSmallItem()) return false; 
         }
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !slot.Itemstack.IsSmallItem()) return false;
+            if (currentIndex == startIndex + 4 && !stack.IsSmallItem()) 
+                return false;
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
@@ -241,7 +248,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     }
 
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
-        if (selection.SelectionBoxIndex != 9) return false;
+        if (selection.SelectionBoxIndex != (int)SlotType.IceDrawer) return false;
         if (slot.Empty) return false;
         ItemStack stack = inv[cutIceSlot].Itemstack;
 
@@ -264,7 +271,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             MarkDirty(true);
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
 
-            return moved > 0;
+            return true;
         }
 
         return false;
@@ -361,7 +368,6 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
-
 
         if (open) {
             if (animUtil.activeAnimationsByAnimCode.ContainsKey("draweropen") == false) {
@@ -490,8 +496,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                     }
                     // -----------------------------------
 
-                    tfMatrices[index] =
-                        new Matrixf()
+                    tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
                         .RotateYDeg(block.Shape.rotateY)
                         .Scale(scale, scale, scale)
@@ -510,7 +515,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         base.GetBlockInfo(forPlayer, sb);
 
         // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == 9 && !inv[cutIceSlot].Empty) {
+        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[cutIceSlot].Empty) {
             if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
@@ -520,7 +525,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         }
 
         // Cycle segments when cabinet is closed
-        if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == 10) {
+        if (!CabinetOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.ClosedCabinet) {
             int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
             sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + Lang.Get("foodshelves:segmentnum-" + currentSegment));
 

@@ -25,14 +25,17 @@ public static class CheckExtensions {
     /// Determines if the item is considered a large item, based on baking properties, "shelvable" attribute, or specific known basket block types.
     /// </summary>
     public static bool IsLargeItem(this ItemStack stack) {
-        if (stack?.Collectible?.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
-        if (stack?.Collectible?.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
-        if (stack?.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
-        if (stack?.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
+        var collectible = stack?.Collectible;
+        if (collectible == null) return false;
 
-        if (stack?.Collectible?.Code.Path.StartsWith("claypot-") == true) return true;
+        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
+        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
+        if (stack.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
+        if (stack.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
+
+        if (collectible.Code.Path.StartsWith("claypot-") == true) return true;
         
-        if (stack?.Collectible is BaseFSBasket) return true;
+        if (collectible is BaseFSBasket) return true;
 
         return false;
     }
@@ -47,8 +50,9 @@ public static class CheckExtensions {
         if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:cookedveggie-*", stackCode)) return true;
 
-        if (stack?.Collectible.Code == "pemmican:pemmican-pack") return false;
-        if (stack?.Collectible.Code == "pemmican:mushroompatebar") return true;
+        if (stackCode == "pemmican:pemmican-pack") return false;
+        if (stackCode == "pemmican:chips-pack") return false;
+        if (stackCode == "pemmican:mushroompatebar") return true;
         
         if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
         if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
@@ -57,26 +61,22 @@ public static class CheckExtensions {
     }
 
     /// <summary>
-    /// Checks if two item stacks can coexist in the same slot.<br/>
-    /// Returns true unless one of them is a solitary item, in which case their codes must match.
+    /// Checks if two item stacks can coexist in the same slot (belong to a same group).<br/>
+    /// Returns true unless one of them belongs to a group, in which case their groups must match.
     /// </summary>
-    public static bool IsSolitaryMatch(this ItemStack checkSlot, ItemStack currSlot) {
-        if (checkSlot?.Collectible == null || currSlot?.Collectible == null) return true;
+    public static bool BelongsToSameGroupAs(this ItemStack checkSlot, ItemStack currSlot) {
+        if (checkSlot?.Collectible == null || currSlot?.Collectible == null)
+            return true;
 
-        string[] solitaryItems = ["pemmican:pemmican-pack", "pemmican:chips-pack"];
+        string checkGroup = checkSlot.ItemAttributes?["fsGroup"]?.AsString();
+        string currGroup = currSlot.ItemAttributes?["fsGroup"]?.AsString();
 
-        bool solitary = false;
-        foreach (string item in solitaryItems) {
-            if (checkSlot.Collectible.Code == item || currSlot.Collectible.Code == item) {
-                solitary = true;
-                break;
-            }
-        }
+        if (string.IsNullOrEmpty(checkGroup) && string.IsNullOrEmpty(currGroup))
+            return true;
 
-        if (solitary) { // Return false only if it should be solitary and the codes don't match.
-            return checkSlot.Collectible.Code == currSlot.Collectible.Code;
-        }
+        if (!string.IsNullOrEmpty(checkGroup) && checkGroup == currGroup)
+            return true;
 
-        return true;
+        return false;
     }
 }

@@ -70,7 +70,7 @@ public class BEDoubleShelf : BEBaseFSContainer {
 
         if (!inv[startIndex].Empty) {
             ItemStack firstItemInSegment = inv[startIndex].Itemstack;
-            if (!firstItemInSegment.IsSolitaryMatch(slot.Itemstack)) return false;
+            if (!firstItemInSegment.BelongsToSameGroupAs(slot.Itemstack)) return false;
             if (slot.Itemstack.IsLargeItem() || firstItemInSegment.IsLargeItem()) return false;
             if (firstItemInSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false;
         }

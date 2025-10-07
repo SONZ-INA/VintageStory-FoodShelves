@@ -69,6 +69,22 @@
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
+
+
+  {
+    "file": "pemmican:itemtypes/food/chips-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+  {
+    "file": "pemmican:itemtypes/food/pemmican-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+
+
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
     "op": "addmerge", "path": "/GroupingCodes/group3/-",
@@ -84,6 +100,8 @@
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
+
+
   {
     "file": "foodshelves:blocktypes/other/floursack.json",
     "op": "addmerge", "path": "/attributes/variantTextures/seed/-", "side": "server",
@@ -114,6 +132,8 @@
     "value": "pemmican:item/seeds/{seed3}-label",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
+
+
   {
     "file": "foodshelves:blocktypes/shelves/barshelf.json",
     "op": "replace", "path": "/enabled", "side": "server", "value": true,
