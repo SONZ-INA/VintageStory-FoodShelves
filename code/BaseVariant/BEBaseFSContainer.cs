@@ -115,36 +115,44 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
         int moved = 0;
 
-        if (block.UnifyItemSlots) {
-            // ItemSlots act as one
+        if (block.UnifyItemSlots) { // Unified slot logic
             if (!inv[startIndex].Empty && !inv[startIndex].Itemstack.Collectible.Equals(slot.Itemstack.Collectible))
                 return false;
 
             for (int i = startIndex; i < startIndex + ItemsPerSegment; i++) {
                 int availableSpace = inv[i].MaxSlotStackSize - inv[i].StackSize;
+                var stack = inv[i].Itemstack;
 
+                // Try normal insertion
                 if (ctrl) {
                     moved += slot.TryPutInto(Api.World, inv[i], availableSpace);
                     if (slot.StackSize == 0) break;
                 }
                 else if (inv[i].StackSize < inv[i].MaxSlotStackSize) {
                     moved = slot.TryPutInto(Api.World, inv[i], 1);
-                    break;
                 }
 
                 // Force merge freshness disparity if enabled
-                if (OverrideMergeStacks && moved == 0 && slot.Itemstack != null && inv[i].Itemstack != null) {
-                    var stack = inv[i].Itemstack;
-                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, availableSpace) {
+                if (OverrideMergeStacks && slot.Itemstack != null && stack != null && moved == 0) {
+                    int before = slot.StackSize;
+                    int amount = ctrl ? availableSpace : 1;
+
+                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, amount) {
                         SourceSlot = new DummySlot(slot.Itemstack),
                         SinkSlot = new DummySlot(stack)
                     };
                     stack.Collectible.TryMergeStacks(op);
+
+                    moved = before - slot.StackSize;
+                }
+
+                // Only break if something was actually moved
+                if (moved > 0) {
+                    break;
                 }
             }
         }
-        else {
-            // ItemSlots are separate
+        else { // Separate slot logic
             for (int i = 0; i < ItemsPerSegment; i++) {
                 int idx = startIndex + i;
                 var stack = inv[idx].Itemstack;
@@ -161,9 +169,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     }
 
                     // Force merge freshness disparity if enabled
-                    if (OverrideMergeStacks && moved == 0 && slot.Itemstack != null && stack != null) {
+                    if (OverrideMergeStacks && slot.Itemstack != null && stack != null && moved == 0) {
+                        int before = slot.StackSize;
                         int amount = ctrl ? availableSpace : 1;
-                        moved = slot.StackSize;
 
                         ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, amount) {
                             SourceSlot = new DummySlot(slot.Itemstack),
@@ -171,10 +179,13 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                         };
                         stack.Collectible.TryMergeStacks(op);
 
-                        moved -= slot.StackSize; // Populate moved so we know how much it transfered
+                        moved = before - slot.StackSize;
                     }
 
-                    if (moved > 0) break;
+                    // Only break if something was actually moved
+                    if (moved > 0) {
+                        break;
+                    }
                 }
             }
         }

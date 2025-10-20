@@ -56,5 +56,68 @@
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "fruitcooler-normal-east" }
+  },
+
+
+  {
+    "enabled": false,
+    "ingredientPattern": "GPH,RCR,PZP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
+      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "fruitcooler-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "glass": "{glass}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "GPH,RCR,PZP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
+      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "fruitcooler-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "glass": "{glass}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "GPH,RCR,PZP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "G": { "type": "block", "code": "*:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "*:rockpolished-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "fruitcooler-normal-east" }
   }
 ]

@@ -6,7 +6,8 @@
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
       "pemmican:mushroompatebar",
-      "pemmican:chips-pack"
+      "pemmican:chips-pack",
+      "pemmican:mushroom-pack"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
@@ -17,7 +18,8 @@
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
       "pemmican:mushroompatebar",
-      "pemmican:chips-pack"
+      "pemmican:chips-pack",
+      "pemmican:mushroom-pack"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
@@ -79,6 +81,12 @@
   },
   {
     "file": "pemmican:itemtypes/food/pemmican-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+  {
+    "file": "pemmican:itemtypes/food/mushroom-pack.json",
     "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
     "value": "packedpemmican",
     "dependsOn": [ { "modid": "longtermfood" } ]

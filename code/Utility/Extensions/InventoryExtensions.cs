@@ -114,4 +114,47 @@ public static class InventoryExtensions {
 
         return dummySlots;
     }
+
+    /// <summary>
+    /// Synchronizes a single transition type progress across all slots in the inventory.
+    /// </summary>
+    public static void SyncTransitionType(this InventoryBase inv, ICoreAPI api, EnumTransitionType type) {
+        float totalProgress = 0f;
+        int totalCount = 0;
+        bool foundAny = false;
+
+        // Collect transition data
+        foreach (var slot in inv) {
+            if (slot.Empty) continue;
+
+            var stack = slot.Itemstack;
+            var collectible = stack.Collectible;
+            var state = collectible.UpdateAndGetTransitionState(api.World, slot, type);
+            if (state == null) continue;
+
+            foundAny = true;
+
+            float progress = state.TransitionedHours;
+
+            totalProgress += progress * slot.StackSize;
+            totalCount += slot.StackSize;
+        }
+
+        if (!foundAny || totalCount == 0)
+            return;
+
+        float avgProgress = totalProgress / totalCount;
+
+        // Apply averaged values to all stacks
+        foreach (var slot in inv) {
+            if (slot.Empty) continue;
+
+            var stack = slot.Itemstack;
+            var collectible = stack.Collectible;
+            var state = collectible.UpdateAndGetTransitionState(api.World, slot, type);
+            if (state == null) continue;
+
+            collectible.SetTransitionState(stack, type, avgProgress);
+        }
+    }
 }

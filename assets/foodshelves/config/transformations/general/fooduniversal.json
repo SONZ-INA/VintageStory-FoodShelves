@@ -12,6 +12,7 @@
 
   "pemmican:pemmican-pack": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0.25, "y": 0, "z": 0.025 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.71 },
   "pemmican:chips-pack": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0.25, "y": 0, "z": 0.025 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.71 },
+  "pemmican:mushroom-pack": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "translation": { "x": 0.25, "y": 0, "z": 0.025 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.71 },
   "pemmican:pemmican-*": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.74 },
   "pemmican:mushroompatebar": { "origin": { "x": 0.5, "y": 0, "z": 0.5 }, "rotation": { "x": 0, "y": 45, "z": 0 }, "scale": 0.74 }
 }

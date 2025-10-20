@@ -117,6 +117,7 @@
   <None Remove="assets\foodshelves\patches\artofgrowing.json" />
   <None Remove="assets\foodshelves\patches\butchering.json" />
   <None Remove="assets\foodshelves\patches\carryon.json" />
+  <None Remove="assets\foodshelves\patches\chiseltools.json" />
   <None Remove="assets\foodshelves\patches\clayworks.json" />
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\floralzones.json" />

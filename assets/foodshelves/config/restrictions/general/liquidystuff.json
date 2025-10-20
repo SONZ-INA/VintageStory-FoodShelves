@@ -16,7 +16,11 @@
     "expandedfoods:wildtreedryfruit-*",
     "expandedfoods:peanut-cooked",
     "expandedfoods:peanut-kernels",
+    "expandedfoods:gelatin*",
 
     "wildcraftfruit:nut-peanutground"
+  ],
+  "BlacklistedCodes": [
+    "expandedfoods:gelatin-liquid"
   ]
 }

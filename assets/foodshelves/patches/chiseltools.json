@@ -1,0 +1,34 @@
+[
+  {
+    "file": "foodshelves:recipes/grid/glassware/fruitcooler.json",
+    "op": "replace", "path": "/3/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  },
+  {
+    "file": "foodshelves:recipes/grid/glassware/fruitcooler.json",
+    "op": "replace", "path": "/4/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  },
+  {
+    "file": "foodshelves:recipes/grid/glassware/fruitcooler.json",
+    "op": "replace", "path": "/5/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  },
+
+
+  {
+    "file": "foodshelves:recipes/grid/glassware/meatfreezer.json",
+    "op": "replace", "path": "/3/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  },
+  {
+    "file": "foodshelves:recipes/grid/glassware/fruitcooler.json",
+    "op": "replace", "path": "/4/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  },
+  {
+    "file": "foodshelves:recipes/grid/glassware/fruitcooler.json",
+    "op": "replace", "path": "/5/enabled", "side": "server", "value": true,
+    "dependsOn": [ { "modid": "chiseltools" } ]
+  }
+]

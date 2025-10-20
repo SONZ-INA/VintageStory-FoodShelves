@@ -3,9 +3,10 @@
 public class BECeilingJar : BEBaseFSContainer {
     public override string AttributeCheck => "fsLiquidyStuff";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
+    protected override bool OverrideMergeStacks => true;
 
     protected override float PerishMultiplier => 0.75f;
-    protected override float DryingMultiplier => 1.25f;
+    protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public override int ItemsPerSegment => 12;
 
@@ -13,9 +14,21 @@ public class BECeilingJar : BEBaseFSContainer {
 
     public override void Initialize(ICoreAPI api) {
         // Adjust when Storage Vessels are fixed
-        inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() { [EnumFoodCategory.Grain] = 0.5f };
+        inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() {
+            [EnumFoodCategory.Grain] = 0.5f
+        };
 
         base.Initialize(api);
+
+        // To apply the uniform transition rates across all slots
+        inv.SlotModified += OnSlotModified;
+    }
+
+    private void OnSlotModified(int slotId) {
+        inv.SyncTransitionType(Api, EnumTransitionType.Perish);
+        inv.SyncTransitionType(Api, EnumTransitionType.Dry);
+        inv.SyncTransitionType(Api, EnumTransitionType.Cure);
+        MarkDirty();
     }
 
     protected override void InitMesh() {
