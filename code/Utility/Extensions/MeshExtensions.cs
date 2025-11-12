@@ -76,7 +76,7 @@ public static class MeshExtensions {
 
         var textureLoc = new AssetLocation(texturePath);
 
-        // Special case: remove "ground" from peanut textures
+        // Exception for WC:FN
         if (textureLoc.ToString().Contains("peanutground"))
             textureLoc = new AssetLocation(textureLoc.ToString().Replace("ground", ""));
 
@@ -116,37 +116,5 @@ public static class MeshExtensions {
             return null;
 
         return new ContainerTextureSource(capi, item, firstTexture);
-    }
-
-    public static Dictionary<string, AssetLocation> AddOverlays(ICoreClientAPI clientApi, ShapeTextureSource textureSource, Shape shape, CompositeTexture texture) {
-        const string prefix = "ov_";
-        
-        shape.SubclassForStepParenting(prefix);
-        Dictionary<string, AssetLocation> prefixedTextureCodes = shape.Textures;
-        shape.Textures = new Dictionary<string, AssetLocation>(prefixedTextureCodes.Count);
-
-        foreach (var entry in prefixedTextureCodes) {
-            shape.Textures[prefix + entry.Key] = entry.Value;
-        }
-
-        Shape resolvedOverlayShape;
-        foreach (var overlay in texture.BlendedOverlays) {
-            AssetLocation ass = overlay.Base.Clone().WithPathAppendixOnce(".json").WithPathPrefixOnce("shapes/");
-            resolvedOverlayShape = clientApi.Assets.TryGet(ass)?.ToObject<Shape>();
-
-            if (resolvedOverlayShape == null) continue;
-
-            resolvedOverlayShape.WalkElements("*", (e) => {
-                if (!string.IsNullOrEmpty(e.StepParentName)) {
-                    e.StepParentName = prefix + e.StepParentName;
-                }
-            });
-
-            shape.StepParentShape(resolvedOverlayShape, overlay.Base, overlay.Base, clientApi.Logger, (textureCode, textureLocation) => {
-                textureSource.textures[textureCode] = new CompositeTexture(textureLocation);
-            });
-        }
-
-        return prefixedTextureCodes;
     }
 }

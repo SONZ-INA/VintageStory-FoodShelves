@@ -17,6 +17,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
 
     private readonly string CoolingOnly = "fsCoolingOnly";
+    private float IceMeltRate = 1;
     private float perishMultiplierBuffed = 0.3f;
     private float perishMultiplierUnBuffed = 0.75f;
     public readonly int cutIceSlot = 216;
@@ -41,6 +42,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
 
         base.Initialize(api);
         
+        IceMeltRate = api.World.Config.GetFloat("FoodShelves.IceMeltRate", IceMeltRate);
         perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", perishMultiplierBuffed);
         perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
 
@@ -72,7 +74,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         if (transType == EnumTransitionType.Melt) {
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 24 days which is 8 ice blocks
-            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f;
+            return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f * IceMeltRate;
         }
 
         return PerishMultiplier * globalPerishMultiplier;

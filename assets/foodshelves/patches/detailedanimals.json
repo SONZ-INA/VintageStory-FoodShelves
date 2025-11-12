@@ -1,6 +1,12 @@
 [
   {
-    "file": "detailedanimals:itemtypes/egg-ceramic.json",
+    "file": "detailedanimals:itemtypes/egg-ceramic-raw.json",
+    "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "detailedanimals" } ]
+  },
+  {
+    "file": "detailedanimals:itemtypes/egg-ceramic-fired.json",
     "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
     "value": true,
     "dependsOn": [ { "modid": "detailedanimals" } ]
@@ -8,6 +14,24 @@
   {
     "file": "detailedanimals:itemtypes/egg-chicken.json",
     "op": "addmerge", "path": "/attributes/fsEggBasket", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "detailedanimals" } ]
+  },
+  {
+    "file": "detailedanimals:itemtypes/egg-ceramic-raw.json",
+    "op": "addmerge", "path": "/attributes/fsEggShelf", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "detailedanimals" } ]
+  },
+  {
+    "file": "detailedanimals:itemtypes/egg-ceramic-fired.json",
+    "op": "addmerge", "path": "/attributes/fsEggShelf", "side": "server",
+    "value": true,
+    "dependsOn": [ { "modid": "detailedanimals" } ]
+  },
+  {
+    "file": "detailedanimals:itemtypes/egg-chicken.json",
+    "op": "addmerge", "path": "/attributes/fsEggShelf", "side": "server",
     "value": true,
     "dependsOn": [ { "modid": "detailedanimals" } ]
   }

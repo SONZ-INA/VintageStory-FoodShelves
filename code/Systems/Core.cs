@@ -17,8 +17,10 @@ public class Core : ModSystem {
             case EnumAppSide.Server:
                 ConfigServer = ModConfig.ReadConfig<ConfigServer>(api, ConfigServer.ConfigServerName);
                 api.World.Config.SetBool("FoodShelves.GlobalBlockBuffs", ConfigServer.GlobalBlockBuffs);
+                api.World.Config.SetBool("FoodShelves.LakeIceToCutIce", ConfigServer.LakeIceToCutIce);
                 api.World.Config.SetFloat("FoodShelves.GlobalPerishMultiplier", ConfigServer.GlobalPerishMultiplier);
                 api.World.Config.SetFloat("FoodShelves.CooledBuff", ConfigServer.CooledBuff);
+                api.World.Config.SetFloat("FoodShelves.IceMeltRate", ConfigServer.IceMeltRate);
                 break;
             //case EnumAppSide.Client:
             //    ConfigClient = ModConfig.ReadConfig<ConfigClient>(api, ConfigClient.ConfigClientName);

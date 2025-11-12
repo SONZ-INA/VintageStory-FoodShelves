@@ -30,8 +30,10 @@ public class ConfigLibCompatibility {
         if (config == null) return;
 
         config.GlobalBlockBuffs = OnCheckBox(id, config.GlobalBlockBuffs, nameof(config.GlobalBlockBuffs));
+        config.LakeIceToCutIce = OnCheckBox(id, config.LakeIceToCutIce, nameof(config.LakeIceToCutIce));
         config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0, 10);
         config.CooledBuff = OnInputFloat(id, config.CooledBuff, nameof(config.CooledBuff), 0, 1);
+        config.IceMeltRate = OnInputFloat(id, config.IceMeltRate, nameof(config.IceMeltRate), 0.001f, 10);
     }
 
     private void BuildSettingsClient(ConfigClient config, string id) {
@@ -42,13 +44,13 @@ public class ConfigLibCompatibility {
 
     private bool OnCheckBox(string id, bool value, string name) {
         bool newValue = value;
-        ImGui.Checkbox(Lang.Get(name) + $"##{name}-{id}", ref newValue);
+        ImGui.Checkbox(name + $"##{name}-{id}", ref newValue);
         return newValue;
     }
 
     private float OnInputFloat(string id, float value, string name, float minValue, float maxValue) {
         float newValue = value;
-        ImGui.InputFloat(Lang.Get(name) + $"##{name}-{id}", ref newValue, step: 0.05f, step_fast: 1.0f);
+        ImGui.InputFloat(name + $"##{name}-{id}", ref newValue, 0.05f, 0.5f);
         return Math.Clamp(newValue, minValue, maxValue);
     }
 }

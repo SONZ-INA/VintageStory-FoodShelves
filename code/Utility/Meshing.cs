@@ -69,35 +69,6 @@ public static class Meshing {
             Shape shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
             if (shape == null) continue;
 
-            // Handle overlays if present
-            //CompositeShape compositeShape = contents[i].Item.Shape.Clone();
-            //if (compositeShape?.Overlays != null && compositeShape.Overlays.Length > 0) {
-            //    string overlayPrefix = $"ov_{i}_";
-            //    shape.SubclassForStepParenting(overlayPrefix);
-
-            //    // Prefix existing textures
-            //    var originalTextures = new Dictionary<string, AssetLocation>(shape.Textures);
-            //    shape.Textures.Clear();
-            //    foreach (var entry in originalTextures) {
-            //        shape.Textures[overlayPrefix + entry.Key] = entry.Value;
-            //    }
-
-            //    // Add overlays
-            //    foreach (var overlay in compositeShape.Overlays) {
-            //        var overlayBase = overlay.Base.Clone().WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
-            //        Shape overlayShape = capi.Assets.TryGet(overlayBase)?.ToObject<Shape>();
-            //        if (overlayShape == null) continue;
-
-            //        overlayShape.WalkElements("*", (e) => {
-            //            if (!string.IsNullOrEmpty(e.StepParentName)) {
-            //                e.StepParentName = overlayPrefix + e.StepParentName;
-            //            }
-            //        });
-
-            //        shape.StepParentShape(overlayShape, overlayBase.ToString(), compositeShape.Base.ToString(), capi.Logger, null);
-            //    }
-            //}
-
             if (shape.Textures.Count == 0) {
                 if (isItem) {
                     foreach (var texture in contents[i].Item.Textures) {

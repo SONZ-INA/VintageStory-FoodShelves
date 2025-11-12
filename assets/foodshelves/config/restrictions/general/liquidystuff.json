@@ -7,6 +7,7 @@
     "game:salt",
     "game:grain-*",
     "game:legume-peanut",
+    "game:legume-soybean",
     "game:blastingpowder",
 
     "expandedfoods:dehydratedfruit-*",

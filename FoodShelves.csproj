@@ -122,7 +122,7 @@
   <None Remove="assets\foodshelves\patches\detailedanimals.json" />
   <None Remove="assets\foodshelves\patches\floralzones.json" />
   <None Remove="assets\foodshelves\patches\gourmand.json" />
-  <None Remove="assets\foodshelves\patches\icyexc.json" />
+  <None Remove="assets\foodshelves\patches\lakeicerecipe.json" />
   <None Remove="assets\foodshelves\patches\longtermfood.json" />
   <None Remove="assets\foodshelves\patches\maltiezfirearms.json" />
   <None Remove="assets\foodshelves\patches\moreanimals.json" />
