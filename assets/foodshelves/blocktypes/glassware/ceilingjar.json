@@ -23,7 +23,7 @@
     "unifyItemSlots": true
   },
   "behaviors": [
-    { "name": "FoodShelves.CeilingAttachable" }
+    { "name": "Unstable", "properties": { "attachedToFaces": ["up"] } }
   ],
   "shape": {
     "base": "block/glassware/ceilingjar"
