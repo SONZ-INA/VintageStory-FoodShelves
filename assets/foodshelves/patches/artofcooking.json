@@ -1,10 +1,22 @@
 [
   {
     "file": "foodshelves:config/restrictions/general/holderuniversal.json",
-    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
     "value": [
       "artofcooking:shawarma*"
     ],
-    "dependsOn": [ { "modid": "artofcooking" } ]
+    "side": "Server",
+    "dependsOn": [ { "modId": "artofcooking" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/general/holderuniversal.json",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
+    "value": [
+      "artofcooking:shawarma*"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "artofcookingpatch" } ]
   }
 ]
