@@ -1,0 +1,10 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/general/coolingonly.json",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
+    "value": [ "brainfreeze:icecubes" ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "brainfreeze" } ]
+  }
+]
