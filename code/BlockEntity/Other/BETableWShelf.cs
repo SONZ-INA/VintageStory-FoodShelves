@@ -36,8 +36,8 @@ public class BETableWShelf : BEBaseFSContainer {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes sound = stack.Block.Sounds.Place;
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {

@@ -9,8 +9,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected MeshData? blockMesh;
 
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block.Code.FirstCodePart();
-    public override string AttributeTransformCode => "on" + Block.Code.FirstCodePart() + "Transform";
+    public override string InventoryClassName => Block?.Code.FirstCodePart() ?? "-temp-";
+    public override string AttributeTransformCode => "on" + Block?.Code.FirstCodePart() ?? "-temp-" + "Transform";
 
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
     public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
@@ -93,10 +93,10 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             if (slot.Empty) return false;
             
             if (slot.CanStoreInSlot(AttributeCheck)) {
-                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                 if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                     MarkDirty();
                     return true;
                 }
@@ -215,8 +215,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     : inv[currentIndex].TakeOut(1);
 
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes sound = stack.Block.Sounds.Place;
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {

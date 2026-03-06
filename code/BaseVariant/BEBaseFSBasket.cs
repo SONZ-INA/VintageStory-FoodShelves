@@ -63,8 +63,8 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
             return false;
 
         if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            SoundAttributes sound = stack.Block!.Sounds.Place;
-            Api.World.PlaySoundAt(sound, byPlayer.Entity);
+            SoundAttributes? sound = stack.Block?.Sounds?.Place;
+            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
         }
 
         if (stack.StackSize > 0) {

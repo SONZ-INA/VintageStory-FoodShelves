@@ -128,20 +128,20 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                 return true;
 
             if (CabinetOpen && slot.CanStoreInSlot(AttributeCheck)) {
-                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                 if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                     MarkDirty();
                     return true;
                 }
             }
 
             if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                 if (TryPutIce(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                     MarkDirty();
                     return true;
                 }
@@ -231,8 +231,8 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             if (!inv[currentIndex].Empty) {
                 ItemStack stack = inv[currentIndex].TakeOut(1);
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes sound = stack.Block.Sounds.Place;
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                 }
 
                 if (stack.StackSize > 0)
@@ -281,8 +281,8 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
         if (!inv[cutIceSlot].Empty) {
             ItemStack stack = inv[cutIceSlot].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                SoundAttributes sound = stack.Block.Sounds.Place;
-                Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
             }
 
             if (stack.StackSize > 0)
@@ -346,7 +346,9 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer, byPlayer, true, 16, 0.3f);
+            }
             PerishMultiplier = 1f;
         }
         else {
@@ -361,7 +363,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             }
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+                Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer, byPlayer, true, 16, 0.3f);
             }
         }
 
@@ -385,7 +387,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             }
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(block.soundDrawerOpen, byPlayer.Entity, byPlayer, true, 16);
+                Api.World.PlaySoundAt(block.soundDrawerOpen, byPlayer, byPlayer, true, 16);
             }
 
             if (!CabinetOpen) {
@@ -402,7 +404,7 @@ public class BECoolingCabinet : BEBaseFSAnimatable {
             }
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(block.soundDrawerClose, byPlayer.Entity, byPlayer, true, 16);
+                Api.World.PlaySoundAt(block.soundDrawerClose, byPlayer, byPlayer, true, 16);
             }
         }
 

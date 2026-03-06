@@ -120,10 +120,10 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
 
                 if (!slot.Empty) {
                     if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                        SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                        SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                         if (TryPutIce(byPlayer, slot, blockSel)) {
-                            Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                             MarkDirty();
                             return true;
                         }
@@ -180,8 +180,8 @@ public class BEMeatFreezer : BEBaseFSAnimatable {
         if (!inv[cutIceSlot].Empty) {
             ItemStack stack = inv[cutIceSlot].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                SoundAttributes sound = stack.Block.Sounds.Place;
-                Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
             }
 
             if (stack.StackSize > 0) {

@@ -72,10 +72,10 @@ public class BETunRack : BEBaseFSContainer {
         }
         else {
             if (inv.Empty && slot.CanStoreInSlot(AttributeCheck)) { // Put barrel in rack
-                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                 if (TryPut(slot)) {
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                     MarkDirty();
                     return true;
                 }
@@ -105,8 +105,8 @@ public class BETunRack : BEBaseFSContainer {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes sound = stack.Block.Sounds.Place;
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {

@@ -55,10 +55,10 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
         }
         else {
             if (slot.CanStoreInSlot("fsGlassJarShelf")) {
-                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
+                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
 
                 if (TryPut(slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
+                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
                     MarkDirty();
                     return true;
                 }
@@ -93,8 +93,8 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
 
         ItemStack stack = inv[index].TakeOut(1);
         if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            SoundAttributes sound = stack.Block.Sounds.Place;
-            Api.World.PlaySoundAt(sound, byPlayer.Entity);
+            SoundAttributes? sound = stack.Block?.Sounds?.Place;
+            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
         }
 
         if (stack.StackSize > 0) {
