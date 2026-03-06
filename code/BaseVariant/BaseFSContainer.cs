@@ -2,13 +2,13 @@
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     public const string FSAttributes = "FSAttributes";
-    public string WorldInteractionAttributeCheck = null;
+    public string? WorldInteractionAttributeCheck = null;
     public bool UnifyItemSlots = false;
 
     protected bool globalBlockBuffs = true;
-    protected WorldInteraction[] itemSlottableInteractions;
+    protected WorldInteraction[]? itemSlottableInteractions;
     
-    private string heldDescEntry;
+    private string? heldDescEntry;
     private bool preventPlacing = false;
     private string placingMessage = "";
 
@@ -71,16 +71,16 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         LoadVariantsCreative(api, this);
     }
 
-    public WorldInteraction[] BaseGetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+    public WorldInteraction[]? BaseGetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
             .Append(itemSlottableInteractions);
     }
 
-    public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
+    public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {
         return true;
     }
 
@@ -89,7 +89,9 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fscontainer) return fscontainer.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fscontainer) 
+            return fscontainer.OnInteract(byPlayer, blockSel);
+        
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
@@ -106,6 +108,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
         string entry = "foodshelves:helddesc-" + heldDescEntry;
         string desc = Lang.Get(entry);
+
         if (desc != entry) {
             dsc.AppendLine();
             dsc.AppendLine(desc);
@@ -114,13 +117,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
         if (preventPlacing) {
-            (api as ICoreClientAPI).TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
+            (api as ICoreClientAPI)!.TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
             failureCode = "__ignore__";
             return false;
         }
-        else {
-            return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
-        }
+        
+        return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
@@ -146,7 +148,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         }
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            if (fscontainer?.VariantAttributes?.Count != 0) {
+            if (fscontainer.VariantAttributes?.Count > 0) {
                 stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
             }
         }
@@ -160,30 +162,31 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
     public override BlockDropItemStack[] GetDropsForHandbook(ItemStack handbookStack, IPlayer forPlayer) {
         BlockDropItemStack[] drops = base.GetDropsForHandbook(handbookStack, forPlayer);
-        drops[0].ResolvedItemstack.SetFrom(handbookStack);
+        drops[0].ResolvedItemstack?.SetFrom(handbookStack);
         return drops;
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
         if (api.Side == EnumAppSide.Server) return;
         
-        string meshCacheKey = GetMeshCacheKey(itemstack);
+        string meshCacheKey = GetMeshCacheKey(renderinfo.InSlot);
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);
 
-        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef meshRef)) {
-            MeshData mesh = GenMesh(itemstack, capi.BlockTextureAtlas, null);
+        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef? meshRef)) {
+            MeshData? mesh = GenMesh(renderinfo.InSlot, capi.BlockTextureAtlas, null);
             meshrefs[meshCacheKey] = meshRef = capi.Render.UploadMultiTextureMesh(mesh);
         }
 
         renderinfo.ModelRef = meshRef;
     }
 
-    public virtual MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        return GenBlockVariantMesh(api, itemstack);
+    public virtual MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
+        return GenBlockVariantMesh(api, slot.Itemstack);
     }
 
-    public virtual string GetMeshCacheKey(ItemStack itemstack) {
-        if (itemstack.Attributes[FSAttributes] is not ITreeAttribute tree) return Code;
+    public virtual string GetMeshCacheKey(ItemSlot slot) {
+        if (slot.Itemstack?.Attributes[FSAttributes] is not ITreeAttribute tree) 
+            return Code;
 
         List<string> parts = [];
         foreach (var pair in tree) {

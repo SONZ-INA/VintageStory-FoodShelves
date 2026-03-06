@@ -4,28 +4,28 @@ using Vintagestory.API.Server;
 namespace FoodShelves;
 
 public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(block) {
-    private bool ignorePlaceTest;
-    private AssetLocation[] exceptions;
     public bool fallSideways;
     private float dustIntensity;
     private float fallSidewaysChance = 0.3f;
-    private AssetLocation fallSound;
+    private AssetLocation? fallSound;
     private float impactDamageMul;
-    private Cuboidi[] attachmentAreas;
-    private BlockFacing[] attachableFaces;
+    private Cuboidi[]? attachmentAreas;
+    private BlockFacing[]? attachableFaces;
 
     public override void Initialize(JsonObject properties) {
         base.Initialize(properties);
         attachableFaces = null;
         if (properties["attachableFaces"].Exists) {
-            string[] array = properties["attachableFaces"].AsArray<string>();
-            attachableFaces = new BlockFacing[array.Length];
-            for (int i = 0; i < array.Length; i++) {
-                attachableFaces[i] = BlockFacing.FromCode(array[i]);
+            string?[]? array = properties["attachableFaces"].AsArray<string>();
+            if (array != null && array.Length > 0) {
+                attachableFaces = new BlockFacing[array.Length];
+                for (int i = 0; i < array.Length; i++) {
+                    attachableFaces[i] = BlockFacing.FromCode(array[i]);
+                }
             }
         }
 
-        Dictionary<string, RotatableCube> dictionary = properties["attachmentAreas"].AsObject<Dictionary<string, RotatableCube>>();
+        Dictionary<string, RotatableCube>? dictionary = properties["attachmentAreas"].AsObject<Dictionary<string, RotatableCube>>();
         attachmentAreas = new Cuboidi[6];
         if (dictionary != null) {
             foreach (KeyValuePair<string, RotatableCube> item in dictionary) {
@@ -35,15 +35,13 @@ public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(b
             }
         }
         else {
-            attachmentAreas[4] = properties["attachmentArea"].AsObject<Cuboidi>();
+            attachmentAreas[4] = properties["attachmentArea"].AsObject<Cuboidi>()!;
         }
 
-        ignorePlaceTest = properties["ignorePlaceTest"].AsBool();
-        exceptions = properties["exceptions"].AsObject(Array.Empty<AssetLocation>(), block.Code.Domain);
         fallSideways = properties["fallSideways"].AsBool();
         dustIntensity = properties["dustIntensity"].AsFloat();
         fallSidewaysChance = properties["fallSidewaysChance"].AsFloat(0.3f);
-        string text = properties["fallSound"].AsString();
+        string? text = properties["fallSound"].AsString();
         if (text != null) {
             fallSound = AssetLocation.Create(text, block.Code.Domain);
         }
@@ -97,7 +95,7 @@ public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(b
 
     private bool TryFalling(IWorldAccessor world, BlockPos pos, ref EnumHandling handling, ref string failureCode) {
         if (world.Side != EnumAppSide.Server) return false;
-        if (!((world as IServerWorldAccessor).Api as ICoreServerAPI).Server.Config.AllowFallingBlocks) return false;
+        if (!((world as IServerWorldAccessor)!.Api as ICoreServerAPI)!.Server.Config.AllowFallingBlocks) return false;
 
         if (IsReplacableBeneath(world, pos) || (fallSideways && world.Rand.NextDouble() < (double)fallSidewaysChance && IsReplacableBeneathAndSideways(world, pos))) {
             if (world.GetNearestEntity(pos.ToVec3d().Add(0.5, 0.5, 0.5), 1f, 1.5f, (Entity e) => e is EntityBlockFalling entityBlockFalling && entityBlockFalling.initialPos.Equals(pos)) == null) {
@@ -134,11 +132,11 @@ public class BlockBehaviorCanCeilingAttachFalling(Block block) : BlockBehavior(b
         return false;
     }
 
-    private bool IsReplacableBeneath(IWorldAccessor world, BlockPos pos) {
+    private static bool IsReplacableBeneath(IWorldAccessor world, BlockPos pos) {
         return world.BlockAccessor.GetBlockBelow(pos).Replaceable > 6000;
     }
 
-    public override bool CanAttachBlockAt(IBlockAccessor world, Block block, BlockPos pos, BlockFacing blockFace, ref EnumHandling handling, Cuboidi attachmentArea = null) {
+    public override bool CanAttachBlockAt(IBlockAccessor world, Block block, BlockPos pos, BlockFacing blockFace, ref EnumHandling handling, Cuboidi? attachmentArea = null) {
         return false;
     }
 }

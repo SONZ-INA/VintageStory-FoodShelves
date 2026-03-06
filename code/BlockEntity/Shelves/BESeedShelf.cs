@@ -17,6 +17,7 @@ public class BESeedShelf : BEBaseFSContainer {
                 ItemsPerSegment /= 2;
                 this.RebuildInventory(api, 64);
                 break;
+
             case "veryshort":
                 ItemsPerSegment /= 4;
                 this.RebuildInventory(api, 64);
@@ -40,7 +41,7 @@ public class BESeedShelf : BEBaseFSContainer {
 
                     tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
+                        .RotateYDeg(block?.Shape.rotateY ?? 0)
                         .Scale(0.44f, 0.35f, 0.44f)
                         .Translate(x - 1.075f, y + 0.175f, z - 1.225f)
                         .Values;

@@ -5,7 +5,7 @@ public static class LocationalExtensions {
     /// Finds and returns the transformation for the given collectible object from the provided dictionary.<br/>
     /// Used to apply item-specific position/rotation/scale adjustments to avoid clipping or misalignment.
     /// </summary>
-    public static ModelTransform GetTransformation(this CollectibleObject obj, Dictionary<string, ModelTransform> transformations) {
+    public static ModelTransform? GetTransformation(this CollectibleObject obj, Dictionary<string, ModelTransform> transformations) {
         foreach (KeyValuePair<string, ModelTransform> transformation in transformations) {
             if (WildcardUtil.Match(transformation.Key, obj.Code.ToString())) return transformation.Value;
         }
@@ -16,7 +16,7 @@ public static class LocationalExtensions {
     /// <summary>
     /// Applies the given <see cref="ModelTransform"/> to the matrix, modifying its translation, rotation, and scale.
     /// </summary>
-    public static void ApplyModelTransformToMatrixF(this Matrixf mat, ModelTransform transformation) {
+    public static void ApplyModelTransformToMatrixF(this Matrixf mat, ModelTransform? transformation) {
         if (transformation == null) return;
 
         mat.Translate(0.5f, 0, 0.5f);
@@ -43,18 +43,16 @@ public static class LocationalExtensions {
     /// rounding it to the nearest 22.5 degrees.<br/> Useful for meshing blocks that can rotate freely (e.g., buckets/baskets).
     /// </summary>
     public static float GetBlockMeshAngle(IPlayer byPlayer, BlockSelection blockSel, bool val) {
-        if (val) {
-            BlockPos targetPos = blockSel.DidOffset ? blockSel.Position.AddCopy(blockSel.Face.Opposite) : blockSel.Position;
-            double dx = byPlayer.Entity.Pos.X - (targetPos.X + blockSel.HitPosition.X);
-            double dz = byPlayer.Entity.Pos.Z - (targetPos.Z + blockSel.HitPosition.Z);
-            float angleHor = (float)Math.Atan2(dx, dz);
+        if (!val) return 0;
 
-            float deg22dot5rad = GameMath.PIHALF / 4;
-            float roundRad = ((int)Math.Round(angleHor / deg22dot5rad)) * deg22dot5rad;
-            return roundRad;
-        }
+        BlockPos targetPos = blockSel.DidOffset ? blockSel.Position.AddCopy(blockSel.Face.Opposite) : blockSel.Position;
+        double dx = byPlayer.Entity.Pos.X - (targetPos.X + blockSel.HitPosition.X);
+        double dz = byPlayer.Entity.Pos.Z - (targetPos.Z + blockSel.HitPosition.Z);
+        float angleHor = (float)Math.Atan2(dx, dz);
 
-        return 0;
+        float deg22dot5rad = GameMath.PIHALF / 4;
+        float roundRad = ((int)Math.Round(angleHor / deg22dot5rad)) * deg22dot5rad;
+        return roundRad;
     }
 
     /// <summary>

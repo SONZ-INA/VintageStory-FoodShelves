@@ -34,7 +34,7 @@ public class BEBarShelf : BEBaseFSContainer {
 
                     tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
+                        .RotateYDeg(block?.Shape.rotateY ?? 0)
                         .Translate(x - 0.58f, y + 0.41f, z - 0.425f)
                         .RotateZDeg(-90f)
                         .RotateXDeg(-90f)

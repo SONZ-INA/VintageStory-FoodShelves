@@ -9,8 +9,8 @@ namespace FoodShelves;
 /// Attribute attachable to any property that can be safely read/wrote to the attributes of a block. Mainly used for animation properties.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class TreeSerializableAttribute(object defaultValue = null) : Attribute {
-    public object DefaultValue { get; set; } = defaultValue;
+public class TreeSerializableAttribute(object defaultValue) : Attribute {
+    public object? DefaultValue { get; set; } = defaultValue;
 }
 
 public static class TreeAttributeSerializer {
@@ -20,7 +20,7 @@ public static class TreeAttributeSerializer {
     /// Gets all properties marked with TreeSerializableAttribute for the given type
     /// </summary>
     private static PropertyInfo[] GetSerializableProperties(Type type) {
-        if (_propertyCache.TryGetValue(type, out PropertyInfo[] cachedProps))
+        if (_propertyCache.TryGetValue(type, out PropertyInfo[]? cachedProps))
             return cachedProps;
 
         var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -34,25 +34,25 @@ public static class TreeAttributeSerializer {
     /// <summary>
     /// Serializes all marked properties from the object to the tree
     /// </summary>
-    public static void SerializeToTree(object obj, ITreeAttribute tree) {
+    public static void SerializeToTree(object? obj, ITreeAttribute? tree) {
         if (obj == null || tree == null) return;
 
         var properties = GetSerializableProperties(obj.GetType());
 
         foreach (var prop in properties) {
             string key = prop.Name;
-            object value = prop.GetValue(obj);
+            object? value = prop.GetValue(obj);
 
             if (value == null) continue;
 
             switch (prop.PropertyType) {
-                case Type t when t == typeof(bool): tree.SetBool(key, (bool)value); break;
-                case Type t when t == typeof(int): tree.SetInt(key, (int)value); break;
-                case Type t when t == typeof(float): tree.SetFloat(key, (float)value); break;
+                case Type t when t == typeof(bool):   tree.SetBool(key, (bool)value);     break;
+                case Type t when t == typeof(int):    tree.SetInt(key, (int)value);       break;
+                case Type t when t == typeof(float):  tree.SetFloat(key, (float)value);   break;
                 case Type t when t == typeof(double): tree.SetDouble(key, (double)value); break;
-                case Type t when t == typeof(long): tree.SetLong(key, (long)value); break;
+                case Type t when t == typeof(long):   tree.SetLong(key, (long)value);     break;
                 case Type t when t == typeof(string): tree.SetString(key, (string)value); break;
-                case Type t when t == typeof(byte[]): tree.SetBytes(key, (byte[])value); break;
+                case Type t when t == typeof(byte[]): tree.SetBytes(key, (byte[])value);  break;
             }
         }
     }
@@ -60,13 +60,15 @@ public static class TreeAttributeSerializer {
     /// <summary>
     /// Deserializes all marked properties from the tree to the object
     /// </summary>
-    public static void DeserializeFromTree(object obj, ITreeAttribute tree) {
+    public static void DeserializeFromTree(object? obj, ITreeAttribute? tree) {
         if (obj == null || tree == null) return;
 
         var properties = GetSerializableProperties(obj.GetType());
 
         foreach (var prop in properties) {
             var attr = prop.GetCustomAttribute<TreeSerializableAttribute>();
+            if (attr == null) continue;
+
             string key = prop.Name;
 
             if (prop.PropertyType == typeof(bool)) {
@@ -90,11 +92,11 @@ public static class TreeAttributeSerializer {
                 prop.SetValue(obj, tree.GetLong(key, defaultValue));
             }
             else if (prop.PropertyType == typeof(string)) {
-                string defaultValue = attr.DefaultValue as string;
+                string defaultValue = (attr.DefaultValue as string)!;
                 prop.SetValue(obj, tree.GetString(key, defaultValue));
             }
             else if (prop.PropertyType == typeof(byte[])) {
-                byte[] defaultValue = attr.DefaultValue as byte[];
+                byte[] defaultValue = (attr.DefaultValue as byte[])!;
                 prop.SetValue(obj, tree.GetBytes(key, defaultValue));
             }
         }
@@ -111,7 +113,7 @@ public static class TreeAttributeSerializer {
     /// Gets the names of all serializable properties for a type
     /// </summary>
     public static string[] GetSerializablePropertyNames(Type type) {
-        return GetSerializableProperties(type).Select(p => p.Name).ToArray();
+        return [.. GetSerializableProperties(type).Select(p => p.Name)];
     }
 
     /// <summary>

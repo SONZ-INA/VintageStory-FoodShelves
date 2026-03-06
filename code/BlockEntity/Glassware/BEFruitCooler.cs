@@ -1,7 +1,7 @@
 ﻿namespace FoodShelves;
 
 public class BEFruitCooler : BEBaseFSAnimatable {
-    protected new BlockFruitCooler block;
+    protected new BlockFruitCooler block = null!;
     private readonly MeshData[] contentMeshes = new MeshData[4];
 
     protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
@@ -40,7 +40,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFruitCooler;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockFruitCooler)!;
 
         base.Initialize(api);
 
@@ -56,7 +56,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         base.InitMesh();
 
         for (int i = 0; i < 4; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilFruitCooler, 9f).BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilFruitCooler, 9f)!.BlockYRotation(block);
         }
     }
 
@@ -72,20 +72,21 @@ public class BEFruitCooler : BEBaseFSAnimatable {
             MarkDirty(true);
         }
 
-        if (transType == EnumTransitionType.Dry) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-        if (transType == EnumTransitionType.Perish) return PerishMultiplier * globalPerishMultiplier;
+        if (transType == EnumTransitionType.Dry) 
+            return container.Room?.ExitCount == 0 ? 2f : 0.5f;
+        
+        if (transType == EnumTransitionType.Perish) 
+            return PerishMultiplier * globalPerishMultiplier;
 
         if (Api == null) return 0;
 
-        if (transType == EnumTransitionType.Ripen) {
+        if (transType == EnumTransitionType.Ripen)
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
-        }
 
-        if (transType == EnumTransitionType.Melt) {
+        if (transType == EnumTransitionType.Melt)
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 32 days which is 8 ice blocks
             return (float)((float)1 / inv[cutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f * IceMeltRate;
-        }
 
         return PerishMultiplier * globalPerishMultiplier;
     }
@@ -118,10 +119,10 @@ public class BEFruitCooler : BEBaseFSAnimatable {
 
                 if (!slot.Empty) {
                     if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                        AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                        SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
 
                         if (TryPutIce(byPlayer, slot, blockSel)) {
-                            Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                            Api.World.PlaySoundAt(sound, byPlayer.Entity);
                             MarkDirty();
                             return true;
                         }
@@ -145,9 +146,9 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     private bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
         if (selection.SelectionBoxIndex != (int)SlotType.IceDrawer) return false;
         if (slot.Empty) return false;
-        ItemStack stack = inv[cutIceSlot].Itemstack;
+        ItemStack? stack = inv[cutIceSlot].Itemstack;
 
-        if (inv[cutIceSlot].Empty || (stack.StackSize < stack.Collectible.MaxStackSize && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))) {
+        if (inv[cutIceSlot].Empty || (stack?.StackSize < stack?.Collectible.MaxStackSize && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))) {
             int quantity = byPlayer.Entity.Controls.CtrlKey ? slot.Itemstack.StackSize : 1;
             int moved = slot.TryPutInto(Api.World, inv[cutIceSlot], quantity);
 
@@ -156,7 +157,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                     SourceSlot = new DummySlot(slot.Itemstack),
                     SinkSlot = new DummySlot(stack)
                 };
-                stack.Collectible.TryMergeStacks(op);
+                stack?.Collectible.TryMergeStacks(op);
             }
 
             SetIceHeight(true);
@@ -173,8 +174,8 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         if (!inv[cutIceSlot].Empty) {
             ItemStack stack = inv[cutIceSlot].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                AssetLocation sound = stack.Block?.Sounds?.Place;
-                Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                SoundAttributes sound = stack.Block.Sounds.Place;
+                Api.World.PlaySoundAt(sound, byPlayer.Entity);
             }
 
             if (stack.StackSize > 0) {
@@ -197,36 +198,37 @@ public class BEFruitCooler : BEBaseFSAnimatable {
     #region Animation
 
     protected override void HandleAnimations() {
-        if (animUtil != null) {
-            if (CoolerOpen) ToggleFreezerDoor(true);
-            else ToggleFreezerDoor(false);
+        if (AnimUtil == null)
+            return;
 
-            if (DrawerOpen) ToggleFreezerDrawer(true);
-            else ToggleFreezerDrawer(false);
+        if (CoolerOpen) ToggleFreezerDoor(true);
+        else ToggleFreezerDoor(false);
 
-            if (!inv[cutIceSlot].Empty) {
-                if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
-                    SetIceHeight(true);
-                }
-                else {
-                    SetWaterHeight(true);
-                }
+        if (DrawerOpen) ToggleFreezerDrawer(true);
+        else ToggleFreezerDrawer(false);
+
+        if (!inv[cutIceSlot].Empty) {
+            if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
+                SetIceHeight(true);
             }
             else {
-                SetIceHeight(false);
-                SetWaterHeight(false);
+                SetWaterHeight(true);
             }
+        }
+        else {
+            SetIceHeight(false);
+            SetWaterHeight(false);
         }
     }
 
-    private void ToggleFreezerDoor(bool open, IPlayer byPlayer = null) {
+    private void ToggleFreezerDoor(bool open, IPlayer? byPlayer = null) {
         if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
         if (open) {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("dooropen") == false) {
-                animUtil.StartAnimation(new AnimationMetaData() {
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("dooropen") == false) {
+                AnimUtil.StartAnimation(new AnimationMetaData() {
                     Animation = "dooropen",
                     Code = "dooropen",
                     AnimationSpeed = 2f,
@@ -235,32 +237,39 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                 });
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerOpen, byPlayer.Entity, byPlayer, false, 16, 1f);
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(block.soundCoolerOpen, byPlayer.Entity, byPlayer, false, 16, 1f);
+            }
+
             PerishMultiplier = 1f;
         }
         else {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("dooropen") == true)
-                animUtil.StopAnimation("dooropen");
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("dooropen") == true) {
+                AnimUtil.StopAnimation("dooropen");
+            }
 
             PerishMultiplier = perishMultiplierUnBuffed;
-            
-            if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly))
+
+            if (!DrawerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 PerishMultiplier = perishMultiplierBuffed;
-            
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCoolerClose, byPlayer.Entity, byPlayer, false, 16, 1f);
+            }
+
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(block.soundCoolerClose, byPlayer.Entity, byPlayer, false, 16, 1f);
+            }
         }
 
         CoolerOpen = open;
     }
 
-    private void ToggleFreezerDrawer(bool open, IPlayer byPlayer = null) {
+    private void ToggleFreezerDrawer(bool open, IPlayer? byPlayer = null) {
         if (!inv[cutIceSlot].Empty && !inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
         if (open) {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("draweropen") == false) {
-                animUtil.StartAnimation(new AnimationMetaData() {
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("draweropen") == false) {
+                AnimUtil.StartAnimation(new AnimationMetaData() {
                     Animation = "draweropen",
                     Code = "draweropen",
                     AnimationSpeed = 4f,
@@ -268,18 +277,27 @@ public class BEFruitCooler : BEBaseFSAnimatable {
                     EaseInSpeed = 2
                 });
             }
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundDrawerOpen, byPlayer.Entity, byPlayer, true, 16);
-            if (!CoolerOpen) PerishMultiplier = perishMultiplierUnBuffed;
+
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(block.soundDrawerOpen, byPlayer.Entity, byPlayer, true, 16);
+            }
+
+            if (!CoolerOpen) {
+                PerishMultiplier = perishMultiplierUnBuffed;
+            }
         }
         else {
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("draweropen") == true) {
-                animUtil?.StopAnimation("draweropen");
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("draweropen") == true) {
+                AnimUtil.StopAnimation("draweropen");
             }
+
             if (!CoolerOpen && !inv[cutIceSlot].Empty && inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
                 PerishMultiplier = perishMultiplierBuffed;
             }
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundDrawerClose, byPlayer.Entity, byPlayer, true, 16);
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(block.soundDrawerClose, byPlayer.Entity, byPlayer, true, 16);
+            }
         }
 
         DrawerOpen = open;
@@ -289,8 +307,8 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         if (up) {
             SetWaterHeight(false);
 
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("iceup") == false) {
-                animUtil?.StartAnimation(new AnimationMetaData() {
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("iceup") == false) {
+                AnimUtil.StartAnimation(new AnimationMetaData() {
                     Animation = "iceup",
                     Code = "iceup",
                     AnimationSpeed = 6f,
@@ -300,8 +318,8 @@ public class BEFruitCooler : BEBaseFSAnimatable {
             }
         }
         else {
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("iceup") == true) {
-                animUtil?.StopAnimation("iceup");
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("iceup") == true) {
+                AnimUtil.StopAnimation("iceup");
             }
         }
     }
@@ -310,8 +328,8 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         if (up) {
             SetIceHeight(false);
 
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("waterup") == false) {
-                animUtil?.StartAnimation(new AnimationMetaData() {
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("waterup") == false) {
+                AnimUtil.StartAnimation(new AnimationMetaData() {
                     Animation = "waterup",
                     Code = "waterup",
                     AnimationSpeed = 6f,
@@ -321,8 +339,8 @@ public class BEFruitCooler : BEBaseFSAnimatable {
             }
         }
         else {
-            if (animUtil?.activeAnimationsByAnimCode.ContainsKey("waterup") == true) {
-                animUtil?.StopAnimation("waterup");
+            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("waterup") == true) {
+                AnimUtil.StopAnimation("waterup");
             }
         }
     }
@@ -349,7 +367,7 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         return true;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         base.GetBlockInfo(forPlayer, sb);
@@ -357,10 +375,10 @@ public class BEFruitCooler : BEBaseFSAnimatable {
         // For ice & water
         if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[cutIceSlot].Empty) {
             if (inv[cutIceSlot].CanStoreInSlot(CoolingOnly)) {
-                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack) + " - " + GetUntilMelted(inv[cutIceSlot]));
+                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack!) + " - " + GetUntilMelted(inv[cutIceSlot]));
             }
             else {
-                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack));
+                sb.AppendLine(GetNameAndStackSize(inv[cutIceSlot].Itemstack!));
             }
         }
 

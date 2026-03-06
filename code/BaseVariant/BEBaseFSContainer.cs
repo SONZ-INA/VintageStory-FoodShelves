@@ -4,13 +4,13 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected float globalPerishMultiplier = 1f;
     protected bool globalBlockBuffs = true;
 
-    public InventoryGeneric inv;
-    protected BaseFSContainer block;
-    protected MeshData blockMesh;
+    public InventoryGeneric inv = null!;
+    protected BaseFSContainer block = null!;
+    protected MeshData? blockMesh;
 
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block?.Code.FirstCodePart();
-    public override string AttributeTransformCode => "on" + Block?.Code.FirstCodePart() + "Transform";
+    public override string InventoryClassName => Block.Code.FirstCodePart();
+    public override string AttributeTransformCode => "on" + Block.Code.FirstCodePart() + "Transform";
 
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
     public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
@@ -31,7 +31,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
 
     public override void Initialize(ICoreAPI api) {
-        block ??= api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer;
+        block ??= (api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer)!;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
         globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
 
@@ -45,10 +45,10 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         blockMesh = GenBlockVariantMesh(Api, this.GetVariantStack());
     }
 
-    public override void OnBlockPlaced(ItemStack byItemStack = null) {
+    public override void OnBlockPlaced(ItemStack byItemStack) {
         base.OnBlockPlaced(byItemStack);
 
-        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
+        if (byItemStack.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
             if (VariantAttributes.Count == 0) VariantAttributes = tree;
         }
         
@@ -61,7 +61,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
     public virtual float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt) {
-            if (!globalBlockBuffs) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
+            if (!globalBlockBuffs) 
+                return container.Room?.ExitCount == 0 ? 2f : 0.5f;
+            
             return container.Room?.ExitCount == 0 ? DryingMultiplier * 2f : DryingMultiplier * 0.5f;
         }
 
@@ -89,11 +91,12 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         }
         else {
             if (slot.Empty) return false;
+            
             if (slot.CanStoreInSlot(AttributeCheck)) {
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
 
                 if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                     MarkDirty();
                     return true;
                 }
@@ -115,8 +118,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
         int moved = 0;
 
-        if (block.UnifyItemSlots) { // Unified slot logic
-            if (!inv[startIndex].Empty && !inv[startIndex].Itemstack.Collectible.Equals(slot.Itemstack.Collectible))
+        if (block.UnifyItemSlots == true) { // Unified slot logic
+            if (!inv[startIndex].Empty && !inv[startIndex].Itemstack?.Collectible.Equals(slot.Itemstack?.Collectible) == true)
                 return false;
 
             for (int i = startIndex; i < startIndex + ItemsPerSegment; i++) {
@@ -158,7 +161,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                 var stack = inv[idx].Itemstack;
 
                 if (inv[idx].Empty
-                    || (stack?.Collectible.Equals(slot.Itemstack.Collectible) == true
+                    || (stack?.Collectible.Equals(slot.Itemstack?.Collectible) == true
                         && stack.StackSize < stack.Collectible.MaxStackSize)) {
                     int availableSpace = inv[idx].MaxSlotStackSize - (stack?.StackSize ?? 0);
 
@@ -212,8 +215,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     : inv[currentIndex].TakeOut(1);
 
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    SoundAttributes sound = stack.Block.Sounds.Place;
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                 }
 
                 if (stack.StackSize > 0) {
@@ -240,7 +243,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         return base.OnTesselation(mesher, tesselator);
     }
 
-    protected abstract override float[][] genTransformationMatrices();
+    protected abstract override float[][]? genTransformationMatrices();
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);

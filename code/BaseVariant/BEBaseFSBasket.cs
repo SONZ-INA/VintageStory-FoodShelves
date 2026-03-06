@@ -1,18 +1,18 @@
 ﻿namespace FoodShelves;
 
 public abstract class BEBaseFSBasket : BEBaseFSContainer {
-    protected new BaseFSBasket block;
+    protected new BaseFSBasket block = null!;
 
     protected abstract string CeilingAttachedUtil { get; }
     public float MeshAngle { get; set; }
     public bool IsCeilingAttached { get; set; }
 
     public override void Initialize(ICoreAPI api) {
-        block ??= api.World.BlockAccessor.GetBlock(Pos) as BaseFSBasket;
+        block ??= (api.World.BlockAccessor.GetBlock(Pos) as BaseFSBasket)!;
         base.Initialize(api);
     }
 
-    public override void OnBlockPlaced(ItemStack byItemStack = null) {
+    public override void OnBlockPlaced(ItemStack byItemStack) {
         base.OnBlockPlaced(byItemStack);
 
         Block attachingBlock = Api.World.BlockAccessor.GetBlock(Pos.UpCopy());
@@ -34,7 +34,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     }
 
     protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
-        ItemStack stack = null;
+        ItemStack? stack = null;
 
         if (byPlayer.Entity.Controls.CtrlKey) { // Take all "same" items
             for (int i = SlotCount - 1; i >= 0; i--) {
@@ -59,22 +59,22 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
             }
         }
 
-        if (stack != null) {
-            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                AssetLocation sound = stack.Block?.Sounds?.Place;
-                Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-            }
+        if (stack == null)
+            return false;
 
-            if (stack.StackSize > 0) {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
-
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-            MarkDirty();
-            return true;
+        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+            SoundAttributes sound = stack.Block!.Sounds.Place;
+            Api.World.PlaySoundAt(sound, byPlayer.Entity);
         }
 
-        return false;
+        if (stack.StackSize > 0) {
+            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+        }
+
+        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        MarkDirty();
+        
+        return true;
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
@@ -84,18 +84,18 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
             InitMesh();
 
             if (IsCeilingAttached) {
-                Shape basketRope = Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>();
+                Shape? basketRope = Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>();
                 if (basketRope != null) {
                     tesselator.TesselateShape(block, basketRope, out MeshData ropeMesh);
 
                     float scale = block.Shape.Scale;
                     ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
 
-                    blockMesh.AddMeshData(ropeMesh);
+                    blockMesh?.AddMeshData(ropeMesh);
                 }
             }
 
-            mesher.AddMeshData(blockMesh.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
+            mesher.AddMeshData(blockMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
         }
 
         return true;

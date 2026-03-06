@@ -5,7 +5,7 @@ public class ConfigClient : IModConfig {
 
     public bool AlternativeCoolingCabinetKeymap { get; set; } = false;
 
-    public ConfigClient(ICoreAPI api, ConfigClient previousConfig = null) {
+    public ConfigClient(ICoreAPI api, ConfigClient? previousConfig = null) {
         if (previousConfig == null) return;
 
         AlternativeCoolingCabinetKeymap = previousConfig.AlternativeCoolingCabinetKeymap;

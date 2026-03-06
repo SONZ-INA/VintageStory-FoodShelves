@@ -8,7 +8,7 @@ public static class InventoryExtensions {
     /// recreating slots using the specified max stack size.<br/> Must be called before inventory initialization!
     /// </summary>
     public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
-        ItemStack[] stack = be.inv.Select(slot => slot.Itemstack).ToArray();
+        ItemStack?[] stack = [.. be.inv.Select(slot => slot.Itemstack)];
 
         be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
 
@@ -23,16 +23,18 @@ public static class InventoryExtensions {
     /// <summary>
     /// Retrieves the contents of an item container by reading its "contents" attribute. Falls back to resolving legacy "ucontents" if necessary.
     /// </summary>
-    public static ItemStack[] GetContents(IWorldAccessor world, ItemStack itemstack) {
-        ITreeAttribute treeAttr = itemstack?.Attributes?.GetTreeAttribute("contents");
+    public static ItemStack[] GetContents(IWorldAccessor world, ItemStack? itemstack) {
+        if (itemstack == null) return [];
+
+        ITreeAttribute? treeAttr = itemstack.Attributes?.GetTreeAttribute("contents");
         if (treeAttr == null) {
             return ResolveUcontents(world, itemstack);
         }
 
         ItemStack[] stacks = new ItemStack[treeAttr.Count];
         foreach (var val in treeAttr) {
-            ItemStack stack = (val.Value as ItemstackAttribute).value;
-            stack?.ResolveBlockOrItem(world);
+            ItemStack stack = (val.Value as ItemstackAttribute)!.value;
+            stack.ResolveBlockOrItem(world);
 
             if (int.TryParse(val.Key, out int index)) stacks[index] = stack;
         }
@@ -43,7 +45,9 @@ public static class InventoryExtensions {
     /// <summary>
     /// Stores an array of item stacks into an item container by setting its "contents" attribute. If the array is null or empty, the contents attribute is removed.
     /// </summary>
-    public static void SetContents(ItemStack containerStack, ItemStack[] stacks) {
+    public static void SetContents(ItemStack? containerStack, ItemStack?[] stacks) {
+        if (containerStack == null) return;
+
         if (stacks == null || stacks.Length == 0) {
             containerStack.Attributes.RemoveAttribute("contents");
             return;
@@ -61,23 +65,24 @@ public static class InventoryExtensions {
     /// Converts legacy, serialized "ucontents" stored in a JSON-like format into resolved <see cref="ItemStack"/> objects.<br/>
     /// Intended for loading container contents that were serialized for persistence.
     /// </summary>
-    public static ItemStack[] ResolveUcontents(IWorldAccessor world, ItemStack itemstack) {
-        if (itemstack?.Attributes.HasAttribute("ucontents") == true) {
-            List<ItemStack> stacks = [];
-
-            var attrs = itemstack.Attributes["ucontents"] as TreeArrayAttribute;
-
-            foreach (ITreeAttribute stackAttr in attrs.value) {
-                stacks.Add(CreateItemStackFromJson(stackAttr, world, itemstack.Collectible.Code.Domain));
-            }
-            ItemStack[] stacksAsArray = [.. stacks];
-            SetContents(itemstack, stacksAsArray);
-            itemstack.Attributes.RemoveAttribute("ucontents");
-
-            return stacksAsArray;
+    public static ItemStack[] ResolveUcontents(IWorldAccessor world, ItemStack? itemstack) {
+        if (itemstack == null || itemstack.Attributes.HasAttribute("ucontents") == false) {
+            return [];
         }
 
-        return [];
+        List<ItemStack> stacks = [];
+
+        var attrs = itemstack.Attributes["ucontents"] as TreeArrayAttribute;
+
+        foreach (ITreeAttribute stackAttr in attrs!.value) {
+            stacks.Add(CreateItemStackFromJson(stackAttr, world, itemstack.Collectible.Code.Domain));
+        }
+
+        ItemStack[] stacksAsArray = [.. stacks];
+        SetContents(itemstack, stacksAsArray);
+        itemstack.Attributes.RemoveAttribute("ucontents");
+
+        return stacksAsArray;
     }
 
     /// <summary>
@@ -85,8 +90,9 @@ public static class InventoryExtensions {
     /// Used for deserializing data from the "ucontents" attribute.
     /// </summary>
     private static ItemStack CreateItemStackFromJson(ITreeAttribute stackAttr, IWorldAccessor world, string defaultDomain) {
-        CollectibleObject collObj;
+        CollectibleObject? collObj;
         var loc = AssetLocation.Create(stackAttr.GetString("code"), defaultDomain);
+        
         if (stackAttr.GetString("type") == "item") {
             collObj = world.GetItem(loc);
         }
@@ -104,7 +110,7 @@ public static class InventoryExtensions {
     /// <summary>
     /// Converts an array of item stacks into dummy slots for GUI display or non-interactive purposes.
     /// </summary>
-    public static DummySlot[] ToDummySlots(this ItemStack[] contents) {
+    public static DummySlot[] ToDummySlots(this ItemStack?[] contents) {
         if (contents == null || contents.Length == 0) return [];
 
         DummySlot[] dummySlots = new DummySlot[contents.Length];

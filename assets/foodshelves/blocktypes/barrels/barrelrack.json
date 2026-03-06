@@ -60,13 +60,13 @@
   "tpHandTransformByType": {
     "*-normal*": {
       "translation": { "x": -1.23, "y": -0.91, "z": -0.8 },
-	    "rotation": { "x": 88, "y": 25, "z": -78 },
-	    "scale": 0.4
+      "rotation": { "x": 88, "y": 25, "z": -78 },
+      "scale": 0.4
     },
     "*-top*": {
-	    "translation": { "x": -1.2, "y": -0.6, "z": -0.5 },
-	    "rotation": { "x": 93, "y": -15, "z": 0 },
-	    "scale": 0.45
+      "translation": { "x": -1.2, "y": -0.6, "z": -0.5 },
+      "rotation": { "x": 93, "y": -15, "z": 0 },
+      "scale": 0.45
     }
   },
   "sounds": {

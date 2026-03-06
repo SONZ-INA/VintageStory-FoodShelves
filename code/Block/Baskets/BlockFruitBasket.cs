@@ -3,7 +3,7 @@
 public class BlockFruitBasket : BaseFSBasket {
     public override int InnerSlotCount => 22;
 
-    public override float[,] GetTransformationMatrix(string path = null) {
+    public override float[,] GetTransformationMatrix(string? path = null) {
         float[] x = [ .65f, .3f, .3f,  .3f,  .6f, .35f,  .5f, .65f, .35f, .1f,  .6f, .58f, .3f,   .2f, -.1f,  .1f, .1f, .25f,  .2f, .55f,   .6f, .3f ];
         float[] y = [    0,   0,   0, .25f,    0, .35f,  .2f, -.3f,  .3f, .2f,  .4f,  .4f, .4f,   .5f, .57f, .05f, .3f, .52f, .55f, .45f, -.65f, .5f ];
         float[] z = [ .05f,   0, .4f,  .1f, .45f, .35f, .18f,  .7f, .55f, .1f, .02f,  .3f, .7f, -.15f, .15f, -.2f, .9f, .05f,  .6f, .35f,  -.2f, .6f ];
@@ -15,9 +15,11 @@ public class BlockFruitBasket : BaseFSBasket {
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
 
-    protected override MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
+    protected override MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
+        if (itemstack == null) return null;
+
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 0.5f, Transformations);
+        MeshData? contentMesh = GenContentMesh((api as ICoreClientAPI)!, contents, GetTransformationMatrix(), 0.5f, Transformations);
 
         return contentMesh;
     }

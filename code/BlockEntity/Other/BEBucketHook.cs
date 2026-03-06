@@ -1,5 +1,4 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 
 namespace FoodShelves;
 
@@ -14,7 +13,7 @@ public class BEBucketHook : BEBaseFSContainer {
 
         tfMatrices[0] = new Matrixf()
             .Translate(0.5f, 0, 0.5f)
-            .RotateYDeg(block.Shape.rotateY)
+            .RotateYDeg(block?.Shape.rotateY ?? 0)
             .Translate(-.5f, .2f, -.54f)
             .Values;
 
@@ -24,41 +23,42 @@ public class BEBucketHook : BEBaseFSContainer {
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         base.GetBlockInfo(forPlayer, sb);
 
-        if (!inv[0].Empty) {
-            var contents = GetContents(Api.World, inv[0].Itemstack);
-            sb.Append(" <font color=\"#ababab\">");
-            if (contents.Length > 0) {
-                if (contents[0] != null) {
-                    sb.Append(GetAmountOfLiters(contents[0]));
+        if (inv[0].Empty)
+            return;
 
-                    // Create dummy inventory and slot for transition calculations
-                    DummyInventory dummyInv = new(Api);
-                    ItemSlot contentSlot = new ItemSlotSurvival(dummyInv) {
-                        Itemstack = contents[0]
-                    };
+        var contents = GetContents(Api.World, inv[0].Itemstack);
+        sb.Append(" <font color=\"#ababab\">");
+        if (contents.Length > 0) {
+            if (contents[0] != null) {
+                sb.Append(GetAmountOfLiters(contents[0]));
 
-                    // Get transition states
-                    TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(Api.World, contentSlot);
+                // Create dummy inventory and slot for transition calculations
+                DummyInventory dummyInv = new(Api);
+                ItemSlot contentSlot = new ItemSlotSurvival(dummyInv) {
+                    Itemstack = contents[0]
+                };
 
-                    if (transitionStates != null) {
-                        // Find perish transition state
-                        TransitionState perishState = transitionStates.FirstOrDefault(state =>
-                            state.Props.Type == EnumTransitionType.Perish &&
-                            contentSlot.Itemstack.Collectible.GetTransitionRateMul(Api.World, contentSlot, state.Props.Type) > 0);
+                // Get transition states
+                TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(Api.World, contentSlot);
 
-                        if (perishState != null) {
-                            float perishRate = contentSlot.Itemstack.Collectible.GetTransitionRateMul(Api.World, inv[0], perishState.Props.Type);
-                            float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
-                            sb.Append(" " + GetTimeRemainingText(Api.World, freshHoursLeft, EnumTransitionType.Perish, perishState.TransitionLevel));
-                        }
+                if (transitionStates != null) {
+                    // Find perish transition state
+                    TransitionState? perishState = transitionStates.FirstOrDefault(state =>
+                        state.Props.Type == EnumTransitionType.Perish &&
+                        contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, contentSlot, state.Props.Type) > 0);
+
+                    if (perishState != null) {
+                        float perishRate = contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, inv[0], perishState.Props.Type) ?? 1;
+                        float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
+                        sb.Append(" " + GetTimeRemainingText(Api.World, freshHoursLeft, EnumTransitionType.Perish, perishState.TransitionLevel));
                     }
                 }
             }
-            else {
-                sb.Append(Lang.Get("foodshelves:Empty."));
-            }
-
-            sb.Append("</font>");
         }
+        else {
+            sb.Append(Lang.Get("foodshelves:Empty."));
+        }
+
+        sb.Append("</font>");
     }
 }

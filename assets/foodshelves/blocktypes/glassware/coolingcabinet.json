@@ -58,13 +58,13 @@
   },
   "sideopaque": { "all": false },
   "guiTransform": {
-		"origin": { "x": 0.5, "y": 1, "z": 1 },
-		"scale": 0.6
-	},
+    "origin": { "x": 0.5, "y": 1, "z": 1 },
+    "scale": 0.6
+  },
   "tpHandTransform": {
-	  "translation": { "x": -0.7, "y": -2.18, "z": -1.11 },
-	  "rotation": { "x": 99, "y": -15, "z": -76 },
-	  "scale": 0.35
+    "translation": { "x": -0.7, "y": -2.18, "z": -1.11 },
+    "rotation": { "x": 99, "y": -15, "z": -76 },
+    "scale": 0.35
   },
   "sounds": {
     "place": "game:block/planks",
@@ -82,7 +82,7 @@
     { "x1": 0.0625, "y1": 1.5, "z1": 0.125, "x2": 0.6875, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.6875, "y1": 1.5, "z1": 0.125, "x2": 1.3125, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 1.3125, "y1": 1.5, "z1": 0.125, "x2": 1.9375, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
-	  { "x1": 0.0625, "y1": 0, "z1": 0, "x2": 1.9375, "y2": 0.5, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.0625, "y1": 0, "z1": 0, "x2": 1.9375, "y2": 0.5, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.0625, "y1": 0.5, "z1": 0, "x2": 1.9375, "y2": 1.9375, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
   ]
 }

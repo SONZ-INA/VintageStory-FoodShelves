@@ -43,7 +43,7 @@ public class BlockBehaviorCeilingAttachable(Block block) : BlockBehavior(block) 
         return attachingBlock.CanAttachBlockAt(world.BlockAccessor, block, pos, BlockFacing.DOWN);
     }
 
-    public override bool CanAttachBlockAt(IBlockAccessor world, Block block, BlockPos pos, BlockFacing blockFace, ref EnumHandling handled, Cuboidi attachmentArea = null) {
+    public override bool CanAttachBlockAt(IBlockAccessor world, Block block, BlockPos pos, BlockFacing blockFace, ref EnumHandling handled, Cuboidi? attachmentArea = null) {
         handled = EnumHandling.PreventDefault;
         return false;
     }

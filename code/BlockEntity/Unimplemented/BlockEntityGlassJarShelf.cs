@@ -2,11 +2,11 @@
 
 public class BlockEntityGlassJarShelf : BlockEntityDisplay {
     private InventoryGeneric inv;
-    private Block block;
+    private Block block = null!;
     
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
-    public override string AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
+    public override string? InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
+    public override string? AttributeTransformCode => Block?.Attributes?["attributeTransformCode"].AsString();
 
     private int shelfCount = 4;
     private const int segmentsPerShelf = 1;
@@ -27,7 +27,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             Inventory.LateInitialize(Inventory.InventoryID, api);
         }
 
-        inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+        inv?.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
     // Check this
@@ -55,10 +55,10 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
         }
         else {
             if (slot.CanStoreInSlot("fsGlassJarShelf")) {
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
 
                 if (TryPut(slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                     MarkDirty();
                     return true;
                 }
@@ -71,39 +71,39 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
 
     private bool TryPut(ItemSlot slot, BlockSelection blockSel) {
         int index = blockSel.SelectionBoxIndex;
-        if (index >= shelfCount * segmentsPerShelf * itemsPerSegment) return false;
+        if (index >= shelfCount * segmentsPerShelf * itemsPerSegment) 
+            return false;
 
-        if (inv[index].Empty) {
-            int moved = slot.TryPutInto(Api.World, inv[index]);
-            MarkDirty();
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-            return moved > 0;
-        }
+        if (!inv[index].Empty)
+            return false;
 
-        return false;
+        int moved = slot.TryPutInto(Api.World, inv[index]);
+        MarkDirty();
+        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        return moved > 0;
     }
 
     private bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
         int index = blockSel.SelectionBoxIndex;
-        if (index >= shelfCount * segmentsPerShelf * itemsPerSegment) return false;
+        if (index >= shelfCount * segmentsPerShelf * itemsPerSegment) 
+            return false;
 
-        if (!inv[index].Empty) {
-            ItemStack stack = inv[index].TakeOut(1);
-            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                AssetLocation sound = stack.Block?.Sounds?.Place;
-                Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-            }
+        if (inv[index].Empty)
+            return false;
 
-            if (stack.StackSize > 0) {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
-
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-            MarkDirty();
-            return true;
+        ItemStack stack = inv[index].TakeOut(1);
+        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+            SoundAttributes sound = stack.Block.Sounds.Place;
+            Api.World.PlaySoundAt(sound, byPlayer.Entity);
         }
 
-        return false;
+        if (stack.StackSize > 0) {
+            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+        }
+
+        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        MarkDirty();
+        return true;
     }
 
     protected override float[][] genTransformationMatrices() {
@@ -116,7 +116,7 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
 
             tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block.Shape.rotateY)
+                .RotateYDeg(block?.Shape.rotateY ?? 0)
                 .Translate(x - 0.5f, i / 2 * 0.313f + 0.0525f, z - 0.5f)
                 .Values;
         }

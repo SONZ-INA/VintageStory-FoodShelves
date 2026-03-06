@@ -15,7 +15,7 @@ public static class InfoDisplay {
     public static string GetNameAndStackSize(ItemStack stack) => stack.GetName() + " x" + stack.StackSize;
     public static string GetAmountOfLiters(ItemStack stack) => stack.GetName() + " (" + (float)stack.StackSize / 100 + " L)";
 
-    public static void DisplayPerishMultiplier(float perishMul, StringBuilder dsc, InWorldContainer container = null) {
+    public static void DisplayPerishMultiplier(float perishMul, StringBuilder dsc, InWorldContainer? container = null) {
         container?.ReloadRoom();
         dsc.AppendLine(Lang.Get("Stored food perish speed: {0}x", Math.Round(perishMul, 2)));
     }
@@ -24,7 +24,6 @@ public static class InfoDisplay {
         if (skipLine) sb.AppendLine(); // Space in between to be in line with vanilla
 
         IWorldAccessor world = inv.Api.World;
-
         List<ItemSlot> itemSlotList = [.. inv];
         
         switch (displaySelection) {
@@ -43,7 +42,8 @@ public static class InfoDisplay {
         if (selectedSegment == -1 && forPlayer.CurrentBlockSelection != null)
             selectedSegment = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
 
-        if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1) return;
+        if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1) 
+            return;
 
         int start = 0, end = slotCount;
 
@@ -69,7 +69,9 @@ public static class InfoDisplay {
             if (skipSlotsFrom != -1 && i >= skipSlotsFrom) break;
             if (inv[i].Empty) continue;
 
-            ItemStack stack = inv[i].Itemstack;
+            ItemStack? stack = inv[i].Itemstack;
+            if (stack == null) continue;
+
             float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
 
             if (stack.Collectible.TransitionableProps?.Length > 0) {
@@ -97,8 +99,8 @@ public static class InfoDisplay {
         }
     }
 
-    public static string GetUntilMelted(ItemSlot slot) {
-        if (slot.Empty) return "";
+    public static string GetUntilMelted(ItemSlot? slot) {
+        if (slot == null || slot.Empty) return "";
 
         IWorldAccessor world = slot.Inventory.Api.World;
 
@@ -114,22 +116,21 @@ public static class InfoDisplay {
         return Lang.Get("foodshelves:Will not melt");
     }
 
-    public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot contentSlot, float ripenRate, bool withStackName = true, bool withStackSize = true) {
-        if (contentSlot.Empty) return "";
+    public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot? contentSlot, float ripenRate, bool withStackName = true, bool withStackSize = true) {
+        if (contentSlot == null || contentSlot.Empty) return "";
 
         StringBuilder dsc = new();
         if (withStackName) dsc.Append(contentSlot.Itemstack.GetName());
         if (withStackSize && contentSlot.StackSize > 1) dsc.Append(" x" + contentSlot.StackSize);
 
-        TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
-
+        TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         bool nowSpoiling = false;
 
         if (transitionStates != null) {
             for (int i = 0; i < transitionStates.Length; i++) {
                 TransitionState state = transitionStates[i];
                 TransitionableProperties prop = state.Props;
-                float perishRate = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, prop.Type);
+                float perishRate = contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, prop.Type);
 
                 if (perishRate <= 0) continue;
 
@@ -164,8 +165,8 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static string PerishableInfoGrouped(InventoryGeneric inv, IWorldAccessor world, int start, int end) {
-        if (inv.Empty) return "";
+    public static string PerishableInfoGrouped(InventoryGeneric? inv, IWorldAccessor world, int start, int end) {
+        if (inv == null || inv.Empty) return "";
 
         StringBuilder dsc = new();
         Dictionary<string, List<ItemSlot>> grouped = [];
@@ -174,12 +175,12 @@ public static class InfoDisplay {
         for (int i = start; i < end; i++) {
             if (i >= inv.Count || inv[i].Empty) continue;
 
-            ItemStack stack = inv[i].Itemstack;
+            ItemStack? stack = inv[i].Itemstack;
             if (stack == null) continue;
 
             string itemKey = stack.GetName();
 
-            if (!grouped.TryGetValue(itemKey, out List<ItemSlot> value)) {
+            if (!grouped.TryGetValue(itemKey, out List<ItemSlot>? value)) {
                 value = [];
                 grouped[itemKey] = value;
             }
@@ -194,31 +195,33 @@ public static class InfoDisplay {
             int totalCount = 0;
 
             foreach (var slot in slots) {
-                totalCount += slot.Itemstack.StackSize;
+                totalCount += slot.Itemstack?.StackSize ?? 0;
             }
 
             dsc.Append(itemName + " x" + totalCount);
 
             // Calculate and display perish information based on the first item's transition properties
-            if (slots.Count > 0 && slots[0].Itemstack.Collectible.TransitionableProps != null &&
-                slots[0].Itemstack.Collectible.TransitionableProps.Length > 0) {
+            if (slots.Count > 0 
+                && slots[0].Itemstack?.Collectible.TransitionableProps != null 
+                && slots[0].Itemstack?.Collectible.TransitionableProps.Length > 0) 
+            {
 
                 Dictionary<EnumTransitionType, List<double>> timeLeftByType = [];
 
                 foreach (var slot in slots) {
-                    TransitionState[] states = slot.Itemstack.Collectible.UpdateAndGetTransitionStates(world, slot);
+                    TransitionState[]? states = slot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, slot);
 
                     if (states != null) {
                         foreach (TransitionState state in states) {
                             TransitionableProperties prop = state.Props;
-                            float perishRate = slot.Itemstack.Collectible.GetTransitionRateMul(world, slot, prop.Type);
 
+                            float perishRate = slot.Itemstack!.Collectible.GetTransitionRateMul(world, slot, prop.Type);
                             if (perishRate <= 0) continue;
 
                             float transitionLevel = state.TransitionLevel;
                             float freshHoursLeft = state.FreshHoursLeft / perishRate;
 
-                            if (!timeLeftByType.TryGetValue(prop.Type, out List<double> value)) {
+                            if (!timeLeftByType.TryGetValue(prop.Type, out List<double>? value)) {
                                 value = [];
                                 timeLeftByType[prop.Type] = value;
                             }
@@ -251,16 +254,16 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static string TransitionInfoCompact(IWorldAccessor world, ItemSlot contentSlot, EnumTransitionType transitionType) {
-        if (contentSlot.Empty) return "";
+    public static string TransitionInfoCompact(IWorldAccessor world, ItemSlot? contentSlot, EnumTransitionType transitionType) {
+        if (contentSlot == null || contentSlot.Empty) return "";
 
-        TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
+        TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         if (transitionStates == null) return "";
 
-        TransitionState state = transitionStates.FirstOrDefault(s => s.Props.Type == transitionType);
+        TransitionState? state = transitionStates.FirstOrDefault(s => s.Props.Type == transitionType);
 
         if (state != null) {
-            float rateMul = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, transitionType);
+            float rateMul = contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, transitionType);
             if (rateMul > 0) {
                 if (state.TransitionLevel > 0) {
                     double hoursLeft = state.TransitionHours / rateMul * (1 - state.TransitionLevel);
@@ -278,9 +281,11 @@ public static class InfoDisplay {
     }
 
     public static string CrockInfoCompact(InventoryGeneric inv, IWorldAccessor world, ItemSlot inSlot) {
-        BlockMeal mealblock = world.GetBlock(new AssetLocation("bowl-meal")) as BlockMeal;
-        BlockCrock crock = inSlot.Itemstack.Collectible as BlockCrock;
-        CookingRecipe recipe = crock.GetCookingRecipe(world, inSlot.Itemstack);
+        if (inSlot.Itemstack == null) return ""; 
+
+        BlockMeal? mealblock = world.GetBlock(new AssetLocation("bowl-meal")) as BlockMeal;
+        BlockCrock crock = (inSlot.Itemstack.Collectible as BlockCrock)!;
+        CookingRecipe? recipe = crock.GetCookingRecipe(world, inSlot.Itemstack);
         ItemStack[] stacks = crock.GetNonEmptyContents(world, inSlot.Itemstack);
 
         if (stacks == null || stacks.Length == 0) {
@@ -309,17 +314,17 @@ public static class InfoDisplay {
             return mul * crock.GetContainingTransitionModifierContained(world, inSlot, transType) * inv.GetTransitionSpeedMul(transType, stack);
         };
 
-        TransitionState[] transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
+        TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
         bool addNewLine = true;
 
         if (transitionStates != null) {
             // Find perish transition state
-            TransitionState perishState = transitionStates.FirstOrDefault(state =>
+            TransitionState? perishState = transitionStates.FirstOrDefault(state =>
                 state.Props.Type == EnumTransitionType.Perish &&
-                contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, state.Props.Type) > 0);
+                contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, state.Props.Type) > 0);
 
             if (perishState != null) {
-                float perishRate = contentSlot.Itemstack.Collectible.GetTransitionRateMul(world, contentSlot, perishState.Props.Type);
+                float perishRate = contentSlot.Itemstack?.Collectible.GetTransitionRateMul(world, contentSlot, perishState.Props.Type) ?? 1;
                 float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
 
                 addNewLine = false;
@@ -334,10 +339,10 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static void ByBlockMerged(ItemSlot[] slots, StringBuilder sb, IWorldAccessor world) {
+    public static void ByBlockMerged(ItemSlot?[] slots, StringBuilder sb, IWorldAccessor world) {
         if (slots == null || slots.Length == 0) return;
 
-        ItemStack firstStack = slots[0].Itemstack?.Clone();
+        ItemStack? firstStack = slots[0]!.Itemstack?.Clone();
         if (firstStack == null) return;
 
         int totalStackSize = firstStack.StackSize;
@@ -345,7 +350,7 @@ public static class InfoDisplay {
         float ripenRate = collectible.GetTransitionRateMul(world, slots[0], EnumTransitionType.Ripen); // Get ripen rate for first slot
 
         for (int i = 1; i < slots.Length; i++) {
-            ItemStack stack = slots[i].Itemstack;
+            ItemStack? stack = slots[i]!.Itemstack;
             if (stack == null) break; // Subsequent slots can't have items if the current one is empty.
             totalStackSize += stack.StackSize;
         }
@@ -356,11 +361,11 @@ public static class InfoDisplay {
         if (totalStackSize > 1) sb.Append(" x" + totalStackSize);
 
         if (collectible.TransitionableProps != null && collectible.TransitionableProps.Length > 0) {
-            sb.Append(PerishableInfoCompact(world, slots[0], ripenRate, false, false));
+            sb.Append(PerishableInfoCompact(world, slots[0]!, ripenRate, false, false));
         }
     }
 
-    public static string PerishableInfoAverageAndSoonest(ItemSlot[] contentSlots, IWorldAccessor world, float perishMul = 1) {
+    public static string PerishableInfoAverageAndSoonest(ItemSlot?[] contentSlots, IWorldAccessor world, float perishMul = 1) {
         StringBuilder dsc = new();
 
         if (contentSlots == null || contentSlots.Length == 0) {
@@ -370,12 +375,12 @@ public static class InfoDisplay {
 
         int itemCount = 0, rotCount = 0, totalCount = 0;
         double totalFreshHours = 0;
-        ItemStack soonestPerishStack = null;
+        ItemStack? soonestPerishStack = null;
         double soonestPerishHours = double.MaxValue;
         float soonestTransitionLevel = 0;
 
         foreach (var slot in contentSlots) {
-            if (slot.Empty) continue;
+            if (slot!.Empty) continue;
 
             var stack = slot.Itemstack;
             if (stack.Collectible.Code.Path.StartsWith("rot")) {
@@ -385,10 +390,10 @@ public static class InfoDisplay {
                 itemCount += stack.StackSize;
             }
 
-            TransitionState[] transitionStates = stack?.Collectible.UpdateAndGetTransitionStates(world, slot);
+            TransitionState?[] transitionStates = stack.Collectible.UpdateAndGetTransitionStates(world, slot);
             if (transitionStates != null) {
                 foreach (var state in transitionStates) {
-                    double basePerishRateMul = stack.Collectible.GetTransitionRateMul(world, slot, state.Props.Type);
+                    double basePerishRateMul = stack.Collectible.GetTransitionRateMul(world, slot, state!.Props.Type);
                     double effectivePerishRateMul = basePerishRateMul * perishMul;
                     double freshHoursLeft = state.FreshHoursLeft / effectivePerishRateMul;
 
@@ -435,7 +440,6 @@ public static class InfoDisplay {
     }
 
     public static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
-
         if (transitionLevel > 0) {
             switch (transitionType) {
                 case EnumTransitionType.Perish:
@@ -486,13 +490,13 @@ public static class InfoDisplay {
         }
     }
 
-    public static string GetNutrientRequirement(IWorldAccessor world, ItemStack itemStack, bool withTranslation = true) {
+    public static string? GetNutrientRequirement(IWorldAccessor world, ItemStack? itemStack, bool withTranslation = true) {
         if (itemStack?.Collectible == null) return null;
 
         string type = itemStack.Collectible.Variant.TryGetValue("type");
         if (string.IsNullOrEmpty(type)) return null;
 
-        Block cropBlock = world.GetBlock(new AssetLocation(itemStack.Collectible.Code.Domain, "crop-" + type + "-1"));
+        Block? cropBlock = world.GetBlock(new AssetLocation(itemStack.Collectible.Code.Domain, "crop-" + type + "-1"));
         if (cropBlock?.CropProps == null) return null;
 
         // Required nutrient (N, P, K)

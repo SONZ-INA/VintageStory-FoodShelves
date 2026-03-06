@@ -17,9 +17,8 @@ public class BEShortShelf : BEBaseFSContainer {
 
         // Crock sealing interactions
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel)) {
+        if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel))
             return true;
-        }
 
         return base.OnInteract(byPlayer, blockSel);
     }
@@ -45,7 +44,7 @@ public class BEShortShelf : BEBaseFSContainer {
 
             tfMatrices[index] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block.Shape.rotateY)
+                .RotateYDeg(block?.Shape.rotateY ?? 0)
                 .Translate(x - 0.5f, y, z - 0.5f)
                 .Translate(-0.5f, 0, -0.5f)
                 .Values;

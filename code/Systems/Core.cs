@@ -9,7 +9,7 @@ public class Core : ModSystem {
     private readonly Dictionary<string, RestrictionData> restrictions = [];
     private readonly Dictionary<string, Dictionary<string, ModelTransform>> transformations = [];
 
-    public static ConfigServer ConfigServer { get; set; }
+    public static ConfigServer? ConfigServer { get; set; }
     // public static ConfigClient ConfigClient { get; set; }
 
     public override void StartPre(ICoreAPI api) {
@@ -129,7 +129,7 @@ public class Core : ModSystem {
 
     #region CoreFunctions
 
-    private Dictionary<string, string[]> DiscoverRestrictionGroups(ICoreAPI api) {
+    private static Dictionary<string, string[]> DiscoverRestrictionGroups(ICoreAPI api) {
         var restrictionGroups = new Dictionary<string, string[]>();
         string basePath = "config/restrictions/";
 
@@ -149,7 +149,7 @@ public class Core : ModSystem {
                     fileName = fileName[..^5];
                 }
 
-                if (!restrictionGroups.TryGetValue(folderName, out string[] value)) {
+                if (!restrictionGroups.TryGetValue(folderName, out string[]? value)) {
                     value = [];
                     restrictionGroups[folderName] = value;
                 }

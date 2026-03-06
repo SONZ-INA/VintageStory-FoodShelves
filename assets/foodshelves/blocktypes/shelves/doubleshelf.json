@@ -56,9 +56,9 @@
     "scale": 0.8
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.8, "y": -0.68, "z": -0.51 },
-	  "rotation": { "x": 93, "y": -30, "z": -20 },
-	  "scale": 0.5
+    "translation": { "x": -0.8, "y": -0.68, "z": -0.51 },
+    "rotation": { "x": 93, "y": -30, "z": -20 },
+    "scale": 0.5
   },
   "sounds": {
     "place": "game:block/planks",

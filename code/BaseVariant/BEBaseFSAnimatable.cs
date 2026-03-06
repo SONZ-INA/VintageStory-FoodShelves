@@ -3,18 +3,18 @@
 namespace FoodShelves;
 
 public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
-    protected MeshData ownMesh;
+    protected MeshData? ownMesh;
 
     protected virtual string ReferencedShape {
         get {
             var className = this.GetType().Name.Replace("BE", "");
-            var field = typeof(ShapeReferences).GetField(className, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-            return field?.GetValue(null) as string
+            var field_name = typeof(ShapeReferences).GetField(className, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            return field_name?.GetValue(null) as string
                 ?? throw new InvalidOperationException($"No shape reference found for {className}");
         }
     }
 
-    protected BlockEntityAnimationUtil animUtil {
+    protected BlockEntityAnimationUtil? AnimUtil {
         get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; }
     }
 
@@ -27,8 +27,8 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
 
     protected abstract void HandleAnimations();
 
-    protected MeshData GenMesh() {
-        string[] parts = VariantAttributes.Values.Select(attr => attr.ToString()).ToArray();
+    protected MeshData? GenMesh() {
+        string?[] parts = [.. VariantAttributes.Values.Select(attr => attr.ToString())];
 
         string blockName = this.GetType().Name.Replace("BE", "");
 
@@ -37,14 +37,14 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
             return new Dictionary<string, MeshData>();
         });
 
-        Shape shape = null;
-        if (animUtil != null) {
+        Shape? shape = null;
+        if (AnimUtil != null) {
             string skeydict = blockName + "Meshes";
             Dictionary<string, Shape> shapes = ObjectCacheUtil.GetOrCreate(Api, skeydict, () => {
                 return new Dictionary<string, Shape>();
             });
 
-            string sKey = blockName + "Shape" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
+            string sKey = blockName + "Shape" + '-' + block?.Code.ToShortString() + '-' + string.Join('-', parts);
             if (!shapes.TryGetValue(sKey, out shape)) {
                 AssetLocation shapeLocation = new(ReferencedShape);
                 shape = Shape.TryGet(capi, shapeLocation);
@@ -52,24 +52,25 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
             }
         }
 
-        string meshKey = blockName + "Anim" + '-' + block.Code.ToShortString() + '-' + string.Join('-', parts);
-        if (meshes.TryGetValue(meshKey, out MeshData mesh)) {
-            if (animUtil != null && animUtil.renderer == null) {
-                animUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, block.GetRotationAngle(), 0));
+        if (shape == null) return null;
+
+        string meshKey = blockName + "Anim" + '-' + block?.Code.ToShortString() + '-' + string.Join('-', parts);
+        if (meshes.TryGetValue(meshKey, out MeshData? mesh)) {
+            if (AnimUtil != null && AnimUtil.renderer == null) {
+                AnimUtil.InitializeAnimator(key, mesh, shape, new Vec3f(0, block?.GetRotationAngle() ?? 0, 0));
             }
 
             return mesh;
         }
 
-        if (animUtil != null) {
-            if (animUtil.renderer == null) {
+        if (AnimUtil != null) {
+            if (AnimUtil.renderer == null) {
                 shape.ApplyVariantTextures(this);
-
                 ITexPositionSource texSource = new ShapeTextureSource(capi, shape, $"FS-{blockName}Animation");
-                mesh = animUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, block.GetRotationAngle(), 0));
+                mesh = AnimUtil.InitializeAnimator(key, shape, texSource, new Vec3f(0, block?.GetRotationAngle() ?? 0, 0));
             }
 
-            return meshes[meshKey] = mesh;
+            return meshes[meshKey] = mesh!;
         }
 
         return null;

@@ -36,8 +36,8 @@ public class BECeilingJar : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar, 8.5f);
-        if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
+        MeshData? contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar, 8.5f);
+        if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
@@ -45,7 +45,7 @@ public class BECeilingJar : BEBaseFSContainer {
         return true;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         base.GetBlockInfo(forPlayer, sb);

@@ -2,7 +2,7 @@
 namespace FoodShelves;
 
 public class BETunRack : BEBaseFSContainer {
-    protected new BlockTunRack block;
+    protected new BlockTunRack block = null!;
 
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
@@ -20,12 +20,12 @@ public class BETunRack : BEBaseFSContainer {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockTunRack;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockTunRack)!;
         InitMesh();
 
         base.Initialize(api);
 
-        (inv[1] as ItemSlotLiquidOnly).CapacityLitres = capacityLitres;
+        (inv[1] as ItemSlotLiquidOnly)?.CapacityLitres = capacityLitres;
         inv.SlotModified += Inventory_SlotModified;
     }
 
@@ -48,8 +48,8 @@ public class BETunRack : BEBaseFSContainer {
         blockMesh = GenBlockVariantMesh(Api, blockStack);
 
         if (inv[0].Itemstack?.Block != null) {
-            MeshData tunMesh = GenBlockVariantMesh(Api, inv[0].Itemstack);
-            blockMesh?.AddMeshData(tunMesh.BlockYRotation(block));
+            MeshData? tunMesh = GenBlockVariantMesh(Api, inv[0].Itemstack);
+            blockMesh?.AddMeshData(tunMesh?.BlockYRotation(block));
         }
     }
 
@@ -61,7 +61,7 @@ public class BETunRack : BEBaseFSContainer {
                 return TryTake(byPlayer);
             }
             else {
-                ItemStack owncontentStack = block.GetContent(blockSel.Position);
+                ItemStack? owncontentStack = block.GetContent(blockSel.Position);
                 if (owncontentStack?.Collectible?.Code.Path.StartsWith("rot") == true) {
                     return TryTake(byPlayer, 1);
                 }
@@ -72,10 +72,10 @@ public class BETunRack : BEBaseFSContainer {
         }
         else {
             if (inv.Empty && slot.CanStoreInSlot(AttributeCheck)) { // Put barrel in rack
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
 
                 if (TryPut(slot)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                     MarkDirty();
                     return true;
                 }
@@ -105,8 +105,8 @@ public class BETunRack : BEBaseFSContainer {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    SoundAttributes sound = stack.Block.Sounds.Place;
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                 }
 
                 if (stack.StackSize > 0) {
@@ -122,5 +122,5 @@ public class BETunRack : BEBaseFSContainer {
         return false;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 }

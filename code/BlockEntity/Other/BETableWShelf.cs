@@ -36,8 +36,8 @@ public class BETableWShelf : BEBaseFSContainer {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    SoundAttributes sound = stack.Block.Sounds.Place;
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                 }
 
                 if (stack.StackSize > 0) {
@@ -62,14 +62,14 @@ public class BETableWShelf : BEBaseFSContainer {
 
             // Using vanilla shelf transformations, the pot is too big so need to adjust it
             ItemSlot slot = inv[index];
-            if (slot?.Itemstack?.Collectible?.Code.Path.StartsWith("claypot-") == true) {
+            if (slot.Itemstack?.Collectible?.Code.Path.StartsWith("claypot-") == true) {
                 scaleValue = 0.85f;
                 offset = 0.03f;
             }
 
             tfMatrices[index] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block.Shape.rotateY)
+                .RotateYDeg(block?.Shape.rotateY ?? 0)
                 .Scale(scaleValue, scaleValue, scaleValue)
                 .Translate(- 0.5f, 0.185f + offset, index * 0.5f - 0.75f)
                 .Values;

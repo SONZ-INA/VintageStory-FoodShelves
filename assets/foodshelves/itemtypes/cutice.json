@@ -1,35 +1,35 @@
 ﻿{
-	"code": "cutice",
-	"creativeinventory": { "general": [ "*" ], "foodshelves": [ "*" ] },
-	"shape": { "base": "item/cutice" },
-	"maxStackSize": 64,
-	"transitionableProps": [
-		{
-			"type": "Melt",
-			"freshHours": { "avg": 0 },
-			"transitionHours": { "avg": 12 },
-			"transitionedStack": {
-				"type": "item",
-				"code": "game:slush"
-			},
-			"transitionRatio": 1
-		}
-	],
-	"guiTransform": {
-		"origin": { "x": 0.6, "y": 0, "z": 0 },
-		"rotation": { "x": -20, "y": -6, "z": 180 },
-		"scale": 2.9
-	},
-	"tpHandTransform": {
-		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
-		"translation": { "x": -1, "y": 0.2, "z": -0.8 },
-		"rotation": { "x": 0, "y": 0, "z": -90 },
-		"scale": 0.6
-	},
-	"groundTransform": {
-		"origin": { "x": 0.5, "y": 0, "z": 0.53 },
-		"translation": { "x": 0, "y": 0, "z": 0 },
-		"rotation": { "x": 0, "y": 0, "z": 0 },
-		"scale": 2.4
-	}
+  "code": "cutice",
+  "creativeinventory": { "general": [ "*" ], "foodshelves": [ "*" ] },
+  "shape": { "base": "item/cutice" },
+  "maxStackSize": 64,
+  "transitionableProps": [
+    {
+      "type": "Melt",
+      "freshHours": { "avg": 0 },
+      "transitionHours": { "avg": 12 },
+      "transitionedStack": {
+        "type": "item",
+        "code": "game:slush"
+      },
+      "transitionRatio": 1
+    }
+  ],
+  "guiTransform": {
+    "origin": { "x": 0.6, "y": 0, "z": 0 },
+    "rotation": { "x": -20, "y": -6, "z": 180 },
+    "scale": 2.9
+  },
+  "tpHandTransform": {
+    "origin": { "x": 0.5, "y": 0, "z": 0.5 },
+    "translation": { "x": -1, "y": 0.2, "z": -0.8 },
+    "rotation": { "x": 0, "y": 0, "z": -90 },
+    "scale": 0.6
+  },
+  "groundTransform": {
+    "origin": { "x": 0.5, "y": 0, "z": 0.53 },
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "scale": 2.4
+  }
 }

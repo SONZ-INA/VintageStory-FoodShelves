@@ -6,13 +6,13 @@ public class BlockGlassJar : BaseFSContainer {
 
         dsc.Append(Lang.Get("foodshelves:Contents"));
 
-        if (inSlot.Itemstack == null) {
-            dsc.AppendLine(Lang.Get("foodshelves:Empty."));
-            return;
+        if (!inSlot.Empty) {
+            ItemStack[] contents = GetContents(world, inSlot.Itemstack);
+            ByBlockMerged(contents.ToDummySlots(), dsc, world);
         }
 
-        ItemStack[] contents = GetContents(world, inSlot.Itemstack);
-        ByBlockMerged(contents.ToDummySlots(), dsc, world);
+        dsc.AppendLine(Lang.Get("foodshelves:Empty."));
+        return;
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
@@ -22,16 +22,16 @@ public class BlockGlassJar : BaseFSContainer {
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
         if (api.Side == EnumAppSide.Server) return;
 
-        string meshCacheKey = GetMeshCacheKey(itemstack);
+        string meshCacheKey = GetMeshCacheKey(renderinfo.InSlot);
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);
 
-        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef meshRef)) {
+        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef? meshRef)) {
             ItemStack[] contents = GetContents(api.World, itemstack);
             
-            MeshData jarMesh = GenBlockVariantMesh(capi, itemstack, ["Glass1"]); // Glass hides the content in GUI
-            MeshData contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.utilGlassJar, 8.5f);
+            MeshData? jarMesh = GenBlockVariantMesh(capi, itemstack, ["Glass1"]); // Glass hides the content in GUI
+            MeshData?contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.utilGlassJar, 8.5f);
             
-            if (contentMesh != null) jarMesh.AddMeshData(contentMesh);
+            if (contentMesh != null) jarMesh?.AddMeshData(contentMesh);
 
             meshrefs[meshCacheKey] = meshRef = capi.Render.UploadMultiTextureMesh(jarMesh);
         }
@@ -39,11 +39,11 @@ public class BlockGlassJar : BaseFSContainer {
         renderinfo.ModelRef = meshRef;
     }
 
-    public override MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        MeshData blockMesh = base.GenMesh(itemstack, targetAtlas, atBlockPos);
-        MeshData contentMesh = GenLiquidyMesh(api as ICoreClientAPI, GetContents(api.World, itemstack), ShapeReferences.utilGlassJar, 6f);
+    public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
+        MeshData? blockMesh = base.GenMesh(slot, targetAtlas, atBlockPos);
+        MeshData? contentMesh = GenLiquidyMesh((api as ICoreClientAPI)!, GetContents(api.World, slot.Itemstack), ShapeReferences.utilGlassJar, 6f);
 
-        if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
+        if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
 
         return blockMesh;
     }

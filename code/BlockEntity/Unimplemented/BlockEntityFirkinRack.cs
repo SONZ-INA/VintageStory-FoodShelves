@@ -2,10 +2,10 @@
 
 public class BlockEntityFirkinRack : BlockEntityDisplay {
     private readonly InventoryGeneric inv;
-    private BlockFirkinRack block;
+    private BlockFirkinRack block = null!;
 
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
+    public override string? InventoryClassName => Block?.Attributes?["inventoryClassName"].AsString();
 
     private int CapacityLitres { get; set; } = 10;
     private static readonly int slotCount = 8;
@@ -20,15 +20,15 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockFirkinRack;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockFirkinRack)!;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
 
         base.Initialize(api);
 
-        if (block?.Attributes?["capacityLitres"].Exists == true) {
+        if (block.Attributes?["capacityLitres"].Exists == true) {
             CapacityLitres = block.Attributes["capacityLitres"].AsInt(10);
             for (int i = slotCount / 2; i < slotCount; i++) {
-                (inv[i] as ItemSlotLiquidOnly).CapacityLitres = CapacityLitres;
+                (inv[i] as ItemSlotLiquidOnly)!.CapacityLitres = CapacityLitres;
             }
         }
 
@@ -43,7 +43,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
                 return TryTake(byPlayer, blockSel);
             }
             else {
-                ItemStack owncontentStack = block.GetContent(blockSel.Position);
+                ItemStack? owncontentStack = block?.GetContent(blockSel.Position);
                 if (owncontentStack?.Collectible?.Code.Path.StartsWith("rot") == true) {
                     return TryTake(byPlayer, blockSel, blockSel.SelectionBoxIndex + 4);
                 }
@@ -54,10 +54,10 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
         }
         else {
             if (inv[blockSel.SelectionBoxIndex].Empty && slot.CanStoreInSlot("fsFirkinRack")) { // Put firkin in rack
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
+                SoundAttributes sound = slot.Itemstack.Block.Sounds.Place;
 
                 if (TryPut(slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    Api.World.PlaySoundAt(sound, byPlayer.Entity);
                     MarkDirty();
                     return true;
                 }
@@ -75,37 +75,36 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
     private bool TryPut(ItemSlot slot, BlockSelection blockSel) {
         int index = blockSel.SelectionBoxIndex;
 
-        if (inv[index].Empty) {
-            int moved = slot.TryPutInto(Api.World, inv[index]);
-            MarkDirty(true);
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        if (!inv[index].Empty)
+            return false;
 
-            return moved > 0;
-        }
+        int moved = slot.TryPutInto(Api.World, inv[index]);
+        MarkDirty(true);
+        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
 
-        return false;
+        return moved > 0;
     }
 
     private bool TryTake(IPlayer byPlayer, BlockSelection blockSel, int rotTakeout = 0) {
         int index = blockSel.SelectionBoxIndex + rotTakeout;
 
-        if (!inv[index].Empty) {
-            ItemStack stack = inv[index].TakeOut(1);
-            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                AssetLocation sound = stack.Block?.Sounds?.Place;
-                Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-            }
+        if (inv[index].Empty)
+            return false;
 
-            if (stack.StackSize > 0) {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
-
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-            MarkDirty(true);
-            return true;
+        ItemStack stack = inv[index].TakeOut(1);
+        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+            SoundAttributes sound = stack.Block.Sounds.Place;
+            Api.World.PlaySoundAt(sound, byPlayer.Entity);
         }
 
-        return false;
+        if (stack.StackSize > 0) {
+            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+        }
+
+        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        MarkDirty(true);
+        
+        return true;
     }
 
     private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
@@ -126,7 +125,7 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
 
             tfMatrices[i] = new Matrixf()
                 .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(this.Block.Shape.rotateY + 90)
+                .RotateYDeg(Block.Shape.rotateY + 90)
                 .RotateZDeg(90)
                 .RotateYDeg(-90)
                 .Translate(x * 0.469f - 0.735f, -0.5f, -z * 0.469 - 0.765f)

@@ -42,16 +42,16 @@
   "emitSideAo": { "all": false },
   "sideao": { "all": true },
   "sidesolid": {
-	  "up": true,
-	  "all": false
+    "up": true,
+    "all": false
   },
   "sideopaque": {
-	  "up": true,
-	  "all": false
+    "up": true,
+    "all": false
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.9, "y": -1, "z": -0.55 },
-	  "rotation": { "x": -2, "y": 25, "z": -78 },
+    "translation": { "x": -0.9, "y": -1, "z": -0.55 },
+    "rotation": { "x": -2, "y": 25, "z": -78 },
     "scale": 0.5
   },
   "sounds": {

@@ -14,12 +14,14 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         return 0; // To prevent the block reducing the cellar rating
     }
 
-    public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
+    public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {
         return true;
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityFirkinRack hbr) return hbr.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityFirkinRack hbr) 
+            return hbr.OnInteract(byPlayer, blockSel);
+        
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
@@ -27,9 +29,11 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BlockEntityFirkinRack be && be.Inventory.Empty) return null;
-        else return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BlockEntityFirkinRack be && be.Inventory.Empty)
+            return null;
+        
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
     //public override string GetHeldItemName(ItemStack itemStack) {
@@ -43,7 +47,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         foreach (BlockBehavior behavior in BlockBehaviors) {
             EnumHandling handled = EnumHandling.PassThrough;
 
-            behavior.OnBlockBroken(world, pos, byPlayer, ref handled);
+            behavior.OnBlockBroken(world, pos, byPlayer, 1, ref handled);
             if (handled == EnumHandling.PreventDefault) preventDefault = true;
             if (handled == EnumHandling.PreventSubsequent) return;
         }
@@ -52,7 +56,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
 
         // Drop firkin
         BlockEntityFirkinRack be = GetBlockEntity<BlockEntityFirkinRack>(pos);
-        be?.Inventory.DropAll(pos.ToVec3d());
+        be.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
@@ -61,7 +65,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
                 world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
             }
 
-            world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos.X, pos.Y, pos.Z, byPlayer);
+            world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos, 0, byPlayer);
         }
 
         world.BlockAccessor.SetBlock(0, pos);
@@ -87,7 +91,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         StringBuilder dsc = new();
         
         BlockEntityFirkinRack be = GetBlockEntity<BlockEntityFirkinRack>(pos);
-        if (be != null && be.Inventory.Empty) dsc.Append(Lang.Get("foodshelves:Missing firkin."));
+        if (be?.Inventory.Empty == true) dsc.Append(Lang.Get("foodshelves:Missing firkin."));
         else dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
         return dsc.ToString();

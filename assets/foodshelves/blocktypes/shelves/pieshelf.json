@@ -44,9 +44,9 @@
     "burnDuration": 36
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
-	  "rotation": { "x": 99, "y": -10, "z": -6 },
-	  "scale": 0.5
+    "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
+    "rotation": { "x": 99, "y": -10, "z": -6 },
+    "scale": 0.5
   },
   "sounds": {
     "place": "game:block/planks",
@@ -55,8 +55,8 @@
   },
   "collisionbox": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
   "selectionBoxes": [
-	  { "x1": 0.125, "y1": 0, "z1": 0.0625, "x2": 0.9375, "y2": 0.3125, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
-	  { "x1": 0.125, "y1": 0.3125, "z1": 0.0625, "x2": 0.9375, "y2": 0.625, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
-	  { "x1": 0.125, "y1": 0.625, "z1": 0.0625, "x2": 0.9375, "y2": 1, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
+    { "x1": 0.125, "y1": 0, "z1": 0.0625, "x2": 0.9375, "y2": 0.3125, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+    { "x1": 0.125, "y1": 0.3125, "z1": 0.0625, "x2": 0.9375, "y2": 0.625, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+    { "x1": 0.125, "y1": 0.625, "z1": 0.0625, "x2": 0.9375, "y2": 1, "z2": 0.9375, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
   ]
 }

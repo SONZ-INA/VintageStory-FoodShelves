@@ -8,10 +8,9 @@ public static class GeneralBlockExtensions {
     /// Retrieves the block entity of type <typeparamref name="T"/> at the given position.<br/>
     /// If the block at the position is a multiblock, it attempts to return the block entity at the master (origin) block instead.
     /// </summary>
-    public static T GetBlockEntityExt<T>(this IBlockAccessor blockAccessor, BlockPos pos) where T : BlockEntity {
-        if (blockAccessor.GetBlockEntity<T>(pos) is T blockEntity) {
+    public static T? GetBlockEntityExt<T>(this IBlockAccessor blockAccessor, BlockPos pos) where T : BlockEntity {
+        if (blockAccessor.GetBlockEntity<T>(pos) is T blockEntity)
             return blockEntity;
-        }
 
         if (blockAccessor.GetBlock(pos) is BlockMultiblock multiblock) {
             BlockPos multiblockPos = new(pos.X + multiblock.OffsetInv.X, pos.Y + multiblock.OffsetInv.Y, pos.Z + multiblock.OffsetInv.Z, pos.dimension);
@@ -66,7 +65,7 @@ public static class GeneralBlockExtensions {
         string blockSide = block.Variant["side"];
         string dropSide = "east";
 
-        string properties = block.GetBehavior<BlockBehaviorHorizontalOrientable>()?.propertiesAtString;
+        string? properties = block.GetBehavior<BlockBehaviorHorizontalOrientable>()?.propertiesAtString;
         if (properties != null) {
             JsonDocument jsonDoc = JsonDocument.Parse(properties);
             dropSide = jsonDoc.RootElement.GetProperty("dropBlockFace").GetString() ?? "east";
@@ -75,9 +74,9 @@ public static class GeneralBlockExtensions {
         if (blockSide != null && blockSide != dropSide) 
             return;
 
-        var materials = block.Attributes["materials"].AsObject<RegistryObjectVariantGroup>();
+        var materials = block.Attributes?["materials"].AsObject<RegistryObjectVariantGroup>();
         string material = "";
-        StandardWorldProperty props = null;
+        StandardWorldProperty? props = null;
 
         if (materials?.LoadFromProperties != null) {
             material = materials.LoadFromProperties.ToString().Split('/')[1];

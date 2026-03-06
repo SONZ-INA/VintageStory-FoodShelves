@@ -20,9 +20,8 @@ public class BEDoubleShelf : BEBaseFSContainer {
 
         // Crock sealing interactions
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        if ((!slot.Empty || ctrl) && TryUse(byPlayer, slot, blockSel)) {
+        if ((!slot.Empty || ctrl) && TryUse(byPlayer, slot, blockSel))
             return true;
-        }
 
         return base.OnInteract(byPlayer, blockSel);
     }
@@ -36,18 +35,17 @@ public class BEDoubleShelf : BEBaseFSContainer {
         if (inv[endIndex - 1].Empty) endIndex--;
         if (inv[endIndex - 1].Empty) endIndex--;
 
-        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic) {
+        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic)
             return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
-        }
 
         // Only check last 2 slots (visually front crocks)
         for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
-            var stack = inv[i]?.Itemstack;
-            var stackSize = slot?.Itemstack?.StackSize ?? 0;
+            var stack = inv[i].Itemstack;
+            var stackSize = slot!.Itemstack?.StackSize ?? 0;
 
             if (stack?.Collectible is IContainedInteractable ici && ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
                 // If it's a meal container, don't check for "sealing" behavior
-                if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
+                if (slot.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
                     MarkDirty();
                     return true;
                 }
@@ -69,15 +67,15 @@ public class BEDoubleShelf : BEBaseFSContainer {
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
 
         if (!inv[startIndex].Empty) {
-            ItemStack firstItemInSegment = inv[startIndex].Itemstack;
+            ItemStack? firstItemInSegment = inv[startIndex].Itemstack;
             if (!firstItemInSegment.BelongsToSameGroupAs(slot.Itemstack)) return false;
-            if (slot.Itemstack.IsLargeItem() || firstItemInSegment.IsLargeItem()) return false;
-            if (firstItemInSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false;
+            if (slot.Itemstack?.IsLargeItem() == true || firstItemInSegment?.IsLargeItem() == true) return false;
+            if (firstItemInSegment?.IsSmallItem() != slot.Itemstack?.IsSmallItem()) return false;
         }
 
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !slot.Itemstack.IsSmallItem()) return false;
+            if (currentIndex == startIndex + 4 && slot.Itemstack?.IsSmallItem() == false) return false;
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
@@ -107,11 +105,11 @@ public class BEDoubleShelf : BEBaseFSContainer {
                     float x, y = 0f, z;
                     float scale = 0.95f;
 
-                    if (itemStack.IsLargeItem()) {
+                    if (itemStack?.IsLargeItem() == true) {
                         x = segment * 0.65f;
                         z = item * 0.65f;
                     }
-                    else if (!itemStack.IsSmallItem()) {
+                    else if (itemStack?.IsSmallItem() == false) {
                         x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
                         z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
                     }
@@ -123,7 +121,7 @@ public class BEDoubleShelf : BEBaseFSContainer {
                     }
 
                     // Exceptions I have to hardcode -----
-                    if (!itemStack.IsLargeItem()) {
+                    if (itemStack?.IsLargeItem() == false) {
                         string itemPath = itemStack.Collectible.Code.Path;
 
                         if (itemPath.Contains("pie") == true || itemPath.Contains("cheese")) {
@@ -132,7 +130,7 @@ public class BEDoubleShelf : BEBaseFSContainer {
                         }
                     }
 
-                    if (itemStack.Collectible.Code == "pemmican:pemmican-pack") {
+                    if (itemStack?.Collectible.Code == "pemmican:pemmican-pack") {
                         y += item / 2 * 0.13f;
                         z = -0.18f;
                     }
@@ -140,7 +138,7 @@ public class BEDoubleShelf : BEBaseFSContainer {
 
                     tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
+                        .RotateYDeg(block?.Shape.rotateY ?? 0)
                         .Scale(scale, scale, scale)
                         .Translate(x - 0.625f, y + 0.395f, z - 0.5325f)
                         .Values;

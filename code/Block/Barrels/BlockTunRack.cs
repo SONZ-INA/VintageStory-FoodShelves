@@ -23,7 +23,9 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BETunRack tr) return tr.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BETunRack tr) 
+            return tr.OnInteract(byPlayer, blockSel);
+        
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
@@ -31,9 +33,11 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BETunRack tr && tr.Inventory.Empty) return null;
-        else return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BETunRack tr && tr.Inventory.Empty)
+            return null;
+        
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
@@ -56,7 +60,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         foreach (BlockBehavior behavior in BlockBehaviors) {
             EnumHandling handled = EnumHandling.PassThrough;
 
-            behavior.OnBlockBroken(world, pos, byPlayer, ref handled);
+            behavior.OnBlockBroken(world, pos, byPlayer, 1, ref handled);
             if (handled == EnumHandling.PreventDefault) preventDefault = true;
             if (handled == EnumHandling.PreventSubsequent) return;
         }
@@ -65,7 +69,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
         // Drop barrel
         BETunRack be = GetBlockEntity<BETunRack>(pos);
-        be?.Inventory.DropAll(pos.ToVec3d());
+        be.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
@@ -74,7 +78,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
                 world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
             }
 
-            world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos.X, pos.Y, pos.Z, byPlayer);
+            world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos, 0, byPlayer);
         }
 
         world.BlockAccessor.SetBlock(0, pos);
@@ -87,15 +91,13 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
     // Selection boxes for multiblock parts
     public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
-        BETunRack be = blockAccessor.GetBlockEntityExt<BETunRack>(pos);
-        if (be != null) {
-            Cuboidf currentSelBox = base.GetSelectionBoxes(blockAccessor, pos).FirstOrDefault().Clone();
-            currentSelBox.MBNormalizeSelectionBox(offset);
+        BETunRack? be = blockAccessor.GetBlockEntityExt<BETunRack>(pos);
+        if (be == null) return base.GetSelectionBoxes(blockAccessor, pos);
+        
+        Cuboidf currentSelBox = base.GetSelectionBoxes(blockAccessor, pos).FirstOrDefault()!.Clone();
+        currentSelBox.MBNormalizeSelectionBox(offset);
 
-            return [currentSelBox];
-        }
-
-        return base.GetSelectionBoxes(blockAccessor, pos);
+        return [currentSelBox];
     }
 
     public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
@@ -110,11 +112,15 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         StringBuilder dsc = new();
 
         BETunRack be = GetBlockEntity<BETunRack>(pos);
-        if (be?.Inventory.Empty == true) dsc.Append(Lang.Get("foodshelves:Missing tun."));
+        if (be == null) return "";
+
+        if (be.Inventory.Empty) {
+            dsc.Append(Lang.Get("foodshelves:Missing tun."));
+        }
         else {
             dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
-            if (!be?.inv[1].Empty == true) {
+            if (!be.inv[1].Empty) {
                 dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure));
             }
         }
@@ -132,7 +138,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         }
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            if (fscontainer?.VariantAttributes?.Count != 0) {
+            if (fscontainer?.VariantAttributes?.Count > 0) {
                 stack.Attributes[BaseFSContainer.FSAttributes] = fscontainer.VariantAttributes;
             }
         }
@@ -148,20 +154,21 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         string meshCacheKey = GetMeshCacheKey(itemstack);
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);
 
-        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef meshRef)) {
-            MeshData mesh = GenMesh(itemstack, capi.BlockTextureAtlas, null);
+        if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef? meshRef)) {
+            MeshData? mesh = GenMesh(itemstack, capi.BlockTextureAtlas, null);
             meshrefs[meshCacheKey] = meshRef = capi.Render.UploadMultiTextureMesh(mesh);
         }
 
         renderinfo.ModelRef = meshRef;
     }
 
-    public virtual MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
+    public virtual MeshData? GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
         return GenBlockVariantMesh(api, itemstack);
     }
 
     public virtual string GetMeshCacheKey(ItemStack itemstack) {
-        if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree) return Code;
+        if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree)
+            return Code;
 
         List<string> parts = [];
         foreach (var pair in tree) {

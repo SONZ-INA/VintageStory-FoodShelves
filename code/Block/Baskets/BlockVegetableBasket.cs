@@ -7,11 +7,11 @@ public class BlockVegetableBasket : BaseFSBasket {
     
     public override int InnerSlotCount => 36;
 
-    public override float[,] GetTransformationMatrix(string path) {
+    public override float[,] GetTransformationMatrix(string? path) {
         float[] x = [.75f], y = [0], z = [-.03f], rX = [-2], rY = [4], rZ = [1];
         if (path == null) return GenTransformationMatrix(x, y, z, rX, rY, rZ);
 
-        foreach (var group in VegetableBasketData.GroupingCodes) {
+        foreach (var group in VegetableBasketData.GroupingCodes!) {
             if (group.Value.Contains(path)) {
                 switch(group.Key) {
                     case "group1":
@@ -50,15 +50,17 @@ public class BlockVegetableBasket : BaseFSBasket {
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
 
-    protected override MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
+    protected override MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
+        if (itemstack == null) return null;
+
         ItemStack[] contents = GetContents(api.World, itemstack);
 
         string itemPath = "";
-        if (contents != null && contents.Length > 0 && contents[0] != null) {
+        if (contents.Length > 0 && contents[0] != null) {
             itemPath = contents[0].Collectible.Code;
         }
 
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
+        MeshData? contentMesh = GenContentMesh((api as ICoreClientAPI)!, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
 
         return contentMesh;
     }
@@ -73,9 +75,8 @@ public class BlockVegetableBasket : BaseFSBasket {
         capacity = Math.Min(InnerSlotCount, tm.GetLength(1));
 
         // Only identical items can be put inside
-        if (contents.Length > 0 && incoming?.Collectible?.Code != contents[0]?.Collectible?.Code) {
+        if (contents.Length > 0 && incoming?.Collectible?.Code != contents[0]?.Collectible?.Code)
             return false;
-        }
 
         return contents.Length < capacity;
     }

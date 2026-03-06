@@ -3,7 +3,7 @@
 public class BlockMushroomBasket : BaseFSBasket {
     public override int InnerSlotCount => 18;
 
-    public override float[,] GetTransformationMatrix(string path = null) {
+    public override float[,] GetTransformationMatrix(string? path) {
         float[] x = [ .25f, .36f, .25f, .42f,   .4f, .37f,  .23f, .13f, .15f, .42f, .10f, .43f, .13f, .53f, .63f, .33f, .13f, .53f ];  
         float[] y = [ .01f, .01f, .01f, .01f, -.01f, .06f, -.05f, .04f, .05f, .07f, .03f, .05f, .04f, .01f, .01f, .01f, .01f, .02f ];
         float[] z = [ .25f, .21f, .37f,  .4f,  .55f, .42f,  .13f, .23f, .24f, .21f, .28f, .53f, .23f, .13f, .33f, .03f, .43f, .53f ];

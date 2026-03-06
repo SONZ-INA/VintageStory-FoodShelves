@@ -7,25 +7,25 @@ public static class CheckExtensions {
     /// using reflection.
     /// </summary>
     public static bool CheckTypedRestriction(this CollectibleObject obj, RestrictionData data) 
-        => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
+        => data.CollectibleTypes.Contains(obj.Code.Domain + ":" + obj.GetType().Name);
 
     /// <summary>
     /// Determines whether the collectible in the given slot has the specified attribute set to true, indicating that it is allowed to be stored.
     /// </summary>
     public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist)
-        => slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == true;
+        => slot.Itemstack?.Collectible.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines whether the collectible has the specified attribute set to true, allowing it to be stored in compatible containers.
     /// </summary>
     public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) 
-        => obj?.Attributes?[attributeWhitelist].AsBool() == true;
+        => obj.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines if the item is considered a large item, based on baking properties, "shelvable" attribute, or specific known basket block types.
     /// </summary>
     public static bool IsLargeItem(this ItemStack stack) {
-        var collectible = stack?.Collectible;
+        var collectible = stack.Collectible;
         if (collectible == null) return false;
 
         if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
@@ -44,7 +44,7 @@ public static class CheckExtensions {
     /// Determines if the item is considered a small item, such as bars or patties, using wildcard matches for known modded food items.
     /// </summary>
     public static bool IsSmallItem(this ItemStack stack) {
-        string stackCode = stack?.Collectible.Code.ToString() ?? "";
+        string stackCode = stack.Collectible.Code.ToString() ?? "";
 
         if (WildcardUtil.Match("wildcraftfruit:nut-*bar", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
@@ -64,12 +64,12 @@ public static class CheckExtensions {
     /// Checks if two item stacks can coexist in the same slot (belong to a same group).<br/>
     /// Returns true unless one of them belongs to a group, in which case their groups must match.
     /// </summary>
-    public static bool BelongsToSameGroupAs(this ItemStack checkSlot, ItemStack currSlot) {
+    public static bool BelongsToSameGroupAs(this ItemStack? checkSlot, ItemStack? currSlot) {
         if (checkSlot?.Collectible == null || currSlot?.Collectible == null)
             return true;
 
-        string checkGroup = checkSlot.ItemAttributes?["fsGroup"]?.AsString();
-        string currGroup = currSlot.ItemAttributes?["fsGroup"]?.AsString();
+        string? checkGroup = checkSlot.ItemAttributes?["fsGroup"]?.AsString();
+        string? currGroup = currSlot.ItemAttributes?["fsGroup"]?.AsString();
 
         if (string.IsNullOrEmpty(checkGroup) && string.IsNullOrEmpty(currGroup))
             return true;

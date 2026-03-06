@@ -34,7 +34,7 @@ public class BESushiShelf : BEBaseFSContainer {
 
                     tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY - 180f)
+                        .RotateYDeg((block?.Shape.rotateY ?? 0) - 180f)
                         .Scale(0.9f, 0.9f, 1f)
                         .Translate(x - 0.07f, y + 0.05f, z - 0.24875f)
                         .Values;

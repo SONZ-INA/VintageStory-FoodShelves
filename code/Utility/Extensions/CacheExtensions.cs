@@ -31,13 +31,11 @@ public static class CacheExtensions {
     /// Retrieves or creates a dictionary for caching mesh references associated with a specific key within the client API's object cache.
     /// </summary>
     public static Dictionary<string, MultiTextureMeshRef> GetCacheDictionary(ICoreClientAPI capi, string meshCacheKey) {
-        if (capi.ObjectCache.TryGetValue(meshCacheKey, out object obj)) {
-            return obj as Dictionary<string, MultiTextureMeshRef>;
-        }
-        else {
-            var dict = new Dictionary<string, MultiTextureMeshRef>();
-            capi.ObjectCache[meshCacheKey] = dict;
+        if (capi.ObjectCache.TryGetValue(meshCacheKey, out object? obj) && obj is Dictionary<string, MultiTextureMeshRef> dict)
             return dict;
-        }
+
+        var newDict = new Dictionary<string, MultiTextureMeshRef>();
+        capi.ObjectCache[meshCacheKey] = newDict;
+        return newDict;
     }
 }

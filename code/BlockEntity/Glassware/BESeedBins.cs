@@ -3,7 +3,7 @@
 namespace FoodShelves;
 
 public class BESeedBins : BEBaseFSContainer {
-    protected new BaseFSContainer block;
+    protected new BaseFSContainer block = null!;
     private readonly MeshData[] contentMeshes = new MeshData[4];
 
     protected override string CantPlaceMessage => "foodshelves:Only seeds can be placed in these jars.";
@@ -17,7 +17,7 @@ public class BESeedBins : BEBaseFSContainer {
     public BESeedBins() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer)!;
         base.Initialize(api);
     }
 
@@ -30,12 +30,12 @@ public class BESeedBins : BEBaseFSContainer {
         for (int i = 0; i < 4; i++) {
             // Content
             var stacksForMesh = stacks.Skip(i * ItemsPerSegment).Take(ItemsPerSegment).ToArray();
-            contentMeshes[i] = GenLiquidyMesh(capi, stacksForMesh, ShapeReferences.utilSeedBins, 6f, false)?.Translate(0, .04f, 0).BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, stacksForMesh, ShapeReferences.utilSeedBins, 6f, false)?.Translate(0, .04f, 0).BlockYRotation(block)!;
             
             // Icon
             if (capi == null) continue;
 
-            if (stacksForMesh?[0]?.Collectible != null) {
+            if (stacksForMesh[0].Collectible != null) {
                 string seedtype = stacksForMesh[0].Collectible.Variant["type"];
                 VariantAttributes.SetString($"seed{i}", seedtype);
             }
@@ -47,7 +47,7 @@ public class BESeedBins : BEBaseFSContainer {
         blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), [.. dontRender]);
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         base.OnTesselation(mesher, tesselator);
@@ -56,7 +56,7 @@ public class BESeedBins : BEBaseFSContainer {
             if (contentMeshes[i] == null) continue;
             MeshData contentMesh = contentMeshes[i].Clone();
 
-            switch (block.GetRotationAngle()) {
+            switch (block?.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
                 case 90: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
                 case 180: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;

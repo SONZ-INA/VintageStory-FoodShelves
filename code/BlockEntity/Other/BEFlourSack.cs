@@ -14,7 +14,7 @@ public class BEFlourSack : BEBaseFSContainer {
         if (capi == null) return;
 
         if (!inv[0].Empty) {
-            string flourtype = inv[0].Itemstack.Collectible.Variant["type"];
+            string flourtype = inv[0].Itemstack!.Collectible.Variant["type"];
             VariantAttributes.SetString("seed", flourtype);
             base.InitMesh();
         }
@@ -22,8 +22,8 @@ public class BEFlourSack : BEBaseFSContainer {
             blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), ["sackicon"]);
         }
 
-        MeshData contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);
-        if (contentMesh != null) blockMesh.AddMeshData(contentMesh);
+        MeshData? contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);
+        if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
@@ -32,5 +32,5 @@ public class BEFlourSack : BEBaseFSContainer {
         return true;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 }

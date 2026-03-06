@@ -25,14 +25,12 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
         if (index >= ShelfCount) return false;
 
         // Bottom Slot
-        if (index == (int)SlotNumber.BottomSlot) {
+        if (index == (int)SlotNumber.BottomSlot)
             return TryPlaceInSlots(slot, 0, ItemsPerSegment);
-        }
 
         // Top Slot
-        if (Block.Variant["type"] == "top" != true && index == (int)SlotNumber.TopSlot) {
+        if (Block.Variant["type"] == "top" != true && index == (int)SlotNumber.TopSlot)
             return TryPlaceInSlots(slot, ItemsPerSegment, ShelfCount * ItemsPerSegment);
-        }
 
         return false;
     }
@@ -46,7 +44,7 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
                 return true;
             }
         }
-        else if (!inv[startIndex].Itemstack.IsLargeItem() && !slot.Itemstack.IsLargeItem()) {
+        else if (!inv[startIndex].Itemstack?.IsLargeItem() == true && slot.Itemstack?.IsLargeItem() == false) {
             for (int i = startIndex + 1; i < endIndex; i++) {
                 if (inv[i].Empty) {
                     int moved = slot.TryPutInto(Api.World, inv[i]);
@@ -71,10 +69,10 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
         float[][] tfMatrices = new float[SlotCount][];
 
         for (int i = 0; i < SlotCount; i++) {
-            if ((i < ItemsPerSegment && inv[i].Itemstack.IsLargeItem()) || (i >= ItemsPerSegment && inv[i].Itemstack.IsLargeItem())) {
+            if ((i < ItemsPerSegment && inv[i].Itemstack?.IsLargeItem() == true) || (i >= ItemsPerSegment && inv[i].Itemstack?.IsLargeItem() == true)) {
                 tfMatrices[i] = new Matrixf()
                     .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block.Shape.rotateY)
+                    .RotateYDeg(block?.Shape.rotateY ?? 0)
                     .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
                     .Translate(-0.5f, i % (ItemsPerSegment - 1) * 0.3725f + 0.24f, i >= ItemsPerSegment ? -0.65f : -0.5f)
                     .Values;
@@ -85,7 +83,7 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
 
                 tfMatrices[i] = new Matrixf()
                     .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block.Shape.rotateY)
+                    .RotateYDeg(block?.Shape.rotateY ?? 0)
                     .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
                     .Translate(x - 0.5f, i / ItemsPerSegment * 0.3725f + 0.24f, z - (i >= ItemsPerSegment ? 0.65f : 0.5f))
                     .Values;

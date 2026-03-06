@@ -34,7 +34,7 @@ public class BEEggShelf : BEBaseFSContainer {
 
                     tfMatrices[index] = new Matrixf()
                         .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
+                        .RotateYDeg(block?.Shape.rotateY ?? 0)
                         .Translate(x - 0.84375f, y + 0.06f, z - 0.8125f)
                         .Values;
                 }

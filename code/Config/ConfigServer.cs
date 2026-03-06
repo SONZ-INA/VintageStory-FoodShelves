@@ -9,7 +9,7 @@ public class ConfigServer : IModConfig {
     public float CooledBuff { get; set; } = 0.3f;
     public float IceMeltRate { get; set; } = 1f;
 
-    public ConfigServer(ICoreAPI api, ConfigServer previousConfig = null) {
+    public ConfigServer(ICoreAPI api, ConfigServer? previousConfig = null) {
         if (previousConfig == null) return;
 
         GlobalPerishMultiplier = previousConfig.GlobalPerishMultiplier;

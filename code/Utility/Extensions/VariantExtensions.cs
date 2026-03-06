@@ -7,12 +7,12 @@ public static class VariantExtensions {
     /// Retrieves the block variant data needed for properly meshing variant textures on blocks.<br/>
     /// Avoid using this method during animation mesh generation.
     /// </summary>
-    public static (Shape, ITexPositionSource) GetBlockVariantData(ICoreClientAPI capi, ItemStack stackWithAttributes) {
+    public static (Shape?, ITexPositionSource?) GetBlockVariantData(ICoreClientAPI capi, ItemStack stackWithAttributes) {
         Block block = stackWithAttributes.Block;
 
         AssetLocation assetLoc = block.Shape.Base.Clone();
         string shapeLocation = assetLoc.WithPathPrefixOnce("shapes/").WithPathAppendixOnce(".json");
-        Shape shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
+        Shape? shape = capi.Assets.TryGet(shapeLocation)?.ToObject<Shape>().Clone();
         if (shape == null) return (null, null);
 
         if (shape.Textures.Count == 0) {
@@ -25,7 +25,7 @@ public static class VariantExtensions {
 
         // Custom Textures
         if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
-            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()) {
+            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()!) {
                 string[] texPaths = pair.Value;
 
                 foreach (var attr in tree) {
@@ -36,9 +36,8 @@ public static class VariantExtensions {
                         if (texPath.Contains($"{{{key}}}")) {
                             string fullTexPath = texPath.Replace($"{{{key}}}", value);
 
-                            if (capi.Assets.TryGet(new AssetLocation(fullTexPath).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                            if (capi.Assets.TryGet(new AssetLocation(fullTexPath).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null)
                                 continue;
-                            }
 
                             shape.Textures[key] = fullTexPath;
 
@@ -74,15 +73,15 @@ public static class VariantExtensions {
 
                 foreach (var attr in fscontainer.VariantAttributes) {
                     string paramPlaceholder = "{" + attr.Key + "}";
-                    string paramValue = attr.Value.ToString();
+                    string? paramValue = attr.Value.ToString();
                     textureValue = textureValue.Replace(paramPlaceholder, paramValue);
                 }
 
-                if (textureValue.Contains('{') || textureValue.Contains('}')) continue;
-
-                if ((fscontainer.Api as ICoreClientAPI)?.Assets.TryGet(new AssetLocation(textureValue).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null) {
+                if (textureValue.Contains('{') || textureValue.Contains('}')) 
                     continue;
-                }
+
+                if ((fscontainer.Api as ICoreClientAPI)?.Assets.TryGet(new AssetLocation(textureValue).WithPathPrefixOnce("textures/").WithPathAppendixOnce(".png")) == null)
+                    continue;
 
                 shape.Textures[texture.Key] = textureValue;
                 break;

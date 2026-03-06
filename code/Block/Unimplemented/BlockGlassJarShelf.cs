@@ -1,12 +1,14 @@
 ﻿namespace FoodShelves;
 
 public class BlockGlassJarShelf : Block {
-    public override bool DoParticalSelection(IWorldAccessor world, BlockPos pos) {
+    public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {
         return true;
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityGlassJarShelf beshelf) return beshelf.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BlockEntityGlassJarShelf beshelf)
+            return beshelf.OnInteract(byPlayer, blockSel);
+        
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 

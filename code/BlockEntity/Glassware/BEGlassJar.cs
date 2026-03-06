@@ -10,5 +10,5 @@ public class BEGlassJar : BEBaseFSContainer {
         return false;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 }

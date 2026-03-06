@@ -16,7 +16,7 @@ public class BEPumpkinCase : BEBaseFSContainer {
 
         tfMatrices[0] = new Matrixf()
             .Translate(0.5f, 0, 0.5f)
-            .RotateYDeg(block.Shape.rotateY)
+            .RotateYDeg(block?.Shape.rotateY ?? 0)
             .Translate(-0.5f, 0.06f, -0.5f)
             .Values;
 
