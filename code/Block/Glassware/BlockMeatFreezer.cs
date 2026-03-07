@@ -7,11 +7,6 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[]? drawerInteractions;
     private WorldInteraction[]? drawerOpenClose;
 
-    public readonly AssetLocation soundFreezerOpen = new(SoundReferences.CoolingCabinetOpen);
-    public readonly AssetLocation soundFreezerClose = new(SoundReferences.CoolingCabinetClose);
-    public readonly AssetLocation soundDrawerOpen = new(SoundReferences.IceDrawerOpen);
-    public readonly AssetLocation soundDrawerClose = new(SoundReferences.IceDrawerClose);
-
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
 
@@ -69,7 +64,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             
             case 5:
                 if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEMeatFreezer bemf && bemf.DrawerOpen) {
-                    if (bemf.Inventory?[bemf.cutIceSlot].Empty == true || bemf.Inventory?[bemf.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
+                    if (bemf.Inventory?[bemf.CutIceSlot].Empty == true || bemf.Inventory?[bemf.CutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
                         return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                     }
                 }
@@ -94,7 +89,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         Cuboidf freezerBase = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(6).Clone();
         Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-freezer)
 
-        if (be.FreezerOpen) {
+        if (be.DoorOpen) {
             Cuboidf section1 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
             Cuboidf section2 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
 
@@ -126,7 +121,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         freezerDoor.MBNormalizeSelectionBox(offset);
         drawerSelBox.MBNormalizeSelectionBox(offset);
 
-        if (be.FreezerOpen) {
+        if (be.DoorOpen) {
             freezerDoor.Y1 += 0.1325f;
             freezerDoor.Y2 += 0.7f;
                 
@@ -151,7 +146,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             }
         }
 
-        if (!be.FreezerOpen) {
+        if (!be.DoorOpen) {
             return [skip, skip, skip, skip, freezerDoor, drawerSelBox, freezerBase];
         }
         else {                

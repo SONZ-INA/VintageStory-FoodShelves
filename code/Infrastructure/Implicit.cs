@@ -11,6 +11,7 @@ global using Vintagestory.API.Util;
 global using Vintagestory.API.MathTools;
 global using Vintagestory.GameContent;
 
+global using static FoodShelves.AnimationExtensions;
 global using static FoodShelves.CacheExtensions;
 global using static FoodShelves.CheckExtensions;
 global using static FoodShelves.GeneralBlockExtensions;

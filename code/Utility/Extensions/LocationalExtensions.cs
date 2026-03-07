@@ -79,8 +79,8 @@ public static class LocationalExtensions {
     /// Returns the rotation angle in degrees for the block based on its variant suffix (e.g., "-north", "-south").<br/>
     /// For this method to work properly, it *must* align with the rotation defined in the block's type.
     /// </summary>
-    public static int GetRotationAngle(this Block block) {
-        string blockPath = block.Code.Path;
+    public static int GetRotationAngle(this Block? block) {
+        string blockPath = block?.Code.Path ?? "";
 
         return blockPath switch {
             var path when path.EndsWith("-north") => 0,

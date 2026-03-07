@@ -14,7 +14,7 @@ public class BEFlourSack : BEBaseFSContainer {
         if (capi == null) return;
 
         if (!inv[0].Empty) {
-            string flourtype = inv[0].Itemstack!.Collectible.Variant["type"];
+            string? flourtype = inv[0].Itemstack?.Collectible.Variant["type"];
             VariantAttributes.SetString("seed", flourtype);
             base.InitMesh();
         }

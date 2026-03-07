@@ -88,7 +88,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
                 if (basketRope != null) {
                     tesselator.TesselateShape(block, basketRope, out MeshData ropeMesh);
 
-                    float scale = block.Shape.Scale;
+                    float scale = block?.Shape.Scale ?? 0;
                     ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
 
                     blockMesh?.AddMeshData(ropeMesh);

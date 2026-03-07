@@ -28,30 +28,28 @@ public class BEBucketHook : BEBaseFSContainer {
 
         var contents = GetContents(Api.World, inv[0].Itemstack);
         sb.Append(" <font color=\"#ababab\">");
-        if (contents.Length > 0) {
-            if (contents[0] != null) {
-                sb.Append(GetAmountOfLiters(contents[0]));
+        if (contents.Length > 0 && contents[0] != null) {
+            sb.Append(GetAmountOfLiters(contents[0]));
 
-                // Create dummy inventory and slot for transition calculations
-                DummyInventory dummyInv = new(Api);
-                ItemSlot contentSlot = new ItemSlotSurvival(dummyInv) {
-                    Itemstack = contents[0]
-                };
+            // Create dummy inventory and slot for transition calculations
+            DummyInventory dummyInv = new(Api);
+            ItemSlot contentSlot = new ItemSlotSurvival(dummyInv) {
+                Itemstack = contents[0]
+            };
 
-                // Get transition states
-                TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(Api.World, contentSlot);
+            // Get transition states
+            TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(Api.World, contentSlot);
 
-                if (transitionStates != null) {
-                    // Find perish transition state
-                    TransitionState? perishState = transitionStates.FirstOrDefault(state =>
-                        state.Props.Type == EnumTransitionType.Perish &&
-                        contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, contentSlot, state.Props.Type) > 0);
+            if (transitionStates != null) {
+                // Find perish transition state
+                TransitionState? perishState = transitionStates.FirstOrDefault(state =>
+                    state.Props.Type == EnumTransitionType.Perish 
+                    && contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, contentSlot, state.Props.Type) > 0);
 
-                    if (perishState != null) {
-                        float perishRate = contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, inv[0], perishState.Props.Type) ?? 1;
-                        float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
-                        sb.Append(" " + GetTimeRemainingText(Api.World, freshHoursLeft, EnumTransitionType.Perish, perishState.TransitionLevel));
-                    }
+                if (perishState != null) {
+                    float perishRate = contentSlot.Itemstack?.Collectible.GetTransitionRateMul(Api.World, inv[0], perishState.Props.Type) ?? 1;
+                    float freshHoursLeft = perishState.FreshHoursLeft / perishRate;
+                    sb.Append(" " + GetTimeRemainingText(Api.World, freshHoursLeft, EnumTransitionType.Perish, perishState.TransitionLevel));
                 }
             }
         }

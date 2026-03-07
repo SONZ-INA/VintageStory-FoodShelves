@@ -6,11 +6,6 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[]? cabinetInteractions;
     private WorldInteraction[]? drawerInteractions;
 
-    public readonly AssetLocation soundCabinetOpen = new(SoundReferences.CoolingCabinetOpen);
-    public readonly AssetLocation soundCabinetClose = new(SoundReferences.CoolingCabinetClose);
-    public readonly AssetLocation soundDrawerOpen = new(SoundReferences.IceDrawerOpen);
-    public readonly AssetLocation soundDrawerClose = new(SoundReferences.IceDrawerClose);
-
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
 
@@ -74,7 +69,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
             if (becc.DrawerOpen) {
-                if (becc.Inventory?[becc.cutIceSlot].Empty == true || becc.Inventory?[becc.cutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
+                if (becc.Inventory?[becc.CutIceSlot].Empty == true || becc.Inventory?[becc.CutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
                     return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                 }
             }
@@ -110,7 +105,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             }
         }
 
-        if (be.CabinetOpen) {
+        if (be.DoorOpen) {
             Cuboidf bottomShelfL = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
             Cuboidf bottomShelfM = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
 
@@ -149,7 +144,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             }
         }
 
-        if (!be.CabinetOpen) {
+        if (!be.DoorOpen) {
             Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
             cabinetSelBox.MBNormalizeSelectionBox(offset);
 

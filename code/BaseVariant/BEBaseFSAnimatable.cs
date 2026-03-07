@@ -4,6 +4,7 @@ namespace FoodShelves;
 
 public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
     protected MeshData? ownMesh;
+    protected BlockEntityAnimationUtil? AnimUtil => GetBehavior<BEBehaviorAnimatable>()?.animUtil;
 
     protected virtual string ReferencedShape {
         get {
@@ -12,10 +13,6 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
             return field_name?.GetValue(null) as string
                 ?? throw new InvalidOperationException($"No shape reference found for {className}");
         }
-    }
-
-    protected BlockEntityAnimationUtil? AnimUtil {
-        get { return GetBehavior<BEBehaviorAnimatable>()?.animUtil; }
     }
 
     public override void Initialize(ICoreAPI api) {

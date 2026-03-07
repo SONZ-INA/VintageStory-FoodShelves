@@ -1022,8 +1022,8 @@
 		},
 
 		{
-			"name": "cabinetOpen",
-			"code": "cabinetopen",
+			"name": "doorOpen",
+			"code": "dooropen",
 			"quantityframes": 30,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",

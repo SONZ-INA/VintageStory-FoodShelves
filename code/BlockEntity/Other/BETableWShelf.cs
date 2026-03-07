@@ -15,7 +15,8 @@ public class BETableWShelf : BEBaseFSContainer {
     public BETableWShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf) return false;
+        if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf)
+            return false;
 
         for (int i = 0; i < SlotCount; i++) {
             if (inv[i].Empty) {
@@ -30,7 +31,8 @@ public class BETableWShelf : BEBaseFSContainer {
     }
 
     protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf) return false;
+        if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf)
+            return false;
 
         for (int i = SlotCount - 1; i >= 0; i--) {
             if (!inv[i].Empty) {

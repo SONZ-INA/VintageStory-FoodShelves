@@ -13,7 +13,7 @@ public static class CheckExtensions {
     /// Determines whether the collectible in the given slot has the specified attribute set to true, indicating that it is allowed to be stored.
     /// </summary>
     public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist)
-        => slot.Itemstack?.Collectible.Attributes?[attributeWhitelist].AsBool() == true;
+        => slot.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines whether the collectible has the specified attribute set to true, allowing it to be stored in compatible containers.

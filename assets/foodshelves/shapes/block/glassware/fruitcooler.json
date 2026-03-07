@@ -572,8 +572,8 @@
 		},
 
 		{
-			"name": "WaterUp",
-			"code": "waterup",
+			"name": "WaterHeight",
+			"code": "waterheight",
 			"quantityframes": 30,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",

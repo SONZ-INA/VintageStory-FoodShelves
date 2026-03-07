@@ -18,7 +18,7 @@ public static class Meshing {
 
         capi.Tesselator.TesselateShape("FS-TesselateShape", variantData.Item1, out MeshData blockMesh, variantData.Item2);
 
-        float scale = block.Shape.Scale;
+        float scale = block?.Shape.Scale ?? 0;
         if (scale != 1) blockMesh.Scale(new Vec3f(.5f, 0, .5f), scale, scale, scale);
 
         return blockMesh.BlockYRotation(block);
