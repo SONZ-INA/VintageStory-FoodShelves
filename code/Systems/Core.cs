@@ -39,12 +39,7 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockFSContainer", typeof(BaseFSContainer));
         // ------------------------
 
-        // Block Behaviors---------
-        api.RegisterBlockBehaviorClass("FoodShelves.CeilingAttachable", typeof(BlockBehaviorCeilingAttachable));
-        api.RegisterBlockBehaviorClass("FoodShelves.CanCeilingAttachFalling", typeof(BlockBehaviorCanCeilingAttachFalling));
-        // ------------------------
-
-        // Block Classes----------
+        // Block Classes-----------
         api.RegisterBlockClass("FoodShelves.BlockBarrelRack", typeof(BlockBarrelRack));
         api.RegisterBlockClass("FoodShelves.BlockTunRack", typeof(BlockTunRack));
 

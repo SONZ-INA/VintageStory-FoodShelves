@@ -23,7 +23,7 @@
   },
   "behaviors": [
     { "name": "RightClickPickup" },
-    { "name": "FoodShelves.CanCeilingAttachFalling" }
+    { "name": "Unstable", "properties": { "attachedToFaces": ["up", "down"] } }
   ],
   "shape": {
     "base": "block/baskets/mushroombasket",

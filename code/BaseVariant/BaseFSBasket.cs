@@ -50,9 +50,8 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
         BEBaseFSBasket? be = GetBlockEntity<BEBaseFSBasket>(pos);
         if (be != null) {
-            BlockBehaviorCanCeilingAttachFalling beh = GetBehavior<BlockBehaviorCanCeilingAttachFalling>();
-            beh.CanBlockStay(world, pos, out bool isCeilingAttached);
-            be.IsCeilingAttached = isCeilingAttached;
+            BlockBehaviorUnstable beh = GetBehavior<BlockBehaviorUnstable>();
+            be.IsCeilingAttached = beh.IsAttached(api.World.BlockAccessor, pos);
             be.MarkDirty(true);
         }
 

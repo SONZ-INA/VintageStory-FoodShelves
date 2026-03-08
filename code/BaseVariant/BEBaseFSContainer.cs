@@ -48,7 +48,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void OnBlockPlaced(ItemStack byItemStack) {
         base.OnBlockPlaced(byItemStack);
 
-        if (byItemStack.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
+        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
             if (VariantAttributes.Count == 0) VariantAttributes = tree;
         }
         
