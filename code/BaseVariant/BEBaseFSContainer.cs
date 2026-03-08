@@ -61,21 +61,17 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
     public virtual float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt) {
-            if (!globalBlockBuffs) 
-                return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-            
+            if (!globalBlockBuffs) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
             return container.Room?.ExitCount == 0 ? DryingMultiplier * 2f : DryingMultiplier * 0.5f;
         }
 
-        if (transType == EnumTransitionType.Cure) {
+        if (transType == EnumTransitionType.Cure)
             return globalBlockBuffs ? CuringMultiplier : 1f;
-        }
 
         if (Api == null) return 0;
 
-        if (RipeningSpot && transType == EnumTransitionType.Ripen) {
+        if (RipeningSpot && transType == EnumTransitionType.Ripen)
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
-        }
 
         return globalPerishMultiplier * (globalBlockBuffs ? PerishMultiplier : 1);
     }
@@ -93,12 +89,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             if (slot.Empty) return false;
             
             if (slot.CanStoreInSlot(AttributeCheck)) {
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
 
@@ -186,9 +178,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     }
 
                     // Only break if something was actually moved
-                    if (moved > 0) {
-                        break;
-                    }
+                    if (moved > 0) break;
                 }
             }
         }
@@ -215,17 +205,14 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                     : inv[currentIndex].TakeOut(1);
 
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
                 }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
                 InitMesh();
-                MarkDirty();
                 return true;
             }
         }

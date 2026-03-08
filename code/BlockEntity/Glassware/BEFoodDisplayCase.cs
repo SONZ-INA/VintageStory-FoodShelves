@@ -26,32 +26,26 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
 
         // Bottom Slot
         if (index == (int)SlotNumber.BottomSlot)
-            return TryPlaceInSlots(slot, 0, ItemsPerSegment);
+            return TryPlaceInSlots(byPlayer, slot, 0, ItemsPerSegment);
 
         // Top Slot
         if (Block.Variant["type"] == "top" != true && index == (int)SlotNumber.TopSlot)
-            return TryPlaceInSlots(slot, ItemsPerSegment, ShelfCount * ItemsPerSegment);
+            return TryPlaceInSlots(byPlayer, slot, ItemsPerSegment, ShelfCount * ItemsPerSegment);
 
         return false;
     }
 
-    private bool TryPlaceInSlots(ItemSlot slot, int startIndex, int endIndex) {
+    private bool TryPlaceInSlots(IPlayer byPlayer, ItemSlot slot, int startIndex, int endIndex) {
         if (inv[startIndex].Empty) {
-            int moved = slot.TryPutInto(Api.World, inv[startIndex]);
-            if (moved > 0) {
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return true;
+            if (slot.TryPutInto(Api.World, inv[startIndex]) > 0) {
+                return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
             }
         }
         else if (!inv[startIndex].Itemstack?.IsLargeItem() == true && slot.Itemstack?.IsLargeItem() == false) {
             for (int i = startIndex + 1; i < endIndex; i++) {
                 if (inv[i].Empty) {
-                    int moved = slot.TryPutInto(Api.World, inv[i]);
-                    if (moved > 0) {
-                        MarkDirty();
-                        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                        return true;
+                    if (slot.TryPutInto(Api.World, inv[i]) > 0) {
+                        return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                     }
                 }
             }

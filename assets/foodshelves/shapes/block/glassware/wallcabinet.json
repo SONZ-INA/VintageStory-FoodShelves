@@ -298,8 +298,8 @@
 	],
 	"animations": [
 		{
-			"name": "CabinetOpen",
-			"code": "cabinetopen",
+			"name": "DoorOpen",
+			"code": "dooropen",
 			"quantityframes": 30,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",

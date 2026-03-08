@@ -79,8 +79,8 @@ public class BEDoubleShelf : BEBaseFSContainer {
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                MarkDirty();
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                MarkDirty();
                 return moved > 0;
             }
         }

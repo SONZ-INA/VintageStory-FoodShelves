@@ -63,17 +63,13 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
             return false;
 
         if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            SoundAttributes? sound = stack.Block?.Sounds?.Place;
-            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+            this.HandlePlacementEffects(stack, byPlayer);
         }
 
         if (stack.StackSize > 0) {
             Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
         }
 
-        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-        MarkDirty();
-        
         return true;
     }
 

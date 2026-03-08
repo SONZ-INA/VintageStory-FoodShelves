@@ -66,8 +66,8 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
         if (preventDefault) return;
 
         // Drop barrel
-        BEBarrelRack be = GetBlockEntity<BEBarrelRack>(pos);
-        be.Inventory.DropAll(pos.ToVec3d());
+        BEBarrelRack? be = GetBlockEntity<BEBarrelRack>(pos);
+        be?.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
@@ -100,15 +100,15 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
     public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer) {
         StringBuilder dsc = new();
 
-        BEBarrelRack be = GetBlockEntity<BEBarrelRack>(pos);
+        BEBarrelRack? be = GetBlockEntity<BEBarrelRack>(pos);
 
-        if (be.Inventory.Empty) {
+        if (be?.Inventory.Empty == true) {
             dsc.Append(Lang.Get("foodshelves:Missing barrel."));
         }
         else {
             dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
-            if (!be.inv[1].Empty) {
+            if (be?.inv[1].Empty == false) {
                 dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure));
             }
         }

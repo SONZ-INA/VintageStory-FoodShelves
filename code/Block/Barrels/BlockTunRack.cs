@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     private bool globalBlockBuffs = true;
@@ -68,8 +66,8 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
         if (preventDefault) return;
 
         // Drop barrel
-        BETunRack be = GetBlockEntity<BETunRack>(pos);
-        be.Inventory.DropAll(pos.ToVec3d());
+        BETunRack? be = GetBlockEntity<BETunRack>(pos);
+        be?.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
@@ -92,9 +90,11 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     // Selection boxes for multiblock parts
     public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
         BETunRack? be = blockAccessor.GetBlockEntityExt<BETunRack>(pos);
-        if (be == null) return base.GetSelectionBoxes(blockAccessor, pos);
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
+
+        if (be == null) return boxes;
         
-        Cuboidf currentSelBox = base.GetSelectionBoxes(blockAccessor, pos).FirstOrDefault()!.Clone();
+        Cuboidf currentSelBox = boxes[0].Clone();
         currentSelBox.MBNormalizeSelectionBox(offset);
 
         return [currentSelBox];
@@ -111,16 +111,15 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer) {
         StringBuilder dsc = new();
 
-        BETunRack be = GetBlockEntity<BETunRack>(pos);
-        if (be == null) return "";
+        BETunRack? be = GetBlockEntity<BETunRack>(pos);
 
-        if (be.Inventory.Empty) {
+        if (be?.Inventory.Empty == true) {
             dsc.Append(Lang.Get("foodshelves:Missing tun."));
         }
         else {
             dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
-            if (!be.inv[1].Empty) {
+            if (be?.inv[1].Empty == false) {
                 dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure));
             }
         }

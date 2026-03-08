@@ -17,8 +17,8 @@ public class BECoolingCabinet : BEBaseFSCooler {
     // Cooler-Specific --------------------------
     public override int CutIceSlot => 216;
 
-    protected override float BuffedPerishMultiplier => 0.3f;
-    protected override float UnbuffedPerishMultiplier => 0.75f;
+    protected override float BuffedPerishMultiplier => 0.2985f;
+    protected override float UnbuffedPerishMultiplier => 0.74f;
 
     protected override AssetLocation DoorOpenSound => SoundReferences.CoolingCabinetOpen;
     protected override AssetLocation DoorCloseSound => SoundReferences.CoolingCabinetClose;
@@ -41,6 +41,11 @@ public class BECoolingCabinet : BEBaseFSCooler {
             if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
         });
+    }
+
+    public override void Initialize(ICoreAPI api) {
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockCoolingCabinet)!;
+        base.Initialize(api);
     }
 
     #region Interactions
@@ -90,22 +95,14 @@ public class BECoolingCabinet : BEBaseFSCooler {
                 return true;
 
             if (DoorOpen && slot.CanStoreInSlot(AttributeCheck)) {
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPut(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
 
             if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPutIce(byPlayer, slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
 
@@ -176,8 +173,8 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
             if (inv[currentIndex].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                MarkDirty();
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                MarkDirty();
                 return moved > 0;
             }
         }
@@ -193,16 +190,15 @@ public class BECoolingCabinet : BEBaseFSCooler {
             int currentIndex = startIndex + i;
             if (!inv[currentIndex].Empty) {
                 ItemStack stack = inv[currentIndex].TakeOut(1);
+                
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
-                if (stack.StackSize > 0)
+                if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+                }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
                 return true;
             }
         }

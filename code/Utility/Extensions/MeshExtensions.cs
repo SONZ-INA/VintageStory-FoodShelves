@@ -7,8 +7,8 @@ public static class MeshExtensions {
     /// Rotates the mesh around the Y-axis based on the block's predefined <c>rotateY</c> value.<br/>
     /// Useful for aligning meshes with the block's in-world orientation.
     /// </summary>
-    public static MeshData BlockYRotation(this MeshData mesh, Block? block)
-        => mesh.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, (block?.Shape.rotateY ?? 0) * GameMath.DEG2RAD, 0)!;
+    public static MeshData? BlockYRotation(this MeshData? mesh, Block? block)
+        => mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, (block?.Shape.rotateY ?? 0) * GameMath.DEG2RAD, 0);
 
     /// <summary>
     /// Updates the texture key for all faces in the shape’s root element and its children.

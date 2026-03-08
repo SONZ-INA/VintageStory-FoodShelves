@@ -2,7 +2,7 @@
 
 public class BEFruitCooler : BEBaseFSCooler {
     protected new BlockFruitCooler block = null!;
-    private readonly MeshData[] contentMeshes = new MeshData[4];
+    private readonly MeshData?[] contentMeshes = new MeshData[4];
 
     // Base-Specific ----------------------------
     protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
@@ -22,6 +22,9 @@ public class BEFruitCooler : BEBaseFSCooler {
     protected override AssetLocation DoorCloseSound => SoundReferences.FruitCoolerClose;
     protected override AssetLocation DrawerOpenSound => SoundReferences.FruitDrawerOpen;
     protected override AssetLocation DrawerCloseSound => SoundReferences.FruitDrawerClose;
+
+    protected override (string, float) DoorOpenAnim => ("dooropen", 2f);
+    protected override (string, float) DrawerOpenAnim => ("draweropen", 4f);
     // ------------------------------------------
 
     private enum SlotType {
@@ -41,6 +44,11 @@ public class BEFruitCooler : BEBaseFSCooler {
             if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
         });
+    }
+
+    public override void Initialize(ICoreAPI api) {
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockFruitCooler)!;
+        base.Initialize(api);
     }
 
     protected override void InitMesh() {
@@ -82,12 +90,8 @@ public class BEFruitCooler : BEBaseFSCooler {
 
                 if (!slot.Empty) {
                     if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                        SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                         if (TryPutIce(byPlayer, slot, blockSel)) {
-                            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                            MarkDirty();
-                            return true;
+                            return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                         }
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
@@ -141,7 +145,7 @@ public class BEFruitCooler : BEBaseFSCooler {
         for (int i = 0; i < 4; i++) {
             if (contentMeshes[i] == null) continue;
 
-            MeshData contentMesh = contentMeshes[i].Clone();
+            MeshData contentMesh = contentMeshes[i]!.Clone();
             switch (block.GetRotationAngle()) {
                 case 0: contentMesh.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
                 case 90: contentMesh.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;

@@ -7,7 +7,7 @@ public class BETunRack : BEBaseFSContainer {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.4f;
-    protected override float CuringMultiplier => 0.75f;
+    protected override float CuringMultiplier => 0.74f;
 
     public override int SlotCount => 2;
     private readonly int capacityLitres = 500;
@@ -72,12 +72,8 @@ public class BETunRack : BEBaseFSContainer {
         }
         else {
             if (inv.Empty && slot.CanStoreInSlot(AttributeCheck)) { // Put barrel in rack
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPut(slot)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
             else if (!inv.Empty) { // Put/Take liquid
@@ -104,17 +100,15 @@ public class BETunRack : BEBaseFSContainer {
         for (int i = rotTakeout; i < SlotCount; i++) {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
+                
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
                 }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
                 return true;
             }
         }

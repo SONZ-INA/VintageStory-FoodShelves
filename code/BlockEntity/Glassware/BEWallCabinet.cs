@@ -11,9 +11,9 @@ public class BEWallCabinet : BEBaseFSAnimatable {
 
     public override int SlotCount => 4;
 
-    [TreeSerializable(false)] public bool CabinetOpen { get; set; }
+    [TreeSerializable(false)] public bool DoorOpen { get; set; }
     
-    private float perishMultiplierUnBuffed = 0.75f;
+    private float perishMultiplierUnBuffed = 0.74f;
 
     public BEWallCabinet() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
@@ -27,14 +27,14 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         // Open/Close cabinet
         if (byPlayer.Entity.Controls.ShiftKey) {
-            if (!CabinetOpen) ToggleCabinetDoor(true, byPlayer);
-            else ToggleCabinetDoor(false, byPlayer);
+            if (!DoorOpen) ToggleDoor(true, byPlayer);
+            else ToggleDoor(false, byPlayer);
             
             MarkDirty(true);
             return true;
         }
 
-        if (!CabinetOpen) return false;
+        if (!DoorOpen) return false;
 
         // Crock sealing interactions
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
@@ -63,40 +63,29 @@ public class BEWallCabinet : BEBaseFSAnimatable {
         if (AnimUtil == null)
             return;
 
-        if (CabinetOpen) ToggleCabinetDoor(true);
-        else ToggleCabinetDoor(false);
+        if (DoorOpen) ToggleDoor(true);
+        else ToggleDoor(false);
     }
 
-    private void ToggleCabinetDoor(bool open, IPlayer? byPlayer = null) {
+    private void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
-            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == false) {
-                AnimUtil.StartAnimation(new AnimationMetaData() {
-                    Animation = "cabinetopen",
-                    Code = "cabinetopen",
-                    AnimationSpeed = 3f,
-                    EaseOutSpeed = 1,
-                    EaseInSpeed = 2
-                });
-            }
+            AnimUtil.TryStartAnimation("dooropen", 3f);
+            PerishMultiplier = 1f;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(block?.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16);
+                Api.World.PlaySoundAt(SoundReferences.WallCabinetOpen, byPlayer, byPlayer, true, 16);
             }
-
-            PerishMultiplier = 1f;
         }
         else {
-            if (AnimUtil!.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == true)
-                AnimUtil.StopAnimation("cabinetopen");
-
+            AnimUtil.TryStopAnimation("dooropen");
             PerishMultiplier = perishMultiplierUnBuffed;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(block?.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+                Api.World.PlaySoundAt(SoundReferences.WallCabinetClose, byPlayer, byPlayer, true, 16, 0.3f);
             }
         }
 
-        CabinetOpen = open;
+        DoorOpen = open;
     }
 
     #endregion

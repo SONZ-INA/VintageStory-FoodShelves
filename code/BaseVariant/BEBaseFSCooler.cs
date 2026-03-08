@@ -102,18 +102,15 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         if (!inv[CutIceSlot].Empty) {
             ItemStack stack = inv[CutIceSlot].TakeOutWhole();
             if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                SoundAttributes? sound = stack.Block?.Sounds?.Place;
-                Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+                this.HandlePlacementEffects(stack, byPlayer, true);
             }
 
             if (stack.StackSize > 0) {
                 Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
             }
 
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             HandleIceHeight(false);
             SetWaterHeight(false);
-            MarkDirty(true);
 
             return true;
         }
@@ -153,16 +150,14 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
         if (open) {
             AnimUtil.TryStartAnimation(DoorOpenAnim.Item1, DoorOpenAnim.Item2);
+            PerishMultiplier = 1f;
 
             if (byPlayer != null) {
                 Api.World.PlaySoundAt(DoorOpenSound, byPlayer, byPlayer, true, 16, 0.3f);
             }
-
-            PerishMultiplier = 1f;
         }
         else {
             AnimUtil.TryStopAnimation(DoorOpenAnim.Item1);
-
             PerishMultiplier = perishMultiplierUnBuffed;
 
             if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {

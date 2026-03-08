@@ -55,12 +55,8 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
         }
         else {
             if (slot.CanStoreInSlot("fsGlassJarShelf")) {
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPut(slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
 
@@ -78,8 +74,8 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             return false;
 
         int moved = slot.TryPutInto(Api.World, inv[index]);
-        MarkDirty();
         (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        MarkDirty();
         return moved > 0;
     }
 
@@ -92,17 +88,15 @@ public class BlockEntityGlassJarShelf : BlockEntityDisplay {
             return false;
 
         ItemStack stack = inv[index].TakeOut(1);
+        
         if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            SoundAttributes? sound = stack.Block?.Sounds?.Place;
-            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+            this.HandlePlacementEffects(stack, byPlayer);
         }
 
         if (stack.StackSize > 0) {
             Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
         }
 
-        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-        MarkDirty();
         return true;
     }
 

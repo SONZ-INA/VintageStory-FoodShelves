@@ -1,11 +1,11 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockFruitCooler : BaseFSContainer {
     private WorldInteraction[]? freezerInteractions;
     private WorldInteraction[]? drawerInteractions;
     private WorldInteraction[]? drawerOpenClose;
+
+    private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-cooler)
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -33,7 +33,7 @@ public class BlockFruitCooler : BaseFSContainer {
             List<ItemStack> coolingOnlyStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
-                if (obj.CanStoreInSlot("fsCoolingOnly")) {
+                if (obj.CanStoreInSlot(FSCoolingOnly)) {
                     coolingOnlyStackList.Add(new ItemStack(obj));
                 }
             }
@@ -63,13 +63,13 @@ public class BlockFruitCooler : BaseFSContainer {
                 return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
             
             case 5:
-                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEFruitCooler bemf && bemf.DrawerOpen) {
-                    if (bemf.Inventory?[bemf.CutIceSlot].Empty == true || bemf.Inventory?[bemf.CutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
+                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEFruitCooler bemf) {
+                    if (bemf.DrawerOpen) {
                         return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                     }
-                }
-                else {
-                    return drawerOpenClose;
+                    else {
+                        return drawerOpenClose;
+                    }
                 }
                 break;
         }
@@ -85,15 +85,14 @@ public class BlockFruitCooler : BaseFSContainer {
         // Sections - 0 - 3
 
         BEFruitCooler? be = blockAccessor.GetBlockEntityExt<BEFruitCooler>(pos);
-        
-        if (be == null)
-            return base.GetSelectionBoxes(blockAccessor, pos);
-        
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
+
+        if (be == null) return boxes;
+
         List<Cuboidf> sections = [];
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-cooler)
 
         for (int i = 0; i < 7; i++) {
-            sections.Add(base.GetSelectionBoxes(blockAccessor, pos).ElementAt(i).Clone());
+            sections.Add(boxes[i].Clone());
         }
 
         if (be.DoorOpen) {
@@ -125,9 +124,9 @@ public class BlockFruitCooler : BaseFSContainer {
             sections[4].Y2 -= 0.05f;
             sections[6].Y2 -= 0.1875f;
 
-            return [sections[0], sections[1], sections[2], sections[3], sections[4], skip, sections[6]];
+            return [sections[0], sections[1], sections[2], sections[3], sections[4], Skip, sections[6]];
         }
 
-        return [skip, skip, skip, skip, sections[4], sections[5], sections[6]];
+        return [Skip, Skip, Skip, Skip, sections[4], sections[5], sections[6]];
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[]? freezerInteractions;
     private WorldInteraction[]? drawerInteractions;
     private WorldInteraction[]? drawerOpenClose;
+
+    private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-freezer)
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -33,7 +33,7 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             List<ItemStack> coolingOnlyStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
-                if (obj.CanStoreInSlot("fsCoolingOnly")) {
+                if (obj.CanStoreInSlot(FSCoolingOnly)) {
                     coolingOnlyStackList.Add(new ItemStack(obj));
                 }
             }
@@ -63,13 +63,13 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
                 return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
             
             case 5:
-                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEMeatFreezer bemf && bemf.DrawerOpen) {
-                    if (bemf.Inventory?[bemf.CutIceSlot].Empty == true || bemf.Inventory?[bemf.CutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
+                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEMeatFreezer bemf) {
+                    if (bemf.DrawerOpen) {
                         return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
                     }
-                }
-                else {
-                    return drawerOpenClose;
+                    else {
+                        return drawerOpenClose;
+                    }
                 }
                 break;
         }
@@ -82,21 +82,20 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
     // Selection box for master block
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BEMeatFreezer? be = blockAccessor.GetBlockEntityExt<BEMeatFreezer>(pos);
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
-        if (be == null)
-            return base.GetSelectionBoxes(blockAccessor, pos);
-        
-        Cuboidf freezerBase = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(6).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-freezer)
+        if (be == null) return boxes;
+
+        Cuboidf freezerBase = boxes[6].Clone();
 
         if (be.DoorOpen) {
-            Cuboidf section1 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
-            Cuboidf section2 = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
+            Cuboidf section1 = boxes[0].Clone();
+            Cuboidf section2 = boxes[1].Clone();
 
-            return [section1, section2, skip, skip, skip, skip, freezerBase];
+            return [section1, section2, Skip, Skip, Skip, Skip, freezerBase];
         }
 
-        return [skip, skip, skip, skip, skip, skip, freezerBase,];
+        return [Skip, Skip, Skip, Skip, Skip, Skip, freezerBase];
     }
 
     // Selection boxes for multiblock parts
@@ -108,14 +107,13 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         // Sections - 0 - 3
 
         BEMeatFreezer? be = blockAccessor.GetBlockEntityExt<BEMeatFreezer>(pos);
-        
-        if (be == null)
-            return base.GetSelectionBoxes(blockAccessor, pos);
-        
-        Cuboidf freezerDoor = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(4).Clone();
-        Cuboidf drawerSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(5).Clone();
-        Cuboidf freezerBase = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(6).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-sections 4-door 5-drawer 6-freezer)
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
+
+        if (be == null) return boxes;
+
+        Cuboidf freezerDoor = boxes[4].Clone();
+        Cuboidf drawerSelBox = boxes[5].Clone();
+        Cuboidf freezerBase = boxes[6].Clone();
 
         freezerBase.MBNormalizeSelectionBox(offset);
         freezerDoor.MBNormalizeSelectionBox(offset);
@@ -147,22 +145,22 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
         }
 
         if (!be.DoorOpen) {
-            return [skip, skip, skip, skip, freezerDoor, drawerSelBox, freezerBase];
+            return [Skip, Skip, Skip, Skip, freezerDoor, drawerSelBox, freezerBase];
         }
         else {                
             List<Cuboidf> sBs = [];
 
             for (int i = 0; i < 4; i++) {
-                sBs.Add(base.GetSelectionBoxes(blockAccessor, pos).ElementAt(i).Clone());
+                sBs.Add(boxes[i].Clone());
                 sBs[i].MBNormalizeSelectionBox(offset);
             }
             sBs.Add(drawerSelBox);
 
             if (offset.Y != 0) {
-                return [sBs[0], sBs[1], sBs[2], sBs[3], freezerDoor, skip, skip];
+                return [sBs[0], sBs[1], sBs[2], sBs[3], freezerDoor, Skip, Skip];
             }
 
-            return [skip, skip, skip, skip, skip, drawerSelBox, freezerBase];
+            return [Skip, Skip, Skip, Skip, Skip, drawerSelBox, freezerBase];
         }
     }
 

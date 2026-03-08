@@ -15,7 +15,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
     // Cooler-Specific --------------------------
     public override int CutIceSlot => 4;
 
-    protected override float BuffedPerishMultiplier => 0.6f;
+    protected override float BuffedPerishMultiplier => 0.65f;
     protected override float UnbuffedPerishMultiplier => 0.65f;
 
     protected override AssetLocation DoorOpenSound => SoundReferences.CoolingCabinetOpen;
@@ -43,6 +43,11 @@ public class BEMeatFreezer : BEBaseFSCooler {
             if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
             else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
         });
+    }
+
+    public override void Initialize(ICoreAPI api) {
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockMeatFreezer)!;
+        base.Initialize(api);
     }
 
     protected override void InitMesh() {
@@ -85,12 +90,8 @@ public class BEMeatFreezer : BEBaseFSCooler {
 
                 if (!slot.Empty) {
                     if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
-                        SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                         if (TryPutIce(byPlayer, slot, blockSel)) {
-                            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                            MarkDirty();
-                            return true;
+                            this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                         }
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));

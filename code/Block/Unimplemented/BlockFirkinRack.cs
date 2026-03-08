@@ -55,8 +55,8 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
         if (preventDefault) return;
 
         // Drop firkin
-        BlockEntityFirkinRack be = GetBlockEntity<BlockEntityFirkinRack>(pos);
-        be.Inventory.DropAll(pos.ToVec3d());
+        BlockEntityFirkinRack? be = GetBlockEntity<BlockEntityFirkinRack>(pos);
+        be?.Inventory.DropAll(pos.ToVec3d());
 
         // Spawn liquid particles
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
@@ -90,7 +90,7 @@ public class BlockFirkinRack : BlockLiquidContainerBase {
     public override string GetPlacedBlockInfo(IWorldAccessor world, BlockPos pos, IPlayer forPlayer) {
         StringBuilder dsc = new();
         
-        BlockEntityFirkinRack be = GetBlockEntity<BlockEntityFirkinRack>(pos);
+        BlockEntityFirkinRack? be = GetBlockEntity<BlockEntityFirkinRack>(pos);
         if (be?.Inventory.Empty == true) dsc.Append(Lang.Get("foodshelves:Missing firkin."));
         else dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 

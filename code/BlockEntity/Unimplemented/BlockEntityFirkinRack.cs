@@ -34,6 +34,15 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
     }
 
+    private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
+        float multiplier = baseMul;
+
+        if (transType == EnumTransitionType.Perish) multiplier *= 0.5f;
+        else multiplier *= 0.8f; // Expanded foods compatibility
+
+        return multiplier;
+    }
+
     internal bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
@@ -53,12 +62,8 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
         }
         else {
             if (inv[blockSel.SelectionBoxIndex].Empty && slot.CanStoreInSlot("fsFirkinRack")) { // Put firkin in rack
-                SoundAttributes? sound = slot.Itemstack.Block?.Sounds?.Place;
-
                 if (TryPut(slot, blockSel)) {
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
-                    MarkDirty();
-                    return true;
+                    this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
             else if (!inv[blockSel.SelectionBoxIndex].Empty) { // Put/Take liquid
@@ -73,46 +78,30 @@ public class BlockEntityFirkinRack : BlockEntityDisplay {
 
     private bool TryPut(ItemSlot slot, BlockSelection blockSel) {
         int index = blockSel.SelectionBoxIndex;
-
-        if (!inv[index].Empty)
-            return false;
+        if (!inv[index].Empty) return false;
 
         int moved = slot.TryPutInto(Api.World, inv[index]);
-        MarkDirty(true);
         (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+        MarkDirty(true);
 
         return moved > 0;
     }
 
     private bool TryTake(IPlayer byPlayer, BlockSelection blockSel, int rotTakeout = 0) {
         int index = blockSel.SelectionBoxIndex + rotTakeout;
-
-        if (inv[index].Empty)
-            return false;
+        if (inv[index].Empty) return false;
 
         ItemStack stack = inv[index].TakeOut(1);
+
         if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            SoundAttributes? sound = stack.Block?.Sounds?.Place;
-            Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+            this.HandlePlacementEffects(stack, byPlayer);
         }
 
         if (stack.StackSize > 0) {
             Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
         }
-
-        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-        MarkDirty(true);
         
         return true;
-    }
-
-    private float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        float multiplier = baseMul;
-
-        if (transType == EnumTransitionType.Perish) multiplier *= 0.5f;
-        else multiplier *= 0.8f; // Expanded foods compatibility
-
-        return multiplier;
     }
 
     protected override float[][] genTransformationMatrices() {

@@ -1,16 +1,16 @@
 ﻿namespace FoodShelves;
 
 public class BETableWShelf : BEBaseFSContainer {
-    private enum TableWShelfPart {
-        Table = 1,
-        Shelf = 0
-    }
-
     public override string AttributeCheck => "shelvable";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     protected override bool RipeningSpot => true;
 
     public override int SlotCount => 2;
+
+    private enum TableWShelfPart {
+        Table = 1,
+        Shelf = 0
+    }
 
     public BETableWShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
@@ -21,8 +21,8 @@ public class BETableWShelf : BEBaseFSContainer {
         for (int i = 0; i < SlotCount; i++) {
             if (inv[i].Empty) {
                 int moved = slot.TryPutInto(Api.World, inv[i]);
-                MarkDirty();
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
+                MarkDirty();
                 return moved > 0;
             }
         }
@@ -37,17 +37,15 @@ public class BETableWShelf : BEBaseFSContainer {
         for (int i = SlotCount - 1; i >= 0; i--) {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
+                
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    SoundAttributes? sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
                 }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
                 return true;
             }
         }

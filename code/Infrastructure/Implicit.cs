@@ -15,6 +15,7 @@ global using static FoodShelves.AnimationExtensions;
 global using static FoodShelves.CacheExtensions;
 global using static FoodShelves.CheckExtensions;
 global using static FoodShelves.GeneralBlockExtensions;
+global using static FoodShelves.InteractionExtensions;
 global using static FoodShelves.InventoryExtensions;
 global using static FoodShelves.JsonExtensions;
 global using static FoodShelves.LocationalExtensions;

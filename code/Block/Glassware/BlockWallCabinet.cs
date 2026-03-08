@@ -1,12 +1,9 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockWallCabinet : BaseFSContainer {
-    public readonly AssetLocation soundCabinetOpen = new(SoundReferences.WallCabinetOpen);
-    public readonly AssetLocation soundCabinetClose = new(SoundReferences.WallCabinetClose);
-
     private WorldInteraction? openCloseDoor;
+
+    private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-shelves 4-cabinet)
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -25,18 +22,16 @@ public class BlockWallCabinet : BaseFSContainer {
 
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BEWallCabinet? be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
-        if (be == null)
-           return base.GetSelectionBoxes(blockAccessor, pos);
+        if (be == null) return boxes;
         
-        Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(4).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-shelves 4-cabinet)
-
-        if (be.CabinetOpen) {
-            List<Cuboidf> segments = base.GetSelectionBoxes(blockAccessor, pos).Take(4).Select(c => c.Clone()).ToList();
-            return [segments[0], segments[1], segments[2], segments[3], skip];
+        if (be.DoorOpen) {
+            return [boxes[0].Clone(), boxes[1].Clone(), boxes[2].Clone(), boxes[3].Clone(), Skip];
         }
 
-        return [skip, skip, skip, skip, cabinetSelBox];
+        Cuboidf cabinetSelBox = boxes[4].Clone();
+
+        return [Skip, Skip, Skip, Skip, cabinetSelBox];
     }
 }

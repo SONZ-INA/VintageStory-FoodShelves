@@ -1,10 +1,10 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     private WorldInteraction[]? cabinetInteractions;
     private WorldInteraction[]? drawerInteractions;
+
+    private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (1-8-shelves 9-drawer 10-cabinet)
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
@@ -45,7 +45,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             List<ItemStack> coolingOnlyStackList = [];
 
             foreach (var obj in api.World.Collectibles) {
-                if (obj.CanStoreInSlot("fsCoolingOnly")) {
+                if (obj.CanStoreInSlot(FSCoolingOnly)) {
                     coolingOnlyStackList.Add(new ItemStack(obj));
                 }
             }
@@ -66,19 +66,25 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         });
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (selection.SelectionBoxIndex == 9 && world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
-            if (becc.DrawerOpen) {
-                if (becc.Inventory?[becc.CutIceSlot].Empty == true || becc.Inventory?[becc.CutIceSlot].CanStoreInSlot("fsCoolingOnly") == true) {
-                    return cabinetInteractions.Append(drawerInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
+            if (selection.SelectionBoxIndex < 9) {
+                if (becc.DoorOpen) {
+                    return cabinetInteractions.Append(itemSlottableInteractions);
+                }
+            }
+
+            if (selection.SelectionBoxIndex == 9) {
+                if (becc.DrawerOpen) {
+                    return cabinetInteractions.Append(drawerInteractions);
+                }
+                else {
+                    return cabinetInteractions;
                 }
             }
         }
 
-        if (selection.SelectionBoxIndex > 8) 
-            return cabinetInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer));
-        
-        return cabinetInteractions.Append(itemSlottableInteractions.Append(base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)));
+        return cabinetInteractions;
     }
 
     #region MBColSelBoxes
@@ -86,13 +92,12 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     // Selection box for master block
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         BECoolingCabinet? be = blockAccessor.GetBlockEntityExt<BECoolingCabinet>(pos);
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
-        if (be == null)
-            return base.GetSelectionBoxes(blockAccessor, pos);
+        if (be == null) return boxes;
 
-        Cuboidf drawerSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(9).Clone();
-        Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (1-8-shelves 9-drawer 10-cabinet)
+        Cuboidf drawerSelBox = boxes[9].Clone();
+        Cuboidf cabinetSelBox = boxes[10].Clone();
 
         if (be.DrawerOpen) {
             int rotAngle = this.GetRotationAngle();
@@ -106,13 +111,13 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         }
 
         if (be.DoorOpen) {
-            Cuboidf bottomShelfL = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(0).Clone();
-            Cuboidf bottomShelfM = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(1).Clone();
+            Cuboidf bottomShelfL = boxes[0].Clone();
+            Cuboidf bottomShelfM = boxes[1].Clone();
 
-            return [bottomShelfL, bottomShelfM, skip, skip, skip, skip, skip, skip, skip, drawerSelBox];
+            return [bottomShelfL, bottomShelfM, Skip, Skip, Skip, Skip, Skip, Skip, Skip, drawerSelBox];
         }
 
-        return [skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox];
+        return [Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, drawerSelBox, cabinetSelBox];
     }
 
     // Selection boxes for multiblock parts
@@ -124,12 +129,11 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         // Bottom - 0 1 2
 
         BECoolingCabinet? be = blockAccessor.GetBlockEntityExt<BECoolingCabinet>(pos);
-        
-        if (be == null)
-            return base.GetSelectionBoxes(blockAccessor, pos);
-            
-        Cuboidf drawerSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(9).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (1-8-shelves 9-drawer 10-cabinet)
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
+
+        if (be == null) return boxes;
+
+        Cuboidf drawerSelBox = boxes[9].Clone();
 
         drawerSelBox.MBNormalizeSelectionBox(offset);
 
@@ -145,25 +149,25 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         }
 
         if (!be.DoorOpen) {
-            Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(10).Clone();
+            Cuboidf cabinetSelBox = boxes[10].Clone();
             cabinetSelBox.MBNormalizeSelectionBox(offset);
 
-            return [skip, skip, skip, skip, skip, skip, skip, skip, skip, drawerSelBox, cabinetSelBox];
+            return [Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, drawerSelBox, cabinetSelBox];
         }
         else {
             List<Cuboidf> sBs = [];
 
             for (int i = 0; i < 9; i++) {
-                sBs.Add(base.GetSelectionBoxes(blockAccessor, pos).ElementAt(i).Clone());
+                sBs.Add(boxes[i].Clone());
                 sBs[i].MBNormalizeSelectionBox(offset);
             }
             sBs.Add(drawerSelBox);
 
             if (offset.Y != 0) {
-                return [skip, skip, skip, sBs[3], sBs[4], sBs[5], sBs[6], sBs[7], sBs[8]];
+                return [Skip, Skip, Skip, sBs[3], sBs[4], sBs[5], sBs[6], sBs[7], sBs[8]];
             }
 
-            return [skip, sBs[1], sBs[2], skip, skip, skip, skip, skip, skip, sBs[9]];
+            return [Skip, sBs[1], sBs[2], Skip, Skip, Skip, Skip, Skip, Skip, sBs[9]];
         }
     }
 

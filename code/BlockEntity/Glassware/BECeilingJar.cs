@@ -5,7 +5,7 @@ public class BECeilingJar : BEBaseFSContainer {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
     protected override bool OverrideMergeStacks => true;
 
-    protected override float PerishMultiplier => 0.75f;
+    protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public override int ItemsPerSegment => 12;
