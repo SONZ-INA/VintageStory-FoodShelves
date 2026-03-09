@@ -164,11 +164,11 @@ public class BEMeatFreezer : BEBaseFSCooler {
             if (contentMeshes[i] == null) continue;
 
             MeshData contentMesh = contentMeshes[i].Clone();
-            switch (block.GetRotationAngle()) {
-                case 0: contentMesh.Translate(i * 0.4375f, 0, 0); break;
-                case 90: contentMesh.Translate(0, 0, -i * 0.4375f); break;
-                case 180: contentMesh.Translate(-i * 0.4375f, 0, 0); break;
-                case 270: contentMesh.Translate(0, 0, i * 0.4375f); break;
+            switch ((BlockDirection)block.GetRotationAngle()) {
+                case BlockDirection.North: contentMesh.Translate(i * 0.4375f, 0, 0); break;
+                case BlockDirection.West: contentMesh.Translate(0, 0, -i * 0.4375f); break;
+                case BlockDirection.South: contentMesh.Translate(-i * 0.4375f, 0, 0); break;
+                case BlockDirection.East: contentMesh.Translate(0, 0, i * 0.4375f); break;
             }
 
             mesher.AddMeshData(contentMesh);

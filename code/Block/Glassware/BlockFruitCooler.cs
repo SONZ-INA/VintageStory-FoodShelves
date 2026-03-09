@@ -96,25 +96,25 @@ public class BlockFruitCooler : BaseFSContainer {
         }
 
         if (be.DoorOpen) {
-            int rotAngle = this.GetRotationAngle();
+            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
 
             switch (rotAngle) {
-                case 0:
+                case BlockDirection.North:
                     sections[4].Z2 += 0.225f;
                     sections[4].Z1 += 0.835f;
                     break;
 
-                case 90:
+                case BlockDirection.West:
                     sections[4].X2 += 0.225f;
                     sections[4].X1 += 0.835f;
                     break;
 
-                case 180:
+                case BlockDirection.South:
                     sections[4].Z2 -= 0.835f;
                     sections[4].Z1 -= 0.225f;
                     break;
 
-                case 270:
+                case BlockDirection.East:
                     sections[4].X2 -= 0.835f;
                     sections[4].X1 -= 0.225f;
                     break;

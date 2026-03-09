@@ -1,9 +1,6 @@
 ﻿namespace FoodShelves;
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
-    public const string FSAttributes = "FSAttributes";
-    public const string FSCoolingOnly = "fsCoolingOnly";
-
     public string? WorldInteractionAttributeCheck = null;
     public bool UnifyItemSlots = false;
 

@@ -48,7 +48,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void OnBlockPlaced(ItemStack byItemStack) {
         base.OnBlockPlaced(byItemStack);
 
-        if (byItemStack?.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree) {
+        if (byItemStack?.Attributes[FSAttributes] is ITreeAttribute tree) {
             if (VariantAttributes.Count == 0) VariantAttributes = tree;
         }
         
@@ -235,7 +235,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
         base.FromTreeAttributes(tree, worldForResolving);
 
-        VariantAttributes = tree[BaseFSContainer.FSAttributes] is ITreeAttribute fsTree 
+        VariantAttributes = tree[FSAttributes] is ITreeAttribute fsTree 
             ? fsTree 
             : new TreeAttribute();
 
@@ -245,7 +245,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public override void ToTreeAttributes(ITreeAttribute tree) {
         base.ToTreeAttributes(tree);
         if (VariantAttributes.Count != 0) {
-            tree[BaseFSContainer.FSAttributes] = VariantAttributes;
+            tree[FSAttributes] = VariantAttributes;
         }
     }
 

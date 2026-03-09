@@ -308,21 +308,21 @@
 					"frame": 0,
 					"elements": {
 						"originDoor": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 },
-						"originPistons": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
+						"originPistons": { "offsetX": 0.0, "offsetY": 1.0286, "offsetZ": -2.1238, "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				},
 				{
 					"frame": 20,
 					"elements": {
-						"originDoor": { "rotationX": -40.0, "rotationY": 0.0, "rotationZ": 0.0 },
-						"originPistons": { "rotationX": 20.0, "rotationY": 0.0, "rotationZ": 0.0 }
+						"originDoor": { "rotationX": -50.0, "rotationY": 0.0, "rotationZ": 0.0 },
+						"originPistons": { "offsetX": 0.0, "offsetY": 0.9, "offsetZ": -0.6, "rotationX": 20.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				},
 				{
 					"frame": 29,
 					"elements": {
-						"originDoor": { "rotationX": -45.0, "rotationY": 0.0, "rotationZ": 0.0 },
-						"originPistons": { "rotationX": 33.0, "rotationY": 0.0, "rotationZ": 0.0 }
+						"originDoor": { "rotationX": -80.0, "rotationY": 0.0, "rotationZ": 0.0 },
+						"originPistons": { "offsetX": 0.0, "offsetY": 2.4, "offsetZ": -2.3, "rotationX": 35.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				}
 			]

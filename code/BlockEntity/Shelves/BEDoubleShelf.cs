@@ -130,7 +130,8 @@ public class BEDoubleShelf : BEBaseFSContainer {
                         }
                     }
 
-                    if (itemStack?.Collectible.Code == "pemmican:pemmican-pack") {
+                    string[] collectibleCodes = ["pemmican-pack", "chips-pack", "mushroom-pack"];
+                    if (collectibleCodes.Contains(itemStack?.Collectible.Code.Path)) {
                         y += item / 2 * 0.13f;
                         z = -0.18f;
                     }

@@ -24,7 +24,7 @@ public static class VariantExtensions {
         var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
-        if (stackWithAttributes.Attributes[BaseFSContainer.FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
+        if (stackWithAttributes.Attributes[FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
             foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()!) {
                 string[] texPaths = pair.Value;
 
@@ -96,7 +96,7 @@ public static class VariantExtensions {
     public static ItemStack GetVariantStack(this BEBaseFSContainer entity) {
         var stack = new ItemStack(entity.Block);
         if (entity.VariantAttributes.Count != 0) {
-            stack.Attributes[BaseFSContainer.FSAttributes] = entity.VariantAttributes;
+            stack.Attributes[FSAttributes] = entity.VariantAttributes;
         }
 
         return stack;

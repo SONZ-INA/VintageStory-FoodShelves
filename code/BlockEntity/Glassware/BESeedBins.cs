@@ -56,11 +56,11 @@ public class BESeedBins : BEBaseFSContainer {
             if (contentMeshes[i] == null) continue;
             MeshData contentMesh = contentMeshes[i].Clone();
 
-            switch (block?.GetRotationAngle()) {
-                case 0: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
-                case 90: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
-                case 180: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
-                case 270: contentMesh.Translate(0, i / 2 * 0.4695f, i % 2 * 0.4695f); break;
+            switch ((BlockDirection)block.GetRotationAngle()) {
+                case BlockDirection.North: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
+                case BlockDirection.West: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
+                case BlockDirection.South: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
+                case BlockDirection.East: contentMesh.Translate(0, i / 2 * 0.4695f, i % 2 * 0.4695f); break;
             }
 
             mesher.AddMeshData(contentMesh);

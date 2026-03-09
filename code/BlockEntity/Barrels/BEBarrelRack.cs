@@ -30,7 +30,7 @@ public class BEBarrelRack : BEBaseFSContainer {
     protected override void InitMesh() {
         var stack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
-            stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
+            stack.Attributes[FSAttributes] = VariantAttributes;
         }
 
         blockMesh = GenBlockVariantMesh(Api, stack);

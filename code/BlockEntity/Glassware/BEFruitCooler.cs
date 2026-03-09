@@ -146,11 +146,11 @@ public class BEFruitCooler : BEBaseFSCooler {
             if (contentMeshes[i] == null) continue;
 
             MeshData contentMesh = contentMeshes[i]!.Clone();
-            switch (block.GetRotationAngle()) {
-                case 0: contentMesh.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
-                case 90: contentMesh.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;
-                case 180: contentMesh.Translate(-i%2 * 0.4065f, 0, i/2 * 0.4065f); break;
-                case 270: contentMesh.Translate(i/2 * 0.4065f, 0, i%2 * 0.4065f); break;
+            switch ((BlockDirection)block.GetRotationAngle()) {
+                case BlockDirection.North: contentMesh.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
+                case BlockDirection.West: contentMesh.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;
+                case BlockDirection.South: contentMesh.Translate(-i%2 * 0.4065f, 0, i/2 * 0.4065f); break;
+                case BlockDirection.East: contentMesh.Translate(i/2 * 0.4065f, 0, i%2 * 0.4065f); break;
             }
 
             mesher.AddMeshData(contentMesh);

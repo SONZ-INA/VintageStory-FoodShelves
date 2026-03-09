@@ -42,7 +42,7 @@ public class BETunRack : BEBaseFSContainer {
     protected override void InitMesh() {
         var blockStack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
-            blockStack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
+            blockStack.Attributes[FSAttributes] = VariantAttributes;
         }
 
         blockMesh = GenBlockVariantMesh(Api, blockStack);

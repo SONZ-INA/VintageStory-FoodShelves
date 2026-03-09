@@ -30,8 +30,10 @@ public class BECoolingCabinet : BEBaseFSCooler {
     
     private enum SlotType {
         Segments = 8,
-        IceDrawer = 9,
-        ClosedCabinet = 10
+        LDoor = 9,
+        RDoor = 10,
+        IceDrawer = 11,
+        ClosedCabinet = 12
     }
 
     public BECoolingCabinet() {
@@ -57,21 +59,25 @@ public class BECoolingCabinet : BEBaseFSCooler {
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
 
         // Open/Close cabinet or drawer
-        if (shift) {
-            switch (blockSel.SelectionBoxIndex) {
-                case (int)SlotType.IceDrawer:
+        switch ((SlotType)blockSel.SelectionBoxIndex) {
+            case SlotType.IceDrawer:
+                if (shift) {
                     if (!DrawerOpen) ToggleDrawer(true, byPlayer);
                     else ToggleDrawer(false, byPlayer);
-                    break;
+                    MarkDirty(true);
+                }
+                return true;
 
-                default:
-                    if (!DoorOpen) ToggleDoor(true, byPlayer);
-                    else ToggleDoor(false, byPlayer);
-                    break;
-            }
+            case SlotType.ClosedCabinet:
+                ToggleDoor(true, byPlayer);
+                MarkDirty(true);
+                return true;
 
-            MarkDirty(true);
-            return true;
+            case SlotType.LDoor:
+            case SlotType.RDoor:
+                ToggleDoor(false, byPlayer);
+                MarkDirty(true);
+                return true;
         }
 
         // Take/Put items

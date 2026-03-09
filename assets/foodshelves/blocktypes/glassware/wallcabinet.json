@@ -16,7 +16,15 @@
     }
   },
   "behaviors": [
-    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } },
+    { "name": "Multiblock",
+      "propertiesByType": {
+        "*-north": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-east": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 1, "y": 0, "z": 0 } },
+        "*-south": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } },
+        "*-west": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 0, "y": 0, "z": 0 } }
+      }
+    }
   ],
   "shape": {
     "base": "block/glassware/wallcabinet",
@@ -51,6 +59,9 @@
     { "x1": 0.4875, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
     { "x1": 0.4875, "y1": 0.5, "z1": 0, "x2": 1, "y2": 1, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
     { "x1": 0.4875, "y1": 0.5, "z1": 0.5, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+
+    { "x1": -0.5, "y1": 0.8275, "z1": 0, "x2": 0.5, "y2": 1.0625, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+
     { "x1": 0.4375, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
   ]
 }

@@ -123,24 +123,24 @@ public class BlockMeatFreezer : BaseFSContainer, IMultiBlockColSelBoxes {
             freezerDoor.Y1 += 0.1325f;
             freezerDoor.Y2 += 0.7f;
                 
-            int rotAngle = this.GetRotationAngle();
+            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
 
             switch (rotAngle) {
-                case 0: freezerDoor.Z2 -= 0.7f; break;
-                case 90: freezerDoor.X2 -= 0.7f; break;
-                case 180: freezerDoor.Z1 += 0.7f; break;
-                case 270: freezerDoor.X1 += 0.7f; break;
+                case BlockDirection.North: freezerDoor.Z2 -= 0.7f; break;
+                case BlockDirection.West: freezerDoor.X2 -= 0.7f; break;
+                case BlockDirection.South: freezerDoor.Z1 += 0.7f; break;
+                case BlockDirection.East: freezerDoor.X1 += 0.7f; break;
             }
         }
 
         if (be.DrawerOpen) {
-            int rotAngle = this.GetRotationAngle();
+            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
 
             switch (rotAngle) {
-                case 0: drawerSelBox.Z2 += .5575f; break;
-                case 90: drawerSelBox.X2 += .5575f; break;
-                case 180: drawerSelBox.Z1 -= .5575f; break;
-                case 270: drawerSelBox.X1 -= .5575f; break;
+                case BlockDirection.North: drawerSelBox.Z2 += .5575f; break;
+                case BlockDirection.West: drawerSelBox.X2 += .5575f; break;
+                case BlockDirection.South: drawerSelBox.Z1 -= .5575f; break;
+                case BlockDirection.East: drawerSelBox.X1 -= .5575f; break;
             }
         }
 

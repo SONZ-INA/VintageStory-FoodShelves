@@ -127,7 +127,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
             if (fscontainer?.VariantAttributes?.Count > 0) {
-                stack.Attributes[BaseFSContainer.FSAttributes] = fscontainer.VariantAttributes;
+                stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
             }
         }
 
@@ -155,7 +155,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
     }
 
     public virtual string GetMeshCacheKey(ItemSlot slot) {
-        if (slot.Itemstack?.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree)
+        if (slot.Itemstack?.Attributes[FSAttributes] is not ITreeAttribute tree)
             return Code;
 
         List<string> parts = [];

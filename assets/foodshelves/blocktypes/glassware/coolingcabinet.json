@@ -28,10 +28,10 @@
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },
     { "name": "Multiblock",
       "propertiesByType": {
-        "*-north": { "sizex": 2, "sizey": 2, "sizez": 1, "cposition": { "x": 0, "y": 0, "z": 0 } },
-        "*-east": { "sizex": 1, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
-        "*-south": { "sizex": 2, "sizey": 2, "sizez": 1, "cposition": { "x": 1, "y": 0, "z": 0 } },
-        "*-west": { "sizex": 1, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } }
+        "*-north": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-east":  { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 0 } },
+        "*-south": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 1 } },
+        "*-west":  { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } }
       }
     }
   ],
@@ -76,13 +76,20 @@
     { "x1": 0.0625, "y1": 0.5625, "z1": 0.125, "x2": 0.6875, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.6875, "y1": 0.5625, "z1": 0.125, "x2": 1.3125, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 1.3125, "y1": 0.5625, "z1": 0.125, "x2": 1.9375, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
     { "x1": 0.0625, "y1": 1.0325, "z1": 0.125, "x2": 0.6875, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.6875, "y1": 1.0325, "z1": 0.125, "x2": 1.3125, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 1.3125, "y1": 1.0325, "z1": 0.125, "x2": 1.9375, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
     { "x1": 0.0625, "y1": 1.5, "z1": 0.125, "x2": 0.6875, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.6875, "y1": 1.5, "z1": 0.125, "x2": 1.3125, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 1.3125, "y1": 1.5, "z1": 0.125, "x2": 1.9375, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
+    { "x1": 0.0625, "y1": 0.5, "z1": 0.875, "x2": 0.125, "y2": 1.9375, "z2": 1.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.875, "y1": 0.5, "z1": 0.875, "x2": 1.9375, "y2": 1.9375, "z2": 1.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
     { "x1": 0.0625, "y1": 0, "z1": 0, "x2": 1.9375, "y2": 0.5, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
     { "x1": 0.0625, "y1": 0.5, "z1": 0, "x2": 1.9375, "y2": 1.9375, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
+
   ]
 }

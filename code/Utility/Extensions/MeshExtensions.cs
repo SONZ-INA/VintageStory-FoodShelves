@@ -66,19 +66,12 @@ public static class MeshExtensions {
         if (pieProps?.Exists != true)
             return null;
 
-        // Exception for WC:FN
-        var texturePath = itemPath.EndsWith("-beachalmondwhole")
-            ? "wildcraftfruit:block/food/pie/fill-beachalmond"
-            : pieProps["texture"]?.ToString();
+        var texturePath = pieProps["texture"]?.ToString();
 
         if (string.IsNullOrEmpty(texturePath))
             return null;
 
         var textureLoc = new AssetLocation(texturePath);
-
-        // Exception for WC:FN
-        if (textureLoc.ToString().Contains("peanutground"))
-            textureLoc = new AssetLocation(textureLoc.ToString().Replace("ground", ""));
 
         // Apply to shape
         shape.Textures.Clear();

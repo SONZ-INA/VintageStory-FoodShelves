@@ -138,7 +138,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
         if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
             if (fscontainer?.VariantAttributes?.Count > 0) {
-                stack.Attributes[BaseFSContainer.FSAttributes] = fscontainer.VariantAttributes;
+                stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
             }
         }
 
@@ -166,7 +166,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     }
 
     public virtual string GetMeshCacheKey(ItemStack itemstack) {
-        if (itemstack.Attributes[BaseFSContainer.FSAttributes] is not ITreeAttribute tree)
+        if (itemstack.Attributes[FSAttributes] is not ITreeAttribute tree)
             return Code;
 
         List<string> parts = [];

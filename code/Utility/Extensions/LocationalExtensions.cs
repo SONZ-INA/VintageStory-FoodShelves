@@ -84,9 +84,9 @@ public static class LocationalExtensions {
 
         return blockPath switch {
             var path when path.EndsWith("-north") => 0,
+            var path when path.EndsWith("-west") => 90,
             var path when path.EndsWith("-south") => 180,
             var path when path.EndsWith("-east") => 270,
-            var path when path.EndsWith("-west") => 90,
             _ => 0
         };
     }
