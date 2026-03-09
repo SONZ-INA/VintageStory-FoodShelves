@@ -1,0 +1,158 @@
+[
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group1",
+    "value": [
+      "artofgrowing:vegetable-wild-cabbage",
+      "artofgrowing:vegetable-small-cabbage",
+      "artofgrowing:vegetable-medium-cabbage",
+      "artofgrowing:vegetable-decent-cabbage",
+      "artofgrowing:vegetable-large-cabbage",
+      "artofgrowing:vegetable-hefty-cabbage",
+      "artofgrowing:vegetable-gigantic-cabbage"
+    ],
+    "side": "Server",
+    "dependsOn": [
+      { "modId": "aogbreedingaddon" }
+    ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group1",
+    "value": [
+      "artofgrowing:vegetable-wild-cabbage",
+      "artofgrowing:vegetable-small-cabbage",
+      "artofgrowing:vegetable-medium-cabbage",
+      "artofgrowing:vegetable-decent-cabbage",
+      "artofgrowing:vegetable-large-cabbage",
+      "artofgrowing:vegetable-hefty-cabbage",
+      "artofgrowing:vegetable-gigantic-cabbage"
+    ],
+    "side": "Server",
+    "dependsOn": [
+      { "modId": "aogbreedingaddonpatch" }
+    ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group2",
+    "value": [
+      "artofgrowing:vegetable-wild-onion",
+      "artofgrowing:vegetable-small-onion",
+      "artofgrowing:vegetable-medium-onion",
+      "artofgrowing:vegetable-decent-onion",
+      "artofgrowing:vegetable-large-onion",
+      "artofgrowing:vegetable-hefty-onion",
+      "artofgrowing:vegetable-gigantic-onion",
+      "artofgrowing:vegetable-wild-turnip",
+      "artofgrowing:vegetable-small-turnip",
+      "artofgrowing:vegetable-medium-turnip",
+      "artofgrowing:vegetable-decent-turnip",
+      "artofgrowing:vegetable-large-turnip",
+      "artofgrowing:vegetable-hefty-turnip",
+      "artofgrowing:vegetable-gigantic-turnip"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddon" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group2",
+    "value": [
+      "artofgrowing:vegetable-wild-onion",
+      "artofgrowing:vegetable-small-onion",
+      "artofgrowing:vegetable-medium-onion",
+      "artofgrowing:vegetable-decent-onion",
+      "artofgrowing:vegetable-large-onion",
+      "artofgrowing:vegetable-hefty-onion",
+      "artofgrowing:vegetable-gigantic-onion",
+      "artofgrowing:vegetable-wild-turnip",
+      "artofgrowing:vegetable-small-turnip",
+      "artofgrowing:vegetable-medium-turnip",
+      "artofgrowing:vegetable-decent-turnip",
+      "artofgrowing:vegetable-large-turnip",
+      "artofgrowing:vegetable-hefty-turnip",
+      "artofgrowing:vegetable-gigantic-turnip"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddonpatch" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group3",
+    "value": [
+      "artofgrowing:vegetable-wild-carrot",
+      "artofgrowing:vegetable-small-carrot",
+      "artofgrowing:vegetable-medium-carrot",
+      "artofgrowing:vegetable-decent-carrot",
+      "artofgrowing:vegetable-large-carrot",
+      "artofgrowing:vegetable-hefty-carrot",
+      "artofgrowing:vegetable-gigantic-carrot",
+      "artofgrowing:vegetable-wild-parsnip",
+      "artofgrowing:vegetable-small-parsnip",
+      "artofgrowing:vegetable-medium-parsnip",
+      "artofgrowing:vegetable-decent-parsnip",
+      "artofgrowing:vegetable-large-parsnip",
+      "artofgrowing:vegetable-hefty-parsnip",
+      "artofgrowing:vegetable-gigantic-parsnip"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddon" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+    "op": "addmerge",
+    "path": "/GroupingCodes/group3",
+    "value": [
+      "artofgrowing:vegetable-wild-carrot",
+      "artofgrowing:vegetable-small-carrot",
+      "artofgrowing:vegetable-medium-carrot",
+      "artofgrowing:vegetable-decent-carrot",
+      "artofgrowing:vegetable-large-carrot",
+      "artofgrowing:vegetable-hefty-carrot",
+      "artofgrowing:vegetable-gigantic-carrot",
+      "artofgrowing:vegetable-wild-parsnip",
+      "artofgrowing:vegetable-small-parsnip",
+      "artofgrowing:vegetable-medium-parsnip",
+      "artofgrowing:vegetable-decent-parsnip",
+      "artofgrowing:vegetable-large-parsnip",
+      "artofgrowing:vegetable-hefty-parsnip",
+      "artofgrowing:vegetable-gigantic-parsnip"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddonpatch" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/other/pumpkincase.json",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
+    "value": [
+      "game:pumpkin-fruit-small-4",
+      "game:pumpkin-fruit-medium-4",
+      "game:pumpkin-fruit-decent-4",
+      "game:pumpkin-fruit-large-4",
+      "game:pumpkin-fruit-hefty-4"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddon" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/other/pumpkincase.json",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
+    "value": [
+      "game:pumpkin-fruit-small-4",
+      "game:pumpkin-fruit-medium-4",
+      "game:pumpkin-fruit-decent-4",
+      "game:pumpkin-fruit-large-4",
+      "game:pumpkin-fruit-hefty-4"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "aogbreedingaddonpatch" } ]
+  }
+]

@@ -1,11 +1,24 @@
 [
   {
     "file": "foodshelves:config/restrictions/general/holderuniversal.json",
-    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
     "value": [
       "pewter:bowl-*",
       "pewter:crock-*"
     ],
-    "dependsOn": [ { "modid": "pewter" } ]
+    "side": "Server",
+    "dependsOn": [ { "modId": "pewter" } ]
+  },
+  {
+    "file": "foodshelves:config/restrictions/general/holderuniversal.json",
+    "op": "addmerge",
+    "path": "/CollectibleCodes",
+    "value": [
+      "pewter:bowl-*",
+      "pewter:crock-*"
+    ],
+    "side": "Server",
+    "dependsOn": [ { "modId": "pewterfix" } ]
   }
 ]
