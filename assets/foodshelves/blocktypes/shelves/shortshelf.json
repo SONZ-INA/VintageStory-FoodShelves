@@ -7,7 +7,10 @@
 		{ "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
 	],
 	"attributes": {
-		"reinforcable": true
+		"reinforcable": true,
+		"handbook": {
+			"groupBy": ["shortshelf-*"]
+		}
 	},
 	"behaviors": [
 		{ "name": "Lockable" },
