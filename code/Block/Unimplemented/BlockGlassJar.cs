@@ -26,10 +26,8 @@ public class BlockGlassJar : BaseFSContainer {
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);
 
         if (!meshrefs.TryGetValue(meshCacheKey, out MultiTextureMeshRef? meshRef)) {
-            ItemStack[] contents = GetContents(api.World, itemstack);
-            
             MeshData? jarMesh = GenBlockVariantMesh(capi, itemstack, ["Glass1"]); // Glass hides the content in GUI
-            MeshData?contentMesh = GenLiquidyMesh(capi, contents, ShapeReferences.utilGlassJar, 8.5f);
+            MeshData?contentMesh = GenLiquidyMesh(capi, renderinfo.InSlot, ShapeReferences.utilGlassJar, 8.5f);
             
             if (contentMesh != null) jarMesh?.AddMeshData(contentMesh);
 
@@ -41,7 +39,7 @@ public class BlockGlassJar : BaseFSContainer {
 
     public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
         MeshData? blockMesh = base.GenMesh(slot, targetAtlas, atBlockPos);
-        MeshData? contentMesh = GenLiquidyMesh((api as ICoreClientAPI)!, GetContents(api.World, slot.Itemstack), ShapeReferences.utilGlassJar, 6f);
+        MeshData? contentMesh = GenLiquidyMesh(api as ICoreClientAPI, slot, ShapeReferences.utilGlassJar, 6f);
 
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
 

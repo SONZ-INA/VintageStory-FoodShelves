@@ -1,7 +1,7 @@
 {
-  "code": "ceilingjar",
+  "code": "largejar",
   "class": "FoodShelves.BlockFSContainer",
-  "entityclass": "FoodShelves.BECeilingJar",
+  "entityclass": "FoodShelves.BELargeJar",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
@@ -12,7 +12,7 @@
       "glass": [ "game:block/glass/{glass}" ]
     },
     "handbook": {
-      "groupBy": [ "ceilingjar-*" ],
+      "groupBy": [ "largejar-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canhold-title",
@@ -20,13 +20,13 @@
         }
       ]
     },
-    "unifyItemSlots": true
+    "worldInteractionAttributeCheck": "fsLiquidyStuff"
   },
   "behaviors": [
-    { "name": "Unstable", "properties": { "attachedToFaces": ["up"] } }
+    { "name": "Unstable", "properties": { "attachedToFaces": ["down"] } }
   ],
   "shape": {
-    "base": "block/glassware/ceilingjar"
+    "base": "block/glassware/largejar"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
@@ -41,14 +41,8 @@
   "drawtype": "json",
   "emitSideAo": { "all": false },
   "sideao": { "all": true },
-  "sidesolid": {
-    "up": true,
-    "all": false
-  },
-  "sideopaque": {
-    "up": true,
-    "all": false
-  },
+  "sidesolid": { "all": false },
+  "sideopaque": { "all": false },
   "tpHandTransform": {
     "translation": { "x": -0.9, "y": -1, "z": -0.55 },
     "rotation": { "x": -2, "y": 25, "z": -78 },
@@ -60,6 +54,6 @@
     "break": "game:block/planks"
   },
   "collisionSelectionBoxes": [ 
-    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.8, "z2": 1 }
   ]
 }

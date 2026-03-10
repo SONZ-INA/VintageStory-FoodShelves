@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 
 namespace FoodShelves;
 
@@ -12,9 +13,8 @@ public class BESeedBins : BEBaseFSContainer {
     protected override float PerishMultiplier => 0.75f; // AoG Compatibility
 
     public override int ShelfCount => 4;
-    public override int ItemsPerSegment => 6;
 
-    public BESeedBins() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
+    public BESeedBins() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 6, true)); }
 
     public override void Initialize(ICoreAPI api) {
         block = (api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer)!;
@@ -24,19 +24,23 @@ public class BESeedBins : BEBaseFSContainer {
     protected override void InitMesh() {
         base.InitMesh();
 
-        var stacks = GetContentStacks();
         List<string> dontRender = [];
 
         for (int i = 0; i < 4; i++) {
+            ItemSlot slot = inv[i];
+
             // Content
-            var stacksForMesh = stacks.Skip(i * ItemsPerSegment).Take(ItemsPerSegment).ToArray();
-            contentMeshes[i] = GenLiquidyMesh(capi, stacksForMesh, ShapeReferences.utilSeedBins, 6f, false)?.Translate(0, .04f, 0).BlockYRotation(block)!;
-            
+            contentMeshes[i] = GenLiquidyMesh(capi, slot, ShapeReferences.utilSeedBins, 6f, false)?
+                .Translate(0, .04f, 0)
+                .BlockYRotation(block)!;
+
             // Icon
             if (capi == null) continue;
 
-            if (stacksForMesh[0].Collectible != null) {
-                string seedtype = stacksForMesh[0].Collectible.Variant["type"];
+            ItemStack? stack = slot.Itemstack;
+
+            if (stack?.Collectible != null) {
+                string seedtype = stack.Collectible.Variant["type"];
                 VariantAttributes.SetString($"seed{i}", seedtype);
             }
             else {

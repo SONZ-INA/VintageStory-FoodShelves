@@ -2,7 +2,7 @@
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     public string? WorldInteractionAttributeCheck = null;
-    public bool UnifyItemSlots = false;
+    public bool BulkStorage = false; // Exclusively for containers that function like crates, and have no other slots.
 
     protected bool globalBlockBuffs = true;
     protected WorldInteraction[]? itemSlottableInteractions;
@@ -16,56 +16,51 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
         globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
-        UnifyItemSlots = Attributes["unifyItemSlots"].AsBool(false);
+        BulkStorage = Attributes["bulkStorage"].AsBool(false);
         preventPlacing = Attributes["preventPlacing"].AsBool(false);
         placingMessage = Attributes["placingMessage"].AsString("");
         heldDescEntry = globalBlockBuffs 
             ? Attributes["helddescentry"].AsString(Code.FirstCodePart())
             : "";
 
-        WorldInteractionAttributeCheck = Attributes["worldInteractionAttributeCheck"].AsString();
+        WorldInteractionAttributeCheck = Attributes["worldInteractionAttributeCheck"].AsString()
+            ?? "fs" + Code.FirstCodePart();
 
-        if (WorldInteractionAttributeCheck == null && UnifyItemSlots) {
-            WorldInteractionAttributeCheck = "fs" + Code.FirstCodePart();
-        }
+        List<ItemStack> stackList = [];
 
-        if (WorldInteractionAttributeCheck != null) {
-            List<ItemStack> stackList = [];
-
-            itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, Code.FirstCodePart(), () => {
-                foreach (var obj in api.World.Collectibles) {
-                    if (obj.CanStoreInSlot(WorldInteractionAttributeCheck)) {
-                        stackList.Add(new ItemStack(obj));
-                    }
+        itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, Code.FirstCodePart(), () => {
+            foreach (var obj in api.World.Collectibles) {
+                if (obj.CanStoreInSlot(WorldInteractionAttributeCheck)) {
+                    stackList.Add(new ItemStack(obj));
                 }
+            }
 
-                var stackArray = stackList.ToArray();
+            var stackArray = stackList.ToArray();
 
-                return new WorldInteraction[] {
-                    new() {
-                        ActionLangCode = "blockhelp-groundstorage-add",
-                        MouseButton = EnumMouseButton.Right,
-                        Itemstacks = stackArray,
-                        HotKeyCode = "shift"
-                    },
-                    new() {
-                        ActionLangCode = "blockhelp-groundstorage-addbulk",
-                        MouseButton = EnumMouseButton.Right,
-                        Itemstacks = stackArray,
-                        HotKeyCodes = ["shift", "ctrl"]
-                    },
-                    new() {
-                        ActionLangCode = "blockhelp-groundstorage-remove",
-                        MouseButton = EnumMouseButton.Right
-                    },
-                    new() {
-                        ActionLangCode = "blockhelp-groundstorage-removebulk",
-                        MouseButton = EnumMouseButton.Right,
-                        HotKeyCode = "ctrl"
-                    }
-                };
-            });
-        }
+            return new WorldInteraction[] {
+                new() {
+                    ActionLangCode = "blockhelp-groundstorage-add",
+                    MouseButton = EnumMouseButton.Right,
+                    Itemstacks = stackArray,
+                    HotKeyCode = "shift"
+                },
+                new() {
+                    ActionLangCode = "blockhelp-groundstorage-addbulk",
+                    MouseButton = EnumMouseButton.Right,
+                    Itemstacks = stackArray,
+                    HotKeyCodes = ["shift", "ctrl"]
+                },
+                new() {
+                    ActionLangCode = "blockhelp-groundstorage-remove",
+                    MouseButton = EnumMouseButton.Right
+                },
+                new() {
+                    ActionLangCode = "blockhelp-groundstorage-removebulk",
+                    MouseButton = EnumMouseButton.Right,
+                    HotKeyCode = "ctrl"
+                }
+            };
+        });
 
         LoadVariantsCreative(api, this);
     }

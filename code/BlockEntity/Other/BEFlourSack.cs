@@ -6,9 +6,7 @@ public class BEFlourSack : BEBaseFSContainer {
 
     protected override float PerishMultiplier => 0.6f;
 
-    public override int ItemsPerSegment => 4;
-
-    public BEFlourSack() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
+    public BEFlourSack() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 4, true)); }
 
     protected override void InitMesh() {
         if (capi == null) return;
@@ -22,7 +20,7 @@ public class BEFlourSack : BEBaseFSContainer {
             blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), ["sackicon"]);
         }
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilFlourSack, 13f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilFlourSack, 13f);
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 

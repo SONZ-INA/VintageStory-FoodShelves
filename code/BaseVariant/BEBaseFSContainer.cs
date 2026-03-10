@@ -1,4 +1,6 @@
-﻿namespace FoodShelves;
+﻿using Vintagestory.Client.NoObf;
+
+namespace FoodShelves;
 
 public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
     protected float globalPerishMultiplier = 1f;
@@ -80,7 +82,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;
-        bool hasAttrCheck = block.WorldInteractionAttributeCheck != null;
+        bool hasAttrCheck = block.WorldInteractionAttributeCheck != null; // For normal, non-bulk containers
 
         if ((hasAttrCheck && !shift) || (!hasAttrCheck && slot.Empty)) {
             return TryTake(byPlayer, blockSel);
@@ -106,33 +108,26 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
         if (startIndex >= inv.Count) return false;
 
-        bool shift = byPlayer.Entity.Controls.ShiftKey;
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
         int moved = 0;
 
-        if (block.UnifyItemSlots == true) { // Unified slot logic
-            if (!inv[startIndex].Empty && !inv[startIndex].Itemstack?.Collectible.Equals(slot.Itemstack?.Collectible) == true)
-                return false;
+        for (int i = 0; i < ItemsPerSegment; i++) {
+            int idx = startIndex + i;
+            ItemSlot target = inv[idx];
+            ItemStack stack = target.Itemstack!;
 
-            for (int i = startIndex; i < startIndex + ItemsPerSegment; i++) {
-                int availableSpace = inv[i].MaxSlotStackSize - inv[i].StackSize;
-                var stack = inv[i].Itemstack;
+            if (target.Empty || stack.Collectible == slot.Itemstack!.Collectible) {
+                ItemSlotFSUniversal fsSlot = (inv[idx] as ItemSlotFSUniversal)!;
+                int availableSpace = fsSlot.GetRemainingSlotSpace(slot.Itemstack!);
 
-                // Try normal insertion
-                if (ctrl) {
-                    moved += slot.TryPutInto(Api.World, inv[i], availableSpace);
-                    if (slot.StackSize == 0) break;
-                }
-                else if (inv[i].StackSize < inv[i].MaxSlotStackSize) {
-                    moved = slot.TryPutInto(Api.World, inv[i], 1);
-                }
+                moved = slot.TryPutIntoBulk(Api.World, inv[idx], ctrl ? availableSpace : 1);
 
                 // Force merge freshness disparity if enabled
-                if (OverrideMergeStacks && slot.Itemstack != null && stack != null && moved == 0) {
+                if (OverrideMergeStacks && stack != null && moved == 0) {
                     int before = slot.StackSize;
                     int amount = ctrl ? availableSpace : 1;
 
-                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.ConfirmedMerge, amount) {
+                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, amount) {
                         SourceSlot = new DummySlot(slot.Itemstack),
                         SinkSlot = new DummySlot(stack)
                     };
@@ -142,50 +137,13 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                 }
 
                 // Only break if something was actually moved
-                if (moved > 0) {
-                    break;
-                }
-            }
-        }
-        else { // Separate slot logic
-            for (int i = 0; i < ItemsPerSegment; i++) {
-                int idx = startIndex + i;
-                var stack = inv[idx].Itemstack;
-
-                if (inv[idx].Empty
-                    || (stack?.Collectible.Equals(slot.Itemstack?.Collectible) == true
-                        && stack.StackSize < stack.Collectible.MaxStackSize)) {
-                    int availableSpace = inv[idx].MaxSlotStackSize - (stack?.StackSize ?? 0);
-
-                    if (block.WorldInteractionAttributeCheck == null || shift) {
-                        moved = ctrl
-                            ? slot.TryPutInto(Api.World, inv[idx], availableSpace)
-                            : slot.TryPutInto(Api.World, inv[idx]);
-                    }
-
-                    // Force merge freshness disparity if enabled
-                    if (OverrideMergeStacks && slot.Itemstack != null && stack != null && moved == 0) {
-                        int before = slot.StackSize;
-                        int amount = ctrl ? availableSpace : 1;
-
-                        ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, amount) {
-                            SourceSlot = new DummySlot(slot.Itemstack),
-                            SinkSlot = new DummySlot(stack)
-                        };
-                        stack.Collectible.TryMergeStacks(op);
-
-                        moved = before - slot.StackSize;
-                    }
-
-                    // Only break if something was actually moved
-                    if (moved > 0) break;
-                }
+                if (moved > 0) break;
             }
         }
 
         if (moved > 0) {
             InitMesh();
-            MarkDirty();
+            MarkDirty(true);
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             return true;
         }
@@ -201,7 +159,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             int currentIndex = startIndex + i;
             if (!inv[currentIndex].Empty) {
                 ItemStack stack = byPlayer.Entity.Controls.CtrlKey
-                    ? inv[currentIndex].TakeOutWhole()
+                    ? inv[currentIndex].TakeOut(inv[currentIndex].Itemstack!.Collectible.MaxStackSize)
                     : inv[currentIndex].TakeOut(1);
 
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {

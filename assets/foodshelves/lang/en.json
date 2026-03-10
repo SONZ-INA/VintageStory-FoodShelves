@@ -44,7 +44,8 @@
   "block-fooddisplayblock-top": "Top Food Display Block",
   "block-fooddisplaycase-*": "Food Display Case",
   "block-glassjar-*": "Glass Jar",
-  "block-ceilingjar-*": "Ceiling Jar",
+  "block-ceilingrack-*": "Ceiling Rack",
+  "block-largejar-*": "Large Jar",
   "block-coolingcabinet-*": "Cooling Cabinet",
   "block-meatfreezer-*": "Meat Freezer",
   "block-wallcabinet-*": "Wall Cabinet",
@@ -80,6 +81,7 @@
   "blockdesc-seedbins-text": "  -All seedbags.",
   "blockdesc-mushroombasket-text": "  -All mushrooms.",
   "blockdesc-fruitcooler-text": "  -All fruit.",
+  "blockdesc-ceilingrack-text": "  -Large Jar.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 100% longer and cure 25% longer.",

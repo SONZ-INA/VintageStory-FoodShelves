@@ -41,7 +41,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
-            else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
+            else return new ItemSlotFSUniversal(inv, CoolingOnly, 1, true);
         });
     }
 

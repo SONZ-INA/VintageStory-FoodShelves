@@ -1,34 +1,20 @@
 ﻿namespace FoodShelves;
 
-public class BECeilingJar : BEBaseFSContainer {
+public class BELargeJar : BEBaseFSContainer {
     public override string AttributeCheck => "fsLiquidyStuff";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
-    protected override bool OverrideMergeStacks => true;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
-    public override int ItemsPerSegment => 12;
-
-    public BECeilingJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64)); }
+    public BELargeJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 12, true)); }
 
     public override void Initialize(ICoreAPI api) {
-        // Adjust when Storage Vessels are fixed
         inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() {
             [EnumFoodCategory.Grain] = 0.5f
         };
 
         base.Initialize(api);
-
-        // To apply the uniform transition rates across all slots
-        inv.SlotModified += OnSlotModified;
-    }
-
-    private void OnSlotModified(int slotId) {
-        inv.SyncTransitionType(Api, EnumTransitionType.Perish);
-        inv.SyncTransitionType(Api, EnumTransitionType.Dry);
-        inv.SyncTransitionType(Api, EnumTransitionType.Cure);
-        MarkDirty();
     }
 
     protected override void InitMesh() {
@@ -36,7 +22,7 @@ public class BECeilingJar : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, GetContentStacks(), ShapeReferences.utilCeilingJar, 8.5f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilCeilingJar, 8.5f);
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 

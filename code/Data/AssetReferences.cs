@@ -26,6 +26,9 @@ public static class SoundReferences {
     public const string CoolingCabinetOpen = "foodshelves:sounds/block/glasscabinetopen.ogg";
     public const string CoolingCabinetClose = "foodshelves:sounds/block/glasscabinetclose.ogg";
 
+    public const string MeatFreezerOpen = "foodshelves:sounds/block/freezeropen.ogg";
+    public const string MeatFreezerClose = "foodshelves:sounds/block/freezerclose.ogg";
+
     public const string IceDrawerOpen = "foodshelves:sounds/block/icedraweropen.ogg";
     public const string IceDrawerClose = "foodshelves:sounds/block/icedrawerclose.ogg";
 

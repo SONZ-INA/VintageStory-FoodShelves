@@ -18,8 +18,8 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override float BuffedPerishMultiplier => 0.65f;
     protected override float UnbuffedPerishMultiplier => 0.65f;
 
-    protected override AssetLocation DoorOpenSound => SoundReferences.CoolingCabinetOpen;
-    protected override AssetLocation DoorCloseSound => SoundReferences.CoolingCabinetClose;
+    protected override AssetLocation DoorOpenSound => SoundReferences.MeatFreezerOpen;
+    protected override AssetLocation DoorCloseSound => SoundReferences.MeatFreezerClose;
     protected override AssetLocation DrawerOpenSound => SoundReferences.IceDrawerOpen;
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
@@ -40,8 +40,8 @@ public class BEMeatFreezer : BEBaseFSCooler {
         PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
-            if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
-            else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
+            if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 1, true);
+            else return new ItemSlotFSUniversal(inv, CoolingOnly, 1, true);
         });
     }
 
@@ -53,10 +53,10 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override void InitMesh() {
         base.InitMesh();
 
-        for (int i = 0; i < 3; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
-        }
-        contentMeshes[3] = GenLiquidyMesh(capi, [inv[3].Itemstack], ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block)!;
+        contentMeshes[0] = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
+        contentMeshes[1] = GenLiquidyMesh(capi, inv[1], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
+        contentMeshes[2] = GenLiquidyMesh(capi, inv[2], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
+        contentMeshes[3] = GenLiquidyMesh(capi, inv[3], ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block)!;
     }
 
     #region Interactions

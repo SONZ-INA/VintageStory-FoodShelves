@@ -125,9 +125,9 @@ public static class Meshing {
     /// Generates a mesh that has a specific "util" shape that resemble liquids or stuff that can behave as liquids.
     /// The parent of the util shape will scale up depending on stacksize passed, and the children of that parent will simply move up.
     /// </summary>
-    public static MeshData? GenLiquidyMesh(ICoreClientAPI? capi, ItemStack?[] contents, string pathToFillShape, float maxHeight, bool inheritTextures = true) {
+    public static MeshData? GenLiquidyMesh(ICoreClientAPI? capi, ItemSlot? slot, string pathToFillShape, float maxHeight, bool inheritTextures = true) {
         if (capi == null) return null;
-        if (contents == null || contents.Length == 0 || contents[0] == null) return null;
+        if (slot == null || slot.Empty) return null;
         if (string.IsNullOrEmpty(pathToFillShape)) return null;
 
         // Shape location of a simple cube, meant as "filling"
@@ -135,27 +135,26 @@ public static class Meshing {
         Shape? shape = Shape.TryGet(capi, shapeLocation)?.Clone();
         if (shape == null) 
             return null;
-        
-        string itemPath = contents[0]!.Item.Code.Path;
+
+        ItemSlotFSUniversal fsSlot = (slot as ItemSlotFSUniversal)!;
+        ItemStack stack = fsSlot.Itemstack!;
+        string itemPath = stack.Item.Code.Path;
 
         // Handle textureSource
         ITexPositionSource? texSource = inheritTextures
-            ? GetPieTexture(capi, contents, shape, itemPath)
-                ?? GetContainerTextureSource(capi, contents)
-                ?? GetItemTextureSource(capi, contents)
+            ? GetPieTexture(capi, [stack], shape, itemPath)
+                ?? GetContainerTextureSource(capi, [stack])
+                ?? GetItemTextureSource(capi, [stack])
             : new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
 
-        // Calculate the total content amount
-        float contentAmount = 0;
-        foreach (var itemStack in contents) {
-            contentAmount += itemStack?.StackSize ?? 0;
-        }
+        // Content / height calculation
+        float contentAmount = slot.StackSize;
+        int capacity = slot.StackSize + slot.GetRemainingSlotSpace(stack);
 
-        // Calculating new height
-        int stackSizeDiv = contents[0]!.Collectible.MaxStackSize / 32;
+        float fillRatio = capacity > 0 ? contentAmount / capacity : 0;
+
         float baseY = (float)shape.Elements[0].From![1];
-        float step = maxHeight / (contents.Length * 32 * stackSizeDiv);
-        double shapeHeight = contentAmount * step + baseY;
+        float shapeHeight = baseY + maxHeight * fillRatio;
 
         // Adjusting the "topping" position
         foreach (var child in shape.Elements[0].Children!) {

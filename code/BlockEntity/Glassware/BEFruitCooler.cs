@@ -41,8 +41,8 @@ public class BEFruitCooler : BEBaseFSCooler {
         PerishMultiplier = 0.65f; // Needs to be change-able so it's set from within the constructor
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
-            if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 64);
-            else return new ItemSlotFSUniversal(inv, CoolingOnly, 64);
+            if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck, 1, true);
+            else return new ItemSlotFSUniversal(inv, CoolingOnly, 1, true);
         });
     }
 
@@ -55,7 +55,7 @@ public class BEFruitCooler : BEBaseFSCooler {
         base.InitMesh();
 
         for (int i = 0; i < 4; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, [inv[i].Itemstack], ShapeReferences.utilFruitCooler, 9f)!.BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilFruitCooler, 9f)!.BlockYRotation(block);
         }
     }
 

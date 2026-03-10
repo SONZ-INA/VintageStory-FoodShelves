@@ -8,7 +8,7 @@ public class BESeedShelf : BEBaseFSContainer {
         ShelfCount = 3;
         SegmentsPerShelf = 3;
         ItemsPerSegment = 4;
-        inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 64));
+        inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 1, true));
     }
 
     public override void Initialize(ICoreAPI api) {

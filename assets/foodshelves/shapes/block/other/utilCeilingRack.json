@@ -1,0 +1,72 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textures": {
+		"rope": "game:item/resource/rope"
+	},
+	"elements": [
+		{
+			"name": "Rope1",
+			"from": [ 1.5, -5.0, 1.25 ],
+			"to": [ 2.0, -1.7, 1.75 ],
+			"rotationOrigin": [ 1.5, -3.0, 1.5 ],
+			"rotationY": -45.0,
+			"rotationZ": 52.0,
+			"faces": {
+				"north": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+				"east": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+				"south": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+				"west": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] }
+			},
+			"children": [
+				{
+					"name": "Rope2",
+					"from": [ 5.6594, -7.2437, -9.1924 ],
+					"to": [ 6.1594, -3.9437, -8.6924 ],
+					"rotationOrigin": [ 5.6594, -5.2437, -8.9424 ],
+					"rotationX": -90.0,
+					"rotationY": -38.0,
+					"rotationZ": -38.0,
+					"faces": {
+						"north": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"east": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"south": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"west": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] }
+					}
+				},
+				{
+					"name": "Rope3",
+					"from": [ 11.3188, -14.4874, 0.0 ],
+					"to": [ 11.8188, -11.1874, 0.5 ],
+					"rotationOrigin": [ 11.3188, -12.4874, 0.25 ],
+					"rotationX": 180.0,
+					"rotationZ": -76.0,
+					"faces": {
+						"north": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"east": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"south": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"west": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] }
+					}
+				},
+				{
+					"name": "Rope4",
+					"from": [ 5.6594, -7.2437, 9.1924 ],
+					"to": [ 6.1594, -3.9437, 9.6924 ],
+					"rotationOrigin": [ 5.6594, -5.2437, 9.4424 ],
+					"rotationX": 90.0,
+					"rotationY": 38.0,
+					"rotationZ": -38.0,
+					"faces": {
+						"north": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"east": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"south": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] },
+						"west": { "texture": "#rope", "uv": [ 0.0, 0.0, 0.5, 3.0 ] }
+					}
+				}
+			]
+		}
+	]}
