@@ -3,7 +3,7 @@
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron" ] },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "steel" ] },
       "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
@@ -25,7 +25,7 @@
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron" ] },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "steel" ] },
       "G": { "type": "block", "code": "*:glass-*" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
@@ -46,7 +46,7 @@
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron" ] },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "steel" ] },
       "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
@@ -67,7 +67,7 @@
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron" ] },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "steel" ] },
       "G": { "type": "block", "code": "*:glass-*" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
       "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
@@ -87,7 +87,7 @@
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
-      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron" ] },
+      "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2, "allowedVariants": [ "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "steel" ] },
       "G": { "type": "block", "code": "*:glass-*" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
       "C": { "type": "block", "code": "*:rockpolished-*", "quantity": 2 }

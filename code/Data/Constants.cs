@@ -10,4 +10,10 @@ public static class Constants {
         South = 180,
         East = 270,
     }
+
+    public enum BlockHintType {
+        None,
+        SingleSlot,
+        Bulk
+    }
 }

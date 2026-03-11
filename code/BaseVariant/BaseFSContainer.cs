@@ -1,68 +1,87 @@
 ﻿namespace FoodShelves;
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
-    public string? WorldInteractionAttributeCheck = null;
-    public bool BulkStorage = false; // Exclusively for containers that function like crates, and have no other slots.
+    public BlockHintType hintType = BlockHintType.None;
 
+    protected string? WorldInteractionAttributeCheck = null;
     protected bool globalBlockBuffs = true;
     protected WorldInteraction[]? itemSlottableInteractions;
     
     private string? heldDescEntry;
-    private bool preventPlacing = false;
+    private string hintTypeStr = "none";
     private string placingMessage = "";
+    private bool preventPlacing = false;
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
         
         PlacedPriorityInteract = true; // Needed to call OnBlockInteractStart when shifting with an item in hand
-        globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
-        BulkStorage = Attributes["bulkStorage"].AsBool(false);
-        preventPlacing = Attributes["preventPlacing"].AsBool(false);
-        placingMessage = Attributes["placingMessage"].AsString("");
-        heldDescEntry = globalBlockBuffs 
+        
+        heldDescEntry = globalBlockBuffs
             ? Attributes["helddescentry"].AsString(Code.FirstCodePart())
             : "";
-
         WorldInteractionAttributeCheck = Attributes["worldInteractionAttributeCheck"].AsString()
             ?? "fs" + Code.FirstCodePart();
 
+        globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
+        preventPlacing = Attributes["preventPlacing"].AsBool(false);
+        placingMessage = Attributes["placingMessage"].AsString("");
+        hintTypeStr = Attributes["hintType"].AsString("none");
+        Enum.TryParse(hintTypeStr, true, out hintType);
+        
+        LoadVariantsCreative(api, this);
+
+        if (hintType == BlockHintType.None)
+            return;
+
         List<ItemStack> stackList = [];
-
-        itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, Code.FirstCodePart(), () => {
-            foreach (var obj in api.World.Collectibles) {
-                if (obj.CanStoreInSlot(WorldInteractionAttributeCheck)) {
-                    stackList.Add(new ItemStack(obj));
-                }
+        foreach (var obj in api.World.Collectibles) {
+            if (obj.CanStoreInSlot(WorldInteractionAttributeCheck)) {
+                stackList.Add(new ItemStack(obj));
             }
+        }
 
-            var stackArray = stackList.ToArray();
-
-            return new WorldInteraction[] {
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-add",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = stackArray,
-                    HotKeyCode = "shift"
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-addbulk",
-                    MouseButton = EnumMouseButton.Right,
-                    Itemstacks = stackArray,
-                    HotKeyCodes = ["shift", "ctrl"]
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-remove",
-                    MouseButton = EnumMouseButton.Right
-                },
-                new() {
-                    ActionLangCode = "blockhelp-groundstorage-removebulk",
-                    MouseButton = EnumMouseButton.Right,
-                    HotKeyCode = "ctrl"
-                }
+        var stackArray = stackList.ToArray();
+        
+        itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, Code.FirstCodePart(), () => {
+            return hintType switch {
+                BlockHintType.SingleSlot => new WorldInteraction[] {
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-add",
+                            MouseButton = EnumMouseButton.Right,
+                            Itemstacks = stackArray,
+                        },
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-remove",
+                            MouseButton = EnumMouseButton.Right
+                        }
+                    },
+                BlockHintType.Bulk => [
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-add",
+                            MouseButton = EnumMouseButton.Right,
+                            Itemstacks = stackArray,
+                            HotKeyCode = "shift"
+                        },
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-addbulk",
+                            MouseButton = EnumMouseButton.Right,
+                            Itemstacks = stackArray,
+                            HotKeyCodes = ["shift", "ctrl"]
+                        },
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-remove",
+                            MouseButton = EnumMouseButton.Right
+                        },
+                        new() {
+                            ActionLangCode = "blockhelp-groundstorage-removebulk",
+                            MouseButton = EnumMouseButton.Right,
+                            HotKeyCode = "ctrl"
+                        }
+                    ],
+                _ => [],
             };
         });
-
-        LoadVariantsCreative(api, this);
     }
 
     public WorldInteraction[]? BaseGetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
@@ -70,8 +89,10 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
-            .Append(itemSlottableInteractions);
+        if (itemSlottableInteractions?.Length > 0) 
+            return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer).Append(itemSlottableInteractions);
+        
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
     public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {

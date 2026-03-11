@@ -24,7 +24,8 @@
           "text": "foodshelves:blockdesc-seedbins-text"
         }
       ]
-    }
+    },
+    "hintType": "bulk"
   },
   "behaviors": [
     { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }

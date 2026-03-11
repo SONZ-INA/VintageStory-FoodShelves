@@ -20,7 +20,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected virtual string CantPlaceMessage => "";
     protected abstract InfoDisplayOptions InfoDisplay { get; }
     protected virtual bool RipeningSpot => false;
-    protected virtual bool OverrideMergeStacks => false;
 
     protected virtual float PerishMultiplier { get; set; } = 1;
     protected virtual float CuringMultiplier { get; set; } = 1;
@@ -82,14 +81,14 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;
-        bool hasAttrCheck = block.WorldInteractionAttributeCheck != null; // For normal, non-bulk containers
+        bool isBulk = block.hintType == BlockHintType.Bulk;
 
-        if ((hasAttrCheck && !shift) || (!hasAttrCheck && slot.Empty)) {
-            return TryTake(byPlayer, blockSel);
-        }
-        else {
+        bool placeBulk = isBulk && shift;
+        bool placeSingle = !isBulk && !shift && !slot.Empty;
+
+        if (placeBulk || placeSingle) {
             if (slot.Empty) return false;
-            
+
             if (slot.CanStoreInSlot(AttributeCheck)) {
                 if (TryPut(byPlayer, slot, blockSel)) {
                     return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
@@ -102,6 +101,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
             return false;
         }
+
+        return TryTake(byPlayer, blockSel);
     }
 
     protected virtual bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
@@ -119,22 +120,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             if (target.Empty || stack.Collectible == slot.Itemstack!.Collectible) {
                 ItemSlotFSUniversal fsSlot = (inv[idx] as ItemSlotFSUniversal)!;
                 int availableSpace = fsSlot.GetRemainingSlotSpace(slot.Itemstack!);
+                if (availableSpace == 0) return false;
 
                 moved = slot.TryPutIntoBulk(Api.World, inv[idx], ctrl ? availableSpace : 1);
-
-                // Force merge freshness disparity if enabled
-                if (OverrideMergeStacks && stack != null && moved == 0) {
-                    int before = slot.StackSize;
-                    int amount = ctrl ? availableSpace : 1;
-
-                    ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, amount) {
-                        SourceSlot = new DummySlot(slot.Itemstack),
-                        SinkSlot = new DummySlot(stack)
-                    };
-                    stack.Collectible.TryMergeStacks(op);
-
-                    moved = before - slot.StackSize;
-                }
 
                 // Only break if something was actually moved
                 if (moved > 0) break;

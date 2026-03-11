@@ -15,7 +15,7 @@ public class BlockWallCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (selection.SelectionBoxIndex == 4) {
+        if (selection.SelectionBoxIndex is 4 or 5) {
             return [openCloseDoor!];
         }
 

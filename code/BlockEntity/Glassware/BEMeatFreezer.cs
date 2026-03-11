@@ -7,7 +7,6 @@ public class BEMeatFreezer : BEBaseFSCooler {
     // Base-Specific ----------------------------
     protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
-    protected override bool OverrideMergeStacks => true;
 
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
@@ -65,6 +64,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
         
         SlotType aimedAt = (SlotType)blockSel.SelectionBoxIndex;
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
 
         switch (aimedAt) {
             case SlotType.Segment1:
@@ -81,7 +81,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
                 return true;
 
             case SlotType.IceDrawer:
-                if (byPlayer.Entity.Controls.ShiftKey) {
+                if (shift) {
                     if (!DrawerOpen) ToggleDrawer(true, byPlayer);
                     else ToggleDrawer(false, byPlayer);
                     MarkDirty(true);

@@ -18,7 +18,8 @@
           "text": "foodshelves:blockdesc-ceilingrack-text"
         }
       ]
-    }
+    },
+    "hintType": "bulk"
   },
   "behaviors": [
     { "name": "Unstable", "properties": { "attachedToFaces": ["up"] } }

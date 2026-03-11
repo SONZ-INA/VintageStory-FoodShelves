@@ -21,7 +21,8 @@
           "text": "foodshelves:blockdesc-floursack-text"
         }
       ]
-    }
+    },
+    "hintType": "bulk"
   },
   "behaviors": [
     { "name": "UnstableFalling" },

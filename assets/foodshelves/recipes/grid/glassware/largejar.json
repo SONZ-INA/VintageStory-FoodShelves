@@ -1,16 +1,15 @@
 [
   {
-    "ingredientPattern": "PRP,SGS,P_P",
+    "ingredientPattern": "_P_,SGS,SSS",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 2, "name": "wood" },
-      "R": { "type": "item", "code": "game:rope" },
-      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "ceilingjar-normal",
+      "code": "largejar-normal",
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
@@ -20,17 +19,16 @@
     }
   }, 
   {
-    "ingredientPattern": "PRP,SGS,P_P",
+    "ingredientPattern": "_P_,SGS,SSS",
     "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
-      "R": { "type": "item", "code": "game:rope" },
-      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "ceilingjar-normal",
+      "code": "largejar-normal",
       "attributes": {
         "FSAttributes": {
           "glass": "{glass}"
@@ -39,14 +37,13 @@
     }
   },
   {
-    "ingredientPattern": "PRP,SGS,P_P",
+    "ingredientPattern": "_P_,SGS,SSS",
     "ingredients": {
-      "P": { "type": "item", "code": "*:plank-*", "quantity": 2 },
-      "R": { "type": "item", "code": "game:rope" },
-      "S": { "type": "item", "code": "game:stick", "quantity": 2 },
+      "P": { "type": "item", "code": "*:plank-*" },
+      "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "*:glass-*" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "ceilingjar-normal" }
+    "output": { "type": "block", "code": "largejar-normal" }
   }
 ]

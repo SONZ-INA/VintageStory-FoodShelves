@@ -78,21 +78,15 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
         if (inv[CutIceSlot].Empty || (stack?.StackSize < stack?.Collectible.MaxStackSize && inv[CutIceSlot].CanStoreInSlot(CoolingOnly))) {
             int quantity = byPlayer.Entity.Controls.CtrlKey ? slot.Itemstack.StackSize : 1;
-            int moved = slot.TryPutInto(Api.World, inv[CutIceSlot], quantity);
+            int moved = slot.TryPutIntoBulk(Api.World, inv[CutIceSlot], quantity);
 
-            if (moved == 0 && slot.Itemstack != null) { // Attempt to merge if it fails
-                ItemStackMergeOperation op = new(Api.World, EnumMouseButton.Left, 0, EnumMergePriority.DirectMerge, quantity) {
-                    SourceSlot = new DummySlot(slot.Itemstack),
-                    SinkSlot = new DummySlot(stack)
-                };
-                stack?.Collectible.TryMergeStacks(op);
+            if (moved > 0) {
+                HandleIceHeight(true);
+                MarkDirty(true);
+                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             }
 
-            HandleIceHeight(true);
-            MarkDirty(true);
-            (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-
-            return true;
+            return moved > 0;
         }
 
         return false;

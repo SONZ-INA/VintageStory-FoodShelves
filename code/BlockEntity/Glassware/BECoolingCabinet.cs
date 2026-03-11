@@ -65,8 +65,9 @@ public class BECoolingCabinet : BEBaseFSCooler {
                     if (!DrawerOpen) ToggleDrawer(true, byPlayer);
                     else ToggleDrawer(false, byPlayer);
                     MarkDirty(true);
+                    return true;
                 }
-                return true;
+                break;
 
             case SlotType.ClosedCabinet:
                 ToggleDoor(true, byPlayer);
