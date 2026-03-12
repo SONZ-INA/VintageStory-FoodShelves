@@ -22,7 +22,8 @@
         }
       ]
     },
-    "worldInteractionAttributeCheck": "fsMeatFreezer"
+    "worldInteractionAttributeCheck": "fsMeatFreezer",
+    "interactionType": "bulk"
   },
   "behaviors": [
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },

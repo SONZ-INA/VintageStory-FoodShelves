@@ -22,7 +22,8 @@
         }
       ]
     },
-    "worldInteractionAttributeCheck": "fsFruitCooler"
+    "worldInteractionAttributeCheck": "fsFruitCooler",
+    "interactionType": "bulk"
   },
   "behaviors": [
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }

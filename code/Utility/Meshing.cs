@@ -1,4 +1,6 @@
-﻿namespace FoodShelves;
+﻿using System.Linq;
+
+namespace FoodShelves;
 
 public static class Meshing {
     /// <summary>
@@ -151,10 +153,8 @@ public static class Meshing {
         float contentAmount = slot.StackSize;
         int capacity = slot.StackSize + slot.GetRemainingSlotSpace(stack);
 
-        float fillRatio = capacity > 0 ? contentAmount / capacity : 0;
-
         float baseY = (float)shape.Elements[0].From![1];
-        float shapeHeight = baseY + maxHeight * fillRatio;
+        float shapeHeight = baseY + GetFillHeight(contentAmount, capacity, maxHeight);
 
         // Adjusting the "topping" position
         foreach (var child in shape.Elements[0].Children!) {
@@ -170,6 +170,77 @@ public static class Meshing {
         }
 
         capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shape, out MeshData contentMesh, texSource);
+        return contentMesh;
+    }
+
+    /// <summary>
+    /// Generates a mesh that will generate some item shapes, and then move them up as the stack size increases.
+    /// Do note that generally, the item shapes should "cover" up the whole top so you can't see the bottom of the block, giving the illusion that it's full.
+    /// </summary>
+    public static MeshData? GenPartialContentMesh(ICoreClientAPI capi, ItemSlot slot, float[][]? transformationMatrices, float maxHeight, string? utilShapeLoc = null) {
+        if (capi == null) return null;
+        if (slot == null || slot.Empty) return null;
+
+        ItemStack stack = slot.Itemstack!;
+        if (stack.Item?.Shape?.Base == null) return null;
+
+        // Get item shape
+        string shapeLocation = stack.Item.Shape.Base;
+
+        Shape? shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
+        if (shape == null) return null;
+
+        // Handle texture source
+        ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-PartialContentMesh");
+        capi.Tesselator.TesselateShape("FS-TesselatePartial", shape, out MeshData itemMesh, texSource);
+
+        MeshData contentMesh = itemMesh.Clone();
+
+        if (transformationMatrices?[0] != null)
+            contentMesh.MatrixTransform(transformationMatrices[0]);
+
+        int stackSize = stack.StackSize;
+        int matrixCount = transformationMatrices?.Length ?? 0;
+
+        // Mesh some shapes
+        for (int i = 1; i < Math.Min(stackSize, matrixCount); i++) {
+            MeshData currentMesh = itemMesh.Clone();
+
+            if (transformationMatrices?[i] != null)
+                currentMesh.MatrixTransform(transformationMatrices[i]);
+
+            contentMesh.AddMeshData(currentMesh);
+        }
+
+        // If more items are added, move content up
+        if (stackSize > matrixCount) {
+            float contentAmount = stackSize;
+            int capacity = stackSize + slot.GetRemainingSlotSpace(stack);
+
+            float shapeHeight = GetFillHeight(contentAmount, capacity, maxHeight);
+
+            contentMesh.Translate(0, shapeHeight, 0);
+
+            if (utilShapeLoc != null) {
+                AssetLocation utilLoc = new(utilShapeLoc);
+                Shape utilShape = Shape.TryGet(capi, utilLoc);
+
+                if (utilShape == null) {
+                    capi.Logger.Warning("[FoodShelves] non-existent utilShapeLoc passed. No content mesh will be generated.");
+                    return null;
+                }
+
+                // Get util textures
+                var textures = stack.Item.Textures;
+                texSource = new ContainerTextureSource(capi, stack, textures.Values.FirstOrDefault());
+
+                capi.Tesselator.TesselateShape("FS-TesselatePartialUtil", utilShape, out MeshData utilMesh, texSource);
+
+                utilMesh.Translate(0, shapeHeight, 0);
+                contentMesh.AddMeshData(utilMesh);
+            }
+        }
+
         return contentMesh;
     }
 }

@@ -86,12 +86,12 @@
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 100% longer and cure 25% longer.",
   "helddesc-tunrack": "Liquids stored in this tun rack stay fresh for 150% longer and cure 35% longer.",
-  "helddesc-ceilingjar": "Dehydrated fruit placed in the Ceiling Jar dries or melts 2.5x faster, and stays fresh for 35% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
+  "helddesc-largejar": "Food placed in the Large Jar dries or melts 2.5x faster, and stays fresh for 30% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
   "helddesc-fooddisplaycase": "Food placed in this case stays fresh for 35% longer.",
   "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 35% longer, or up to 235% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-meatfreezer": "Raw meat stored in this freezer stays fresh 55% longer, or up to 235% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-wallcabinet": "Stuff placed in this cabinet lasts up to 35% longer.<br>Make sure to keep it closed!",
-  "helddesc-floursack": "Flour placed in this sack lasts up to 10x longer.",
+  "helddesc-floursack": "Flour placed in this sack lasts up to 170% longer.",
   "helddesc-fruitcooler": "Fruit placed in this cooler lasts up to 55% longer, or up to 235% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-seedbins": "Displays the nutrient type and ideal temperature for the seeds kept inside.",
 
@@ -119,7 +119,6 @@
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",
-  "The jar must be emptied before it can be picked up.": "The jar must be emptied before it can be picked up.",
   "The tun must be emptied before it can be picked up.": "The tun must be emptied before it can be picked up.",
   "Missing barrel.": "<font color=\"orange\">Missing barrel.</font>",
   "Missing large jar.": "<font color=\"orange\">Missing large jar.</font>",

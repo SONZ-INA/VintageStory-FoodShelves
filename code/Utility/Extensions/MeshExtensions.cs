@@ -110,4 +110,12 @@ public static class MeshExtensions {
 
         return new ContainerTextureSource(capi, item, firstTexture);
     }
+
+    /// <summary>
+    /// Returns the Fill Height of utilCube content height. Used for the GenPartialContentMesh() method.
+    /// </summary>
+    public static float GetFillHeight(float content, float capacity, float maxHeight) {
+        if (capacity <= 0) return 0;
+        return maxHeight * GameMath.Clamp(content / capacity, 0f, 1f);
+    }
 }

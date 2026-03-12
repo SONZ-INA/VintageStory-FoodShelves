@@ -52,10 +52,10 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override void InitMesh() {
         base.InitMesh();
 
-        contentMeshes[0] = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
-        contentMeshes[1] = GenLiquidyMesh(capi, inv[1], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
-        contentMeshes[2] = GenLiquidyMesh(capi, inv[2], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block)!;
-        contentMeshes[3] = GenLiquidyMesh(capi, inv[3], ShapeReferences.utilMeatFreezer, 9f)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block)!;
+        contentMeshes[0] = GenPartialContentMesh(capi, inv[0], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
+        contentMeshes[1] = GenPartialContentMesh(capi, inv[1], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
+        contentMeshes[2] = GenPartialContentMesh(capi, inv[2], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
+        contentMeshes[3] = GenPartialContentMesh(capi, inv[3], tfMatrices, 0.55f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block)!;
     }
 
     #region Interactions
@@ -177,7 +177,26 @@ public class BEMeatFreezer : BEBaseFSCooler {
         return true;
     }
 
-    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][] genTransformationMatrices() {
+        float[][] tfMatrices = new float[24][];
+        
+        float[] x = [  .1f, .22f,  .2f,  .14f, .23f, .57f, .2f, .15f, .6f,  .7f, .65f, .55f, .2f,  .5f,   .1f,   .1f,  .6f, .57f, .1f, .5f,  .1f,  .4f,  .6f, .58f ];
+        float[] y = [    0, .01f, .02f,  .03f, .04f, .05f,   0, .06f,   0, .01f,    0, .05f,   0, .01f,  .01f,  .02f, .03f, .04f,   0,   0, .15f, .14f, .15f, .14f ];
+        float[] z = [-.05f,  .4f,  .2f, -.07f, .61f,  .3f, .4f, .55f, .1f,  .4f, .62f, .65f, .7f,    0, .075f, .065f,  .6f,  .5f, .5f, .1f, -.1f, .05f,  .4f, .75f ];
+
+        float[] ry = [   0,  -30,    0,    90,   -5,    0,   0,   90,  30,   45,  -10,    5,   2,   90,     5,    -5,   90,    0,   0,   0,    2,   25,   55,   90 ];
+
+        for (int i = 0; i < tfMatrices.Length; i++) {
+            tfMatrices[i] = new Matrixf()
+                .Translate(0.5f, 0, 0.5f)
+                .RotateYDeg(block.Shape.rotateY + ry[i])
+                .Scale(0.5f, 0.5f, 0.5f)
+                .Translate(x[i] * 1.8f - 1.1f, y[i] * 1.8f + 0.5f, z[i] * 1.8f - 1.1f)
+                .Values;
+        }
+
+        return tfMatrices;
+    }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         base.GetBlockInfo(forPlayer, sb);

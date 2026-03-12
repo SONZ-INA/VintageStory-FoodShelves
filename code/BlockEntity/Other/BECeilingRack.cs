@@ -30,7 +30,6 @@ public class BECeilingRack : BEBaseFSContainer {
             if (!inv[0].Empty) return TryTake(byPlayer, blockSel);
             if (!inv[1].Empty) return TryTakeFromSlot(byPlayer, inv[1]);
 
-            (Api as ICoreClientAPI)?.TriggerIngameError(this, "canttake", Lang.Get("foodshelves:The jar must be emptied before it can be picked up."));
             return false;
         }
 
