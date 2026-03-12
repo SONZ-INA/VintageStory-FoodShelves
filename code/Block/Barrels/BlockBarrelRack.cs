@@ -82,7 +82,6 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
         world.BlockAccessor.SetBlock(0, pos);
     }
 
-    // Dynamic change of collision boxes, when there's a barrel inside
     public override Cuboidf[] GetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         if (Variant["type"] == "top") {
             if (blockAccessor.GetBlockEntity(pos) is BEBarrelRack be && be.Inventory.Empty) {

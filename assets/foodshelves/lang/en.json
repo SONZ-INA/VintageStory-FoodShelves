@@ -81,7 +81,7 @@
   "blockdesc-seedbins-text": "  -All seedbags.",
   "blockdesc-mushroombasket-text": "  -All mushrooms.",
   "blockdesc-fruitcooler-text": "  -All fruit.",
-  "blockdesc-ceilingrack-text": "  -Large Jar.",
+  "blockdesc-ceilingrack-text": "  -Large Jar. Can hold everything a Large Jar can.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 100% longer and cure 25% longer.",
@@ -115,11 +115,14 @@
   "Only seeds can be placed in these jars.": "Only seeds can be placed in these jars.",
   "Only mushrooms can be placed in this basket.": "Only mushrooms can be placed in this basket.",
   "Only fruit can be placed in this cooler.": "Only fruit can be placed in this cooler.",
+  "Only Large Jars can be placed on this rack.": "Only Large Jars can be placed on this rack.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",
+  "The jar must be emptied before it can be picked up.": "The jar must be emptied before it can be picked up.",
   "The tun must be emptied before it can be picked up.": "The tun must be emptied before it can be picked up.",
   "Missing barrel.": "<font color=\"orange\">Missing barrel.</font>",
+  "Missing large jar.": "<font color=\"orange\">Missing large jar.</font>",
   "Missing tun.": "<font color=\"orange\">Missing tun.</font>",
 
   "placefailure-requireceilingattachable": "Cannot place this block here. It has to be attached to the ceiling of an unchiseled block.",

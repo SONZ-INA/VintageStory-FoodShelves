@@ -1,14 +1,14 @@
 ﻿namespace FoodShelves;
 
 public class BaseFSContainer : BlockContainer, IContainedMeshSource {
-    public BlockHintType hintType = BlockHintType.None;
+    public BlockInteractionType interactionType = BlockInteractionType.None;
 
     protected string? WorldInteractionAttributeCheck = null;
     protected bool globalBlockBuffs = true;
     protected WorldInteraction[]? itemSlottableInteractions;
     
     private string? heldDescEntry;
-    private string hintTypeStr = "none";
+    private string interactionTypeStr = "none";
     private string placingMessage = "";
     private bool preventPlacing = false;
 
@@ -26,12 +26,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         globalBlockBuffs = api.World.Config.GetBool("FoodShelves.GlobalBlockBuffs", true);
         preventPlacing = Attributes["preventPlacing"].AsBool(false);
         placingMessage = Attributes["placingMessage"].AsString("");
-        hintTypeStr = Attributes["hintType"].AsString("none");
-        Enum.TryParse(hintTypeStr, true, out hintType);
+        interactionTypeStr = Attributes["interactionType"].AsString("none");
+        Enum.TryParse(interactionTypeStr, true, out interactionType);
         
         LoadVariantsCreative(api, this);
 
-        if (hintType == BlockHintType.None)
+        if (interactionType == BlockInteractionType.None)
             return;
 
         List<ItemStack> stackList = [];
@@ -44,8 +44,8 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         var stackArray = stackList.ToArray();
         
         itemSlottableInteractions = ObjectCacheUtil.GetOrCreate(api, Code.FirstCodePart(), () => {
-            return hintType switch {
-                BlockHintType.SingleSlot => new WorldInteraction[] {
+            return interactionType switch {
+                BlockInteractionType.SingleSlot => new WorldInteraction[] {
                         new() {
                             ActionLangCode = "blockhelp-groundstorage-add",
                             MouseButton = EnumMouseButton.Right,
@@ -56,7 +56,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
                             MouseButton = EnumMouseButton.Right
                         }
                     },
-                BlockHintType.Bulk => [
+                BlockInteractionType.Bulk => [
                         new() {
                             ActionLangCode = "blockhelp-groundstorage-add",
                             MouseButton = EnumMouseButton.Right,
@@ -141,10 +141,24 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
-        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
-            var stacks = bec.GetContentStacks();
-            foreach (var stack in stacks) {
-                world.SpawnItemEntity(stack, pos);
+        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) { // Split stacks
+            Vec3d dropPos = pos.ToVec3d().Add(0.5, 0.5, 0.5);
+
+            foreach (var stack in bec.GetContentStacks()) {
+                if (stack == null) continue;
+
+                int max = stack.Collectible.MaxStackSize;
+
+                while (stack.StackSize > 0) {
+                    int amount = Math.Min(max, stack.StackSize);
+
+                    ItemStack drop = stack.Clone();
+                    drop.StackSize = amount;
+
+                    stack.StackSize -= amount;
+
+                    world.SpawnItemEntity(drop, dropPos);
+                }
             }
 
             bec.Inventory.Clear();

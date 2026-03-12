@@ -53,7 +53,7 @@ public class BETunRack : BEBaseFSContainer {
         }
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         if (slot.Empty) { // Take barrel

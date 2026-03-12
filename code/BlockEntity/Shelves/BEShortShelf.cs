@@ -12,7 +12,7 @@ public class BEShortShelf : BEBaseFSContainer {
 
     public BEShortShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
 
         // Crock sealing interactions

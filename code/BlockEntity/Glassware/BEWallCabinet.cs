@@ -29,7 +29,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
         perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         switch ((SlotType)blockSel.SelectionBoxIndex) {
             case SlotType.Cabinet:
                 ToggleDoor(true, byPlayer);

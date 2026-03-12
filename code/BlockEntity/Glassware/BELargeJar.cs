@@ -22,7 +22,7 @@ public class BELargeJar : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilCeilingJar, 8.5f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilLargeJar, 8.5f);
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 

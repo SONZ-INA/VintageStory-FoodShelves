@@ -128,6 +128,9 @@ public static class InventoryExtensions {
     public static int TryPutIntoBulk(this ItemSlot source, IWorldAccessor world, ItemSlot target, int quantity = 1) {
         if (source.Empty) return 0;
 
+        if (!target.CanHold(source))
+            return 0;
+
         if (!target.Empty && !target.Itemstack.Collectible.Equals(source.Itemstack?.Collectible))
             return 0;
 

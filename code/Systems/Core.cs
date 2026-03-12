@@ -54,6 +54,8 @@ public class Core : ModSystem {
         api.RegisterBlockClass("FoodShelves.BlockFruitCooler", typeof(BlockFruitCooler));
         //api.RegisterBlockClass("FoodShelves.BlockGlassJar", typeof(BlockGlassJar));
 
+        api.RegisterBlockClass("FoodShelves.BlockCeilingRack", typeof(BlockCeilingRack));
+
         api.RegisterBlockClass("FoodShelves.BlockDoubleShelf", typeof(BlockDoubleShelf));
         // ------------------------
 

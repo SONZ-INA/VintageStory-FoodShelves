@@ -103,9 +103,9 @@
 				},
 				{
 					"name": "originPistons",
-					"from": [ 0.0, 7.0, 0.0 ],
-					"to": [ 0.0, 7.0, 0.0 ],
-					"rotationOrigin": [ -0.3, 7.9, 7.6 ],
+					"from": [ 0.0, 6.0, 0.0 ],
+					"to": [ 0.0, 6.0, 0.0 ],
+					"rotationOrigin": [ -0.3, 6.9, 7.6 ],
 					"rotationX": 8.0,
 					"faces": {
 					},
@@ -307,7 +307,7 @@
 				{
 					"frame": 0,
 					"elements": {
-						"originDoor": { "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 },
+						"originDoor": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0, "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 },
 						"originPistons": { "offsetX": 0.0, "offsetY": 1.0286, "offsetZ": -2.1238, "rotationX": 0.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				},
@@ -321,7 +321,7 @@
 				{
 					"frame": 29,
 					"elements": {
-						"originDoor": { "rotationX": -80.0, "rotationY": 0.0, "rotationZ": 0.0 },
+						"originDoor": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": -1.0, "rotationX": -80.0, "rotationY": 0.0, "rotationZ": 0.0 },
 						"originPistons": { "offsetX": 0.0, "offsetY": 2.4, "offsetZ": -2.3, "rotationX": 35.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				}

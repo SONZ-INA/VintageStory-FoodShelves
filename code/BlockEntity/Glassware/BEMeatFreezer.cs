@@ -60,7 +60,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
 
     #region Interactions
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
         
         SlotType aimedAt = (SlotType)blockSel.SelectionBoxIndex;

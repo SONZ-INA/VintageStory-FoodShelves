@@ -1,6 +1,6 @@
 {
   "code": "ceilingrack",
-  "class": "FoodShelves.BlockFSContainer",
+  "class": "FoodShelves.BlockCeilingRack",
   "entityclass": "FoodShelves.BECeilingRack",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
@@ -19,7 +19,8 @@
         }
       ]
     },
-    "hintType": "bulk"
+    "worldInteractionAttributeCheck": "fsLiquidyStuff",
+    "interactionType": "bulk"
   },
   "behaviors": [
     { "name": "Unstable", "properties": { "attachedToFaces": ["up"] } }
@@ -48,8 +49,11 @@
     "up": true,
     "all": false
   },
+  "guiTransform": {
+    "origin": { "x": 0.5, "y": 1, "z": 0.5 }
+  },
   "tpHandTransform": {
-    "translation": { "x": -0.9, "y": -1, "z": -0.55 },
+    "translation": { "x": -0.7, "y": -1, "z": -0.7 },
     "rotation": { "x": -2, "y": 25, "z": -78 },
     "scale": 0.5
   },

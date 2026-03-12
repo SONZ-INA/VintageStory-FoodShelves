@@ -21,7 +21,7 @@
       ]
     },
     "worldInteractionAttributeCheck": "fsLiquidyStuff",
-    "hintType": "bulk"
+    "interactionType": "bulk"
   },
   "behaviors": [
     { "name": "Unstable", "properties": { "attachedToFaces": ["down"] } }

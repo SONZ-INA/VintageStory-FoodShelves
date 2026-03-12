@@ -14,9 +14,10 @@ public static class ShapeReferences {
     public const string utilMushroomBasket = "foodshelves:shapes/util/mushroombasketrope.json";
 
     public const string utilFlourSack = "foodshelves:shapes/util/floursackcontentcube.json";
+    public const string utilCeilingRack = "foodshelves:shapes/util/ceilingrackrope.json";
 
     public const string utilGlassJar = "foodshelves:shapes/util/glassjarcontentcube.json";
-    public const string utilCeilingJar = "foodshelves:shapes/util/ceilingjarcontentcube.json";
+    public const string utilLargeJar = "foodshelves:shapes/util/largejarcontentcube.json";
     public const string utilMeatFreezer = "foodshelves:shapes/util/meatfreezercontentcube.json";
     public const string utilSeedBins = "foodshelves:shapes/util/seedbinscontentcube.json";
     public const string utilFruitCooler = "foodshelves:shapes/util/fruitcoolercontentcube.json";

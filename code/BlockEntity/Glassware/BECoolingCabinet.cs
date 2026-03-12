@@ -52,7 +52,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
     #region Interactions
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;

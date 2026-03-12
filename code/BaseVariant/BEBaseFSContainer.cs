@@ -1,4 +1,4 @@
-﻿using Vintagestory.Client.NoObf;
+﻿using Vintagestory.API.Server;
 
 namespace FoodShelves;
 
@@ -77,11 +77,11 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         return globalPerishMultiplier * (globalBlockBuffs ? PerishMultiplier : 1);
     }
 
-    public virtual bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public virtual bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;
-        bool isBulk = block.hintType == BlockHintType.Bulk;
+        bool isBulk = block.interactionType == BlockInteractionType.Bulk;
 
         bool placeBulk = isBulk && shift;
         bool placeSingle = !isBulk && !shift && !slot.Empty;
@@ -89,7 +89,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         if (placeBulk || placeSingle) {
             if (slot.Empty) return false;
 
-            if (slot.CanStoreInSlot(AttributeCheck)) {
+            if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck)) {
                 if (TryPut(byPlayer, slot, blockSel)) {
                     return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
@@ -161,6 +161,25 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
                 InitMesh();
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    protected virtual bool TryTakeFromSlot(IPlayer byPlayer, ItemSlot slot, int quantity = 1) {
+        if (!slot.Empty) {
+            ItemStack stack = slot.TakeOut(quantity);
+
+            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+                this.HandlePlacementEffects(stack, byPlayer);
+            }
+
+            if (stack.StackSize > 0) {
+                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+            }
+
+            InitMesh();
+            return true;
         }
 
         return false;

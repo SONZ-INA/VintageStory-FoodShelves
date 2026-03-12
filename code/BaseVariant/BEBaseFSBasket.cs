@@ -19,6 +19,26 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
         IsCeilingAttached = attachingBlock.CanAttachBlockAt(Api.World.BlockAccessor, Block, Pos, BlockFacing.DOWN);
     }
 
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
+        ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
+
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+
+        if (!shift && slot.Empty) return false; // Take basket
+
+        if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck)) {
+            if (TryPut(byPlayer, slot, blockSel)) {
+                return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+            }
+        }
+
+        if (CantPlaceMessage != "") {
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+        }
+
+        return TryTake(byPlayer, blockSel);
+    }
+
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
         int moved = 0;
 
