@@ -165,11 +165,11 @@ public class BECoolingCabinet : BEBaseFSCooler {
         ItemStack? stack = slot.Itemstack;
         startIndex *= ItemsPerSegment;
 
-        if (!CanInsertIntoSegment(inv[startIndex], stack))
-            return false;
-
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
+
+            if (!CanInsertIntoSegment(this, stack, currentIndex, 4))
+                return false;
             
             if (currentIndex == startIndex + 4 && stack?.IsSmallItem() == false) 
                 return false;

@@ -104,16 +104,31 @@ public static class CheckExtensions {
 
     /// <summary>
     /// Checks if the stack can be placed in the slot. Used for containers that have varying slot sizes.
+    /// slotCount is used for calculating if the 'medium' item can be placed inside, if the inventory is half full.
     /// </summary>
-    public static bool CanInsertIntoSegment(ItemSlot firstSlot, ItemStack? stack) {
+    public static bool CanInsertIntoSegment(BEBaseFSContainer be, ItemStack? stack, int currIndex, int maxSlotSize = -1) {
+        ItemSlot firstSlot = be.Inventory[currIndex];
         if (firstSlot.Empty) return true;
 
         ItemStack? firstItem = firstSlot.Itemstack;
 
         if (!firstItem.BelongsToSameGroupAs(stack)) return false;
         if (stack?.IsLargeItem() == true || firstItem?.IsLargeItem() == true) return false;
-        if (firstItem?.IsMediumItem() != stack?.IsMediumItem()) return false;
         if (firstItem?.IsSmallItem() != stack?.IsSmallItem()) return false;
+        if (firstItem?.IsMediumItem() != stack?.IsMediumItem()) return false;
+
+        // Medium item limit
+        if (firstItem?.IsMediumItem() == true && stack?.IsMediumItem() == true) {
+            int segmentIndex = currIndex / be.ItemsPerSegment;
+            int segmentStart = segmentIndex * be.ItemsPerSegment;
+
+            int slotInSegment = currIndex - segmentStart;
+            int limit = maxSlotSize == -1
+                ? be.ItemsPerSegment / 2 - 1
+                : maxSlotSize / 2 - 1;
+
+            if (slotInSegment >= limit) return false;
+        }
 
         return true;
     }
