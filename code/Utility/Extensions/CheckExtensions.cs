@@ -29,13 +29,24 @@ public static class CheckExtensions {
         if (collectible == null) return false;
 
         if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
-        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
         if (stack.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
-        if (stack.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
 
         if (collectible.Code.Path.StartsWith("claypot-") == true) return true;
         
         if (collectible is BaseFSBasket) return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// Determines if the item is considered a medium item. Primarily used for 'Halves' IShelvable type.
+    /// </summary>
+    public static bool IsMediumItem(this ItemStack stack) {
+        var collectible = stack.Collectible;
+        if (collectible == null) return false;
+
+        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
+        if (stack.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
 
         return false;
     }
@@ -61,6 +72,17 @@ public static class CheckExtensions {
     }
 
     /// <summary>
+    /// Determines if the item is considered a standard item - not Large, not Medium, not Small.
+    /// </summary>
+    public static bool IsStandardItem(this ItemStack stack) {
+        if (stack.IsLargeItem()) return false;
+        if (stack.IsMediumItem()) return false;
+        if (stack.IsSmallItem()) return false;
+
+        return true;
+    }
+
+    /// <summary>
     /// Checks if two item stacks can coexist in the same slot (belong to a same group).<br/>
     /// Returns true unless one of them belongs to a group, in which case their groups must match.
     /// </summary>
@@ -78,5 +100,21 @@ public static class CheckExtensions {
             return true;
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks if the stack can be placed in the slot. Used for containers that have varying slot sizes.
+    /// </summary>
+    public static bool CanInsertIntoSegment(ItemSlot firstSlot, ItemStack? stack) {
+        if (firstSlot.Empty) return true;
+
+        ItemStack? firstItem = firstSlot.Itemstack;
+
+        if (!firstItem.BelongsToSameGroupAs(stack)) return false;
+        if (stack?.IsLargeItem() == true || firstItem?.IsLargeItem() == true) return false;
+        if (firstItem?.IsMediumItem() != stack?.IsMediumItem()) return false;
+        if (firstItem?.IsSmallItem() != stack?.IsSmallItem()) return false;
+
+        return true;
     }
 }

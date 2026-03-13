@@ -1,6 +1,4 @@
-﻿using Vintagestory.API.Server;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
     protected float globalPerishMultiplier = 1f;
@@ -11,8 +9,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected MeshData? blockMesh;
 
     public override InventoryBase Inventory => inv;
-    public override string InventoryClassName => Block?.Code.FirstCodePart() ?? "-temp-";
-    public override string AttributeTransformCode => "on" + Block?.Code.FirstCodePart() ?? "-temp-" + "Transform";
+    public override string InventoryClassName => (Block?.Code.FirstCodePart() ?? "-temp-");
+    public override string AttributeTransformCode => "on" + (Block?.Code.FirstCodePart() ?? "-temp-") + "Transform";
 
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
     public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
@@ -31,6 +29,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public virtual int AdditionalSlots { get; set; } = 0;
     public virtual int SlotCount => ShelfCount * SegmentsPerShelf * ItemsPerSegment + AdditionalSlots;
 
+    private bool isBulk = false;
+
     public override void Initialize(ICoreAPI api) {
         block ??= (api.World.BlockAccessor.GetBlock(Pos) as BaseFSContainer)!;
         globalPerishMultiplier = api.World.Config.GetFloat("FoodShelves.GlobalPerishMultiplier", 1f);
@@ -40,6 +40,14 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
         if (blockMesh == null) InitMesh();
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+
+        foreach (var inv in Inventory) {
+            ItemSlotFSUniversal? fsSlot = inv as ItemSlotFSUniversal;
+            if (fsSlot?.isBulk == true) {
+                isBulk = true;
+                break;
+            }
+        }
     }
 
     protected virtual void InitMesh() {
@@ -81,7 +89,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;
-        bool isBulk = block.interactionType == BlockInteractionType.Bulk;
 
         bool placeBulk = isBulk && shift;
         bool placeSingle = !isBulk && !shift && !slot.Empty;
@@ -120,7 +127,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             if (target.Empty || stack.Collectible == slot.Itemstack!.Collectible) {
                 ItemSlotFSUniversal fsSlot = (inv[idx] as ItemSlotFSUniversal)!;
                 int availableSpace = fsSlot.GetRemainingSlotSpace(slot.Itemstack!);
-                if (availableSpace == 0) return false;
+                if (availableSpace == 0) continue;
 
                 moved = slot.TryPutIntoBulk(Api.World, inv[idx], ctrl ? availableSpace : 1);
 

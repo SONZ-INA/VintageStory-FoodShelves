@@ -1,19 +1,20 @@
 ﻿namespace FoodShelves;
 
 public class ItemSlotFSUniversal : ItemSlot {
+    public readonly bool isBulk;
+
     private readonly string attributeCheck;
     private readonly int stackCountLimit;
-    private readonly bool bulk;
 
-    public ItemSlotFSUniversal(InventoryBase inventory, string attributeCheck, int stackCountLimit = 1, bool bulk = false) : base(inventory) {
+    public ItemSlotFSUniversal(InventoryBase inventory, string attributeCheck, int stackCountLimit = 1, bool isBulk = false) : base(inventory) {
         this.inventory = inventory;
         this.attributeCheck = attributeCheck;
         this.stackCountLimit = stackCountLimit;
-        this.bulk = bulk;
+        this.isBulk = isBulk;
     }
 
     public override int GetRemainingSlotSpace(ItemStack forItemstack) {
-        int capacity = bulk
+        int capacity = isBulk
             ? forItemstack.Collectible.MaxStackSize * stackCountLimit
             : stackCountLimit;
 

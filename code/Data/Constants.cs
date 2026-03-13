@@ -11,7 +11,7 @@ public static class Constants {
         East = 270,
     }
 
-    public enum BlockInteractionType {
+    public enum BlockHintType {
         None,
         SingleSlot,
         Bulk

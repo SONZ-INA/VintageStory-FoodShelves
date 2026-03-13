@@ -24,19 +24,26 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
 
         bool shift = byPlayer.Entity.Controls.ShiftKey;
 
-        if (!shift && slot.Empty) return false; // Take basket
+        if (!shift && slot.Empty) // Take basket
+            return false;
 
-        if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck)) {
-            if (TryPut(byPlayer, slot, blockSel)) {
-                return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+        if (shift) {
+            if (!slot.Empty) {
+                if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck) && TryPut(byPlayer, slot, blockSel)) {
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+                }
+
+                if (CantPlaceMessage != "") {
+                    (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+                }
+
+                return true;
             }
+
+            return TryTake(byPlayer, blockSel);
         }
 
-        if (CantPlaceMessage != "") {
-            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
-        }
-
-        return TryTake(byPlayer, blockSel);
+        return false;
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
@@ -65,7 +72,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
                 }
                 else {
                     if (inv[i].Itemstack?.Item?.Code == stack.Item?.Code || inv[i].Itemstack?.Block?.Code == stack.Block?.Code) {
-                        inv[i].TakeOut(1); // To remove the item from the basket.
+                        inv[i].TakeOut(1); // To remove the item from the basket
                         stack.StackSize += 1;
                     }
                 }

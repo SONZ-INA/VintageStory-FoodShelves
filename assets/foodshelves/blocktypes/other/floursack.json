@@ -22,7 +22,7 @@
         }
       ]
     },
-    "interactionType": "bulk"
+    "hintType": "bulk"
   },
   "behaviors": [
     { "name": "UnstableFalling" },
