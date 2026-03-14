@@ -1,6 +1,6 @@
 ﻿namespace FoodShelves;
 
-public class BlockWallCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
+public class BlockWallCabinet : BaseFSContainer {
     private WorldInteraction? openCloseDoor;
 
     private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-shelves 4-door, 5-cabinet)
@@ -37,20 +37,5 @@ public class BlockWallCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         }
 
         return [Skip, Skip, Skip, Skip, Skip, boxes[5].Clone()];
-    }
-
-    public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
-        BEWallCabinet? be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
-        if (be?.DoorOpen == false) return [];
-        
-        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
-        var doorSelBox = boxes[4].Clone();
-        doorSelBox.MBNormalizeSelectionBox(offset);
-
-        return [Skip, Skip, Skip, Skip, doorSelBox, Skip];
-    }
-
-    public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
-        return [];
     }
 }

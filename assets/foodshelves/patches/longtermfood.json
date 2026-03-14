@@ -52,7 +52,7 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
-    "file": "foodshelves:config/restrictions/shelves/eggbasket.json",
+    "file": "foodshelves:config/restrictions/baskets/eggbasket.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:egg-glazed",
@@ -62,7 +62,7 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
-    "file": "foodshelves:config/restrictions/shelves/eggbasket.json",
+    "file": "foodshelves:config/restrictions/baskets/eggbasket.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:egg-glazed",
@@ -91,7 +91,12 @@
     "value": "packedpemmican",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
-
+  {
+    "file": "pemmican:itemtypes/food/nutribar-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
 
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",

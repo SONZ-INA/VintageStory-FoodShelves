@@ -14,12 +14,14 @@ public class TransformationData(BEBaseFSContainer be) {
     public float x, y, z;
     public float offsetX, offsetY, offsetZ;
     public float rotX, rotY, rotZ;
+    public float offsetRotX, offsetRotY, offsetRotZ;
     public float scaleX, scaleY, scaleZ;
 
     public void Reset() {
         x = y = z = 0;
         offsetX = offsetY = offsetZ = 0;
         rotX = rotY = rotZ = 0;
+        offsetRotX = offsetRotY = offsetRotZ = 0;
         scaleX = scaleY = scaleZ = 1;
     }
 
@@ -33,7 +35,10 @@ public class TransformationData(BEBaseFSContainer be) {
             .RotateYDeg((be.Block?.Shape.rotateY ?? 0) + rotY)
             .RotateZDeg(rotZ)
             .Scale(scaleX, scaleY, scaleZ)
-            .Translate(x - 0.5f, y, z - 0.55f)
+            .Translate(x - 0.5f, y, z - 0.5f)
+            .RotateXDeg(offsetRotX)
+            .RotateYDeg(offsetRotY)
+            .RotateZDeg(offsetRotZ)
             .Values;
     }
 

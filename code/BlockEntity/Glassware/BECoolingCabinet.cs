@@ -158,27 +158,31 @@ public class BECoolingCabinet : BEBaseFSCooler {
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex;
-        if (startIndex > (int)SlotType.Segments) 
-            return false; // If it's cabinet or drawer selection box, return
+        int segmentIndex = blockSel.SelectionBoxIndex;
+        if (segmentIndex > (int)SlotType.Segments)
+            return false;
 
-        ItemStack? stack = slot.Itemstack;
-        startIndex *= ItemsPerSegment;
+        int startIndex = segmentIndex * ItemsPerSegment;
+        ItemStack stack = slot.Itemstack!;
 
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
+        if (!CanInsertIntoSegment(inv[startIndex].Itemstack, stack))
+            return false;
 
-            if (!CanInsertIntoSegment(this, stack, currentIndex, 4))
-                return false;
-            
-            if (currentIndex == startIndex + 4 && stack?.IsSmallItem() == false) 
-                return false;
+        int limit = this.GetSegmentLimit(stack);
+        int count = this.CountItemsInSegment(startIndex);
 
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
+        if (count >= limit)
+            return false;
+
+        int currentIndex = startIndex + count;
+
+        if (inv[currentIndex].Empty) {
+            int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
+
+            if (moved > 0) {
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
                 MarkDirty();
-                return moved > 0;
+                return true;
             }
         }
 
@@ -255,67 +259,15 @@ public class BECoolingCabinet : BEBaseFSCooler {
     #endregion
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
+        string[] exceptions = ["coolingCabinet"];
 
-        for (int shelf = 0; shelf < ShelfCount; shelf++) {
-            for (int segment = 0; segment < SegmentsPerShelf; segment++) {
-                for (int item = 0; item < ItemsPerSegment; item++) {
-                    int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
-                    if (inv[index].Empty) {
-                        tfMatrices[index] = new Matrixf().Values;
-                        continue;
-                    }
+        return TransformationGenerator.Generate(this, td => {
+            td.x = td.segment * 0.66f;
+            td.y = td.shelf * 0.4921875f + 0.66f;
 
-                    var itemStack = inv[index].Itemstack;
-
-                    float x, y = shelf * 0.4921875f, z;
-                    float scale = 0.95f;
-
-                    if (itemStack?.IsLargeItem() == true) {
-                        x = segment * 0.65f;
-                        z = item * 0.65f;
-                    }
-                    else if (itemStack?.IsSmallItem() == false) {
-                        x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
-                        z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
-                    }
-                    else {
-                        x = segment * 0.763f + (item % 4) * 0.19f - 0.314f;
-                        y = y * 1.16f + (item / 8) * 0.10f + 0.103f;
-                        z = ((item / 4) % 2) * 0.45f - 0.25f;
-                        scale = 0.82f;
-                    }
-
-                    // Exceptions I have to hardcode -----
-                    if (itemStack?.IsLargeItem() == false) {
-                        string? itemPath = itemStack?.Collectible.Code.Path;
-
-                        if (itemPath?.Contains("pie") == true || itemPath?.Contains("cheese") == true) {
-                            x += 0.15f;
-                            z += 0.1f;
-                        }
-                    }
-
-                    string[] collectibleCodes = ["pemmican-pack", "chips-pack", "mushroom-pack"];
-                    if (collectibleCodes.Contains(itemStack?.Collectible.Code.Path)) {
-                        y += item / 2 * 0.13f;
-                        z = -0.18f;
-                    }
-                    // -----------------------------------
-
-                    tfMatrices[index] = new Matrixf()
-                        .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block?.Shape.rotateY ?? 0)
-                        .Scale(scale, scale, scale)
-                        .Translate(x - 0.625f, y + 0.66f, z - 0.5325f)
-                        .Values;
-                }
-            }
-        }
-
-        tfMatrices[CutIceSlot] = new Matrixf().Scale(0.01f, 0.01f, 0.01f).Values; // Hide original cut ice shape, can't bother to custom mesh it out
-
-        return tfMatrices;
+            td.offsetX = -0.125f;
+            td.scaleX = td.scaleY = td.scaleZ = 0.95f;
+        }, exceptions);
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {

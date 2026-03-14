@@ -88,7 +88,12 @@ public static class InfoDisplay {
             else if (stack.Collectible is BaseFSBasket) {
                 sb.AppendLine(stack.GetName());
                 ItemStack[] contents = GetContents(world, stack);
-                float perishMul = inv.GetTransitionSpeedMul(EnumTransitionType.Perish, new ItemSlot(inv).Itemstack);
+
+                ItemStack? transStack = new ItemSlot(inv).Itemstack;
+                float perishMul = transStack != null 
+                    ? inv.GetTransitionSpeedMul(EnumTransitionType.Perish, transStack)
+                    : 1;
+
                 sb.AppendLine("<font color=\"#989898\">" + PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world, perishMul) + "</font>");
             }
             else {

@@ -16,15 +16,7 @@
     }
   },
   "behaviors": [
-    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } },
-    { "name": "Multiblock",
-      "propertiesByType": {
-        "*-north": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
-        "*-east": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 1, "y": 0, "z": 0 } },
-        "*-south": { "sizex": 1, "sizey": 1, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } },
-        "*-west": { "sizex": 2, "sizey": 1, "sizez": 1, "cposition": { "x": 0, "y": 0, "z": 0 } }
-      }
-    }
+    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
     "base": "block/glassware/wallcabinet",

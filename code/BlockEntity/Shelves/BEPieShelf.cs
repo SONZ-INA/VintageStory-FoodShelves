@@ -20,7 +20,7 @@ public class BEPieShelf : BEBaseFSContainer {
         for (int i = 0; i < ItemsPerSegment; i++) {
             int currentIndex = startIndex + i;
 
-            if (!CanInsertIntoSegment(this, stack, currentIndex))
+            if (!CanInsertIntoSegment(inv[currentIndex].Itemstack, stack))
                 return false;
 
             if (currentIndex == startIndex + 4 && stack?.IsSmallItem() == false)
@@ -42,6 +42,7 @@ public class BEPieShelf : BEBaseFSContainer {
 
         return TransformationGenerator.Generate(this, td => {
             td.y = td.shelf * 0.313f + 0.0525f;
+            td.z = -0.05f;
             td.offsetX = 0.025f;
             td.rotY = 45f;
         }, exceptions);

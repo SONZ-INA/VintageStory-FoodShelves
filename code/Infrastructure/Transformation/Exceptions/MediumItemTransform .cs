@@ -8,7 +8,7 @@ public class MediumItemTransform : ITransformationException {
 
             td.offsetX = 0;
             td.offsetZ = -0.05f;
-            
+
             td.rotY = td.item * 180f + 45f;
         }
     }
