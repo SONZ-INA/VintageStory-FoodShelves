@@ -1,30 +1,16 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 /// <summary>
-/// Helper class to generate the transformation matrices for the BlockEntity's contents.
+/// A static orchestrator that iterates through a block entity's inventory to build a flat array of transformation matrices. <br />
+/// It separates concerns by first calculating the "grid" position (shelf/segment) via a delegate, then applying item-specific logic fetched from the <see cref="LayoutRegistry"/>.
 /// </summary>
 public static class TransformationGenerator {
-    // Registry of all exceptions
-    private static readonly Dictionary<string, ITransformationException> AllExceptions = new() {
-        ["medium"] = new MediumItemTransform(),
-        ["standard"] = new StandardItemTransform(),
-        ["coolingCabinet"] = new CoolingCabinetTransform(),
-    };
-
     /// <summary>
-    /// Generates all transformation matrices for a BEBaseFSContainer.
+    /// Generates all transformation matrices for a <see cref="BEBaseFSContainer"/>.
     /// </summary>
-    public static float[][] Generate(BEBaseFSContainer be, Action<TransformationData> accessor, params string[] applyExceptions) {
+    public static float[][] Generate(BEBaseFSContainer be, Action<TransformationData> accessor) {
         float[][] tfMatrices = new float[be.SlotCount][];
         TransformationData td = new(be);
-
-        // Build the list of exceptions to apply
-        var exceptionsToApply = applyExceptions
-            .Where(name => AllExceptions.ContainsKey(name))
-            .Select(name => AllExceptions[name])
-            .ToList();
 
         for (int shelf = 0; shelf < be.ShelfCount; shelf++) {
             for (int segment = 0; segment < be.SegmentsPerShelf; segment++) {
@@ -44,8 +30,8 @@ public static class TransformationGenerator {
                     td.Reset();
                     accessor(td);
 
-                    foreach (var ex in exceptionsToApply)
-                        ex.Apply(be, td);
+                    var itemLayout = LayoutRegistry.GetLayout(be.inv[index].Itemstack);
+                    itemLayout?.Apply(td, be.inv[index].Itemstack);
 
                     tfMatrices[index] = td.BuildMatrix();
                 }
