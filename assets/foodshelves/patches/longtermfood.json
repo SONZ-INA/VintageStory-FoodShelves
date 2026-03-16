@@ -31,7 +31,8 @@
       "pemmican:pemmican-bar",
       "pemmican:pemmican-salt",
       "pemmican:pemmican-cooked",
-      "pemmican:mushroompatebar"
+      "pemmican:mushroompatebar",
+      "pemmican:nutribar-general"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },

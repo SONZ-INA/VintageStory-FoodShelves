@@ -2,7 +2,7 @@
 
 public class CheeseLayout : ICollectibleLayout {
     public void Apply(TransformationData td, ItemStack? stack) {
-        td.offsetOriginZ = -0.025f;
+        td.offsetOriginZ = -0.015f;
 
         if (stack?.IsMediumItem() == true) {
             td.offsetZ = -0.05f;

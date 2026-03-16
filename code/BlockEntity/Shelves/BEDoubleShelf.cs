@@ -93,6 +93,6 @@ public class BEDoubleShelf : BEBaseFSContainer {
             td.x = td.segment * 0.625f - 0.125f;
             td.y = 0.395f;
             td.scaleX = td.scaleY = td.scaleZ = 0.95f;
-        });
+        }, true);
     }
 }

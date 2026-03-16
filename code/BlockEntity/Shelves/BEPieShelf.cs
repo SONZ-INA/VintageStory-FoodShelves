@@ -43,6 +43,6 @@ public class BEPieShelf : BEBaseFSContainer {
             td.y = td.shelf * 0.313f + 0.0525f;
             td.z = -0.05f;
             td.rotY = 45;
-        });
+        }, true);
     }
 }

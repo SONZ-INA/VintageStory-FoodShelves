@@ -75,7 +75,12 @@ public class BECeilingRack : BEBaseFSContainer {
     }
 
     protected override float[][]? genTransformationMatrices() {
-        return [new Matrixf().Scale(0.01f, 0.01f, 0.01f).Values, new Matrixf().Values]; // Can't bother to mesh out the original contents
+        return TransformationGenerator.Generate(this, td => {
+            // Hide original contents, can't bother to mesh it out
+            if (td.index == 0) {
+                td.hidden = true;
+            }
+        });
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {

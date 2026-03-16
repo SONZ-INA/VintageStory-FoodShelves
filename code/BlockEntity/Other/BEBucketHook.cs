@@ -9,15 +9,11 @@ public class BEBucketHook : BEBaseFSContainer {
     public BEBucketHook() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        tfMatrices[0] = new Matrixf()
-            .Translate(0.5f, 0, 0.5f)
-            .RotateYDeg(block?.Shape.rotateY ?? 0)
-            .Translate(-.5f, .2f, -.54f)
-            .Values;
-
-        return tfMatrices;
+        return TransformationGenerator.Generate(this, td => {
+            td.x = 0.15f;
+            td.y = 0.2f;
+            td.z = 0.175f;
+        });
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {

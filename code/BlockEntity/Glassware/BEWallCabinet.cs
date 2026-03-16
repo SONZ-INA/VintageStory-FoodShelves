@@ -9,7 +9,8 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     public override string AttributeCheck => "shelvable";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
-    public override int SlotCount => 4;
+    public override int ShelfCount => 2;
+    public override int SegmentsPerShelf => 2;
 
     [TreeSerializable(false)] public bool DoorOpen { get; set; }
     
@@ -97,21 +98,10 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     #endregion
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int index = 0; index < SlotCount; index++) {
-            float x = index % 2 == 0 ? 0.275f : 0.725f;
-            float y = index >= 2 ? 0.5625f : 0.0625f;
-            float z = 0.25f;
-
-            tfMatrices[index] = new Matrixf()
-                .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block?.Shape.rotateY ?? 0)
-                .Translate(x - 0.5f, y, z - 0.5f)
-                .Translate(-0.5f, 0, -0.5f)
-                .Values;
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.Generate(this, td => {
+            td.x = td.segment * 0.43f - 0.215f;
+            td.y = td.shelf * 0.5f + 0.065f;
+            td.z = -0.2f;
+        });
     }
 }

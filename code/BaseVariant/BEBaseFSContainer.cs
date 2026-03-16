@@ -138,7 +138,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
         if (moved > 0) {
             InitMesh();
-            MarkDirty(true);
+            MarkDirty();
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             return true;
         }

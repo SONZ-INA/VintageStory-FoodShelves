@@ -260,12 +260,11 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
     protected override float[][] genTransformationMatrices() {
         return TransformationGenerator.Generate(this, td => {
-            td.x = td.segment * 0.66f;
-            td.y = td.shelf * 0.4921875f + 0.66f;
+            td.x = td.segment * 0.625f - 0.125f;
+            td.y = td.shelf * 0.47f + 0.625f;
 
-            td.offsetX = -0.125f;
             td.scaleX = td.scaleY = td.scaleZ = 0.95f;
-        });
+        }, true);
     }
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {

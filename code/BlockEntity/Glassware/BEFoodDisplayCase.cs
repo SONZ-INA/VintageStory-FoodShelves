@@ -60,30 +60,12 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
+        return TransformationGenerator.Generate(this, td => {
+            td.y = td.shelf * 0.3825f + 0.25f;
+            td.z = (td.item / 2 == 0 ? -0.05f : 0.05f) + 0.05f;
 
-        for (int i = 0; i < SlotCount; i++) {
-            if ((i < ItemsPerSegment && inv[i].Itemstack?.IsLargeItem() == true) || (i >= ItemsPerSegment && inv[i].Itemstack?.IsLargeItem() == true)) {
-                tfMatrices[i] = new Matrixf()
-                    .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block?.Shape.rotateY ?? 0)
-                    .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
-                    .Translate(-0.5f, i % (ItemsPerSegment - 1) * 0.3725f + 0.24f, i >= ItemsPerSegment ? -0.65f : -0.5f)
-                    .Values;
-            }
-            else {
-                float x = i % (ItemsPerSegment / 2) == 0 ? -0.18f : 0.18f;
-                float z = i / (ItemsPerSegment / 2) % 2 == 0 ? -0.18f : 0.18f;
-
-                tfMatrices[i] = new Matrixf()
-                    .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block?.Shape.rotateY ?? 0)
-                    .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
-                    .Translate(x - 0.5f, i / ItemsPerSegment * 0.3725f + 0.24f, z - (i >= ItemsPerSegment ? 0.65f : 0.5f))
-                    .Values;
-            }
-        }
-
-        return tfMatrices;
+            td.rotX = td.shelf * 15;
+            td.y += td.shelf * td.item / 2 * -0.025f;
+        }, true);
     }
 }

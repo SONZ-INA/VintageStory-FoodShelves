@@ -19,6 +19,8 @@ public class TransformationData(BEBaseFSContainer be) {
     public float scaleX, scaleY, scaleZ;
     public float offsetOriginX, offsetOriginY, offsetOriginZ;
 
+    public bool hidden;
+
     public void Reset() {
         x = y = z = 0;
         offsetX = offsetY = offsetZ = 0;
@@ -26,10 +28,15 @@ public class TransformationData(BEBaseFSContainer be) {
         offsetRotX = offsetRotY = offsetRotZ = 0;
         scaleX = scaleY = scaleZ = 1;
         offsetOriginX = offsetOriginY = offsetOriginZ = 0;
+        hidden = false;
     }
 
     public float[] BuildMatrix() {
         Matrixf mat = new();
+
+        if (hidden) {
+            return mat.Scale(0.01f, 0.01f, 0.01f).Values;
+        }
 
         mat.Translate(0.5f, 0, 0.5f);
 
@@ -39,7 +46,7 @@ public class TransformationData(BEBaseFSContainer be) {
 
         // Handle segment locations
         mat.Translate(x, y, z);
-        mat.RotateYDeg(rotY);
+        mat.Rotate(rotX * GameMath.DEG2RAD, rotY * GameMath.DEG2RAD, rotZ * GameMath.DEG2RAD);
 
         // Handle item offsets
         mat.Translate(offsetX, offsetY, offsetZ);

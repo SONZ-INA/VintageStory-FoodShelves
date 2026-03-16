@@ -5,7 +5,7 @@ public class BETableWShelf : BEBaseFSContainer {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     protected override bool RipeningSpot => true;
 
-    public override int SlotCount => 2;
+    public override int ItemsPerSegment => 2;
 
     private enum TableWShelfPart {
         Table = 1,
@@ -54,27 +54,9 @@ public class BETableWShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int index = 0; index < SlotCount; index++) {
-            float scaleValue = 1f;
-            float offset = 0;
-
-            // Using vanilla shelf transformations, the pot is too big so need to adjust it
-            ItemSlot slot = inv[index];
-            if (slot.Itemstack?.Collectible?.Code.Path.StartsWith("claypot-") == true) {
-                scaleValue = 0.85f;
-                offset = 0.03f;
-            }
-
-            tfMatrices[index] = new Matrixf()
-                .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block?.Shape.rotateY ?? 0)
-                .Scale(scaleValue, scaleValue, scaleValue)
-                .Translate(- 0.5f, 0.185f + offset, index * 0.5f - 0.75f)
-                .Values;
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.Generate(this, td => {
+            td.z = td.item * 0.4f - 0.175f;
+            td.y = 0.185f;
+        });
     }
 }

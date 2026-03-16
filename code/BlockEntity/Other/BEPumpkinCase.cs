@@ -12,14 +12,10 @@ public class BEPumpkinCase : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        tfMatrices[0] = new Matrixf()
-            .Translate(0.5f, 0, 0.5f)
-            .RotateYDeg(block?.Shape.rotateY ?? 0)
-            .Translate(-0.5f, 0.06f, -0.5f)
-            .Values;
-
-        return tfMatrices;
+        return TransformationGenerator.Generate(this, td => {
+            td.x = 0.155f;
+            td.y = 0.06f;
+            td.z = 0.205f;
+        });
     }
 }

@@ -8,7 +8,7 @@ public static class TransformationGenerator {
     /// <summary>
     /// Generates all transformation matrices for a <see cref="BEBaseFSContainer"/>.
     /// </summary>
-    public static float[][] Generate(BEBaseFSContainer be, Action<TransformationData> accessor) {
+    public static float[][] Generate(BEBaseFSContainer be, Action<TransformationData> accessor, bool useLayouts = false) {
         float[][] tfMatrices = new float[be.SlotCount][];
         TransformationData td = new(be);
 
@@ -30,8 +30,10 @@ public static class TransformationGenerator {
                     td.Reset();
                     accessor(td);
 
-                    var itemLayout = LayoutRegistry.GetLayout(be.inv[index].Itemstack);
-                    itemLayout?.Apply(td, be.inv[index].Itemstack);
+                    if (useLayouts) {
+                        var itemLayout = LayoutRegistry.GetLayout(be.inv[index].Itemstack);
+                        itemLayout?.Apply(td, be.inv[index].Itemstack);
+                    }
 
                     tfMatrices[index] = td.BuildMatrix();
                 }

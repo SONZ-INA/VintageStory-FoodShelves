@@ -22,26 +22,10 @@ public class BEBreadShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int shelf = 0; shelf < ShelfCount; shelf++) {
-            for (int segment = 0; segment < SegmentsPerShelf; segment++) {
-                for (int item = 0; item < ItemsPerSegment; item++) {
-                    int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
-
-                    float x = segment * 0.29f;
-                    float y = shelf * 0.25f;
-                    float z = item * 0.4f;
-
-                    tfMatrices[index] = new Matrixf()
-                        .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block?.Shape.rotateY ?? 0)
-                        .Translate(x - 0.79f, y + 0.06f, z - 0.75f)
-                        .Values;
-                }
-            }
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.Generate(this, td => {
+            td.x = td.segment * 0.3f - 0.3f;
+            td.y = td.shelf * 0.25f + 0.0625f;
+            td.z = td.item * 0.375f - 0.225f;
+        });
     }
 }

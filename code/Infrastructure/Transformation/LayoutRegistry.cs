@@ -5,6 +5,9 @@
 /// </summary>
 public static class LayoutRegistry {
     private static readonly ICollectibleLayout Default = new DefaultLayout();
+    private static readonly ICollectibleLayout Large = new LargeLayout();
+    private static readonly ICollectibleLayout Small = new SmallLayout();
+
     private static readonly List<LayoutRegistration> Registrations = [];
 
     private class LayoutRegistration(ICollectibleLayout layout, string[] wildcards) {
@@ -25,8 +28,10 @@ public static class LayoutRegistry {
     public static ICollectibleLayout GetLayout(ItemStack? stack) {
         if (stack == null) return Default;
 
-        AssetLocation code = stack.Collectible.Code;
+        if (stack.IsLargeItem()) return Large;
+        if (stack.IsSmallItem()) return Small;
 
+        AssetLocation code = stack.Collectible.Code;
         foreach (var reg in Registrations) {
             foreach (var wildcard in reg.Wildcards) {
                 if (WildcardUtil.Match(wildcard, code.ToString())) {
