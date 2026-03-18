@@ -100,6 +100,13 @@ public static class InfoDisplay {
                 sb.Append(stack.GetName());
                 if (stack.StackSize > 1) sb.Append(" x" + stack.StackSize);
                 sb.AppendLine();
+
+                // Check if there's something inside (liquid container)
+                ItemStack[] contents = GetContents(world, stack);
+
+                if (contents.Length > 0 && contents[0] != null) {
+                    AppendStackContentInfo(world, inv[i], sb);
+                }
             }
         }
     }
@@ -442,6 +449,44 @@ public static class InfoDisplay {
         }
 
         return dsc.ToString();
+    }
+
+    public static void AppendStackContentInfo(IWorldAccessor world, ItemSlot? slot, StringBuilder sb) {
+        if (slot == null || slot.Empty || slot.Itemstack == null) {
+            sb.AppendLine(Lang.Get("foodshelves:Empty."));
+            return;
+        }
+
+        ItemStack stack = slot.Itemstack;
+        ItemStack[] contents = GetContents(world, stack);
+        ItemStack targetStack = (contents.Length > 0 && contents[0] != null) ? contents[0] : stack;
+
+        sb.Append(" <font color=\"#ababab\">");
+
+        if (contents.Length > 0 && contents[0] != null)
+            sb.Append(" (" + (targetStack.StackSize / 100f) + " L)");
+
+        DummyInventory dummyInv = new(world.Api);
+        ItemSlot contentSlot = new ItemSlotSurvival(dummyInv) {
+            Itemstack = targetStack
+        };
+
+        TransitionState[]? transitionStates = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionStates(world, contentSlot);
+        if (transitionStates != null) {
+            foreach (var state in transitionStates) {
+                var type = state.Props.Type;
+                float rateMul = targetStack.Collectible.GetTransitionRateMul(world, contentSlot, type);
+                if (rateMul <= 0) continue;
+
+                float hoursLeft = state.FreshHoursLeft / rateMul;
+
+                if (type == EnumTransitionType.Perish || type == EnumTransitionType.Melt)
+                    sb.Append(" " + GetTimeRemainingText(world, hoursLeft, type, state.TransitionLevel));
+            }
+        }
+
+        sb.Append("</font>");
+        sb.AppendLine();
     }
 
     public static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {
