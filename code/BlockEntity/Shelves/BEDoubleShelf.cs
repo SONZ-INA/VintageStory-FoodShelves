@@ -63,35 +63,14 @@ public class BEDoubleShelf : BEBaseFSContainer {
         return false;
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
-
-        if (!inv[startIndex].Empty) {
-            ItemStack? firstItemInSegment = inv[startIndex].Itemstack;
-            if (!firstItemInSegment.BelongsToSameGroupAs(slot.Itemstack)) return false;
-            if (slot.Itemstack?.IsLargeItem() == true || firstItemInSegment?.IsLargeItem() == true) return false;
-            if (firstItemInSegment?.IsSmallItem() != slot.Itemstack?.IsSmallItem()) return false;
-        }
-
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && slot.Itemstack?.IsSmallItem() == false) return false;
-
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
-                return moved > 0;
-            }
-        }
-
-        return false;
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     protected override float[][] genTransformationMatrices() {
         return TransformationGenerator.Generate(this, td => {
             td.x = td.segment * 0.625f - 0.125f;
-            td.y = 0.395f;
+            td.y = 0.375f;
             td.scaleX = td.scaleY = td.scaleZ = 0.95f;
         }, true);
     }

@@ -162,31 +162,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
         if (segmentIndex > (int)SlotType.Segments)
             return false;
 
-        int startIndex = segmentIndex * ItemsPerSegment;
-        ItemStack stack = slot.Itemstack!;
-
-        if (!CanInsertIntoSegment(inv[startIndex].Itemstack, stack))
-            return false;
-
-        int limit = this.GetSegmentLimit(stack);
-        int count = this.CountItemsInSegment(startIndex);
-
-        if (count >= limit)
-            return false;
-
-        int currentIndex = startIndex + count;
-
-        if (inv[currentIndex].Empty) {
-            int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-
-            if (moved > 0) {
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
-                return true;
-            }
-        }
-
-        return false;
+        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
@@ -211,6 +187,10 @@ public class BECoolingCabinet : BEBaseFSCooler {
         }
 
         return false;
+    }
+
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     protected override bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {

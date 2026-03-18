@@ -13,9 +13,7 @@ public class BEPumpkinCase : BEBaseFSContainer {
 
     protected override float[][] genTransformationMatrices() {
         return TransformationGenerator.Generate(this, td => {
-            td.x = 0.155f;
             td.y = 0.06f;
-            td.z = 0.205f;
         });
     }
 }

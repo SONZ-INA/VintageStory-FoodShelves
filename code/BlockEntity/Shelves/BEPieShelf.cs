@@ -10,31 +10,8 @@ public class BEPieShelf : BEBaseFSContainer {
 
     public BEPieShelf() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex;
-        if (startIndex > inv.Count) return false;
-
-        ItemStack? stack = slot.Itemstack;
-        startIndex *= ItemsPerSegment;
-
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
-
-            if (!CanInsertIntoSegment(inv[currentIndex].Itemstack, stack))
-                return false;
-
-            if (currentIndex == startIndex + 4 && stack?.IsSmallItem() == false)
-                return false;
-
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
-                return moved > 0;
-            }
-        }
-
-        return false;
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     protected override float[][] genTransformationMatrices() {

@@ -2,8 +2,12 @@
 
 public class BETableWShelf : BEBaseFSContainer {
     public override string AttributeCheck => "shelvable";
+    public override string AttributeTransformCode => "onshelfTransform";
+
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
+    
     protected override bool RipeningSpot => true;
+    protected override bool IgnoreSegmentRestrictions => true;
 
     public override int ItemsPerSegment => 2;
 
@@ -18,39 +22,7 @@ public class BETableWShelf : BEBaseFSContainer {
         if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf)
             return false;
 
-        for (int i = 0; i < SlotCount; i++) {
-            if (inv[i].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[i]);
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
-                return moved > 0;
-            }
-        }
-
-        return false;
-    }
-
-    protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf)
-            return false;
-
-        for (int i = SlotCount - 1; i >= 0; i--) {
-            if (!inv[i].Empty) {
-                ItemStack stack = inv[i].TakeOut(1);
-                
-                if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    this.HandlePlacementEffects(stack, byPlayer);
-                }
-
-                if (stack.StackSize > 0) {
-                    Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-                }
-
-                return true;
-            }
-        }
-
-        return false;
+        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     protected override float[][] genTransformationMatrices() {

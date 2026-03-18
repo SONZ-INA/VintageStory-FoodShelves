@@ -29,38 +29,8 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
         base.Initialize(api);
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int index = blockSel.SelectionBoxIndex;
-        if (index >= ShelfCount) return false;
-
-        // Bottom Slot
-        if (index == (int)SlotNumber.BottomSlot)
-            return TryPlaceInSlots(byPlayer, slot, 0, ItemsPerSegment);
-
-        // Top Slot
-        if (Block.Variant["type"] == "top" != true && index == (int)SlotNumber.TopSlot)
-            return TryPlaceInSlots(byPlayer, slot, ItemsPerSegment, ShelfCount * ItemsPerSegment);
-
-        return false;
-    }
-
-    private bool TryPlaceInSlots(IPlayer byPlayer, ItemSlot slot, int startIndex, int endIndex) {
-        if (inv[startIndex].Empty) {
-            if (slot.TryPutInto(Api.World, inv[startIndex]) > 0) {
-                return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
-            }
-        }
-        else if (!inv[startIndex].Itemstack?.IsLargeItem() == true && slot.Itemstack?.IsLargeItem() == false) {
-            for (int i = startIndex + 1; i < endIndex; i++) {
-                if (inv[i].Empty) {
-                    if (slot.TryPutInto(Api.World, inv[i]) > 0) {
-                        return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
-                    }
-                }
-            }
-        }
-
-        return false;
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {

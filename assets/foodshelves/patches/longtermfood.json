@@ -5,9 +5,7 @@
     "value": [
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
-      "pemmican:mushroompatebar",
-      "pemmican:chips-pack",
-      "pemmican:mushroom-pack"
+      "pemmican:mushroompatebar"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },

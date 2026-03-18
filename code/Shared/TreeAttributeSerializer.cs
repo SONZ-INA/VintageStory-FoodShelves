@@ -3,10 +3,9 @@ using System.Reflection;
 
 namespace FoodShelves;
 
-// Class used to dynamically read/write properties needed from/to the attribute tree mainly for animations to work properly. Can also be used to read/set other properties as well.
-
 /// <summary>
-/// Attribute attachable to any property that can be safely read/wrote to the attributes of a block. Mainly used for animation properties.
+/// Attribute attachable to any property that can be safely read/wrote to the attributes of a block. <br /> 
+/// Mainly used for animation properties, but can sync other props as well.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public class TreeSerializableAttribute(object defaultValue) : Attribute {
