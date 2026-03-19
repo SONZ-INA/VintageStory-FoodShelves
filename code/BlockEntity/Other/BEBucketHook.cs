@@ -8,9 +8,8 @@ public class BEBucketHook : BEBaseFSContainer {
 
     protected override float[][] genTransformationMatrices() {
         return TransformationGenerator.Generate(this, td => {
-            td.x = 0.15f;
-            td.y = 0.2f;
-            td.z = 0.175f;
+            td.y = 0.205f;
+            td.z = -0.025f;
         });
     }
 }

@@ -46,58 +46,34 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
         return false;
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int moved = 0;
-
-        for (int i = 0; i < SlotCount; i++) {
-            if (inv[i].Empty) {
-                moved += slot.TryPutInto(Api.World, inv[i]);
-                if (!byPlayer.Entity.Controls.CtrlKey) break;
-            }
-        }
-
-        if (moved > 0) (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-        return moved > 0;
-    }
-
-    protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {
+    protected override ItemStack? TryTakeFromSegment(IPlayer byPlayer, int startIndex) {
         ItemStack? stack = null;
 
-        if (byPlayer.Entity.Controls.CtrlKey) { // Take all "same" items
-            for (int i = SlotCount - 1; i >= 0; i--) {
-                if (inv[i].Empty) continue;
+        if (byPlayer.Entity.Controls.CtrlKey) {
+            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
+                int idx = startIndex + i;
+                if (inv[idx].Empty) continue;
 
                 if (stack == null) {
-                    stack = inv[i].TakeOut(1);
+                    stack = inv[idx].TakeOut(1);
                 }
-                else {
-                    if (inv[i].Itemstack?.Item?.Code == stack.Item?.Code || inv[i].Itemstack?.Block?.Code == stack.Block?.Code) {
-                        inv[i].TakeOut(1); // To remove the item from the basket
-                        stack.StackSize += 1;
-                    }
+                else if (inv[idx].Itemstack?.Collectible?.Code == stack.Collectible?.Code) {
+                    inv[idx].TakeOut(1);
+                    stack.StackSize += 1;
                 }
             }
         }
         else {
-            for (int i = SlotCount - 1; i >= 0; i--) {
-                if (inv[i].Empty) continue;
-                stack = inv[i].TakeOut(1);
+            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
+                int idx = startIndex + i;
+                if (inv[idx].Empty) continue;
+
+                stack = inv[idx].TakeOut(1);
                 break;
             }
         }
 
-        if (stack == null)
-            return false;
-
-        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            this.HandlePlacementEffects(stack, byPlayer);
-        }
-
-        if (stack.StackSize > 0) {
-            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-        }
-
-        return true;
+        return stack;
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {

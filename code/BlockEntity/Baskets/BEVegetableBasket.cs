@@ -5,7 +5,7 @@ public class BEVegetableBasket : BEBaseFSBasket {
     protected override string CantPlaceMessage => "foodshelves:Only vegetables can be placed in this basket.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockAverageAndSoonest;
 
-    public override int SlotCount => 36;
+    public override int ItemsPerSegment => 36;
 
     public BEVegetableBasket() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
