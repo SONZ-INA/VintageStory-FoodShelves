@@ -7,7 +7,7 @@ public class BEBucketHook : BEBaseFSContainer {
     public BEBucketHook() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.y = 0.205f;
             td.z = -0.025f;
         });

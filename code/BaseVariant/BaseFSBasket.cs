@@ -110,7 +110,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         if (itemstack == null) return null;
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData? contentMesh = GenContentMesh((api as ICoreClientAPI)!, contents, GetTransformationMatrix(), 1f, Transformations!);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 1f, Transformations);
 
         return contentMesh;
     }

@@ -28,7 +28,7 @@ public class BESeedShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.x = td.segment * 0.26f - 0.26f;
             td.y = td.shelf * 0.3125f + 0.0625f;
             td.z = td.item * 0.1875f - 0.33f;

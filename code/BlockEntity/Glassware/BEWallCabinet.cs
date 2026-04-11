@@ -98,7 +98,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     #endregion
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.x = td.segment * 0.43f - 0.215f;
             td.y = td.shelf * 0.5f + 0.065f;
             td.z = -0.2f;

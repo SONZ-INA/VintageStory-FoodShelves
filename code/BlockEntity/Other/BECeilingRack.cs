@@ -75,7 +75,7 @@ public class BECeilingRack : BEBaseFSContainer {
     }
 
     protected override float[][]? genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             // Hide original contents, can't bother to mesh it out
             if (td.index == 0) {
                 td.hidden = true;

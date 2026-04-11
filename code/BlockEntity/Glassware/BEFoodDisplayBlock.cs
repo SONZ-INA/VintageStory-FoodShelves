@@ -39,7 +39,7 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.y = td.shelf * 0.375f + 0.25f;
             td.z = 0.05f;
 

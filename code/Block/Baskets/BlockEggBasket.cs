@@ -5,13 +5,13 @@ public class BlockEggBasket : BaseFSBasket {
     public override int InnerSlotCount => 10;
 
     public override float[,] GetTransformationMatrix(string? path) {
-        float[] x = [ .25f, .36f, .25f, .42f,  .4f, .37f,  .23f, .23f, .45f, .42f ];  
-        float[] y = [ .01f, .01f, .01f, .01f, .05f, .09f, -.08f, .04f, .05f, .07f ];
-        float[] z = [ .25f, .21f, .37f,  .4f, .45f, .42f,  .13f, .23f, .24f, .21f ];
+        float[] x = [.092f, .092f, -.05f, -.086f, .11f, -.02f, -.17f,   -.1f, .02f,  .1f, -.05f, -.1f ];  
+        float[] y = [    0,     0,     0,      0, .06f,  .06f,  .08f,   .06f, .12f, .06f,  .08f, .13f ];
+        float[] z = [ .08f,  -.1f,  -.1f,  .079f, .12f,  .13f,  .11f, -.025f, .07f, -.1f, -.16f, .11f ];
 
-        float[] rX = [   0,    0,    0,    0,   -3,    0,    52,   28,    0,    0 ];
-        float[] rY = [ -10,  -32,   15,    3,   10,    0,     0,    0,  -10,    0 ];
-        float[] rZ = [   0,    0,    0,    0,    1,   30,     0,    0,    0,   30 ];
+        float[] rX = [   0,     0,     0,      0,   -3,     0,     0,      0,  -35,    0,    13,    2 ];
+        float[] rY = [   3,    -4,   -10,      3,    7,    -3,     0,    -20,  -45,   18,   -22,  -15 ];
+        float[] rZ = [   0,     0,     0,      0,    1,     0,   -20,      0,    0,    0,     0,  -12 ];
 
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }

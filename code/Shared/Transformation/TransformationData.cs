@@ -12,6 +12,7 @@ public class TransformationData(BEBaseFSContainer be) {
     public int segment;
     public int item;
 
+    public float preRotate = 0;
     public float x, y, z;
     public float offsetX, offsetY, offsetZ;
     public float rotX, rotY, rotZ;
@@ -22,6 +23,7 @@ public class TransformationData(BEBaseFSContainer be) {
     public bool hidden;
 
     public void Reset() {
+        preRotate = 0;
         x = y = z = 0;
         offsetX = offsetY = offsetZ = 0;
         rotX = rotY = rotZ = 0;
@@ -42,7 +44,7 @@ public class TransformationData(BEBaseFSContainer be) {
 
         // Handle block rotation
         int blockRot = be.Block.GetRotationAngle();
-        mat.RotateYDeg(blockRot);
+        mat.RotateYDeg(blockRot + preRotate);
 
         // Handle segment locations
         mat.Translate(x, y, z);

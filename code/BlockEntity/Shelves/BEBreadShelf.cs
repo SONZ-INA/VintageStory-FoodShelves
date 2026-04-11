@@ -22,7 +22,7 @@ public class BEBreadShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.x = td.segment * 0.3f - 0.3f;
             td.y = td.shelf * 0.25f + 0.0625f;
             td.z = td.item * 0.375f - 0.225f;

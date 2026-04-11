@@ -239,7 +239,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
     #endregion
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.x = td.segment * 0.625f - 0.125f;
             td.y = td.shelf * 0.47f + 0.625f;
 

@@ -30,7 +30,7 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.y = td.shelf * 0.3825f + 0.25f;
             td.z = (td.item / 2 == 0 ? -0.05f : 0.05f) + 0.05f;
 

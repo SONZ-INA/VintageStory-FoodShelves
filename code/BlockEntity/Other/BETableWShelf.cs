@@ -26,7 +26,7 @@ public class BETableWShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.Generate(this, td => {
+        return TransformationGenerator.GenerateLayout(this, td => {
             td.z = td.item * 0.4f - 0.175f;
             td.y = 0.185f;
         });
