@@ -6,6 +6,6 @@
   "description": "Contains various food shelves and food storage, mainly made to be used alongside Expanded Foods.",
   "version": "3.0.0",
   "dependencies": {
-    "game": "1.22.0-pre.5"
+    "game": "1.22.0-rc.10"
   }
 }

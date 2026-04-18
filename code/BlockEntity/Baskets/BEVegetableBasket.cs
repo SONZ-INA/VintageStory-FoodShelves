@@ -27,21 +27,11 @@ public class BEVegetableBasket : BEBaseFSBasket {
 
     protected override float[][] genTransformationMatrices() {
         float[,] transformationMatrix = block.GetTransformationMatrix(inv[0]?.Itemstack?.Collectible?.Code);
-        float[][] tfMatrices = new float[36][];
-        int offset = transformationMatrix.GetLength(1);
 
-        for (int i = 0; i < offset; i++) {
-            tfMatrices[i] = new Matrixf()
-                .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg((block?.Shape.rotateY ?? 0) + MeshAngle * GameMath.RAD2DEG)
-                .RotateXDeg(transformationMatrix[3, i])
-                .RotateYDeg(transformationMatrix[4, i])
-                .RotateZDeg(transformationMatrix[5, i])
-                .Scale(0.5f, 0.5f, 0.5f)
-                .Translate(transformationMatrix[0, i] - 0.84375f, transformationMatrix[1, i], transformationMatrix[2, i] - 0.8125f)
-                .Values;
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.GenerateExplicit(this, transformationMatrix, (t) => {
+            t.preRotate = MeshAngle * GameMath.RAD2DEG;
+            t.scaleX = t.scaleY = t.scaleZ = 0.5f;
+            t.offsetY = 0.015f;
+        });
     }
 }
