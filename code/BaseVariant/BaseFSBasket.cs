@@ -93,6 +93,10 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     }
 
     public abstract float[,] GetTransformationMatrix(string? path = null);
+    
+    public virtual Action<TransformationData>? GetTransformationModifier() { 
+        return null; 
+    }
 
     public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
         MeshData? basketMesh = base.GenMesh(slot, targetAtlas, atBlockPos);
@@ -110,7 +114,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         if (itemstack == null) return null;
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 1f, Transformations);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), Transformations, GetTransformationModifier());
 
         return contentMesh;
     }

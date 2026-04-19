@@ -15,4 +15,10 @@ public class BlockEggBasket : BaseFSBasket {
 
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
+
+    public override Action<TransformationData>? GetTransformationModifier() {
+        return t => {
+            t.offsetY = 0.0275f;
+        };
+    }
 }

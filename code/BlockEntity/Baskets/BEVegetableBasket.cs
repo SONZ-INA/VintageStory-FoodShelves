@@ -25,13 +25,7 @@ public class BEVegetableBasket : BEBaseFSBasket {
         return moved > 0;
     }
 
-    protected override float[][] genTransformationMatrices() {
-        float[,] transformationMatrix = block.GetTransformationMatrix(inv[0]?.Itemstack?.Collectible?.Code);
-
-        return TransformationGenerator.GenerateExplicit(this, transformationMatrix, (t) => {
-            t.preRotate = MeshAngle * GameMath.RAD2DEG;
-            t.scaleX = t.scaleY = t.scaleZ = 0.5f;
-            t.offsetY = 0.015f;
-        });
+    protected override string? GetTransformationPath() {
+        return inv[0]?.Itemstack?.Collectible?.Code;
     }
 }

@@ -14,4 +14,10 @@ public class BlockMushroomBasket : BaseFSBasket {
 
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
+
+    public override Action<TransformationData>? GetTransformationModifier() {
+        return t => {
+            t.offsetY = 0.025f;
+        };
+    }
 }

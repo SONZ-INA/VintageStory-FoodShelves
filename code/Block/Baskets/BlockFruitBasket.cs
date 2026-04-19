@@ -15,11 +15,18 @@ public class BlockFruitBasket : BaseFSBasket {
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
 
+    public override Action<TransformationData>? GetTransformationModifier() {
+        return t => {
+            t.scaleX = t.scaleY = t.scaleZ = 0.5f;
+            t.offsetY = 0.05f;
+        };
+    }
+
     protected override MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
         if (itemstack == null) return null;
 
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 0.5f, Transformations);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), Transformations, GetTransformationModifier());
 
         return contentMesh;
     }

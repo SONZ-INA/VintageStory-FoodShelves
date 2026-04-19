@@ -33,10 +33,13 @@ public static class InventoryExtensions {
 
         ItemStack[] stacks = new ItemStack[treeAttr.Count];
         foreach (var val in treeAttr) {
-            ItemStack stack = (val.Value as ItemstackAttribute)!.value;
+            ItemStack? stack = (val.Value as ItemstackAttribute)?.value;
+            if (stack == null) continue;
+
             stack.ResolveBlockOrItem(world);
 
-            if (int.TryParse(val.Key, out int index)) stacks[index] = stack;
+            if (int.TryParse(val.Key, out int index))
+                stacks[index] = stack;
         }
 
         return stacks;

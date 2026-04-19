@@ -11,7 +11,7 @@ public static class TransformationGenerator {
     /// </summary>
     public static float[][] GenerateLayout(BEBaseFSContainer be, Action<TransformationData> accessor, bool useLayouts = false) {
         float[][] tfMatrices = new float[be.SlotCount][];
-        TransformationData td = new(be);
+        TransformationData td = new(be.Block.GetRotationAngle());
 
         for (int shelf = 0; shelf < be.ShelfCount; shelf++) {
             for (int segment = 0; segment < be.SegmentsPerShelf; segment++) {
@@ -52,17 +52,12 @@ public static class TransformationGenerator {
     /// Generates transformation matrices from a predefined set of positions and rotations. <br />
     /// Each slot is placed exactly according to the given matrix, with an optional modifier for small adjustments.
     /// </summary>
-    public static float[][] GenerateExplicit(BEBaseFSContainer be, float[,] matrix, Action<TransformationData>? modifier = null) {
+    public static float[][] GenerateExplicit(float[,] matrix, int blockRotation = 0, Action<TransformationData>? modifier = null) {
         int count = matrix.GetLength(1);
         float[][] tfMatrices = new float[count][];
-        TransformationData td = new(be);
+        TransformationData td = new(blockRotation);
 
         for (int i = 0; i < count; i++) {
-            if (i >= be.SlotCount || be.inv[i].Empty) {
-                tfMatrices[i] = new Matrixf().Values;
-                continue;
-            }
-
             td.Reset();
             td.index = i;
 

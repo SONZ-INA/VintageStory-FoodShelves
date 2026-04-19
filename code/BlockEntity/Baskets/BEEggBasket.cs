@@ -8,13 +8,4 @@ public class BEEggBasket : BEBaseFSBasket {
     public override int ItemsPerSegment => 12;
 
     public BEEggBasket() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
-
-    protected override float[][] genTransformationMatrices() {
-        float[,] transformationMatrix = block.GetTransformationMatrix();
-
-        return TransformationGenerator.GenerateExplicit(this, transformationMatrix, (t) => {
-            t.preRotate = MeshAngle * GameMath.RAD2DEG;
-            t.offsetY = 0.0275f;
-        });
-    }
 }

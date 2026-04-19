@@ -60,6 +60,13 @@ public class BlockVegetableBasket : BaseFSBasket {
         return GenTransformationMatrix(x, y, z, rX, rY, rZ);
     }
 
+    public override Action<TransformationData>? GetTransformationModifier() {
+        return t => {
+            t.scaleX = t.scaleY = t.scaleZ = 0.5f;
+            t.offsetY = 0.015f;
+        };
+    }
+
     protected override MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
         if (itemstack == null) return null;
 
@@ -70,7 +77,7 @@ public class BlockVegetableBasket : BaseFSBasket {
             itemPath = contents[0].Collectible.Code;
         }
 
-        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), Transformations, GetTransformationModifier());
 
         return contentMesh;
     }

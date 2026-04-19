@@ -76,6 +76,22 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
         return stack;
     }
 
+    protected virtual string? GetTransformationPath() {
+        return null;
+    }
+
+    protected override float[][] genTransformationMatrices() {
+        float[,] transformationMatrix = block.GetTransformationMatrix(GetTransformationPath());
+        int blockRotation = Block.GetRotationAngle();
+        var modifier = block.GetTransformationModifier();
+
+        return TransformationGenerator.GenerateExplicit(transformationMatrix, blockRotation, (t) => {
+            t.preRotate = MeshAngle * GameMath.RAD2DEG;
+
+            modifier?.Invoke(t);
+        });
+    }
+
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         bool skipmesh = base.BaseRenderContents(mesher, tesselator);
 

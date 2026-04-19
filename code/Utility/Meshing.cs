@@ -55,10 +55,12 @@ public static class Meshing {
     /// <summary>
     /// Generates the content mesh of the block's inventory. Mainly used for generating basket contents.
     /// </summary>
-    public static MeshData? GenContentMesh(ICoreClientAPI? capi, ItemStack[] contents, float[,] transformationMatrix, float scaleValue = 1f, Dictionary<string, ModelTransform>? modelTransformations = null) {
+    public static MeshData? GenContentMesh(ICoreClientAPI? capi, ItemStack[] contents, float[,] transformationMatrix, Dictionary<string, ModelTransform>? modelTransformations = null, Action<TransformationData>? contentModifier = null) {
         if (capi == null) return null;
 
         MeshData? nestedContentMesh = null;
+        float[][] contentTransformations = TransformationGenerator.GenerateExplicit(transformationMatrix, 0, contentModifier);
+
         for (int i = 0; i < contents.Length; i++) {
             if (contents[i] == null || (contents[i].Item == null && contents[i].Block == null)) 
                 continue;
@@ -104,16 +106,7 @@ public static class Meshing {
                     if (transformation != null) collectibleMesh.ModelTransform(transformation);
                 }
 
-                float[] matrixTransform = new Matrixf()
-                    .Translate(0.5f, 0, 0.5f)
-                    .RotateXDeg(transformationMatrix[3, i])
-                    .RotateYDeg(transformationMatrix[4, i])
-                    .RotateZDeg(transformationMatrix[5, i])
-                    .Scale(scaleValue, scaleValue, scaleValue)
-                    .Translate(transformationMatrix[0, i] - 0.84375f, transformationMatrix[1, i], transformationMatrix[2, i] - 0.8125f)
-                    .Values;
-
-                collectibleMesh.MatrixTransform(matrixTransform);
+                collectibleMesh.MatrixTransform(contentTransformations[i]);
             }
 
             if (nestedContentMesh == null) nestedContentMesh = collectibleMesh;
