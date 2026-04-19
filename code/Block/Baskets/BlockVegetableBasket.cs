@@ -33,15 +33,14 @@ public class BlockVegetableBasket : BaseFSBasket {
                             rZ = [   1,  -1,    0,  -120,    1,    0,   -90,    1,  180,   -3,   -3,   -2 ];
                             return GenTransformationMatrix(x, y, z, rX, rY, rZ);
 
-                        // TODO
                         case "standard":
-                            x = [    0,  .3f, .11f, .04f,-.22f,  .3f, -.11f, -.1f, .07f, .13f,-.07f,    0 ];
-                            y = [-.03f,-.03f,-.03f, .14f,    0, .11f,  .02f,  .1f, .38f,  .1f, .12f, .12f ];
-                            z = [-.15f,    0, .11f, .14f, .22f,-.25f, -.03f, -.1f,    0, .15f, .02f,    0 ];
+                            x = [ .24f, .24f, .24f, .09f, .09f, .09f, -.09f,-.09f,-.09f,-.24f,-.24f,-.24f, .17f, .02f,-.07f, .12f, .17f,-.12f, -.3f,-.38f ];
+                            y = [-.04f,-.04f,-.04f,-.04f,-.04f,-.04f, -.04f,-.04f,-.04f,-.04f,-.04f,-.04f, .23f, .18f,  .1f, .23f, .23f, .16f, .18f, .23f ];
+                            z = [-.15f,    0, .15f,-.17f,    0, .15f, -.15f,    0, .15f,-.15f,    0, .15f, -.3f,  .1f,    0,-.17f, .12f,-.13f, .01f, .16f ];
 
-                            rX = [  -2,   0,    0,     3,   -3,   45,    16,    2,    0,    2,   -1,    1 ];
-                            rY = [   4,  -2,   10,    -4,  -95,    0,    20,   -1,   -2,    4,   40,  -90 ];
-                            rZ = [   1,  -1,    0,  -120,    1,    0,   -90,    1,  180,   -3,   -3,   -2 ];
+                            rX = [  -2,   0,    0,     3,   -3,    2,     3,    2,    0,    2,   -1,    1,   90,   89,    0,   90,   91,    0,   90,   90 ];
+                            rY = [   4,  -2,   -5,    -4,    0,    0,     4,   -1,   -2,    4,    0,   -1,    2,   20,   20,    0,    0,    0,   21,    1 ];
+                            rZ = [   1,  -1,    0,    -1,    1,    0,     0,    1,    0,   -3,   -3,   -2,   -4,  -91,  -40,   90,   78,   45,  -85,  -90 ];
                             return GenTransformationMatrix(x, y, z, rX, rY, rZ);
 
                         case "long":
@@ -71,7 +70,7 @@ public class BlockVegetableBasket : BaseFSBasket {
             itemPath = contents[0].Collectible.Code;
         }
 
-        MeshData? contentMesh = GenContentMesh((api as ICoreClientAPI)!, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(itemPath), 0.5f, Transformations);
 
         return contentMesh;
     }

@@ -11,20 +11,11 @@ public class BEFruitBasket : BEBaseFSBasket {
 
     protected override float[][] genTransformationMatrices() {
         float[,] transformationMatrix = block.GetTransformationMatrix();
-        float[][] tfMatrices = new float[SlotCount][];
 
-        for (int item = 0; item < SlotCount; item++) {
-            tfMatrices[item] = new Matrixf()
-                .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg((block?.Shape.rotateY ?? 0) + MeshAngle * GameMath.RAD2DEG)
-                .RotateXDeg(transformationMatrix[3, item])
-                .RotateYDeg(transformationMatrix[4, item])
-                .RotateZDeg(transformationMatrix[5, item])
-                .Scale(0.5f, 0.5f, 0.5f)
-                .Translate(transformationMatrix[0, item] - 0.84375f, transformationMatrix[1, item] + 0.1f, transformationMatrix[2, item] - 0.8125f)
-                .Values;
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.GenerateExplicit(this, transformationMatrix, t => {
+            t.preRotate = MeshAngle * GameMath.RAD2DEG;
+            t.scaleX = t.scaleY = t.scaleZ = 0.5f;
+            t.offsetY = 0.05f;
+        });
     }
 }
