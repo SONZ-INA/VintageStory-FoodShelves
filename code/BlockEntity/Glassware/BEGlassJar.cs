@@ -1,7 +1,7 @@
 ﻿namespace FoodShelves;
 
 public class BEGlassJar : BEBaseFSContainer {
-    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
+    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     public override int SlotCount => 2;
 
     public BEGlassJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsLiquidyStuff")); }

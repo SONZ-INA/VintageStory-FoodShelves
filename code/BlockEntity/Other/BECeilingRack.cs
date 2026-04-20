@@ -1,7 +1,7 @@
 ﻿namespace FoodShelves;
 
 public class BECeilingRack : BEBaseFSContainer {
-    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
+    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked

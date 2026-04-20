@@ -2,7 +2,7 @@
 
 public class BlockEggBasket : BaseFSBasket {
     protected override Dictionary<string, ModelTransform> Transformations => []; // No custom transformations
-    public override int InnerSlotCount => 10;
+    public override int InnerSlotCount => 12;
 
     public override float[,] GetTransformationMatrix(string? path) {
         float[] x = [.092f, .092f, -.05f, -.086f, .11f, -.02f, -.17f,   -.1f, .02f,  .1f, -.05f, -.1f ];  

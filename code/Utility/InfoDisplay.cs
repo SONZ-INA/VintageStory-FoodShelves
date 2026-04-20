@@ -8,8 +8,7 @@ public static class InfoDisplay {
         ByShelf,
         BySegment,
         BySegmentGrouped,
-        ByBlockAverageAndSoonest,
-        ByBlockMerged
+        ByBlockAverageAndSoonest
     }
 
     public static string GetNameAndStackSize(ItemStack stack) => stack.GetName() + " x" + stack.StackSize;
@@ -25,89 +24,114 @@ public static class InfoDisplay {
 
         IWorldAccessor world = inv.Api.World;
         List<ItemSlot> itemSlotList = [.. inv];
-        
+
         switch (displaySelection) {
             case InfoDisplayOptions.ByBlockAverageAndSoonest:
                 sb.Append(PerishableInfoAverageAndSoonest([.. itemSlotList], world));
                 return;
-            case InfoDisplayOptions.ByBlockMerged:
-                ByBlockMerged([.. itemSlotList], sb, world);
-                return;
+
             case InfoDisplayOptions.BySegmentGrouped:
                 int fromSlot = forPlayer.CurrentBlockSelection.SelectionBoxIndex * itemsPerSegment;
                 sb.Append(PerishableInfoGrouped(inv, world, fromSlot, fromSlot + itemsPerSegment));
                 return;
-        }
 
+            case InfoDisplayOptions.ByBlock:
+            case InfoDisplayOptions.ByShelf:
+            case InfoDisplayOptions.BySegment:
+                ProcessStandardDisplay(forPlayer, sb, inv, displaySelection, slotCount, segmentsPerShelf, itemsPerSegment, skipSlotsFrom, selectedSegment);
+                return;
+        }
+    }
+
+    private static (int start, int end) GetIterationBounds(IPlayer forPlayer, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf, int itemsPerSegment, int selectedSegment) {
         if (selectedSegment == -1 && forPlayer.CurrentBlockSelection != null)
             selectedSegment = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
 
-        if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1) 
+        if (displaySelection != InfoDisplayOptions.ByBlock && selectedSegment == -1)
+            return (0, 0);
+
+        return displaySelection switch {
+            InfoDisplayOptions.ByBlock => (slotCount - 1, -1),
+            InfoDisplayOptions.ByShelf => CalculateShelfBounds(selectedSegment, segmentsPerShelf, itemsPerSegment),
+            InfoDisplayOptions.BySegment => (selectedSegment * itemsPerSegment, (selectedSegment * itemsPerSegment) + itemsPerSegment),
+            _ => (0, slotCount)
+        };
+    }
+
+    private static (int start, int end) CalculateShelfBounds(int selectedSegment, int segmentsPerShelf, int itemsPerSegment) {
+        int itemsPerShelf = segmentsPerShelf * itemsPerSegment;
+        int selectedShelf = selectedSegment / segmentsPerShelf * itemsPerShelf;
+        return (selectedShelf, selectedShelf + itemsPerShelf);
+    }
+
+    private static void ProcessStandardDisplay(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf, int itemsPerSegment, int skipSlotsFrom, int selectedSegment) {
+        var (start, end) = GetIterationBounds(forPlayer, displaySelection, slotCount, segmentsPerShelf, itemsPerSegment, selectedSegment);
+
+        if (start == end && displaySelection != InfoDisplayOptions.ByBlock)
             return;
 
-        int start = 0, end = slotCount;
+        IWorldAccessor world = inv.Api.World;
+        int step = displaySelection == InfoDisplayOptions.ByBlock ? -1 : 1;
 
-        switch (displaySelection) {
-            case InfoDisplayOptions.ByBlock:
-                start = slotCount - 1;
-                end = -1;
+        for (int i = start; i != end; i += step) {
+            if (i >= slotCount) continue;
+            if (skipSlotsFrom != -1 && i >= skipSlotsFrom) continue;
+
+            ItemSlot slot = inv[i];
+            if (slot.Empty || slot.Itemstack == null) continue;
+
+            if (!ProcessSingleSlot(world, inv, i, slot, slot.Itemstack, end, sb)) {
                 break;
-            case InfoDisplayOptions.ByShelf:
-                int itemsPerShelf = segmentsPerShelf * itemsPerSegment;
-                int selectedShelf = selectedSegment / segmentsPerShelf * itemsPerShelf;
-                start = selectedShelf;
-                end = selectedShelf + itemsPerShelf;
-                break;
-            case InfoDisplayOptions.BySegment:
-                start = selectedSegment * itemsPerSegment;
-                end = start + itemsPerSegment;
-                break;
+            }
+        }
+    }
+
+    private static bool ProcessSingleSlot(IWorldAccessor world, InventoryGeneric inv, int index, ItemSlot slot, ItemStack stack, int end, StringBuilder sb) {
+        if (stack.Collectible.TransitionableProps?.Length > 0) {
+            if (stack.IsSmallItem()) {
+                sb.Append(PerishableInfoGrouped(inv, world, index, end));
+                return false;
+            }
+
+            float ripenRate = stack.Collectible.GetTransitionRateMul(world, slot, EnumTransitionType.Ripen);
+            sb.Append(PerishableInfoCompact(world, slot, ripenRate));
+        }
+        else if (stack.Collectible is BlockCrock) {
+            sb.Append(CrockInfoCompact(inv, world, slot));
+        }
+        else if (stack.Collectible is BaseFSBasket) {
+            AppendBasketInfo(world, inv, slot, stack, sb);
+        }
+        else {
+            AppendGenericItemInfo(world, slot, stack, sb);
         }
 
-        for (int i = start; i != end; i = displaySelection == InfoDisplayOptions.ByBlock ? i - 1 : i + 1) {
-            if (i >= slotCount) break;
-            if (skipSlotsFrom != -1 && i >= skipSlotsFrom) break;
-            if (inv[i].Empty) continue;
+        return true;
+    }
 
-            ItemStack? stack = inv[i].Itemstack;
-            if (stack == null) continue;
+    private static void AppendBasketInfo(IWorldAccessor world, InventoryGeneric inv, ItemSlot slot, ItemStack stack, StringBuilder sb) {
+        sb.AppendLine(stack.GetName());
+        ItemStack[] contents = GetContents(world, stack);
 
-            float ripenRate = stack.Collectible.GetTransitionRateMul(world, inv[i], EnumTransitionType.Ripen); // Get ripen rate
+        float containerMul = inv.GetTransitionSpeedMul(EnumTransitionType.Perish, stack);
 
-            if (stack.Collectible.TransitionableProps?.Length > 0) {
-                if (stack.IsSmallItem()) {
-                    sb.Append(PerishableInfoGrouped(inv, world, i, end));
-                    return;
-                }
+        float basketMul = (stack.Collectible as BaseFSBasket)?
+            .GetContainingTransitionModifierContained(world, slot, EnumTransitionType.Perish) ?? 1f;
 
-                sb.Append(PerishableInfoCompact(world, inv[i], ripenRate));
-            }
-            else if (stack.Collectible is BlockCrock) {
-                sb.Append(CrockInfoCompact(inv, world, inv[i]));
-            }
-            else if (stack.Collectible is BaseFSBasket) {
-                sb.AppendLine(stack.GetName());
-                ItemStack[] contents = GetContents(world, stack);
+        float totalPerishMul = containerMul * basketMul;
 
-                ItemStack? transStack = new ItemSlot(inv).Itemstack;
-                float perishMul = transStack != null 
-                    ? inv.GetTransitionSpeedMul(EnumTransitionType.Perish, transStack)
-                    : 1;
+        sb.AppendLine("<font color=\"#989898\">" + PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world, totalPerishMul) + "</font>");
+    }
 
-                sb.AppendLine("<font color=\"#989898\">" + PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world, perishMul) + "</font>");
-            }
-            else {
-                sb.Append(stack.GetName());
-                if (stack.StackSize > 1) sb.Append(" x" + stack.StackSize);
-                sb.AppendLine();
+    private static void AppendGenericItemInfo(IWorldAccessor world, ItemSlot slot, ItemStack stack, StringBuilder sb) {
+        sb.Append(stack.GetName());
+        if (stack.StackSize > 1) sb.Append(" x" + stack.StackSize);
+        sb.AppendLine();
 
-                // Check if there's something inside (liquid container)
-                ItemStack[] contents = GetContents(world, stack);
+        ItemStack[] contents = GetContents(world, stack);
 
-                if (contents.Length > 0 && contents[0] != null) {
-                    AppendStackContentInfo(world, inv[i], sb);
-                }
-            }
+        if (contents.Length > 0 && contents[0] != null) {
+            AppendStackContentInfo(world, slot, sb);
         }
     }
 
@@ -349,32 +373,6 @@ public static class InfoDisplay {
         }
 
         return dsc.ToString();
-    }
-
-    public static void ByBlockMerged(ItemSlot?[] slots, StringBuilder sb, IWorldAccessor world) {
-        if (slots == null || slots.Length == 0) return;
-
-        ItemStack? firstStack = slots[0]!.Itemstack?.Clone();
-        if (firstStack == null) return;
-
-        int totalStackSize = firstStack.StackSize;
-        CollectibleObject collectible = firstStack.Collectible;
-        float ripenRate = collectible.GetTransitionRateMul(world, slots[0], EnumTransitionType.Ripen); // Get ripen rate for first slot
-
-        for (int i = 1; i < slots.Length; i++) {
-            ItemStack? stack = slots[i]!.Itemstack;
-            if (stack == null) break; // Subsequent slots can't have items if the current one is empty.
-            totalStackSize += stack.StackSize;
-        }
-
-        firstStack.StackSize = totalStackSize;
-
-        sb.Append(firstStack.GetName());
-        if (totalStackSize > 1) sb.Append(" x" + totalStackSize);
-
-        if (collectible.TransitionableProps != null && collectible.TransitionableProps.Length > 0) {
-            sb.Append(PerishableInfoCompact(world, slots[0]!, ripenRate, false, false));
-        }
     }
 
     public static string PerishableInfoAverageAndSoonest(ItemSlot?[] contentSlots, IWorldAccessor world, float perishMul = 1) {

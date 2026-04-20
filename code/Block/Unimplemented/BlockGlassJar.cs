@@ -7,8 +7,8 @@ public class BlockGlassJar : BaseFSContainer {
         dsc.Append(Lang.Get("foodshelves:Contents"));
 
         if (!inSlot.Empty) {
-            ItemStack[] contents = GetContents(world, inSlot.Itemstack);
-            ByBlockMerged(contents.ToDummySlots(), dsc, world);
+            // ItemStack[] contents = GetContents(world, inSlot.Itemstack);
+            // ByBlockMerged(contents.ToDummySlots(), dsc, world);
         }
 
         dsc.AppendLine(Lang.Get("foodshelves:Empty."));

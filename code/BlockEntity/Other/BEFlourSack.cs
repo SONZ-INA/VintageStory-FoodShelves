@@ -2,7 +2,7 @@
 
 public class BEFlourSack : BEBaseFSContainer {
     protected override string CantPlaceMessage => "foodshelves:Only flour can be placed in this sack.";
-    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlockMerged;
+    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.6f;
 
