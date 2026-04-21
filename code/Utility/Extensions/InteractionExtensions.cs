@@ -14,17 +14,17 @@ public static class InteractionExtensions {
         if (!target.Empty && !target.Itemstack.Collectible.Equals(source.Itemstack?.Collectible))
             return 0;
 
-        int free = target.MaxSlotStackSize - target.StackSize;
-        if (free <= 0) return 0;
+        int freeSlotsCount = target.MaxSlotStackSize - target.StackSize;
+        if (freeSlotsCount <= 0) return 0;
 
-        int move = Math.Min(quantity, Math.Min(free, source.StackSize));
+        int moveAmount = Math.Min(quantity, Math.Min(freeSlotsCount, source.StackSize));
 
         // Initialize slots
         if (target.Empty) {
-            target.Itemstack = source.TakeOut(move);
+            target.Itemstack = source.TakeOut(moveAmount);
             target.OnItemSlotModified(target.Itemstack);
             source.OnItemSlotModified(source.Itemstack);
-            return move;
+            return moveAmount;
         }
 
         ItemStack sink = target.Itemstack;
@@ -37,7 +37,7 @@ public static class InteractionExtensions {
         var sinkStates = sink.Collectible.UpdateAndGetTransitionStates(world, target);
 
         if (srcStates != null && sinkStates != null) {
-            float weight = (float)move / (move + sinkSizeBefore);
+            float weight = (float)moveAmount / (moveAmount + sinkSizeBefore);
 
             foreach (var s in srcStates) {
                 foreach (var t in sinkStates) {
@@ -52,13 +52,13 @@ public static class InteractionExtensions {
             }
         }
 
-        sink.StackSize += move;
-        source.TakeOut(move);
+        sink.StackSize += moveAmount;
+        source.TakeOut(moveAmount);
 
         target.OnItemSlotModified(target.Itemstack);
         source.OnItemSlotModified(source.Itemstack);
 
-        return move;
+        return moveAmount;
     }
 
     /// <summary>

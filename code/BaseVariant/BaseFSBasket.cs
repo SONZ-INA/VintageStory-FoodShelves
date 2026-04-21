@@ -92,7 +92,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         return;
     }
 
-    public abstract float[,] GetTransformationMatrix(string? path = null);
+    public abstract ExplicitTransform GetTransformationMatrix(string? path = null);
     
     public virtual Action<TransformationData>? GetTransformationModifier() { 
         return null; 

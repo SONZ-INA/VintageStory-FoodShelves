@@ -55,17 +55,15 @@ public static class Meshing {
     /// <summary>
     /// Generates the content mesh of the block's inventory. Mainly used for generating basket contents.
     /// </summary>
-    public static MeshData? GenContentMesh(ICoreClientAPI? capi, ItemStack[] contents, float[,] transformationMatrix, Dictionary<string, ModelTransform>? modelTransformations = null, Action<TransformationData>? contentModifier = null) {
+    public static MeshData? GenContentMesh(ICoreClientAPI? capi, ItemStack[] contents, ExplicitTransform transformationMatrix, Dictionary<string, ModelTransform>? modelTransformations = null, Action<TransformationData>? contentModifier = null) {
         if (capi == null) return null;
 
         MeshData? nestedContentMesh = null;
-        float[][] contentTransformations = TransformationGenerator.GenerateExplicit(transformationMatrix, 0, contentModifier);
+        float[][] contentTransformations = TransformationGenerator.GenerateExplicit(transformationMatrix, contentModifier);
 
         for (int i = 0; i < contents.Length; i++) {
             if (contents[i] == null || (contents[i].Item == null && contents[i].Block == null)) 
                 continue;
-
-            bool isItem = contents[i].Item != null;
 
             string shapeLocation = contents[i].Item?.Shape?.Base
                 ?? contents[i].ItemAttributes?["displayedShape"]?.Token?.ToObject<CompositeShape>()?.Base
@@ -76,6 +74,8 @@ public static class Meshing {
             if (shape == null) continue;
 
             if (shape.Textures.Count == 0) {
+                bool isItem = contents[i].Item != null;
+
                 if (isItem) {
                     foreach (var texture in contents[i].Item.Textures) {
                         shape.Textures.Add(texture.Key, texture.Value.Base);
@@ -97,12 +97,9 @@ public static class Meshing {
 
             capi.Tesselator.TesselateShape("FS-TesselateContent", shape, out MeshData collectibleMesh, texSource);
 
-            int offset = transformationMatrix.GetLength(1);
-            if (i < offset) {
+            if (i < transformationMatrix.Length) {
                 if (modelTransformations != null) {
-                    ModelTransform? transformation = isItem
-                        ? contents[i].Item.GetTransformation(modelTransformations)
-                        : contents[i].Block.GetTransformation(modelTransformations);
+                    ModelTransform? transformation = contents[i].Collectible.GetTransformation(modelTransformations);
                     if (transformation != null) collectibleMesh.ModelTransform(transformation);
                 }
 
@@ -133,13 +130,12 @@ public static class Meshing {
 
         ItemSlotFSUniversal fsSlot = (slot as ItemSlotFSUniversal)!;
         ItemStack stack = fsSlot.Itemstack!;
-        string itemPath = stack.Item.Code.Path;
 
         // Handle textureSource
         ITexPositionSource? texSource = inheritTextures
-            ? GetPieTexture(capi, [stack], shape, itemPath)
-                ?? GetContainerTextureSource(capi, [stack])
-                ?? GetItemTextureSource(capi, [stack])
+            ? GetPieTexture(capi, stack, shape)
+                ?? GetContainerTextureSource(capi, stack)
+                ?? GetItemTextureSource(capi, stack)
             : new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
 
         // Content / height calculation
@@ -177,13 +173,11 @@ public static class Meshing {
         ItemStack stack = slot.Itemstack!;
         if (stack.Item?.Shape?.Base == null) return null;
 
-        // Get item shape
         string shapeLocation = stack.Item.Shape.Base;
 
         Shape? shape = capi.TesselatorManager.GetCachedShape(shapeLocation)?.Clone();
         if (shape == null) return null;
 
-        // Handle texture source
         ITexPositionSource texSource = new ShapeTextureSource(capi, shape, "FS-PartialContentMesh");
         capi.Tesselator.TesselateShape("FS-TesselatePartial", shape, out MeshData itemMesh, texSource);
 

@@ -2,11 +2,32 @@
 
 namespace FoodShelves;
 
-public static class DataRegistry {
+public static class FSDataLoader {
+    /// <summary>
+    /// Loads restriction and transformation data.
+    /// </summary>
+    public static void LoadAssets(ICoreAPI api, Dictionary<string, RestrictionData> restrictions, Dictionary<string, Dictionary<string, ModelTransform>> transformations) {
+        if (api.Side == EnumAppSide.Server) {
+            var restrictionGroupsServer = DiscoverRestrictionGroups(api);
+            LoadData(api, restrictionGroupsServer, restrictions, transformations);
+        }
+
+        if (api.Side == EnumAppSide.Client) {
+            Dictionary<string, string[]> restrictionGroups = new() {
+                ["baskets"] = ["vegetablebasket"]
+            };
+
+            LoadData(api, restrictionGroups, restrictions, transformations);
+        }
+
+        // Both Server & Client
+        BlockVegetableBasket.VegetableBasketData = restrictions["vegetablebasket"];
+    }
+
     /// <summary>
     /// Discovers all restriction files present in the mod.
     /// </summary>
-    public static Dictionary<string, string[]> DiscoverRestrictionGroups(ICoreAPI api) {
+    private static Dictionary<string, string[]> DiscoverRestrictionGroups(ICoreAPI api) {
         var restrictionGroups = new Dictionary<string, string[]>();
         string basePath = "config/restrictions/";
 
@@ -51,8 +72,8 @@ public static class DataRegistry {
     /// <summary>
     /// Loads the Restriction and Transformation data from json files.
     /// </summary>
-    public static void LoadData(
-        ICoreAPI api, 
+    private static void LoadData(
+        ICoreAPI api,
         Dictionary<string, string[]> restrictionGroups,
         Dictionary<string, RestrictionData> restrictions,
         Dictionary<string, Dictionary<string, ModelTransform>> transformations

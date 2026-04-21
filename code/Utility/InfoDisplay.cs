@@ -32,7 +32,7 @@ public static class InfoDisplay {
 
             case InfoDisplayOptions.BySegmentGrouped:
                 int fromSlot = forPlayer.CurrentBlockSelection.SelectionBoxIndex * itemsPerSegment;
-                sb.Append(PerishableInfoGrouped(inv, world, fromSlot, fromSlot + itemsPerSegment));
+                sb.Append(PerishableInfoGrouped(inv, fromSlot, fromSlot + itemsPerSegment));
                 return;
 
             case InfoDisplayOptions.ByBlock:
@@ -67,10 +67,6 @@ public static class InfoDisplay {
     private static void ProcessStandardDisplay(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf, int itemsPerSegment, int skipSlotsFrom, int selectedSegment) {
         var (start, end) = GetIterationBounds(forPlayer, displaySelection, slotCount, segmentsPerShelf, itemsPerSegment, selectedSegment);
 
-        if (start == end && displaySelection != InfoDisplayOptions.ByBlock)
-            return;
-
-        IWorldAccessor world = inv.Api.World;
         int step = displaySelection == InfoDisplayOptions.ByBlock ? -1 : 1;
 
         for (int i = start; i != end; i += step) {
@@ -80,16 +76,18 @@ public static class InfoDisplay {
             ItemSlot slot = inv[i];
             if (slot.Empty || slot.Itemstack == null) continue;
 
-            if (!ProcessSingleSlot(world, inv, i, slot, slot.Itemstack, end, sb)) {
+            if (!ProcessSingleSlot(inv, i, slot, slot.Itemstack, end, sb)) {
                 break;
             }
         }
     }
 
-    private static bool ProcessSingleSlot(IWorldAccessor world, InventoryGeneric inv, int index, ItemSlot slot, ItemStack stack, int end, StringBuilder sb) {
+    private static bool ProcessSingleSlot(InventoryGeneric inv, int index, ItemSlot slot, ItemStack stack, int end, StringBuilder sb) {
+        IWorldAccessor world = inv.Api.World;
+
         if (stack.Collectible.TransitionableProps?.Length > 0) {
             if (stack.IsSmallItem()) {
-                sb.Append(PerishableInfoGrouped(inv, world, index, end));
+                sb.Append(PerishableInfoGrouped(inv, index, end));
                 return false;
             }
 
@@ -100,16 +98,19 @@ public static class InfoDisplay {
             sb.Append(CrockInfoCompact(inv, world, slot));
         }
         else if (stack.Collectible is BaseFSBasket) {
-            AppendBasketInfo(world, inv, slot, stack, sb);
+            sb.Append(AppendBasketInfo(inv, slot, stack));
         }
         else {
-            AppendGenericItemInfo(world, slot, stack, sb);
+            sb.Append(AppendGenericItemInfo(world, slot, stack));
         }
 
         return true;
     }
 
-    private static void AppendBasketInfo(IWorldAccessor world, InventoryGeneric inv, ItemSlot slot, ItemStack stack, StringBuilder sb) {
+    private static string AppendBasketInfo(InventoryGeneric inv, ItemSlot slot, ItemStack stack) {
+        StringBuilder sb = new();
+        IWorldAccessor world = inv.Api.World;
+
         sb.AppendLine(stack.GetName());
         ItemStack[] contents = GetContents(world, stack);
 
@@ -121,18 +122,25 @@ public static class InfoDisplay {
         float totalPerishMul = containerMul * basketMul;
 
         sb.AppendLine("<font color=\"#989898\">" + PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world, totalPerishMul) + "</font>");
+        
+        return sb.ToString();
     }
 
-    private static void AppendGenericItemInfo(IWorldAccessor world, ItemSlot slot, ItemStack stack, StringBuilder sb) {
+    private static string AppendGenericItemInfo(IWorldAccessor world, ItemSlot slot, ItemStack stack) {
+        StringBuilder sb = new();
+
         sb.Append(stack.GetName());
+
         if (stack.StackSize > 1) sb.Append(" x" + stack.StackSize);
         sb.AppendLine();
 
         ItemStack[] contents = GetContents(world, stack);
 
         if (contents.Length > 0 && contents[0] != null) {
-            AppendStackContentInfo(world, slot, sb);
+            sb.Append(AppendStackContentInfo(world, slot));
         }
+
+        return sb.ToString();
     }
 
     public static string GetUntilMelted(ItemSlot? slot) {
@@ -201,8 +209,10 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static string PerishableInfoGrouped(InventoryGeneric? inv, IWorldAccessor world, int start, int end) {
+    public static string PerishableInfoGrouped(InventoryGeneric? inv, int start, int end) {
         if (inv == null || inv.Empty) return "";
+
+        IWorldAccessor world = inv.Api.World;
 
         StringBuilder dsc = new();
         Dictionary<string, List<ItemSlot>> grouped = [];
@@ -449,10 +459,12 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
-    public static void AppendStackContentInfo(IWorldAccessor world, ItemSlot? slot, StringBuilder sb) {
+    public static string AppendStackContentInfo(IWorldAccessor world, ItemSlot? slot) {
+        StringBuilder sb = new();
+
         if (slot == null || slot.Empty || slot.Itemstack == null) {
             sb.AppendLine(Lang.Get("foodshelves:Empty."));
-            return;
+            return "";
         }
 
         ItemStack stack = slot.Itemstack;
@@ -485,6 +497,8 @@ public static class InfoDisplay {
 
         sb.Append("</font>");
         sb.AppendLine();
+
+        return sb.ToString();
     }
 
     public static string GetTimeRemainingText(IWorldAccessor world, double hoursLeft, EnumTransitionType transitionType, float transitionLevel = 0, string actionVerb = "") {

@@ -56,26 +56,6 @@ public static class LocationalExtensions {
     }
 
     /// <summary>
-    /// Generates a compact transformation matrix from individual arrays of translation and rotation values.<br/>
-    /// Used to simplify method parameters by grouping position (x, y, z) and rotation (rX, rY, rZ) data
-    /// into a single 2D array format.
-    /// </summary>
-    public static float[,] GenTransformationMatrix(float[] x, float[] y, float[] z, float[] rX, float[] rY, float[] rZ) {
-        float[,] transformationMatrix = new float[6, x.Length];
-
-        for (int i = 0; i < x.Length; i++) {
-            transformationMatrix[0, i] = x[i];
-            transformationMatrix[1, i] = y[i];
-            transformationMatrix[2, i] = z[i];
-            transformationMatrix[3, i] = rX[i];
-            transformationMatrix[4, i] = rY[i];
-            transformationMatrix[5, i] = rZ[i];
-        }
-
-        return transformationMatrix;
-    }
-
-    /// <summary>
     /// Returns the rotation angle in degrees for the block based on its variant suffix (e.g., "-north", "-south").<br/>
     /// For this method to work properly, it *must* align with the rotation defined in the block's type.
     /// </summary>

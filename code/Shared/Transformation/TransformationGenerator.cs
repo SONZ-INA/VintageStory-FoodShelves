@@ -11,14 +11,22 @@ public static class TransformationGenerator {
     /// </summary>
     public static float[][] GenerateLayout(BEBaseFSContainer be, Action<TransformationData> accessor, bool useLayouts = false) {
         float[][] tfMatrices = new float[be.SlotCount][];
-        TransformationData td = new(be.Block.GetRotationAngle());
+
+        TransformationData td = new() {
+            preRotate = be.Block.GetRotationAngle()
+        };
 
         for (int shelf = 0; shelf < be.ShelfCount; shelf++) {
-            for (int segment = 0; segment < be.SegmentsPerShelf; segment++) {
-                for (int item = 0; item < be.ItemsPerSegment; item++) {
-                    int index = shelf * be.SegmentsPerShelf * be.ItemsPerSegment + segment * be.ItemsPerSegment + item;
+            int shelfOffset = shelf * be.SegmentsPerShelf * be.ItemsPerSegment;
 
-                    if (be.inv[index].Empty) {
+            for (int segment = 0; segment < be.SegmentsPerShelf; segment++) {
+                int segmentOffset = shelfOffset + (segment * be.ItemsPerSegment);
+
+                for (int item = 0; item < be.ItemsPerSegment; item++) {
+                    int index = segmentOffset + item;
+                    var slot = be.inv[index];
+                    
+                    if (slot.Empty) {
                         tfMatrices[index] = new Matrixf().Values;
                         continue;
                     }
@@ -32,8 +40,8 @@ public static class TransformationGenerator {
                     accessor(td);
 
                     if (useLayouts) {
-                        var itemLayout = LayoutRegistry.GetLayout(be.inv[index].Itemstack);
-                        itemLayout?.Apply(td, be.inv[index].Itemstack);
+                        var itemStack = slot.Itemstack;
+                        LayoutRegistry.GetLayout(itemStack)?.Apply(td, itemStack);
                     }
 
                     tfMatrices[index] = td.BuildMatrix();
@@ -52,22 +60,22 @@ public static class TransformationGenerator {
     /// Generates transformation matrices from a predefined set of positions and rotations. <br />
     /// Each slot is placed exactly according to the given matrix, with an optional modifier for small adjustments.
     /// </summary>
-    public static float[][] GenerateExplicit(float[,] matrix, int blockRotation = 0, Action<TransformationData>? modifier = null) {
-        int count = matrix.GetLength(1);
+    public static float[][] GenerateExplicit(ExplicitTransform transform, Action<TransformationData>? modifier = null) {
+        int count = transform.Length;
         float[][] tfMatrices = new float[count][];
-        TransformationData td = new(blockRotation);
+        TransformationData td = new();
 
         for (int i = 0; i < count; i++) {
             td.Reset();
             td.index = i;
 
-            td.x = matrix[0, i];
-            td.y = matrix[1, i];
-            td.z = matrix[2, i];
+            td.x = transform.X[i];
+            td.y = transform.Y[i];
+            td.z = transform.Z[i];
 
-            td.rotX = matrix[3, i];
-            td.rotY = matrix[4, i];
-            td.rotZ = matrix[5, i];
+            td.offsetRotX = transform.RX[i];
+            td.offsetRotY = transform.RY[i];
+            td.offsetRotZ = transform.RZ[i];
 
             modifier?.Invoke(td);
 

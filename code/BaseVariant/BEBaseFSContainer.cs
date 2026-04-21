@@ -19,7 +19,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected abstract InfoDisplayOptions InfoDisplay { get; }
 
     protected virtual bool RipeningSpot => false;
-    protected virtual bool IgnoreSegmentRestrictions => false;
 
     protected virtual float PerishMultiplier { get; set; } = 1;
     protected virtual float CuringMultiplier { get; set; } = 1;
@@ -43,6 +42,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         if (blockMesh == null) InitMesh();
         
         inv.OnAcquireTransitionSpeed += Inventory_OnAcquireTransitionSpeed;
+
+        // Restrict chutes from interacting
         inv.OnGetAutoPushIntoSlot = (_, _) => null;
         inv.OnGetAutoPullFromSlot = _ => null;
 
@@ -125,7 +126,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
         ItemStack incoming = slot.Itemstack!;
 
-        if (!IgnoreSegmentRestrictions && !CanInsertIntoSegment(inv[startIndex].Itemstack, incoming))
+        if (!CanInsertIntoSegment(inv[startIndex].Itemstack, incoming))
             return false;
 
         if (!isBulk) {

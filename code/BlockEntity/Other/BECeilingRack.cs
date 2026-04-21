@@ -26,7 +26,7 @@ public class BECeilingRack : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        if (slot.Empty) { // Take jar
+        if (slot.Empty) {
             if (!inv[0].Empty) return TryTake(byPlayer, blockSel);
             if (!inv[1].Empty) return TryTakeFromSlot(byPlayer, inv[1]);
 
@@ -34,7 +34,7 @@ public class BECeilingRack : BEBaseFSContainer {
         }
 
         if (inv[1].Empty) {
-            if (slot.CanStoreInSlot(AttributeCheck)) { // Put jar in rack
+            if (slot.CanStoreInSlot(AttributeCheck)) {
                 if (slot.TryPutInto(Api.World, inv[1]) > 0) {
                     return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
@@ -43,7 +43,6 @@ public class BECeilingRack : BEBaseFSContainer {
             return false;
         }
 
-        // Large Jar interactions
         return base.OnInteract(byPlayer, blockSel, "fsLiquidyStuff");
     }
 

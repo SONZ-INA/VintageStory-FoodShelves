@@ -89,8 +89,8 @@ public static class CheckExtensions {
         if (checkSlot?.Collectible == null || currSlot?.Collectible == null)
             return true;
 
-        string? checkGroup = checkSlot.ItemAttributes?["fsGroup"]?.AsString();
-        string? currGroup = currSlot.ItemAttributes?["fsGroup"]?.AsString();
+        string? checkGroup = checkSlot.ItemAttributes?[FSGroup]?.AsString();
+        string? currGroup = currSlot.ItemAttributes?[FSGroup]?.AsString();
 
         if (string.IsNullOrEmpty(checkGroup) && string.IsNullOrEmpty(currGroup))
             return true;

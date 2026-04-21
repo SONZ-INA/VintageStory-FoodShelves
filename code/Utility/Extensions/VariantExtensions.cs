@@ -3,6 +3,8 @@
 namespace FoodShelves;
 
 public static class VariantExtensions {
+    private static string VariantTextures = "variantTextures";
+
     /// <summary>
     /// Retrieves the block variant data needed for properly meshing variant textures on blocks.<br/>
     /// Avoid using this method during animation mesh generation.
@@ -24,8 +26,8 @@ public static class VariantExtensions {
         var stexSource = new ShapeTextureSource(capi, shape, "FS-TextureSource");
 
         // Custom Textures
-        if (stackWithAttributes.Attributes[FSAttributes] is ITreeAttribute tree && block.Attributes["variantTextures"].Exists) {
-            foreach (var pair in block.Attributes["variantTextures"].AsObject<Dictionary<string, string[]>>()!) {
+        if (stackWithAttributes.Attributes[FSAttributes] is ITreeAttribute tree && block.Attributes[VariantTextures].Exists) {
+            foreach (var pair in block.Attributes[VariantTextures].AsObject<Dictionary<string, string[]>>()!) {
                 string[] texPaths = pair.Value;
 
                 foreach (var attr in tree) {
@@ -60,7 +62,7 @@ public static class VariantExtensions {
     /// Intended for use in animations; do not use GetBlockVariantData here.
     /// </summary>
     public static void ApplyVariantTextures(this Shape shape, BEBaseFSContainer fscontainer) {
-        var variantTextures = fscontainer.Block.Attributes?["variantTextures"]?.AsObject<Dictionary<string, string[]>>();
+        var variantTextures = fscontainer.Block.Attributes?[VariantTextures]?.AsObject<Dictionary<string, string[]>>();
 
         if (variantTextures == null) return;
         if (fscontainer.VariantAttributes == null) return;

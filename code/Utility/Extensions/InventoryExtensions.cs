@@ -7,10 +7,10 @@ public static class InventoryExtensions {
     /// Rebuilds the inventory for a block entity container, preserving existing item stacks and
     /// recreating slots using the specified max stack size.<br/> Must be called before inventory initialization!
     /// </summary>
-    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1) {
+    public static void RebuildInventory(this BEBaseFSContainer be, ICoreAPI api, int maxSlotStackSize = 1, bool isBulk = false) {
         ItemStack?[] stack = [.. be.inv.Select(slot => slot.Itemstack)];
 
-        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize));
+        be.inv = new InventoryGeneric(be.SlotCount, be.inv.ClassName + "-0", api, (_, inv) => new ItemSlotFSUniversal(inv, be.AttributeCheck, maxSlotStackSize, isBulk));
 
         for (int i = 0; i < be.SlotCount; i++) {
             if (i >= stack.Length) break;
@@ -93,15 +93,11 @@ public static class InventoryExtensions {
     /// Used for deserializing data from the "ucontents" attribute.
     /// </summary>
     private static ItemStack CreateItemStackFromJson(ITreeAttribute stackAttr, IWorldAccessor world, string defaultDomain) {
-        CollectibleObject? collObj;
         var loc = AssetLocation.Create(stackAttr.GetString("code"), defaultDomain);
-        
-        if (stackAttr.GetString("type") == "item") {
-            collObj = world.GetItem(loc);
-        }
-        else {
-            collObj = world.GetBlock(loc);
-        }
+
+        CollectibleObject? collObj = stackAttr.GetString("type") == "item"
+            ? world.GetItem(loc)
+            : world.GetBlock(loc);
 
         ItemStack stack = new(collObj, (int)stackAttr.GetDecimal("quantity", 1));
         var attr = (stackAttr["attributes"] as TreeAttribute)?.Clone();

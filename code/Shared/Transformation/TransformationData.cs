@@ -4,7 +4,7 @@
 /// A hierarchical state container that stores translation, rotation, and scale properties. Its BuildMatrix method handles the complex 3D math by chaining transforms in a specific order. <br />
 /// Use offsets for item-specific manipulation!
 /// </summary>
-public class TransformationData(int blockRotation = 0) {
+public class TransformationData() {
     public int index;
     public int shelf;
     public int segment;
@@ -20,8 +20,10 @@ public class TransformationData(int blockRotation = 0) {
 
     public bool hidden;
 
+    /// <summary>
+    /// Resets all properties to 0, except preRotate.
+    /// </summary>
     public void Reset() {
-        preRotate = 0;
         x = y = z = 0;
         offsetX = offsetY = offsetZ = 0;
         rotX = rotY = rotZ = 0;
@@ -41,7 +43,7 @@ public class TransformationData(int blockRotation = 0) {
         mat.Translate(0.5f, 0, 0.5f);
 
         // Handle block rotation
-        mat.RotateYDeg(blockRotation + preRotate);
+        mat.RotateYDeg(preRotate);
 
         // Handle segment locations
         mat.Translate(x, y, z);

@@ -81,12 +81,13 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[,] transformationMatrix = block.GetTransformationMatrix(GetTransformationPath());
-        int blockRotation = Block.GetRotationAngle();
+        ExplicitTransform transformationMatrix = block.GetTransformationMatrix(GetTransformationPath());
+        
         var modifier = block.GetTransformationModifier();
+        int blockRotation = Block.GetRotationAngle();
 
-        return TransformationGenerator.GenerateExplicit(transformationMatrix, blockRotation, (t) => {
-            t.preRotate = MeshAngle * GameMath.RAD2DEG;
+        return TransformationGenerator.GenerateExplicit(transformationMatrix, (t) => {
+            t.preRotate = blockRotation + MeshAngle * GameMath.RAD2DEG;
 
             modifier?.Invoke(t);
         });

@@ -40,7 +40,7 @@ public static class GeneralBlockExtensions {
     /// Returns an empty string if no relevant attribute is found.
     /// </summary>
     public static string GetMaterialNameLocalized(this ItemStack itemStack, bool includeParenthesis = true) {
-        if (itemStack.Attributes["FSAttributes"] is not ITreeAttribute tree)
+        if (itemStack.Attributes[FSAttributes] is not ITreeAttribute tree)
             return "";
 
         foreach (var pair in tree) {
@@ -59,7 +59,7 @@ public static class GeneralBlockExtensions {
     /// - Loads material variants from world properties JSON files if available.<br/>
     /// - Adds a default block stack unless explicitly skipped via attributes.<br/>
     /// - For each material variant, creates a corresponding item stack with variant-specific attributes for display in the creative inventory.<br/>
-    /// - Assigns the generated stacks to the block’s creative inventory tabs "general", "decorative", and "purposefulstorage".<br/>
+    /// - Assigns the generated stacks to the block’s creative inventory tabs "general", "decorative", and "foodshelves".<br/>
     /// </summary>
     public static void LoadVariantsCreative(ICoreAPI api, Block block) {
         string blockSide = block.Variant["side"];
@@ -85,7 +85,7 @@ public static class GeneralBlockExtensions {
 
         var stacks = new List<JsonItemStack>();
 
-        if (block.Attributes?["skipDefault"]?.AsBool() != true) {
+        if (block.Attributes?[FSSkipDefault]?.AsBool() != true) {
             var defaultBlock = new JsonItemStack() {
                 Code = block.Code,
                 Type = EnumItemClass.Block,
@@ -103,7 +103,7 @@ public static class GeneralBlockExtensions {
                 };
 
                 var attributes = new JObject {
-                    ["FSAttributes"] = fsAttributes
+                    [FSAttributes] = fsAttributes
                 };
 
                 var jstack = new JsonItemStack() {

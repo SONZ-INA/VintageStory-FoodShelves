@@ -1,7 +1,22 @@
 ﻿namespace FoodShelves;
 
-public static class Patches {
-    public static void PatchCollectibleWhitelist(CollectibleObject obj, KeyValuePair<string, RestrictionData> restrictionData, Dictionary<string, ModelTransform>? transformationData) {
+public static class FSDataFinalizer {
+    /// <summary>
+    /// Applies all defined restrictions and optional transformations to collectible items needed for this mod.
+    /// </summary>
+    public static void FinalizeAssets(ICoreAPI api, Dictionary<string, RestrictionData> restrictions, Dictionary<string, Dictionary<string, ModelTransform>> transformations) {
+        foreach (CollectibleObject obj in api.World.Collectibles) {
+            foreach (var restriction in restrictions) {
+                transformations.TryGetValue(restriction.Key, out var transformation);
+                PatchCollectibleWhitelist(obj, restriction, transformation);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if a collectible matches a restriction and applies tags and optional model transformation data.
+    /// </summary>
+    private static void PatchCollectibleWhitelist(CollectibleObject obj, KeyValuePair<string, RestrictionData> restrictionData, Dictionary<string, ModelTransform>? transformationData) {
         bool shouldPatch = false;
 
         string token = restrictionData.Key;

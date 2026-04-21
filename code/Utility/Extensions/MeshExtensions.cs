@@ -57,12 +57,11 @@ public static class MeshExtensions {
     /// <summary>
     /// Returns a pie texture source based on the 'inPieProperties' attribute.
     /// </summary>
-    public static ITexPositionSource? GetPieTexture(ICoreClientAPI capi, ItemStack?[] contents, Shape? shape, string itemPath) {
-        if (capi == null || shape == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetPieTexture(ICoreClientAPI capi, ItemStack? stack, Shape? shape) {
+        if (capi == null || shape == null || stack == null) 
             return null;
 
-        var item = contents[0];
-        var pieProps = item?.ItemAttributes?["inPieProperties"];
+        var pieProps = stack?.ItemAttributes?["inPieProperties"];
         if (pieProps?.Exists != true)
             return null;
 
@@ -83,32 +82,30 @@ public static class MeshExtensions {
     /// <summary>
     /// Returns a texture source defined by the item's 'inContainerTexture' attribute.
     /// </summary>
-    public static ITexPositionSource? GetContainerTextureSource(ICoreClientAPI capi, ItemStack?[] contents) {
-        if (capi == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetContainerTextureSource(ICoreClientAPI capi, ItemStack? stack) {
+        if (capi == null || stack == null)
             return null;
 
-        var item = contents[0];
-        var texAttr = item?.ItemAttributes?["inContainerTexture"];
+        var texAttr = stack?.ItemAttributes?["inContainerTexture"];
         if (texAttr?.Exists != true) 
             return null;
 
         var texture = texAttr.AsObject<CompositeTexture>();
-        return new ContainerTextureSource(capi, item, texture);
+        return new ContainerTextureSource(capi, stack, texture);
     }
 
     /// <summary>
     /// Returns a texture source using the item's first available texture.
     /// </summary>
-    public static ITexPositionSource? GetItemTextureSource(ICoreClientAPI capi, ItemStack?[] contents) {
-        if (capi == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetItemTextureSource(ICoreClientAPI capi, ItemStack? stack) {
+        if (capi == null || stack == null)
             return null;
 
-        var item = contents[0];
-        var firstTexture = item?.Item?.Textures?.Values?.FirstOrDefault();
+        var firstTexture = stack?.Item?.Textures?.Values?.FirstOrDefault();
         if (firstTexture == null) 
             return null;
 
-        return new ContainerTextureSource(capi, item, firstTexture);
+        return new ContainerTextureSource(capi, stack, firstTexture);
     }
 
     /// <summary>

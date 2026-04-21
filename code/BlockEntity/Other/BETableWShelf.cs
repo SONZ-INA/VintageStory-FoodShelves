@@ -7,7 +7,6 @@ public class BETableWShelf : BEBaseFSContainer {
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
     
     protected override bool RipeningSpot => true;
-    protected override bool IgnoreSegmentRestrictions => true;
 
     public override int ItemsPerSegment => 2;
 
