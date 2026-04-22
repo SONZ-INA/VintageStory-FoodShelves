@@ -84,6 +84,6 @@ public class BECeilingRack : BEBaseFSContainer {
 
     public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
         base.GetBlockInfo(forPlayer, sb);
-        sb.AppendLine(TransitionInfoCompact(Api.World, inv[0], EnumTransitionType.Dry));
+        sb.AppendLine(TransitionInfoCompact(Api.World, inv[0], EnumTransitionType.Dry, TransitionDisplayMode.Percentage));
     }
 }

@@ -21,13 +21,4 @@ public class BlockFruitBasket : BaseFSBasket {
             t.offsetY = 0.05f;
         };
     }
-
-    protected override MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
-        if (itemstack == null) return null;
-
-        ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), Transformations, GetTransformationModifier());
-
-        return contentMesh;
-    }
 }

@@ -12,6 +12,7 @@ global using Vintagestory.API.MathTools;
 global using Vintagestory.GameContent;
 
 global using static FoodShelves.Constants;
+global using static FoodShelves.Enums;
 
 global using static FoodShelves.AnimationExtensions;
 global using static FoodShelves.CacheExtensions;

@@ -41,7 +41,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
             if (id != CutIceSlot) return new ItemSlotFSUniversal(inv, AttributeCheck);
-            else return new ItemSlotFSUniversal(inv, CoolingOnly, 1, true);
+            else return new ItemSlotFSUniversal(inv, FSCoolingOnly, 1, true);
         });
     }
 
@@ -107,7 +107,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
                 }
             }
 
-            if (DrawerOpen && slot.CanStoreInSlot(CoolingOnly)) {
+            if (DrawerOpen && slot.CanStoreInSlot(FSCoolingOnly)) {
                 if (TryPutIce(byPlayer, slot, blockSel)) {
                     return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
@@ -252,8 +252,8 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
         // For ice & water
         if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[CutIceSlot].Empty) {
-            if (inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
-                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!) + " - " + GetUntilMelted(inv[CutIceSlot]));
+            if (inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
+                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!) + " - " + TransitionInfoCompact(Api.World, inv[CutIceSlot], EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft));
             }
             else {
                 sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!));

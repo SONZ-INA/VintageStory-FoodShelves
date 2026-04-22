@@ -1,7 +1,6 @@
 ﻿namespace FoodShelves;
 
 public class BlockEggBasket : BaseFSBasket {
-    protected override Dictionary<string, ModelTransform> Transformations => []; // No custom transformations
     public override int InnerSlotCount => 12;
 
     public override ExplicitTransform GetTransformationMatrix(string? path) {

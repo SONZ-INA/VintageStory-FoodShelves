@@ -10,6 +10,7 @@ public class BETunRack : BEBaseFSContainer {
     protected override float CuringMultiplier => 0.74f;
 
     public override int SlotCount => 2;
+
     private readonly int capacityLitres = 500;
 
     public BETunRack() {

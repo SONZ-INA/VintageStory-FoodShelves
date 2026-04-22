@@ -3,7 +3,7 @@
 namespace FoodShelves;
 
 public static class VariantExtensions {
-    private static string VariantTextures = "variantTextures";
+    private static readonly string VariantTextures = "variantTextures";
 
     /// <summary>
     /// Retrieves the block variant data needed for properly meshing variant textures on blocks.<br/>

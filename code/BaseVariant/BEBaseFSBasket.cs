@@ -4,6 +4,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     protected new BaseFSBasket block = null!;
 
     protected abstract string CeilingAttachedUtil { get; }
+
     public float MeshAngle { get; set; }
     public bool IsCeilingAttached { get; set; }
 

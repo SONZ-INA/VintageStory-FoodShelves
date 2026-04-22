@@ -84,6 +84,14 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         });
     }
 
+    public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {
+        return true;
+    }
+    
+    public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type) {
+        return 0; // To prevent the block reducing the cellar rating
+    }
+
     public WorldInteraction[]? BaseGetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
@@ -95,49 +103,14 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
-    public override bool DoPartialSelection(IWorldAccessor world, BlockPos pos) {
-        return true;
-    }
-
-    public override int GetRetention(BlockPos pos, BlockFacing facing, EnumRetentionType type) {
-        return 0; // To prevent the block reducing the cellar rating
-    }
+    public bool BaseOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
+        => base.OnBlockInteractStart(world, byPlayer, blockSel);
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
         if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fscontainer) 
             return fscontainer.OnInteract(byPlayer, blockSel);
         
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
-    }
-
-    public bool BaseOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        return base.OnBlockInteractStart(world, byPlayer, blockSel);
-    }
-
-    public override string GetHeldItemName(ItemStack itemStack) {
-        return base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
-    }
-
-    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
-        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
-
-        string entry = "foodshelves:helddesc-" + heldDescEntry;
-        string desc = Lang.Get(entry);
-
-        if (desc != entry) {
-            dsc.AppendLine();
-            dsc.AppendLine(desc);
-        }
-    }
-
-    public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
-        if (preventPlacing) {
-            (api as ICoreClientAPI)!.TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
-            failureCode = "__ignore__";
-            return false;
-        }
-        
-        return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
     }
 
     public override void OnBlockBroken(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
@@ -185,6 +158,16 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         return stack;
     }
 
+    public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
+        if (preventPlacing) {
+            (api as ICoreClientAPI)!.TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
+            failureCode = "__ignore__";
+            return false;
+        }
+
+        return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
+    }
+
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
         return [OnPickBlock(world, pos)];
     }
@@ -193,6 +176,22 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         BlockDropItemStack[] drops = base.GetDropsForHandbook(handbookStack, forPlayer);
         drops[0].ResolvedItemstack?.SetFrom(handbookStack);
         return drops;
+    }
+
+    public override string GetHeldItemName(ItemStack itemStack) {
+        return base.GetHeldItemName(itemStack) + " " + itemStack.GetMaterialNameLocalized();
+    }
+
+    public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
+        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+
+        string entry = "foodshelves:helddesc-" + heldDescEntry;
+        string desc = Lang.Get(entry);
+
+        if (desc != entry) {
+            dsc.AppendLine();
+            dsc.AppendLine(desc);
+        }
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {

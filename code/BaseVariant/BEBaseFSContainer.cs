@@ -5,6 +5,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected bool globalBlockBuffs = true;
 
     public InventoryGeneric inv = null!;
+    
     protected BaseFSContainer block = null!;
     protected MeshData? blockMesh;
 
@@ -15,9 +16,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public ITreeAttribute VariantAttributes { get; set; } = new TreeAttribute();
     public virtual string AttributeCheck => "fs" + GetType().Name.Replace("BE", "");
 
-    protected virtual string CantPlaceMessage => "";
     protected abstract InfoDisplayOptions InfoDisplay { get; }
-
+    
+    protected virtual string CantPlaceMessage => "";
     protected virtual bool RipeningSpot => false;
 
     protected virtual float PerishMultiplier { get; set; } = 1;

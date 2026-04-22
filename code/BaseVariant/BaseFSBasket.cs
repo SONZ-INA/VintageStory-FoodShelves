@@ -42,6 +42,12 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         });
     }
 
+    public abstract ExplicitTransform GetTransformationMatrix(string? path = null);
+    
+    public virtual Action<TransformationData>? GetTransformationModifier() {
+        return null;
+    }
+
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
             .Append(interactions);
@@ -87,15 +93,6 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
             ItemStack[] contents = GetContents(world, inSlot.Itemstack);
             dsc.Append(PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world));
         }
-
-        dsc.AppendLine(Lang.Get("foodshelves:Empty."));
-        return;
-    }
-
-    public abstract ExplicitTransform GetTransformationMatrix(string? path = null);
-    
-    public virtual Action<TransformationData>? GetTransformationModifier() { 
-        return null; 
     }
 
     public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
@@ -191,15 +188,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         return false;
     }
 
-    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
-        return false;
-    }
-
-    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
-        // Do nothing
-    }
-
-    public WorldInteraction[] GetContainedInteractionHelp(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
-        return [];
-    }
+    public WorldInteraction[] GetContainedInteractionHelp(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => [];
+    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => false;
+    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {}
 }

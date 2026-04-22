@@ -108,7 +108,7 @@ public class BlockBarrelRack : BlockLiquidContainerBase, IContainedMeshSource {
             dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
             if (be?.inv[1].Empty == false) {
-                dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure));
+                dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure, TransitionDisplayMode.Percentage));
             }
         }
 

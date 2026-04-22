@@ -17,8 +17,6 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
     [TreeSerializable(false)] public bool DoorOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
-    
-    protected const string CoolingOnly = "fsCoolingOnly";
 
     private float IceMeltRate = 1;
     private float perishMultiplierBuffed;
@@ -31,7 +29,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", BuffedPerishMultiplier);
         perishMultiplierUnBuffed = globalBlockBuffs ? UnbuffedPerishMultiplier : 1f;
 
-        if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
+        if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
         if (DoorOpen) PerishMultiplier = 1f;
     }
 
@@ -42,7 +40,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (!inv[CutIceSlot].Empty
             && PerishMultiplier < perishMultiplierUnBuffed
-            && !inv[CutIceSlot].CanStoreInSlot(CoolingOnly)
+            && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)
         ) {
             if (DoorOpen) PerishMultiplier = 1f;
             else PerishMultiplier = perishMultiplierUnBuffed;
@@ -64,7 +62,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
         if (transType == EnumTransitionType.Melt)
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
-            // A stack should last about 32 days which is 8 ice blocks
+            // A stack should last about 24 days which is 8 ice blocks
             return 1f / (inv[CutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f * IceMeltRate;
 
         return PerishMultiplier * globalPerishMultiplier;
@@ -76,7 +74,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         if (slot.Empty) return false;
         ItemStack? stack = inv[CutIceSlot].Itemstack;
 
-        if (inv[CutIceSlot].Empty || (stack?.StackSize < stack?.Collectible.MaxStackSize && inv[CutIceSlot].CanStoreInSlot(CoolingOnly))) {
+        if (inv[CutIceSlot].Empty || (stack?.StackSize < stack?.Collectible.MaxStackSize && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly))) {
             int quantity = byPlayer.Entity.Controls.CtrlKey ? slot.Itemstack.StackSize : 1;
             int moved = slot.TryPutIntoBulk(Api.World, inv[CutIceSlot], quantity);
 
@@ -124,7 +122,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         else ToggleDrawer(false);
 
         if (!inv[CutIceSlot].Empty) {
-            if (inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
+            if (inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
                 HandleIceHeight(true);
             }
             else {
@@ -138,7 +136,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     }
 
     protected virtual void ToggleDoor(bool open, IPlayer? byPlayer = null) {
-        if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -154,7 +152,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
             AnimUtil.TryStopAnimation(DoorOpenAnim.Item1);
             PerishMultiplier = perishMultiplierUnBuffed;
 
-            if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
+            if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
                 PerishMultiplier = perishMultiplierBuffed;
             }
 
@@ -167,7 +165,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     }
 
     protected virtual void ToggleDrawer(bool open, IPlayer? byPlayer = null) {
-        if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
+        if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
             SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
         }
 
@@ -185,7 +183,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         else {
             AnimUtil.TryStopAnimation(DrawerOpenAnim.Item1);
 
-            if (!DoorOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(CoolingOnly)) {
+            if (!DoorOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
                 PerishMultiplier = perishMultiplierBuffed;
             }
 
