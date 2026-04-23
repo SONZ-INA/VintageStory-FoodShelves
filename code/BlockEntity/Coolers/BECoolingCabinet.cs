@@ -6,7 +6,11 @@ public class BECoolingCabinet : BEBaseFSCooler {
     // Base-Specific ----------------------------
     public override string AttributeTransformCode => "onHolderUniversalTransform";
     public override string AttributeCheck => "fsHolderUniversal";
-    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
+
+    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
+    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.Cycle;
+    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
+
     protected override bool RipeningSpot => true;
 
     public override int ShelfCount => 3;
@@ -245,32 +249,5 @@ public class BECoolingCabinet : BEBaseFSCooler {
 
             td.scaleX = td.scaleY = td.scaleZ = 0.95f;
         }, true);
-    }
-
-    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
-
-        // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[CutIceSlot].Empty) {
-            if (inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!) + " - " + TransitionInfoCompact(Api.World, inv[CutIceSlot], EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft));
-            }
-            else {
-                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!));
-            }
-        }
-
-        // Cycle segments when cabinet is closed
-        if (!DoorOpen && forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.ClosedCabinet) {
-            int currentSegment = (int)(Api.World.ElapsedMilliseconds / 2000) % 9;
-            sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + Lang.Get("foodshelves:segmentnum-" + currentSegment));
-
-            if (inv[currentSegment * ItemsPerSegment].Empty) {
-                sb.AppendLine(Lang.Get("foodshelves:Empty."));
-            }
-            else {
-                DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, SlotCount, SegmentsPerShelf, ItemsPerSegment, false, -1, currentSegment);
-            }
-        }
     }
 }

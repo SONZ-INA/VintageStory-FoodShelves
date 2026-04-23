@@ -3,6 +3,12 @@
 public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     public abstract int CutIceSlot { get; }
 
+    protected abstract InfoDisplayOptions DisplayInfoClosed { get; }
+    protected abstract InfoDisplayOptions DisplayInfoOpen { get; }
+    protected abstract int DisplayInfoIceIndex { get; }
+
+    protected sealed override InfoDisplayOptions InfoDisplay => DoorOpen ? DisplayInfoOpen : DisplayInfoClosed;
+
     protected abstract float BuffedPerishMultiplier { get; }
     protected abstract float UnbuffedPerishMultiplier { get; }
 
@@ -208,4 +214,22 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     }
 
     #endregion
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
+        DisplayPerishMultiplier(GetPerishRate(), sb);
+
+        if (RipeningSpot) {
+            float ripenRate = GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
+            if (ripenRate > 0) sb.Append(Lang.Get("Suitable spot for food ripening."));
+        }
+
+        // For ice & water
+        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == DisplayInfoIceIndex) {
+            sb.AppendLine();
+            sb.Append(IceDrawerInfo(Api.World, inv[CutIceSlot], FSCoolingOnly));
+            return;
+        }
+
+        DisplayInfo(forPlayer, sb, inv, InfoDisplay, SlotCount, SegmentsPerShelf, ItemsPerSegment, true, SlotCount - AdditionalSlots);
+    }
 }

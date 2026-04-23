@@ -6,7 +6,10 @@ public class BEFruitCooler : BEBaseFSCooler {
 
     // Base-Specific ----------------------------
     protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
-    protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
+    
+    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
+    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.AllSegments;
+    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
 
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
@@ -160,30 +163,4 @@ public class BEFruitCooler : BEBaseFSCooler {
     }
 
     protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
-
-    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
-        base.GetBlockInfo(forPlayer, sb);
-
-        // For ice & water
-        if (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.IceDrawer && !inv[CutIceSlot].Empty) {
-            if (inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!) + " - " + TransitionInfoCompact(Api.World, inv[CutIceSlot], EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft));
-            }
-            else {
-                sb.AppendLine(GetNameAndStackSize(inv[CutIceSlot].Itemstack!));
-            }
-        }
-
-        // Display all segments if freezer is closed
-        if (!DoorOpen && (forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.FreezerDoor || forPlayer.CurrentBlockSelection.SelectionBoxIndex == (int)SlotType.FruitCooler)) {
-            for (int i = 0; i < 4; i++) {
-                if (inv[i * ItemsPerSegment].Empty) {
-                    sb.AppendLine(Lang.Get("foodshelves:Empty."));
-                }
-                else {
-                    DisplayInfo(forPlayer, sb, inv, InfoDisplayOptions.BySegment, SlotCount, SegmentsPerShelf, ItemsPerSegment, false, -1, i);
-                }
-            }
-        }
-    }
 }

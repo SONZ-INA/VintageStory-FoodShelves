@@ -153,13 +153,13 @@
   "Items inside {0}": "Items inside: {0}",
   "No item will perish soon.": "No item will perish soon.",
 
-  "segmentnum-0": "Bottom left",
-  "segmentnum-1": "Bottom center",
-  "segmentnum-2": "Bottom right",
-  "segmentnum-3": "Middle left",
-  "segmentnum-4": "Middle center",
-  "segmentnum-5": "Middle right",
-  "segmentnum-6": "Top left",
-  "segmentnum-7": "Top center",
-  "segmentnum-8": "Top right"
+  "segmentnum-coolingcabinet-0": "Bottom left",
+  "segmentnum-coolingcabinet-1": "Bottom center",
+  "segmentnum-coolingcabinet-2": "Bottom right",
+  "segmentnum-coolingcabinet-3": "Middle left",
+  "segmentnum-coolingcabinet-4": "Middle center",
+  "segmentnum-coolingcabinet-5": "Middle right",
+  "segmentnum-coolingcabinet-6": "Top left",
+  "segmentnum-coolingcabinet-7": "Top center",
+  "segmentnum-coolingcabinet-8": "Top right"
 }

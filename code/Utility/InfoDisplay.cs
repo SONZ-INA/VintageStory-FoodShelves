@@ -5,11 +5,13 @@ namespace FoodShelves;
 
 public static class InfoDisplay {
     public enum InfoDisplayOptions {
+        AllSegments,
         ByBlock,
         ByShelf,
         BySegment,
         BySegmentGrouped,
-        ByBlockAverageAndSoonest
+        ByBlockAverageAndSoonest,
+        Cycle
     }
 
     #region // Public Methods -------------------------------------------------------------------------------------------------------------------------------
@@ -22,25 +24,35 @@ public static class InfoDisplay {
         dsc.AppendLine(Lang.Get("Stored food perish speed: {0}x", Math.Round(perishMul, 2)));
     }
 
-    public static void DisplayInfo(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf = 0, int itemsPerSegment = 0, bool skipLine = true, int skipSlotsFrom = -1, int selectedSegment = -1) {
+    public static void DisplayInfo(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, InfoDisplayOptions displaySelection, int slotCount, int segmentsPerShelf = 0, int itemsPerSegment = 0, bool skipLine = true, int skipSlotsFrom = -1) {
         if (skipLine) sb.AppendLine(); // Space in between to be in line with vanilla
 
         IWorldAccessor world = inv.Api.World;
 
+        int selectionIndex = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
+
         switch (displaySelection) {
+            case InfoDisplayOptions.AllSegments:
+                ProcessAllSegmentsDisplay(forPlayer, sb, inv, slotCount, itemsPerSegment, skipSlotsFrom);
+                return;
+
             case InfoDisplayOptions.ByBlockAverageAndSoonest:
                 sb.Append(PerishableInfoAverageAndSoonest([.. inv], world));
                 return;
 
             case InfoDisplayOptions.BySegmentGrouped:
-                int fromSlot = forPlayer.CurrentBlockSelection.SelectionBoxIndex * itemsPerSegment;
+                int fromSlot = selectionIndex * itemsPerSegment;
                 sb.Append(PerishableInfoGrouped(inv, fromSlot, fromSlot + itemsPerSegment));
+                return;
+
+            case InfoDisplayOptions.Cycle:
+                ProcessCycleDisplay(forPlayer, sb, inv, slotCount, itemsPerSegment, skipSlotsFrom);
                 return;
 
             case InfoDisplayOptions.ByBlock:
             case InfoDisplayOptions.ByShelf:
             case InfoDisplayOptions.BySegment:
-                ProcessStandardDisplay(forPlayer, sb, inv, displaySelection, slotCount, segmentsPerShelf, itemsPerSegment, skipSlotsFrom, selectedSegment);
+                ProcessStandardDisplay(forPlayer, sb, inv, displaySelection, slotCount, segmentsPerShelf, itemsPerSegment, skipSlotsFrom, selectionIndex);
                 return;
         }
     }
@@ -139,6 +151,17 @@ public static class InfoDisplay {
         return dsc.ToString();
     }
 
+    public static string IceDrawerInfo(IWorldAccessor world, ItemSlot iceSlot, string coolingAttributeCheck) {
+        if (iceSlot == null || iceSlot.Empty) return "";
+
+        if (iceSlot.CanStoreInSlot(coolingAttributeCheck)) {
+            return GetNameAndStackSize(iceSlot.Itemstack!) + " - " + TransitionInfoCompact(world, iceSlot, EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft);
+        }
+        else {
+            return GetNameAndStackSize(iceSlot.Itemstack!);
+        }
+    }
+
     public static string? GetNutrientRequirement(IWorldAccessor world, ItemStack? itemStack, bool withTranslation = true) {
         if (itemStack?.Collectible == null) return null;
 
@@ -205,6 +228,53 @@ public static class InfoDisplay {
         }
 
         return true;
+    }
+
+    private static void ProcessCycleDisplay(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, int slotCount, int itemsPerSegment, int skipSlotsFrom) {
+        IWorldAccessor world = inv.Api.World;
+
+        int validSlotCount = skipSlotsFrom != -1 ? skipSlotsFrom : slotCount;
+        int totalSegments = validSlotCount / itemsPerSegment;
+        if (totalSegments <= 0) return;
+
+        int currentSegment = (int)(world.ElapsedMilliseconds / 2000) % totalSegments;
+
+        var currentBlockSelection = forPlayer.CurrentBlockSelection;
+        if (currentBlockSelection == null) return;
+
+        Block? selectionBlock = currentBlockSelection.Block;
+        string blockCode = selectionBlock?.Code?.FirstCodePart() ?? "unknown";
+
+        if (blockCode == "multiblock") {
+            var be = selectionBlock?.GetBlockEntity<BEBaseFSContainer>(currentBlockSelection);
+            blockCode = be?.Block?.Code?.FirstCodePart() ?? "unknown";
+        }
+
+        sb.AppendLine(Lang.Get("foodshelves:Displaying segment") + " " + Lang.Get($"foodshelves:segmentnum-{blockCode}-{currentSegment}"));
+
+        int startSlot = currentSegment * itemsPerSegment;
+        if (inv[startSlot].Empty) {
+            sb.AppendLine(Lang.Get("foodshelves:Empty."));
+        }
+        else {
+            ProcessStandardDisplay(forPlayer, sb, inv, InfoDisplayOptions.BySegment, slotCount, 0, itemsPerSegment, skipSlotsFrom, currentSegment);
+        }
+    }
+
+    private static void ProcessAllSegmentsDisplay(IPlayer forPlayer, StringBuilder sb, InventoryGeneric inv, int slotCount, int itemsPerSegment, int skipSlotsFrom) {
+        int validSlotCount = skipSlotsFrom != -1 ? skipSlotsFrom : slotCount;
+        int totalSegments = validSlotCount / itemsPerSegment;
+
+        for (int i = 0; i < totalSegments; i++) {
+            int startSlot = i * itemsPerSegment;
+
+            if (inv[startSlot].Empty) {
+                sb.AppendLine(Lang.Get("foodshelves:Empty."));
+            }
+            else {
+                ProcessStandardDisplay(forPlayer, sb, inv, InfoDisplayOptions.BySegment, slotCount, 0, itemsPerSegment, skipSlotsFrom, i);
+            }
+        }
     }
 
     private static string BasketInfo(InventoryGeneric inv, ItemSlot slot, ItemStack stack) {
