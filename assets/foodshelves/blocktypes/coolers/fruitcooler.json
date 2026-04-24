@@ -29,7 +29,7 @@
     { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
   ],
   "shape": {
-    "base": "block/glassware/fruitcooler",
+    "base": "block/coolers/fruitcooler",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",

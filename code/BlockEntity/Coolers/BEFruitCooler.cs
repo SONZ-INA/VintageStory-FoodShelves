@@ -5,17 +5,17 @@ public class BEFruitCooler : BEBaseFSCooler {
     private readonly MeshData?[] contentMeshes = new MeshData[4];
 
     // Base-Specific ----------------------------
-    protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
-    
-    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
-    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.AllSegments;
-    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
+    protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";    
 
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
 
     // Cooler-Specific --------------------------
     public override int CutIceSlot => 4;
+
+    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
+    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.AllSegments;
+    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
 
     protected override float BuffedPerishMultiplier => 0.4f;
     protected override float UnbuffedPerishMultiplier => 0.65f;
@@ -57,7 +57,7 @@ public class BEFruitCooler : BEBaseFSCooler {
         base.InitMesh();
 
         for (int i = 0; i < 4; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilFruitCooler, 9f)!.BlockYRotation(block);
+            contentMeshes[i] = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilFruitCooler, 9f).BlockYRotation(block);
         }
     }
 
@@ -124,36 +124,18 @@ public class BEFruitCooler : BEBaseFSCooler {
 
     #endregion
 
-    #region Animation
-
-    protected override void HandleIceHeight(bool up) {
-        SetIceHeight(up);
-    }
-
-    private void SetIceHeight(bool up) {
-        if (up) {
-            SetWaterHeight(false);
-            AnimUtil.TryStartAnimation("iceup", 6f);
-        }
-        else {
-            AnimUtil.TryStopAnimation("iceup");
-        }
-    }
-
-    #endregion
-
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         base.OnTesselation(mesher, tesselator);
 
         for (int i = 0; i < 4; i++) {
             if (contentMeshes[i] == null) continue;
 
-            MeshData contentMesh = contentMeshes[i]!.Clone();
+            MeshData? contentMesh = contentMeshes[i]?.Clone();
             switch ((BlockDirection)block.GetRotationAngle()) {
-                case BlockDirection.North: contentMesh.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
-                case BlockDirection.West: contentMesh.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;
-                case BlockDirection.South: contentMesh.Translate(-i%2 * 0.4065f, 0, i/2 * 0.4065f); break;
-                case BlockDirection.East: contentMesh.Translate(i/2 * 0.4065f, 0, i%2 * 0.4065f); break;
+                case BlockDirection.North: contentMesh?.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
+                case BlockDirection.West: contentMesh?.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;
+                case BlockDirection.South: contentMesh?.Translate(-i%2 * 0.4065f, 0, i/2 * 0.4065f); break;
+                case BlockDirection.East: contentMesh?.Translate(i/2 * 0.4065f, 0, i%2 * 0.4065f); break;
             }
 
             mesher.AddMeshData(contentMesh);

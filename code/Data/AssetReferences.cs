@@ -2,11 +2,11 @@
 
 public static class ShapeReferences {
     public const string HorizontalBarrel = "foodshelves:shapes/block/barrels/horizontalbarrel.json";
-    public const string CoolingCabinet = "foodshelves:shapes/block/glassware/coolingcabinet.json";
-    public const string MeatFreezer = "foodshelves:shapes/block/glassware/meatfreezer.json";
+    public const string CoolingCabinet = "foodshelves:shapes/block/coolers/coolingcabinet.json";
+    public const string MeatFreezer = "foodshelves:shapes/block/coolers/meatfreezer.json";
+    public const string FruitCooler = "foodshelves:shapes/block/coolers/fruitcooler.json";
     public const string WallCabinet = "foodshelves:shapes/block/glassware/wallcabinet.json";
     public const string SeedBins = "foodshelves:shapes/block/glassware/seedbins.json";
-    public const string FruitCooler = "foodshelves:shapes/block/glassware/fruitcooler.json";
 
     public const string utilFruitBasket = "foodshelves:shapes/util/fruitbasketrope.json";
     public const string utilVegetableBasket = "foodshelves:shapes/util/vegetablebasketrope.json";

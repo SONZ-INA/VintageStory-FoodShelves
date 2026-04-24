@@ -1222,30 +1222,8 @@
 		},
 
 		{
-			"name": "iceHeight1",
-			"code": "iceheight1",
-			"quantityframes": 10,
-			"onActivityStopped": "Rewind",
-			"onAnimationEnd": "Hold",
-			"keyframes": [
-				{
-					"frame": 0,
-					"elements": {
-						"ibsOriginIce": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
-					}
-				},
-				{
-					"frame": 9,
-					"elements": {
-						"ibsOriginIce": { "offsetX": 0.0, "offsetY": 2.0, "offsetZ": 0.0 }
-					}
-				}
-			]
-		},
-
-		{
-			"name": "iceHeight2",
-			"code": "iceheight2",
+			"name": "iceHeight",
+			"code": "iceheight",
 			"quantityframes": 20,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",
@@ -1259,28 +1237,6 @@
 				{
 					"frame": 19,
 					"elements": {
-						"ibsOriginIce": { "offsetX": 0.0, "offsetY": 3.5, "offsetZ": 0.0 }
-					}
-				}
-			]
-		},
-
-		{
-			"name": "iceHeight3",
-			"code": "iceheight3",
-			"quantityframes": 30,
-			"onActivityStopped": "Rewind",
-			"onAnimationEnd": "Hold",
-			"keyframes": [
-				{
-					"frame": 0,
-					"elements": {
-						"ibsOriginIce": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
-					}
-				},
-				{
-					"frame": 29,
-					"elements": {
 						"ibsOriginIce": { "offsetX": 0.0, "offsetY": 5.0, "offsetZ": 0.0 }
 					}
 				}
@@ -1290,7 +1246,7 @@
 		{
 			"name": "waterHeight",
 			"code": "waterheight",
-			"quantityframes": 10,
+			"quantityframes": 20,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",
 			"keyframes": [
@@ -1301,7 +1257,7 @@
 					}
 				},
 				{
-					"frame": 9,
+					"frame": 19,
 					"elements": {
 						"ibsOriginWater": { "offsetX": 0.0, "offsetY": 2.0, "offsetZ": 0.0 }
 					}

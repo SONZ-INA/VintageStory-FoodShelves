@@ -103,13 +103,14 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
-    public bool BaseOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel)
-        => base.OnBlockInteractStart(world, byPlayer, blockSel);
+    public bool BaseOnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
+        return base.OnBlockInteractStart(world, byPlayer, blockSel);
+    }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fscontainer) 
-            return fscontainer.OnInteract(byPlayer, blockSel);
-        
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fsContainer)
+            return fsContainer.OnInteract(byPlayer, blockSel);
+
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 

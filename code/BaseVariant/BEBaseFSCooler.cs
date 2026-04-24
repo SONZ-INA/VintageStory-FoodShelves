@@ -20,6 +20,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     protected virtual (string, float) DoorOpenAnim => ("dooropen", 3f);
     protected virtual (string, float) DrawerOpenAnim => ("draweropen", 3f);
     protected virtual (string, float) WaterHeightAnim => ("waterheight", 6f);
+    protected virtual (string, float) IceHeightAnim => ("iceheight", 6f);
 
     [TreeSerializable(false)] public bool DoorOpen { get; set; }
     [TreeSerializable(false)] public bool DrawerOpen { get; set; }
@@ -85,7 +86,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
             int moved = slot.TryPutIntoBulk(Api.World, inv[CutIceSlot], quantity);
 
             if (moved > 0) {
-                HandleIceHeight(true);
+                SetIceHeight(true);
                 MarkDirty(true);
                 (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             }
@@ -107,7 +108,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
                 Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
             }
 
-            HandleIceHeight(false);
+            SetIceHeight(false);
             SetWaterHeight(false);
 
             return true;
@@ -129,14 +130,14 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
         if (!inv[CutIceSlot].Empty) {
             if (inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-                HandleIceHeight(true);
+                SetIceHeight(true);
             }
             else {
                 SetWaterHeight(true);
             }
         }
         else {
-            HandleIceHeight(false);
+            SetIceHeight(false);
             SetWaterHeight(false);
         }
     }
@@ -201,11 +202,19 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         DrawerOpen = open;
     }
 
-    protected abstract void HandleIceHeight(bool up);
+    protected virtual void SetIceHeight(bool up) {
+        if (up) {
+            SetWaterHeight(false);
+            AnimUtil.TryStartAnimation(IceHeightAnim.Item1, IceHeightAnim.Item2);
+        }
+        else {
+            AnimUtil.TryStopAnimation(IceHeightAnim.Item1);
+        }
+    }
 
     protected virtual void SetWaterHeight(bool up) {
         if (up) {
-            HandleIceHeight(false);
+            SetIceHeight(false);
             AnimUtil.TryStartAnimation(WaterHeightAnim.Item1, WaterHeightAnim.Item2);
         }
         else {

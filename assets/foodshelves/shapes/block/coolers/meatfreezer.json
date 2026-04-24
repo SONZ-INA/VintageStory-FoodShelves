@@ -949,9 +949,9 @@
 		},
 
 		{
-			"name": "IceHeight1",
-			"code": "iceheight1",
-			"quantityframes": 15,
+			"name": "IceHeight",
+			"code": "iceheight",
+			"quantityframes": 20,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",
 			"keyframes": [
@@ -962,51 +962,7 @@
 					}
 				},
 				{
-					"frame": 14,
-					"elements": {
-						"originIce": { "offsetX": 0.0, "offsetY": 2.0, "offsetZ": 0.0 }
-					}
-				}
-			]
-		},
-
-		{
-			"name": "IceHeight2",
-			"code": "iceheight2",
-			"quantityframes": 15,
-			"onActivityStopped": "Rewind",
-			"onAnimationEnd": "Hold",
-			"keyframes": [
-				{
-					"frame": 0,
-					"elements": {
-						"originIce": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
-					}
-				},
-				{
-					"frame": 14,
-					"elements": {
-						"originIce": { "offsetX": 0.0, "offsetY": 3.0, "offsetZ": 0.0 }
-					}
-				}
-			]
-		},
-
-		{
-			"name": "IceHeight3",
-			"code": "iceheight3",
-			"quantityframes": 15,
-			"onActivityStopped": "Rewind",
-			"onAnimationEnd": "Hold",
-			"keyframes": [
-				{
-					"frame": 0,
-					"elements": {
-						"originIce": { "offsetX": 0.0, "offsetY": 0.0, "offsetZ": 0.0 }
-					}
-				},
-				{
-					"frame": 14,
+					"frame": 19,
 					"elements": {
 						"originIce": { "offsetX": 0.0, "offsetY": 4.0, "offsetZ": 0.0 }
 					}

@@ -2,20 +2,20 @@
 
 public class BEMeatFreezer : BEBaseFSCooler {
     protected new BlockMeatFreezer block = null!;
-    private readonly MeshData[] contentMeshes = new MeshData[4];
+    private readonly MeshData?[] contentMeshes = new MeshData[4];
 
     // Base-Specific ----------------------------
     protected override string CantPlaceMessage => "foodshelves:Only raw meat can be placed in this freezer.";
     
-    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
-    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.AllSegments;
-    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
-
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;
 
     // Cooler-Specific --------------------------
     public override int CutIceSlot => 4;
+
+    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
+    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.AllSegments;
+    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
 
     protected override float BuffedPerishMultiplier => 0.65f;
     protected override float UnbuffedPerishMultiplier => 0.65f;
@@ -25,8 +25,6 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override AssetLocation DrawerOpenSound => SoundReferences.IceDrawerOpen;
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
-
-    private static readonly string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
     
     private enum SlotType {
         Segment1 = 0,
@@ -55,10 +53,10 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override void InitMesh() {
         base.InitMesh();
 
-        contentMeshes[0] = GenPartialContentMesh(capi, inv[0], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
-        contentMeshes[1] = GenPartialContentMesh(capi, inv[1], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
-        contentMeshes[2] = GenPartialContentMesh(capi, inv[2], tfMatrices, 0.8f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)!;
-        contentMeshes[3] = GenPartialContentMesh(capi, inv[3], tfMatrices, 0.55f, ShapeReferences.utilMeatFreezer)?.BlockYRotation(block)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block)!;
+        contentMeshes[0] = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
+        contentMeshes[1] = GenLiquidyMesh(capi, inv[1], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
+        contentMeshes[2] = GenLiquidyMesh(capi, inv[2], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
+        contentMeshes[3] = GenLiquidyMesh(capi, inv[3], ShapeReferences.utilMeatFreezer, 9f)?.BlockYRotation(block)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
     }
 
     #region Interactions
@@ -94,7 +92,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
                 if (!slot.Empty) {
                     if (DrawerOpen && slot.CanStoreInSlot(FSCoolingOnly)) {
                         if (TryPutIce(byPlayer, slot, blockSel)) {
-                            this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+                            return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                         }
                     }
                     (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get("foodshelves:This item cannot be placed in this container."));
@@ -124,54 +122,18 @@ public class BEMeatFreezer : BEBaseFSCooler {
 
     #endregion
 
-    #region Animation
-
-    protected override void HandleIceHeight(bool up) {
-        if (up) {
-            if (inv[CutIceSlot].Itemstack?.StackSize < 20) SetIceHeight(1);
-            else if (inv[CutIceSlot].Itemstack?.StackSize < 40) SetIceHeight(2);
-            else if (inv[CutIceSlot].Itemstack?.StackSize >= 40) SetIceHeight(3);
-        }
-        else {
-            SetIceHeight(0);
-        }
-    }
-
-    private void SetIceHeight(int heightLevel) {
-        foreach (string anim in iceAnimations) {
-            AnimUtil.TryStopAnimation(anim);
-        }
-
-        if (heightLevel > 0) {
-            SetWaterHeight(false);
-        }
-
-        if (heightLevel > 0 && heightLevel <= 3) {
-            string animation = "iceheight" + heightLevel;
-            float speed = heightLevel switch {
-                1 => 3f,
-                2 => 8f,
-                _ => 6f
-            };
-
-            AnimUtil.TryStartAnimation(animation, speed);
-        }
-    }
-
-    #endregion
-
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         base.OnTesselation(mesher, tesselator);
 
         for (int i = 0; i < 4; i++) {
             if (contentMeshes[i] == null) continue;
 
-            MeshData contentMesh = contentMeshes[i].Clone();
+            MeshData? contentMesh = contentMeshes[i]?.Clone();
             switch ((BlockDirection)block.GetRotationAngle()) {
-                case BlockDirection.North: contentMesh.Translate(i * 0.4375f, 0, 0); break;
-                case BlockDirection.West: contentMesh.Translate(0, 0, -i * 0.4375f); break;
-                case BlockDirection.South: contentMesh.Translate(-i * 0.4375f, 0, 0); break;
-                case BlockDirection.East: contentMesh.Translate(0, 0, i * 0.4375f); break;
+                case BlockDirection.North: contentMesh?.Translate(i * 0.4375f, 0, 0); break;
+                case BlockDirection.West: contentMesh?.Translate(0, 0, -i * 0.4375f); break;
+                case BlockDirection.South: contentMesh?.Translate(-i * 0.4375f, 0, 0); break;
+                case BlockDirection.East: contentMesh?.Translate(0, 0, i * 0.4375f); break;
             }
 
             mesher.AddMeshData(contentMesh);

@@ -579,9 +579,9 @@
 	],
 	"animations": [
 		{
-			"name": "IceUp",
-			"code": "iceup",
-			"quantityframes": 30,
+			"name": "IceHeight",
+			"code": "iceheight",
+			"quantityframes": 20,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",
 			"keyframes": [
@@ -592,7 +592,7 @@
 					}
 				},
 				{
-					"frame": 29,
+					"frame": 19,
 					"elements": {
 						"animIce": { "offsetX": 0.0, "offsetY": 0.9, "offsetZ": 0.0, "rotationX": 8.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
@@ -603,7 +603,7 @@
 		{
 			"name": "WaterHeight",
 			"code": "waterheight",
-			"quantityframes": 30,
+			"quantityframes": 20,
 			"onActivityStopped": "Rewind",
 			"onAnimationEnd": "Hold",
 			"keyframes": [
@@ -614,7 +614,7 @@
 					}
 				},
 				{
-					"frame": 29,
+					"frame": 19,
 					"elements": {
 						"animWater": { "offsetX": 0.0, "offsetY": 0.8, "offsetZ": 0.0, "rotationX": 7.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}

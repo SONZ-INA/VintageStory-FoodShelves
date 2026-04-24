@@ -155,10 +155,10 @@ public static class InfoDisplay {
         if (iceSlot == null || iceSlot.Empty) return "";
 
         if (iceSlot.CanStoreInSlot(coolingAttributeCheck)) {
-            return GetNameAndStackSize(iceSlot.Itemstack!) + " - " + TransitionInfoCompact(world, iceSlot, EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft);
+            return GetNameAndStackSize(iceSlot.Itemstack) + " - " + TransitionInfoCompact(world, iceSlot, EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft);
         }
         else {
-            return GetNameAndStackSize(iceSlot.Itemstack!);
+            return GetNameAndStackSize(iceSlot.Itemstack);
         }
     }
 

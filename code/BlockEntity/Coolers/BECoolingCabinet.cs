@@ -7,10 +7,6 @@ public class BECoolingCabinet : BEBaseFSCooler {
     public override string AttributeTransformCode => "onHolderUniversalTransform";
     public override string AttributeCheck => "fsHolderUniversal";
 
-    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
-    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.Cycle;
-    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
-
     protected override bool RipeningSpot => true;
 
     public override int ShelfCount => 3;
@@ -21,6 +17,10 @@ public class BECoolingCabinet : BEBaseFSCooler {
     // Cooler-Specific --------------------------
     public override int CutIceSlot => 216;
 
+    protected override InfoDisplayOptions DisplayInfoOpen => InfoDisplayOptions.BySegment;
+    protected override InfoDisplayOptions DisplayInfoClosed => InfoDisplayOptions.Cycle;
+    protected override int DisplayInfoIceIndex => (int)SlotType.IceDrawer;
+
     protected override float BuffedPerishMultiplier => 0.2985f;
     protected override float UnbuffedPerishMultiplier => 0.74f;
 
@@ -29,8 +29,6 @@ public class BECoolingCabinet : BEBaseFSCooler {
     protected override AssetLocation DrawerOpenSound => SoundReferences.IceDrawerOpen;
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
-
-    private static readonly string[] iceAnimations = ["iceheight1", "iceheight2", "iceheight3"];
     
     private enum SlotType {
         Segments = 8,
@@ -202,42 +200,6 @@ public class BECoolingCabinet : BEBaseFSCooler {
             return false;
         
         return base.TryPutIce(byPlayer, slot, selection);
-    }
-
-    #endregion
-
-    #region Animation
-
-    protected override void HandleIceHeight(bool up) {
-        if (up) {
-            if (inv[CutIceSlot].Itemstack?.StackSize < 20) SetIceHeight(1);
-            else if (inv[CutIceSlot].Itemstack?.StackSize < 40) SetIceHeight(2);
-            else if (inv[CutIceSlot].Itemstack?.StackSize >= 40) SetIceHeight(3);
-        }
-        else {
-            SetIceHeight(0);
-        }
-    }
-
-    private void SetIceHeight(int heightLevel) {
-        foreach (string anim in iceAnimations) {
-            AnimUtil.TryStopAnimation(anim);
-        }
-
-        if (heightLevel > 0) {
-            SetWaterHeight(false);
-        }
-
-        if (heightLevel > 0 && heightLevel <= 3) {
-            string animation = "iceheight" + heightLevel;
-            float speed = heightLevel switch {
-                1 => 3f,
-                2 => 8f,
-                _ => 6f
-            };
-
-            AnimUtil.TryStartAnimation(animation, speed);
-        }
     }
 
     #endregion

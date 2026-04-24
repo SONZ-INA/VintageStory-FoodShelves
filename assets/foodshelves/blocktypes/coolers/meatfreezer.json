@@ -37,7 +37,7 @@
     }
   ],
   "shape": {
-    "base": "block/glassware/meatfreezer",
+    "base": "block/coolers/meatfreezer",
     "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
