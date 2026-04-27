@@ -22,6 +22,16 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
+    "file": "foodshelves:config/restrictions/general/liquidystuff.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "pemmican:sugargrind-*",
+      "pemmican:starch-*",
+      "pemmican:sugar"
+    ],
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+  {
     "file": "foodshelves:config/restrictions/shelves/barshelf.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
@@ -99,13 +109,13 @@
 
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group3/-",
+    "op": "addmerge", "path": "/GroupingCodes/long/-",
     "value": "pemmican:vegetable-corn-raw",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group2",
+    "op": "addmerge", "path": "/GroupingCodes/standard",
     "value": [
       "pemmican:vegetable-potato-raw",
       "pemmican:vegetable-sugarbeet-raw"

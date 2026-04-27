@@ -165,6 +165,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
                 moved = slot.TryPutIntoBulk(Api.World, target, ctrl ? available : 1);
                 if (moved > 0) {
+                    // If it's bulk, continue placing items iteratively
                     if (moved <= slot.StackSize && ctrl) {
                         continue;
                     }

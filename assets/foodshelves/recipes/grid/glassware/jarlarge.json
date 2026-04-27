@@ -9,7 +9,7 @@
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "largejar-normal",
+      "code": "jarlarge-normal",
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
@@ -28,7 +28,7 @@
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "largejar-normal",
+      "code": "jarlarge-normal",
       "attributes": {
         "FSAttributes": {
           "glass": "{glass}"
@@ -44,6 +44,6 @@
       "G": { "type": "block", "code": "*:glass-*" }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "largejar-normal" }
+    "output": { "type": "block", "code": "jarlarge-normal" }
   }
 ]

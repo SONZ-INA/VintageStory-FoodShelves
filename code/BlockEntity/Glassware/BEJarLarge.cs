@@ -1,13 +1,13 @@
 ﻿namespace FoodShelves;
 
-public class BELargeJar : BEBaseFSContainer {
+public class BEJarLarge : BEBaseFSContainer {
     public override string AttributeCheck => "fsLiquidyStuff";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
-    public BELargeJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 12, true)); }
+    public BEJarLarge() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 12, true)); }
 
     public override void Initialize(ICoreAPI api) {
         inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() {
@@ -22,7 +22,7 @@ public class BELargeJar : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilLargeJar, 8.5f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 9f);
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 

@@ -43,9 +43,10 @@
   "block-fooddisplayblock-normal": "Food Display Block",
   "block-fooddisplayblock-top": "Top Food Display Block",
   "block-fooddisplaycase-*": "Food Display Case",
-  "block-glassjar-*": "Glass Jar",
   "block-ceilingrack-*": "Ceiling Rack",
-  "block-largejar-*": "Large Jar",
+  "block-jarlarge-*": "Large Jar",
+  "block-jar-*": "Jar",
+  "block-jarshelf-*": "Jar Shelf",
   "block-coolingcabinet-*": "Cooling Cabinet",
   "block-meatfreezer-*": "Meat Freezer",
   "block-wallcabinet-*": "Wall Cabinet",
@@ -58,6 +59,8 @@
 
   "blockdesc-canhold-title": "Can hold:",
   "blockdesc-canbeplacedin-title": "Can be placed in:",
+
+  "blockhelp-behavior-shiftrightclickpickup": "Pickup",
 
   "blockdesc-breadshelf-text": "  -All bread types<br>Expanded Foods:<br>  -Muffins<br>  -Dumplings<br>  -Soft bread<br>Wildcraft: Fruits and Nuts:<br>  -Pacoca<br>  -Halva<br>  -Marzipam",
   "blockdesc-eggshelf-text": "  -Raw or boiled eggs",
@@ -82,11 +85,13 @@
   "blockdesc-mushroombasket-text": "  -All mushrooms.",
   "blockdesc-fruitcooler-text": "  -All fruit.",
   "blockdesc-ceilingrack-text": "  -Large Jar. Can hold everything a Large Jar can.",
+  "blockdesc-jarshelf-text": "  -A Jar.",
 
   "helddesc-breadshelf": "Bread placed on this shelf stays fresh for 100% longer.",
   "helddesc-barrelrack": "Liquids stored in this barrel rack stay fresh for 100% longer and cure 25% longer.",
   "helddesc-tunrack": "Liquids stored in this tun rack stay fresh for 150% longer and cure 35% longer.",
-  "helddesc-largejar": "Food placed in the Large Jar dries or melts 2.5x faster, and stays fresh for 30% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
+  "helddesc-jarlarge": "Food placed in the Large Jar dries or melts 2.5x faster, and stays fresh for 30% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
+  "helddesc-jar": "Food placed in the Jar dries or melts 2.5x faster, and stays fresh for 30% longer. Grain stored in it is fresh for 35% longer than in a Storage Vessel.",
   "helddesc-fooddisplaycase": "Food placed in this case stays fresh for 35% longer.",
   "helddesc-coolingcabinet": "Food stored in this cabinet stays fresh 35% longer, or up to 235% longer when ice is added.<br>Make sure to keep it closed!",
   "helddesc-meatfreezer": "Raw meat stored in this freezer stays fresh 55% longer, or up to 235% longer when ice is added.<br>Make sure to keep it closed!",
@@ -116,6 +121,7 @@
   "Only mushrooms can be placed in this basket.": "Only mushrooms can be placed in this basket.",
   "Only fruit can be placed in this cooler.": "Only fruit can be placed in this cooler.",
   "Only Large Jars can be placed on this rack.": "Only Large Jars can be placed on this rack.",
+  "Only Jars can be placed on this shelf.": "Only Jars can be placed on this shelf.",
 
   "This tun needs to be placed in a tun rack.": "This tun needs to be placed in a tun rack.",
   "The barrel must be emptied before it can be picked up.": "The barrel must be emptied before it can be picked up.",

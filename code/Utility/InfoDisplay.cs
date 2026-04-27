@@ -77,6 +77,41 @@ public static class InfoDisplay {
         return GetTimeRemainingText(world, hoursLeft, transitionType);
     }
 
+    public static string PerishableInfoCompact(IWorldAccessor world, ItemSlot? contentSlot, float ripenRate, bool withStackName = true, bool withStackSize = true) {
+        if (contentSlot == null || contentSlot.Empty) return "";
+
+        StringBuilder dsc = new();
+        if (withStackName) dsc.Append(contentSlot.Itemstack.GetName());
+        if (withStackSize && contentSlot.StackSize > 1) dsc.Append(" x" + contentSlot.StackSize);
+
+        bool nowSpoiling = false;
+
+        string perishText = TransitionInfoCompact(world, contentSlot, EnumTransitionType.Perish, TransitionDisplayMode.Percentage);
+        if (!string.IsNullOrEmpty(perishText)) {
+            dsc.Append(", " + perishText);
+
+            if (perishText.Contains('%')) {
+                nowSpoiling = true;
+            }
+        }
+
+        if (!nowSpoiling) {
+            TransitionState? ripenState = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionState(world, contentSlot, EnumTransitionType.Ripen);
+
+            if (ripenState != null && contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, EnumTransitionType.Ripen) > 0) {
+                if (ripenState.TransitionLevel > 0) {
+                    dsc.Append(", " + Lang.Get("{1:0.#} days left to ripen ({0}%)", (int)Math.Round(ripenState.TransitionLevel * 100), (ripenState.TransitionHours - ripenState.TransitionedHours) / world.Calendar.HoursPerDay / ripenRate));
+                }
+                else {
+                    dsc.Append(", " + TransitionInfoCompact(world, contentSlot, EnumTransitionType.Ripen, TransitionDisplayMode.TimeLeft));
+                }
+            }
+        }
+
+        dsc.AppendLine();
+        return dsc.ToString();
+    }
+
     public static string PerishableInfoAverageAndSoonest(ItemSlot?[] contentSlots, IWorldAccessor world, float perishMul = 1) {
         StringBuilder dsc = new();
 
@@ -311,41 +346,6 @@ public static class InfoDisplay {
         }
 
         return sb.ToString();
-    }
-
-    private static string PerishableInfoCompact(IWorldAccessor world, ItemSlot? contentSlot, float ripenRate, bool withStackName = true, bool withStackSize = true) {
-        if (contentSlot == null || contentSlot.Empty) return "";
-
-        StringBuilder dsc = new();
-        if (withStackName) dsc.Append(contentSlot.Itemstack.GetName());
-        if (withStackSize && contentSlot.StackSize > 1) dsc.Append(" x" + contentSlot.StackSize);
-
-        bool nowSpoiling = false;
-
-        string perishText = TransitionInfoCompact(world, contentSlot, EnumTransitionType.Perish, TransitionDisplayMode.Percentage);
-        if (!string.IsNullOrEmpty(perishText)) {
-            dsc.Append(", " + perishText);
-
-            if (perishText.Contains('%')) {
-                nowSpoiling = true;
-            }
-        }
-
-        if (!nowSpoiling) {
-            TransitionState? ripenState = contentSlot.Itemstack?.Collectible.UpdateAndGetTransitionState(world, contentSlot, EnumTransitionType.Ripen);
-
-            if (ripenState != null && contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, EnumTransitionType.Ripen) > 0) {
-                if (ripenState.TransitionLevel > 0) {
-                    dsc.Append(", " + Lang.Get("{1:0.#} days left to ripen ({0}%)", (int)Math.Round(ripenState.TransitionLevel * 100), (ripenState.TransitionHours - ripenState.TransitionedHours) / world.Calendar.HoursPerDay / ripenRate));
-                }
-                else {
-                    dsc.Append(", " + TransitionInfoCompact(world, contentSlot, EnumTransitionType.Ripen, TransitionDisplayMode.TimeLeft));
-                }
-            }
-        }
-
-        dsc.AppendLine();
-        return dsc.ToString();
     }
 
     private static string PerishableInfoGrouped(InventoryGeneric? inv, int start, int end) {

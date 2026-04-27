@@ -1,8 +1,7 @@
 {
-  "code": "glassjar",
-  "class": "FoodShelves.BlockGlassJar",
-  "entityclass": "FoodShelves.BEGlassJar",
-  "enabled": false,
+  "code": "jar",
+  "class": "FoodShelves.BlockJar",
+  "entityclass": "FoodShelves.BEJar",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
@@ -13,29 +12,30 @@
       "glass": [ "game:block/glass/{glass}" ]
     },
     "handbook": {
-      "groupBy": [ "glassjar-*" ],
+      "groupBy": [ "jar-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canhold-title",
           "text": "foodshelves:blockdesc-liquidystuff-text"
         }
       ]
-    }
+    },
+    "worldInteractionAttributeCheck": "fsLiquidyStuff",
+    "hintType": "bulk"
   },
   "behaviors": [
-    { "name": "UnstableFalling" },
-    { "name": "RightClickPickup" }
+    { "name": "Unstable", "properties": { "attachedToFaces": ["down"] } },
+    { "name": "FoodShelves.ShiftRightClickPickup" }
   ],
   "shape": {
-    "base": "block/glassware/glassjar"
+    "base": "block/glassware/jar"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
   "heldTpUseAnimation": "twohandplaceblock",
   "blockmaterial": "Wood",
-  "storageFlags": 257,
   "lightAbsorption": 1,
-  "maxStackSize": 8,
+  "maxStackSize": 1,
   "replaceable": 900,
   "resistance": 1.5,
   "materialDensity": 400,
@@ -50,9 +50,9 @@
     "scale": 1.8
   },
   "tpHandTransform": {
-    "translation": { "x": -0.6, "y": -0.4, "z": -0.25 },
+    "translation": { "x": -0.9, "y": -0.7, "z": -0.45 },
     "rotation": { "x": -2, "y": 25, "z": -78 },
-    "scale": 1
+    "scale": 0.65
   },
   "sounds": {
     "place": "game:block/planks",

@@ -128,8 +128,7 @@ public static class Meshing {
         if (shape == null) 
             return null;
 
-        ItemSlotFSUniversal fsSlot = (slot as ItemSlotFSUniversal)!;
-        ItemStack stack = fsSlot.Itemstack!;
+        ItemStack stack = slot.Itemstack!;
 
         // Handle textureSource
         ITexPositionSource? texSource = inheritTextures
@@ -155,7 +154,50 @@ public static class Meshing {
 
         // Re-sizing the textures
         for (int i = 0; i < 4; i++) {
-            shape.Elements[0].FacesResolved![i].Uv[3] = (float)shapeHeight;
+            shape.Elements[0].FacesResolved![i].Uv[3] = shapeHeight;
+        }
+
+        capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shape, out MeshData contentMesh, texSource);
+        return contentMesh;
+    }
+
+    /// <summary>
+    /// Generates a mesh that has a specific "util" shape that resemble liquids or stuff that can behave as liquids.
+    /// The parent of the util shape will scale up depending on stacksize passed, and the children of that parent will simply move up.
+    /// </summary>
+    public static MeshData? GenLiquidyMesh(ICoreClientAPI? capi, ItemStack? stack, string pathToFillShape, float capacity, float maxHeight) {
+        if (capi == null) return null;
+        if (stack == null) return null;
+        if (string.IsNullOrEmpty(pathToFillShape)) return null;
+
+        // Shape location of a simple cube, meant as "filling"
+        AssetLocation shapeLocation = new(pathToFillShape);
+        Shape? shape = Shape.TryGet(capi, shapeLocation)?.Clone();
+        if (shape == null)
+            return null;
+
+        // Handle textureSource
+        ITexPositionSource? texSource = GetPieTexture(capi, stack, shape)
+                ?? GetContainerTextureSource(capi, stack)
+                ?? GetItemTextureSource(capi, stack);
+
+        // Height calculation
+        float contentAmount = stack.StackSize;
+
+        float baseY = (float)shape.Elements[0].From![1];
+        float shapeHeight = baseY + GetFillHeight(contentAmount, capacity, maxHeight);
+
+        // Adjusting the "topping" position
+        foreach (var child in shape.Elements[0].Children!) {
+            child.To![1] = shapeHeight - shape.Elements[0].From![1] - (child.From![1] - child.To[1]);
+            child.From[1] = shapeHeight - shape.Elements[0].From![1];
+        }
+
+        shape.Elements[0].To![1] = shapeHeight;
+
+        // Re-sizing the textures
+        for (int i = 0; i < 4; i++) {
+            shape.Elements[0].FacesResolved![i].Uv[3] = shapeHeight;
         }
 
         capi.Tesselator.TesselateShape("FS-TesselateLiquidy", shape, out MeshData contentMesh, texSource);

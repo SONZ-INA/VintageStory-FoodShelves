@@ -51,7 +51,7 @@ public class BECeilingRack : BEBaseFSContainer {
 
         if (capi == null) return;
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilLargeJar, 8.5f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 8.5f);
         if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
     }
 

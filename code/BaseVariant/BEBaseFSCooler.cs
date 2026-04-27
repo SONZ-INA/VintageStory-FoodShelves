@@ -45,34 +45,12 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     }
 
     public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
-        if (!inv[CutIceSlot].Empty
-            && PerishMultiplier < perishMultiplierUnBuffed
-            && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)
-        ) {
-            if (DoorOpen) PerishMultiplier = 1f;
-            else PerishMultiplier = perishMultiplierUnBuffed;
-            
-            SetWaterHeight(true);
-            MarkDirty(true);
-        }
-
-        if (transType == EnumTransitionType.Dry)
-            return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-
-        if (transType == EnumTransitionType.Perish)
-            return PerishMultiplier * globalPerishMultiplier;
-
-        if (Api == null) return 0;
-
-        if (transType == EnumTransitionType.Ripen)
-            return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
-
-        if (transType == EnumTransitionType.Melt)
+        if (stack.Item?.Code == "foodshelves:cutice")
             // Single cut ice will last for ~12 hours. However a stack of them will also last ~12 hours, so a multiplier depending on them is needed.
             // A stack should last about 24 days which is 8 ice blocks
             return 1f / (inv[CutIceSlot].Itemstack?.StackSize ?? 1) * 5.33f * IceMeltRate;
 
-        return PerishMultiplier * globalPerishMultiplier;
+        return base.Inventory_OnAcquireTransitionSpeed(transType, stack, baseMul);
     }
 
     #region Interactions
@@ -144,7 +122,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
     protected virtual void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-            SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
+            SetWaterHeight(true);
         }
 
         if (open) {
@@ -157,11 +135,10 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         }
         else {
             AnimUtil.TryStopAnimation(DoorOpenAnim.Item1);
-            PerishMultiplier = perishMultiplierUnBuffed;
 
-            if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-                PerishMultiplier = perishMultiplierBuffed;
-            }
+            PerishMultiplier = !DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)
+                ? perishMultiplierBuffed
+                : perishMultiplierUnBuffed;
 
             if (byPlayer != null) {
                 Api.World.PlaySoundAt(DoorCloseSound, byPlayer, byPlayer, true, 16, 0.3f);
@@ -173,7 +150,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
 
     protected virtual void ToggleDrawer(bool open, IPlayer? byPlayer = null) {
         if (!inv[CutIceSlot].Empty && !inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) {
-            SetWaterHeight(true); // Unfortunately inside Inventory_OnAcquireTransitionSpeed this updates only when you look at it. Forcing it here too.
+            SetWaterHeight(true);
         }
 
         if (open) {

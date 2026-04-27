@@ -97,7 +97,7 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (itemSlottableInteractions?.Length > 0) 
+        if (itemSlottableInteractions?.Length > 0)
             return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer).Append(itemSlottableInteractions);
         
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
@@ -108,9 +108,12 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fsContainer)
-            return fsContainer.OnInteract(byPlayer, blockSel);
+        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fsContainer) {
+            if (fsContainer.OnInteract(byPlayer, blockSel))
+                return true;
+        }
 
+        // Handle block behaviors
         return base.OnBlockInteractStart(world, byPlayer, blockSel);
     }
 

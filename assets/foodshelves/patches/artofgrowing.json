@@ -13,7 +13,7 @@
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group1", "side": "server",
+    "op": "addmerge", "path": "/GroupingCodes/large", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-cabbage",
       "artofgrowing:vegetable-small-cabbage",
@@ -27,7 +27,7 @@
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group2", "side": "server",
+    "op": "addmerge", "path": "/GroupingCodes/standard", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-onion",
       "artofgrowing:vegetable-small-onion",
@@ -48,7 +48,7 @@
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group3", "side": "server",
+    "op": "addmerge", "path": "/GroupingCodes/long", "side": "server",
     "value": [
       "artofgrowing:vegetable-wild-carrot",
       "artofgrowing:vegetable-small-carrot",

@@ -17,6 +17,7 @@ public class Core : ModSystem {
     public override void Start(ICoreAPI api) {
         base.Start(api);
 
+        FSRegistrations.RegisterBlockBehaviors(api);
         FSRegistrations.RegisterBlockClasses(api);
         FSRegistrations.RegisterBlockEntityClasses(api);
     }

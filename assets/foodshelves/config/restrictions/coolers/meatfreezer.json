@@ -4,7 +4,6 @@
     "game:redmeat-raw",
     "game:bushmeat-raw",
     "game:poultry-raw",
-    "game:fish-raw",
-    "game:fishraw-*"
+    "game:fish-raw"
   ]
 }

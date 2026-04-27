@@ -5,7 +5,7 @@ public class BEFruitCooler : BEBaseFSCooler {
     private readonly MeshData?[] contentMeshes = new MeshData[4];
 
     // Base-Specific ----------------------------
-    protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";    
+    protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
 
     public override int ShelfCount => 4;
     public override int AdditionalSlots => 1;

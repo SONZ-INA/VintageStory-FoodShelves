@@ -1,7 +1,7 @@
 {
-  "code": "largejar",
+  "code": "jarlarge",
   "class": "FoodShelves.BlockFSContainer",
-  "entityclass": "FoodShelves.BELargeJar",
+  "entityclass": "FoodShelves.BEJarLarge",
   "variantgroups": [
     { "code": "type", "states": ["normal"] }
   ],
@@ -12,7 +12,7 @@
       "glass": [ "game:block/glass/{glass}" ]
     },
     "handbook": {
-      "groupBy": [ "largejar-*" ],
+      "groupBy": [ "jarlarge-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canhold-title",
@@ -27,7 +27,7 @@
     { "name": "Unstable", "properties": { "attachedToFaces": ["down"] } }
   ],
   "shape": {
-    "base": "block/glassware/largejar"
+    "base": "block/glassware/jarlarge"
   },
   "heldTpIdleAnimation": "holdbothhandslarge",
   "heldRightReadyAnimation": "heldblockready", 
@@ -44,6 +44,11 @@
   "sideao": { "all": true },
   "sidesolid": { "all": false },
   "sideopaque": { "all": false },
+  "guiTransform": {
+    "rotation": { "x": -22.5, "y": -45, "z": 0 },
+    "origin": { "x": 0.5, "y": 0.4, "z": 0.5 },
+    "scale": 1.15
+  },
   "tpHandTransform": {
     "translation": { "x": -0.9, "y": -1, "z": -0.55 },
     "rotation": { "x": -2, "y": 25, "z": -78 },

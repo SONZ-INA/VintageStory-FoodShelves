@@ -1,42 +1,54 @@
 {
-  "code": "glassjarshelf",
-  "class": "FoodShelves.BlockGlassJarShelf",
-  "entityclass": "FoodShelves.BlockEntityGlassJarShelf",
-  "creativeinventory": { "general": ["*-east"], "decorative": ["*-east"], "foodshelves": ["*-east"] },
+  "code": "jarshelf",
+  "class": "FoodShelves.BlockFSContainer",
+  "entityclass": "FoodShelves.BEJarShelf",
   "variantgroups": [
     { "code": "type", "states": ["normal", "short"] },
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
-  "enabled": false,
   "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "wood": [ "game:block/wood/debarked/{wood}" ]
+    },
     "handbook": {
-      "groupBy": [ "glassjarshelf-*" ],
+      "groupBy": [ "jarshelf-*" ],
       "extraSections": [
         {
           "title": "foodshelves:blockdesc-canhold-title",
-          "text": "foodshelves:blockdesc-glassjarshelf-text"
+          "text": "foodshelves:blockdesc-jarshelf-text"
         }
       ]
-    },
-    "inventoryClassName": "glassjarshelf",
-    "attributeTransformCode": "onGlassJarShelfTransform"
+    }
   },
-  "behaviors": [
-    { "name": "HorizontalAttachable", "properties": { "dropBlockFace": "east" } }
-  ],
+  "behaviorsByType": {
+    "*south*": [
+      { "name": "Unstable", "properties": { "attachedToFaces": ["down", "south"] } },
+      { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
+    ],
+    "*east*": [
+      { "name": "Unstable", "properties": { "attachedToFaces": ["down", "east"] } },
+      { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
+    ],
+    "*west*": [
+      { "name": "Unstable", "properties": { "attachedToFaces": ["down", "west"] } },
+      { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
+    ],
+    "*north*": [
+      { "name": "Unstable", "properties": { "attachedToFaces": ["down", "north"] } },
+      { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
+    ]
+  },
   "shapeByType": {
     "*-short*": {
-      "base": "block/wood/shelves/glassjarshelfshort",
+      "base": "block/shelves/jarshelfshort",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     },
     "*": {
-      "base": "block/wood/shelves/glassjarshelf",
+      "base": "block/shelves/jarshelf",
       "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
     }
-  },
-  "textures": {
-    "wood": { "base": "game:block/wood/shelf/wood" },
-    "surface": { "base": "game:block/wood/shelf/surface" }
   },
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",
@@ -57,6 +69,12 @@
       "burnDuration": 48
     }
   },
+  "guiTransformByType": {
+    "*short*": {
+      "origin": { "x": 0.75, "y": 0.3, "z": 0.5 },
+      "scale": 1.35
+    }
+  },
   "tpHandTransform": {
     "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
     "rotation": { "x": 99, "y": -10, "z": -6 },
@@ -70,7 +88,7 @@
   "materialDensity": 400,
   "collisionboxByType": { 
     "*-short*": { "x1": 0.5, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
-    "*": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+    "*": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
   },
   "selectionBoxesByType": {
     "*-short-*": [
