@@ -1,15 +1,15 @@
 [
   {
-    "ingredientPattern": "_PP,SGP,PPP",
+    "ingredientPattern": "SGS,SPS",
     "ingredients": {
       "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
       "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
-    "width": 3, "height": 3, "recipeGroup": 1,
+    "width": 3, "height": 2, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "fooddisplaycase-normal-east",
+      "code": "jar-normal",
       "attributes": {
         "FSAttributes": {
           "wood": "{wood}",
@@ -19,16 +19,16 @@
     }
   },
   {
-    "ingredientPattern": "_PP,SGP,PPP",
+    "ingredientPattern": "SGS,SPS",
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*" },
       "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] }
     },
-    "width": 3, "height": 3, "recipeGroup": 1,
+    "width": 3, "height": 2, "recipeGroup": 1,
     "output": {
       "type": "block",
-      "code": "fooddisplaycase-normal-east",
+      "code": "jar-normal",
       "attributes": {
         "FSAttributes": {
           "glass": "{glass}"
@@ -37,13 +37,13 @@
     }
   },
   {
-    "ingredientPattern": "_PP,SGP,PPP",
+    "ingredientPattern": "SGS,SPS",
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*" },
       "S": { "type": "item", "code": "game:stick" },
       "G": { "type": "block", "code": "*:glassslab-*-down-free" }
     },
-    "width": 3, "height": 3, "recipeGroup": 1,
-    "output": { "type": "block", "code": "fooddisplaycase-normal-east" }
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": { "type": "block", "code": "jar-normal" }
   }
 ]
