@@ -340,7 +340,7 @@ public static class InfoDisplay {
             string contents = customNameInterface.GetContainedInfo(slot)?.Trim() ?? "";
 
             if (!string.IsNullOrEmpty(contents)) {
-                contents = Regex.Replace(contents, @"(\(.*?\))", "\n  <font color=\"#989898\">$1</font>");
+                contents = Regex.Replace(contents, @"\([^()]*\)(?!.*\()", "<font color=\"#989898\">$0</font>");
                 sb.AppendLine(contents);
             }
         }

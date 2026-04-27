@@ -32,6 +32,7 @@ public static class FSRegistrations {
 
         // Other
         api.RegisterBlockClass("FoodShelves.BlockCeilingRack", typeof(BlockCeilingRack));
+        api.RegisterBlockClass("FoodShelves.BlockJarStand", typeof(BlockJarStand));
 
         // Shelves
         api.RegisterBlockClass("FoodShelves.BlockDoubleShelf", typeof(BlockDoubleShelf));
@@ -68,6 +69,7 @@ public static class FSRegistrations {
         api.RegisterBlockEntityClass("FoodShelves.BEBucketHook", typeof(BEBucketHook));
         api.RegisterBlockEntityClass("FoodShelves.BECeilingRack", typeof(BECeilingRack));
         api.RegisterBlockEntityClass("FoodShelves.BEFlourSack", typeof(BEFlourSack));
+        api.RegisterBlockEntityClass("FoodShelves.BEJarStand", typeof(BEJarStand));
         api.RegisterBlockEntityClass("FoodShelves.BEPumpkinCase", typeof(BEPumpkinCase));
         api.RegisterBlockEntityClass("FoodShelves.BETableWShelf", typeof(BETableWShelf));
 
@@ -76,7 +78,6 @@ public static class FSRegistrations {
         api.RegisterBlockEntityClass("FoodShelves.BEBreadShelf", typeof(BEBreadShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEDoubleShelf", typeof(BEDoubleShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEEggShelf", typeof(BEEggShelf));
-        api.RegisterBlockEntityClass("FoodShelves.BEJarShelf", typeof(BEJarShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEPieShelf", typeof(BEPieShelf));
         api.RegisterBlockEntityClass("FoodShelves.BESeedShelf", typeof(BESeedShelf));
         api.RegisterBlockEntityClass("FoodShelves.BEShortShelf", typeof(BEShortShelf));

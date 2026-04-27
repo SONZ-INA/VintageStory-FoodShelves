@@ -6,7 +6,8 @@ public static class InteractionExtensions {
     /// Merges the collectibles together, and handles the transition states merging.
     /// </summary>
     public static int TryPutIntoBulk(this ItemSlot source, IWorldAccessor world, ItemSlot target, int quantity = 1) {
-        if (source.Empty) return 0;
+        if (source.Empty)
+            return 0;
 
         if (!target.CanHold(source))
             return 0;
@@ -22,8 +23,12 @@ public static class InteractionExtensions {
         // Initialize slots
         if (target.Empty) {
             target.Itemstack = source.TakeOut(moveAmount);
-            target.OnItemSlotModified(target.Itemstack);
+
+            if (target is not DummySlot) 
+                target.OnItemSlotModified(target.Itemstack);
+            
             source.OnItemSlotModified(source.Itemstack);
+            
             return moveAmount;
         }
 
@@ -55,7 +60,7 @@ public static class InteractionExtensions {
         sink.StackSize += moveAmount;
         source.TakeOut(moveAmount);
 
-        target.OnItemSlotModified(target.Itemstack);
+        if (target is not DummySlot) target.OnItemSlotModified(target.Itemstack);
         source.OnItemSlotModified(source.Itemstack);
 
         return moveAmount;
