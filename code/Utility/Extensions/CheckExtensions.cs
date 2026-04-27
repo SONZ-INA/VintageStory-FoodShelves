@@ -7,31 +7,29 @@ public static class CheckExtensions {
     /// using reflection.
     /// </summary>
     public static bool CheckTypedRestriction(this CollectibleObject obj, RestrictionData data) 
-        => data.CollectibleTypes?.Contains(obj.Code.Domain + ":" + obj.GetType().Name) == true;
+        => data.CollectibleTypes.Contains(obj.Code.Domain + ":" + obj.GetType().Name);
 
     /// <summary>
     /// Determines whether the collectible in the given slot has the specified attribute set to true, indicating that it is allowed to be stored.
     /// </summary>
     public static bool CanStoreInSlot(this ItemSlot slot, string attributeWhitelist)
-        => slot?.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == true;
+        => slot.Itemstack?.Collectible?.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines whether the collectible has the specified attribute set to true, allowing it to be stored in compatible containers.
     /// </summary>
     public static bool CanStoreInSlot(this CollectibleObject obj, string attributeWhitelist) 
-        => obj?.Attributes?[attributeWhitelist].AsBool() == true;
+        => obj.Attributes?[attributeWhitelist].AsBool() == true;
 
     /// <summary>
     /// Determines if the item is considered a large item, based on baking properties, "shelvable" attribute, or specific known basket block types.
     /// </summary>
     public static bool IsLargeItem(this ItemStack stack) {
-        var collectible = stack?.Collectible;
+        var collectible = stack.Collectible;
         if (collectible == null) return false;
 
         if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.SingleCenter) return true;
-        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
         if (stack.ItemAttributes["shelvable"]?.ToString() == "SingleCenter") return true;
-        if (stack.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
 
         if (collectible.Code.Path.StartsWith("claypot-") == true) return true;
         
@@ -41,18 +39,30 @@ public static class CheckExtensions {
     }
 
     /// <summary>
+    /// Determines if the item is considered a medium item. Primarily used for 'Halves' IShelvable type.
+    /// </summary>
+    public static bool IsMediumItem(this ItemStack stack) {
+        var collectible = stack.Collectible;
+        if (collectible == null) return false;
+
+        if (collectible.GetCollectibleInterface<IShelvable>()?.GetShelvableType(stack) == EnumShelvableLayout.Halves) return true;
+        if (stack.ItemAttributes["shelvable"]?.ToString() == "Halves") return true;
+
+        return false;
+    }
+
+    /// <summary>
     /// Determines if the item is considered a small item, such as bars or patties, using wildcard matches for known modded food items.
     /// </summary>
     public static bool IsSmallItem(this ItemStack stack) {
-        string stackCode = stack?.Collectible.Code.ToString() ?? "";
+        string stackCode = stack.Collectible.Code.ToString() ?? "";
 
         if (WildcardUtil.Match("wildcraftfruit:nut-*bar", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:fruitbar-*", stackCode)) return true;
         if (WildcardUtil.Match("expandedfoods:cookedveggie-*", stackCode)) return true;
 
-        if (stackCode == "pemmican:pemmican-pack") return false;
-        if (stackCode == "pemmican:chips-pack") return false;
         if (stackCode == "pemmican:mushroompatebar") return true;
+        if (stackCode == "pemmican:nutribar-general") return true;
         
         if (WildcardUtil.Match("*pemmican-*", stackCode)) return true;
         if (WildcardUtil.Match("*vegetable-pumpkin", stackCode)) return true;
@@ -61,15 +71,26 @@ public static class CheckExtensions {
     }
 
     /// <summary>
+    /// Determines if the item is considered a standard item - not Large, not Medium, not Small.
+    /// </summary>
+    public static bool IsStandardItem(this ItemStack stack) {
+        if (stack.IsLargeItem()) return false;
+        if (stack.IsMediumItem()) return false;
+        if (stack.IsSmallItem()) return false;
+
+        return true;
+    }
+
+    /// <summary>
     /// Checks if two item stacks can coexist in the same slot (belong to a same group).<br/>
     /// Returns true unless one of them belongs to a group, in which case their groups must match.
     /// </summary>
-    public static bool BelongsToSameGroupAs(this ItemStack checkSlot, ItemStack currSlot) {
+    public static bool BelongsToSameGroupAs(this ItemStack? checkSlot, ItemStack? currSlot) {
         if (checkSlot?.Collectible == null || currSlot?.Collectible == null)
             return true;
 
-        string checkGroup = checkSlot.ItemAttributes?["fsGroup"]?.AsString();
-        string currGroup = currSlot.ItemAttributes?["fsGroup"]?.AsString();
+        string? checkGroup = checkSlot.ItemAttributes?[FSGroup]?.AsString();
+        string? currGroup = currSlot.ItemAttributes?[FSGroup]?.AsString();
 
         if (string.IsNullOrEmpty(checkGroup) && string.IsNullOrEmpty(currGroup))
             return true;
@@ -78,5 +99,31 @@ public static class CheckExtensions {
             return true;
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks if the stack can be placed in the slot. Used for containers that have varying slot sizes.
+    /// slotCount is used for calculating if the 'medium' item can be placed inside, if the inventory is half full.
+    /// </summary>
+    public static bool CanInsertIntoSegment(ItemStack? firstStack, ItemStack? checkStack) {
+        if (firstStack == null)
+            return true;
+
+        if (checkStack == null)
+            return false;
+
+        if (!firstStack.BelongsToSameGroupAs(checkStack))
+            return false;
+
+        if (firstStack.IsLargeItem() || checkStack.IsLargeItem())
+            return false;
+
+        if (firstStack.IsSmallItem() != checkStack.IsSmallItem())
+            return false;
+
+        if (firstStack.IsMediumItem() != checkStack.IsMediumItem())
+            return false;
+
+        return true;
     }
 }

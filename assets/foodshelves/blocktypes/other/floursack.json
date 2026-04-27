@@ -22,7 +22,7 @@
         }
       ]
     },
-    "unifyItemSlots": true
+    "hintType": "bulk"
   },
   "behaviors": [
     { "name": "UnstableFalling" },
@@ -47,9 +47,9 @@
     "burnDuration": 36
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
-	  "rotation": { "x": 99, "y": -10, "z": -6 },
-	  "scale": 0.5
+    "translation": { "x": -0.8, "y": -0.68, "z": -0.41 },
+    "rotation": { "x": 99, "y": -10, "z": -6 },
+    "scale": 0.5
   },
   "sounds": {
     "place": "game:block/planks",

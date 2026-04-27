@@ -1,0 +1,77 @@
+{
+	"editor": {
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {},
+	"textures": {
+		"surface": "game:block/wood/shelf/surface"
+	},
+	"elements": [
+		{
+			"name": "TShelf",
+			"from": [ 1.0, 3.0, 1.0 ],
+			"to": [ 15.0, 4.0, 8.0 ],
+			"rotationOrigin": [ 1.0, 3.0, 1.0 ],
+			"faces": {
+				"south": { "texture": "#surface", "uv": [ 0.0, 3.0, 14.0, 4.0 ] },
+				"up": { "texture": "#surface", "uv": [ 0.0, 9.0, 16.0, 16.0 ], "autoUv": false },
+				"down": { "texture": "#surface", "uv": [ 0.0, 9.0, 16.0, 16.0 ], "autoUv": false }
+			},
+			"children": [
+				{
+					"name": "TBFence",
+					"from": [ 0.0, 0.0, -1.0 ],
+					"to": [ 14.0, 2.0, 0.0 ],
+					"rotationOrigin": [ 0.0, 0.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 5.0 ] },
+						"south": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 5.0 ] },
+						"up": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 4.0 ] },
+						"down": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 4.0 ] }
+					}
+				},
+				{
+					"name": "TLFence",
+					"from": [ -1.0, -3.0, -1.0 ],
+					"to": [ 0.0, 2.0, 7.0 ],
+					"rotationOrigin": [ -1.0, -3.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 15.0, 3.0, 16.0, 8.0 ] },
+						"east": { "texture": "#surface", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+						"south": { "texture": "#surface", "uv": [ 0.0, 3.0, 1.0, 8.0 ] },
+						"west": { "texture": "#surface", "uv": [ 0.0, 4.0, 8.0, 9.0 ] },
+						"up": { "texture": "#surface", "uv": [ 0.0, 8.0, 1.0, 16.0 ] },
+						"down": { "texture": "#surface", "uv": [ 15.0, 8.0, 16.0, 16.0 ] }
+					}
+				},
+				{
+					"name": "TRFence",
+					"from": [ 14.0, -3.0, -1.0 ],
+					"to": [ 15.0, 2.0, 7.0 ],
+					"rotationOrigin": [ 14.0, -3.0, -1.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 0.0, 3.0, 1.0, 8.0 ] },
+						"east": { "texture": "#surface", "uv": [ 0.0, 3.0, 8.0, 8.0 ] },
+						"south": { "texture": "#surface", "uv": [ 15.0, 3.0, 16.0, 8.0 ] },
+						"west": { "texture": "#surface", "uv": [ 8.0, 3.0, 16.0, 8.0 ] },
+						"up": { "texture": "#surface", "uv": [ 15.0, 8.0, 16.0, 16.0 ] },
+						"down": { "texture": "#surface", "uv": [ 0.0, 8.0, 1.0, 16.0 ] }
+					}
+				},
+				{
+					"name": "Base",
+					"from": [ 0.0, -3.0, 0.0 ],
+					"to": [ 14.0, 0.0, 6.0 ],
+					"rotationOrigin": [ 0.0, -3.0, 0.0 ],
+					"faces": {
+						"north": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 6.0 ] },
+						"south": { "texture": "#surface", "uv": [ 1.0, 3.0, 15.0, 6.0 ] },
+						"down": { "texture": "#surface", "uv": [ 1.0, 10.0, 15.0, 16.0 ] }
+					}
+				}
+			]
+		}
+	]}

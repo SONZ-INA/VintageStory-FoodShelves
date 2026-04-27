@@ -20,46 +20,8 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); 
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int index = blockSel.SelectionBoxIndex;
-        if (index >= ShelfCount) return false;
-
-        // Bottom Slot
-        if (index == (int)SlotNumber.BottomSlot) {
-            return TryPlaceInSlots(slot, 0, ItemsPerSegment);
-        }
-
-        // Top Slot
-        if (Block.Variant["type"] == "top" != true && index == (int)SlotNumber.TopSlot) {
-            return TryPlaceInSlots(slot, ItemsPerSegment, ShelfCount * ItemsPerSegment);
-        }
-
-        return false;
-    }
-
-    private bool TryPlaceInSlots(ItemSlot slot, int startIndex, int endIndex) {
-        if (inv[startIndex].Empty) {
-            int moved = slot.TryPutInto(Api.World, inv[startIndex]);
-            if (moved > 0) {
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return true;
-            }
-        }
-        else if (!inv[startIndex].Itemstack.IsLargeItem() && !slot.Itemstack.IsLargeItem()) {
-            for (int i = startIndex + 1; i < endIndex; i++) {
-                if (inv[i].Empty) {
-                    int moved = slot.TryPutInto(Api.World, inv[i]);
-                    if (moved > 0) {
-                        MarkDirty();
-                        (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
@@ -68,30 +30,12 @@ public class BEFoodDisplayCase : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
+        return TransformationGenerator.GenerateLayout(this, td => {
+            td.y = td.shelf * 0.3825f + 0.25f;
+            td.z = (td.item / 2 == 0 ? -0.05f : 0.05f) + 0.05f;
 
-        for (int i = 0; i < SlotCount; i++) {
-            if ((i < ItemsPerSegment && inv[i].Itemstack.IsLargeItem()) || (i >= ItemsPerSegment && inv[i].Itemstack.IsLargeItem())) {
-                tfMatrices[i] = new Matrixf()
-                    .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block.Shape.rotateY)
-                    .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
-                    .Translate(-0.5f, i % (ItemsPerSegment - 1) * 0.3725f + 0.24f, i >= ItemsPerSegment ? -0.65f : -0.5f)
-                    .Values;
-            }
-            else {
-                float x = i % (ItemsPerSegment / 2) == 0 ? -0.18f : 0.18f;
-                float z = i / (ItemsPerSegment / 2) % 2 == 0 ? -0.18f : 0.18f;
-
-                tfMatrices[i] = new Matrixf()
-                    .Translate(0.5f, 0, 0.5f)
-                    .RotateYDeg(block.Shape.rotateY)
-                    .RotateXDeg(i >= ItemsPerSegment ? 15 : 0)
-                    .Translate(x - 0.5f, i / ItemsPerSegment * 0.3725f + 0.24f, z - (i >= ItemsPerSegment ? 0.65f : 0.5f))
-                    .Values;
-            }
-        }
-
-        return tfMatrices;
+            td.rotX = td.shelf * 15;
+            td.y += td.shelf * td.item / 2 * -0.025f;
+        }, true);
     }
 }

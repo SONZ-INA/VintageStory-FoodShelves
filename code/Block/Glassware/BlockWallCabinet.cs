@@ -1,43 +1,41 @@
-﻿using System.Linq;
-
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BlockWallCabinet : BaseFSContainer {
-    public readonly AssetLocation soundCabinetOpen = new(SoundReferences.WallCabinetOpen);
-    public readonly AssetLocation soundCabinetClose = new(SoundReferences.WallCabinetClose);
+    private WorldInteraction? openCloseDoor;
 
-    private WorldInteraction openCloseDoor;
+    private static readonly Cuboidf Skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-shelves 4-door, 5-cabinet)
 
     public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
 
         openCloseDoor = new() {
             ActionLangCode = "blockhelp-door-openclose",
-            MouseButton = EnumMouseButton.Right,
-            HotKeyCode = "shift"
+            MouseButton = EnumMouseButton.Right
         };
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
-            .Append(openCloseDoor);
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        if (selection.SelectionBoxIndex is 4 or 5) {
+            return [openCloseDoor!];
+        }
+
+        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
 
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
-        BEWallCabinet be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
+        // Selection Box indexes:
+        // Cabinet - 5
+        // Door    - 4
+        // Shelves - 0 1 2 3
+        BEWallCabinet? be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
+        var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
-        Cuboidf cabinetSelBox = base.GetSelectionBoxes(blockAccessor, pos).ElementAt(4).Clone();
-        Cuboidf skip = new(); // Skip selectionBox, to keep consistency between selectionBox indexes (0-3-shelves 4-cabinet)
-
-        if (be != null) {
-            if (be.CabinetOpen) {
-                List<Cuboidf> segments = base.GetSelectionBoxes(blockAccessor, pos).Take(4).Select(c => c.Clone()).ToList();
-                return [segments[0], segments[1], segments[2], segments[3], skip];
-            }
-
-            return [skip, skip, skip, skip, cabinetSelBox];
+        if (be == null) return boxes;
+        
+        if (be.DoorOpen) {
+            return [boxes[0].Clone(), boxes[1].Clone(), boxes[2].Clone(), boxes[3].Clone(), boxes[4].Clone()];
         }
 
-        return base.GetSelectionBoxes(blockAccessor, pos);
+        return [Skip, Skip, Skip, Skip, Skip, boxes[5].Clone()];
     }
 }

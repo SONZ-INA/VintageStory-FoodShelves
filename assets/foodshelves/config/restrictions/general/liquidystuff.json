@@ -1,27 +1,1 @@
-{
-  "CollectibleTypes": [],
-  "CollectibleCodes": [
-    "game:resin",
-    "game:beeswax",
-    "game:fat",
-    "game:salt",
-    "game:grain-*",
-    "game:legume-peanut",
-    "game:legume-soybean",
-    "game:blastingpowder",
-
-    "expandedfoods:dehydratedfruit-*",
-    "expandedfoods:dryfruit-*",
-    "expandedfoods:wilddehydratedfruit-*",
-    "expandedfoods:wilddryfruit-*",
-    "expandedfoods:wildtreedryfruit-*",
-    "expandedfoods:peanut-cooked",
-    "expandedfoods:peanut-kernels",
-    "expandedfoods:gelatin*",
-
-    "wildcraftfruit:nut-peanutground"
-  ],
-  "BlacklistedCodes": [
-    "expandedfoods:gelatin-liquid"
-  ]
-}
+{  "CollectibleTypes": [],  "CollectibleCodes": [    "game:resin",    "game:beeswax",    "game:fat",    "game:fat-rendered",    "game:salt",    "game:grain-*",    "game:legume-peanut",    "game:legume-soybean",    "game:blastingpowder",    "expandedfoods:dehydratedfruit-*",    "expandedfoods:dryfruit-*",    "expandedfoods:wilddehydratedfruit-*",    "expandedfoods:wilddryfruit-*",    "expandedfoods:wildtreedryfruit-*",    "expandedfoods:peanut-cooked",    "expandedfoods:peanut-kernels",    "expandedfoods:gelatin*",    "wildcraftfruit:nut-peanutground"  ],  "BlacklistedCodes": [    "expandedfoods:gelatin-liquid"  ]}

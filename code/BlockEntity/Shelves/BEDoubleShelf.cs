@@ -15,14 +15,13 @@ public class BEDoubleShelf : BEBaseFSContainer {
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); 
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
 
         // Crock sealing interactions
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        if ((!slot.Empty || ctrl) && TryUse(byPlayer, slot, blockSel)) {
+        if ((!slot.Empty || ctrl) && TryUse(byPlayer, slot, blockSel))
             return true;
-        }
 
         return base.OnInteract(byPlayer, blockSel);
     }
@@ -36,18 +35,17 @@ public class BEDoubleShelf : BEBaseFSContainer {
         if (inv[endIndex - 1].Empty) endIndex--;
         if (inv[endIndex - 1].Empty) endIndex--;
 
-        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic) {
+        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic)
             return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
-        }
 
         // Only check last 2 slots (visually front crocks)
         for (int i = endIndex - 1; i >= Math.Max(startIndex, endIndex - 2); i--) {
-            var stack = inv[i]?.Itemstack;
-            var stackSize = slot?.Itemstack?.StackSize ?? 0;
+            var stack = inv[i].Itemstack;
+            var stackSize = slot!.Itemstack?.StackSize ?? 0;
 
             if (stack?.Collectible is IContainedInteractable ici && ici.OnContainedInteractStart(this, inv[i], player, blockSel)) {
                 // If it's a meal container, don't check for "sealing" behavior
-                if (slot?.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
+                if (slot.Itemstack?.ItemAttributes["mealContainer"].AsBool() == true) {
                     MarkDirty();
                     return true;
                 }
@@ -65,89 +63,15 @@ public class BEDoubleShelf : BEBaseFSContainer {
         return false;
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int startIndex = blockSel.SelectionBoxIndex * ItemsPerSegment;
-
-        if (!inv[startIndex].Empty) {
-            ItemStack firstItemInSegment = inv[startIndex].Itemstack;
-            if (!firstItemInSegment.BelongsToSameGroupAs(slot.Itemstack)) return false;
-            if (slot.Itemstack.IsLargeItem() || firstItemInSegment.IsLargeItem()) return false;
-            if (firstItemInSegment.IsSmallItem() != slot.Itemstack.IsSmallItem()) return false;
-        }
-
-        for (int i = 0; i < ItemsPerSegment; i++) {
-            int currentIndex = startIndex + i;
-            if (currentIndex == startIndex + 4 && !slot.Itemstack.IsSmallItem()) return false;
-
-            if (inv[currentIndex].Empty) {
-                int moved = slot.TryPutInto(Api.World, inv[currentIndex]);
-                MarkDirty();
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                return moved > 0;
-            }
-        }
-
-        return false;
+    protected override int GetSegmentLimit(ItemStack? stack) {
+        return SegmentLimits.Mixed(this, stack);
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int shelf = 0; shelf < ShelfCount; shelf++) {
-            for (int segment = 0; segment < SegmentsPerShelf; segment++) {
-                for (int item = 0; item < ItemsPerSegment; item++) {
-                    int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
-                    if (inv[index].Empty) {
-                        tfMatrices[index] = new Matrixf().Values;
-                        continue;
-                    }
-
-                    var itemStack = inv[index].Itemstack;
-
-                    float x, y = 0f, z;
-                    float scale = 0.95f;
-
-                    if (itemStack.IsLargeItem()) {
-                        x = segment * 0.65f;
-                        z = item * 0.65f;
-                    }
-                    else if (!itemStack.IsSmallItem()) {
-                        x = segment * 0.65f + (index % 2 == 0 ? -0.16f : 0.16f);
-                        z = (index / 2) % 2 == 0 ? -0.18f : 0.18f;
-                    }
-                    else {
-                        x = segment * 0.763f + (item % 4) * 0.19f - 0.314f;
-                        y = (item / 8) * 0.10f + 0.061f;
-                        z = ((item / 4) % 2) * 0.45f - 0.25f;
-                        scale = 0.82f;
-                    }
-
-                    // Exceptions I have to hardcode -----
-                    if (!itemStack.IsLargeItem()) {
-                        string itemPath = itemStack.Collectible.Code.Path;
-
-                        if (itemPath.Contains("pie") == true || itemPath.Contains("cheese")) {
-                            x += 0.15f;
-                            z += 0.1f;
-                        }
-                    }
-
-                    if (itemStack.Collectible.Code == "pemmican:pemmican-pack") {
-                        y += item / 2 * 0.13f;
-                        z = -0.18f;
-                    }
-                    // -----------------------------------
-
-                    tfMatrices[index] = new Matrixf()
-                        .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg(block.Shape.rotateY)
-                        .Scale(scale, scale, scale)
-                        .Translate(x - 0.625f, y + 0.395f, z - 0.5325f)
-                        .Values;
-                }
-            }
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.GenerateLayout(this, td => {
+            td.x = td.segment * 0.625f - 0.125f;
+            td.y = 0.375f;
+            td.scaleX = td.scaleY = td.scaleZ = 0.95f;
+        }, true);
     }
 }

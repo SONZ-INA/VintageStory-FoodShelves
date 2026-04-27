@@ -23,7 +23,7 @@
   },
   "behaviors": [
     { "name": "RightClickPickup" },
-    { "name": "FoodShelves.CanCeilingAttachFalling" }
+    { "name": "Unstable", "properties": { "attachedToFaces": ["up", "down"] } }
   ],
   "shape": {
     "base": "block/baskets/vegetablebasket",
@@ -44,11 +44,11 @@
     "origin": { "x": 0.5, "y": 0.3, "z": 0.5 },
     "scale": 1.6
   },
-	"tpHandTransform": {
-		"translation": { "x": -0.65, "y": -0.55, "z": -0.625 },
-		"rotation": { "x": 0, "y": 0, "z": 0 },
-		"scale": 0.8
-	},
+  "tpHandTransform": {
+    "translation": { "x": -0.65, "y": -0.55, "z": -0.625 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "scale": 0.8
+  },
   "sounds": {
     "place": "game:block/planks",
     "hit": "game:block/planks",

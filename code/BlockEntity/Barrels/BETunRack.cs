@@ -2,14 +2,15 @@
 namespace FoodShelves;
 
 public class BETunRack : BEBaseFSContainer {
-    protected new BlockTunRack block;
+    protected new BlockTunRack block = null!;
 
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.4f;
-    protected override float CuringMultiplier => 0.75f;
+    protected override float CuringMultiplier => 0.74f;
 
     public override int SlotCount => 2;
+
     private readonly int capacityLitres = 500;
 
     public BETunRack() {
@@ -20,12 +21,12 @@ public class BETunRack : BEBaseFSContainer {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockTunRack;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockTunRack)!;
         InitMesh();
 
         base.Initialize(api);
 
-        (inv[1] as ItemSlotLiquidOnly).CapacityLitres = capacityLitres;
+        (inv[1] as ItemSlotLiquidOnly)?.CapacityLitres = capacityLitres;
         inv.SlotModified += Inventory_SlotModified;
     }
 
@@ -42,18 +43,18 @@ public class BETunRack : BEBaseFSContainer {
     protected override void InitMesh() {
         var blockStack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
-            blockStack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
+            blockStack.Attributes[FSAttributes] = VariantAttributes;
         }
 
         blockMesh = GenBlockVariantMesh(Api, blockStack);
 
         if (inv[0].Itemstack?.Block != null) {
-            MeshData tunMesh = GenBlockVariantMesh(Api, inv[0].Itemstack);
-            blockMesh?.AddMeshData(tunMesh.BlockYRotation(block));
+            MeshData? tunMesh = GenBlockVariantMesh(Api, inv[0].Itemstack);
+            blockMesh?.AddMeshData(tunMesh?.BlockYRotation(block));
         }
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         if (slot.Empty) { // Take barrel
@@ -61,7 +62,7 @@ public class BETunRack : BEBaseFSContainer {
                 return TryTake(byPlayer);
             }
             else {
-                ItemStack owncontentStack = block.GetContent(blockSel.Position);
+                ItemStack? owncontentStack = block.GetContent(blockSel.Position);
                 if (owncontentStack?.Collectible?.Code.Path.StartsWith("rot") == true) {
                     return TryTake(byPlayer, 1);
                 }
@@ -72,12 +73,8 @@ public class BETunRack : BEBaseFSContainer {
         }
         else {
             if (inv.Empty && slot.CanStoreInSlot(AttributeCheck)) { // Put barrel in rack
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
-
                 if (TryPut(slot)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
             else if (!inv.Empty) { // Put/Take liquid
@@ -104,17 +101,15 @@ public class BETunRack : BEBaseFSContainer {
         for (int i = rotTakeout; i < SlotCount; i++) {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
+                
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
                 }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
                 return true;
             }
         }
@@ -122,5 +117,5 @@ public class BETunRack : BEBaseFSContainer {
         return false;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 }

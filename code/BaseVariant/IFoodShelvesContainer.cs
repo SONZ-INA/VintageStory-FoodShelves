@@ -2,5 +2,5 @@
 
 public interface IFoodShelvesContainer {
     public ITreeAttribute VariantAttributes { get; set; }
-    public bool OnInteract(IPlayer byPlayer, BlockSelection blockSel);
+    public bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null);
 }

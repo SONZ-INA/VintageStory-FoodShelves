@@ -5,9 +5,7 @@
     "value": [
       "pemmican:pemmican-*",
       "pemmican:rusks-*",
-      "pemmican:mushroompatebar",
-      "pemmican:chips-pack",
-      "pemmican:mushroom-pack"
+      "pemmican:mushroompatebar"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
@@ -24,6 +22,16 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
+    "file": "foodshelves:config/restrictions/general/liquidystuff.json",
+    "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
+    "value": [
+      "pemmican:sugargrind-*",
+      "pemmican:starch-*",
+      "pemmican:sugar"
+    ],
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+  {
     "file": "foodshelves:config/restrictions/shelves/barshelf.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
@@ -31,7 +39,8 @@
       "pemmican:pemmican-bar",
       "pemmican:pemmican-salt",
       "pemmican:pemmican-cooked",
-      "pemmican:mushroompatebar"
+      "pemmican:mushroompatebar",
+      "pemmican:nutribar-general"
     ],
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
@@ -52,7 +61,7 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
-    "file": "foodshelves:config/restrictions/shelves/eggbasket.json",
+    "file": "foodshelves:config/restrictions/baskets/eggbasket.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:egg-glazed",
@@ -62,7 +71,7 @@
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
-    "file": "foodshelves:config/restrictions/shelves/eggbasket.json",
+    "file": "foodshelves:config/restrictions/baskets/eggbasket.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "pemmican:egg-glazed",
@@ -91,17 +100,22 @@
     "value": "packedpemmican",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
-
+  {
+    "file": "pemmican:itemtypes/food/nutribar-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
 
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group3/-",
+    "op": "addmerge", "path": "/GroupingCodes/long/-",
     "value": "pemmican:vegetable-corn-raw",
     "dependsOn": [ { "modid": "longtermfood" } ]
   },
   {
     "file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
-    "op": "addmerge", "path": "/GroupingCodes/group2",
+    "op": "addmerge", "path": "/GroupingCodes/standard",
     "value": [
       "pemmican:vegetable-potato-raw",
       "pemmican:vegetable-sugarbeet-raw"

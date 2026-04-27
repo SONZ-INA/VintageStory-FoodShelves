@@ -5,7 +5,7 @@
 
   "foodshelvesguide-title": "Guide de Food Shelves",
   "foodshelvesguide-text": "<strong>Food Shelves : Guide du joueur</strong><br><br><strong>Introduction</strong><br>Ce mod ajoute diverses options de rangement, telles que des étagères pour l'exposition, des paniers pour la décoration et d'autres conteneurs spécialisés. Certains blocs offrent également des <strong>effets additionels</strong> tels que des bonus de fraîcheur, de maturation ou de séchage. <br><br><strong>Remarque</strong><br>Ce mod a été conçu en tenant compte du mod <a href=\"https://mods.vintagestory.at/expandedfoods\">Expanded Foods</a>. Certains blocs (par exemple, les supports pour tonneau) ne <strong>fermentent les liquides</strong> que si Expanded Foods est installé. Sans cela, ils appliquent toujours des bonus liés à la fraîcheur, mais aucune fermentation n'aura lieu.<br><br><strong>Bonus des blocs</strong><br>Certains blocs offrent des bonus au <i>taux de péremption</i>, au <i>taux de fermentation</i> ou au <i>taux de séchage</i>. Si un bloc dispose d'un tel bonus, celui-ci s'affichera directement dans l'infobulle du bloc lorsque vous passerez votre souris dessus. Ces infobulles peuvent également afficher des fonctionnalités utiles de type <i>quality-of-life</i>. Par exemple, les <a href=\"handbook://block-foodshelves:seedbins-normal-east\">grainetiers</a> indiquent le type de nutriments requis par les graines qu'ils contiennent. <br><br><strong>Mécanisme de refroidissement par glace</strong><br>Les blocs tels que l' <a href=\"handbook://block-foodshelves:coolingcabinet-normal-east\">Armoire réfrigérée</a> et le <a href=\" handbook://block-foodshelves:meatfreezer-normal-east\" >Congélateur à viande</a> offrent un petit bonus de fraîcheur non modifié lorsque leurs portes sont <strong>fermées</strong>. Les laisser ouvertes annule cet avantage, alors veillez à toujours les garder fermées !<br>Ces blocs peuvent être améliorés grâce à la <a href=\"handbook://item-foodshelves:cutice\">glace pilée</a>. La glace est placée dans un tiroir dédié, fond avec le temps et doit être remplacée régulièrement. Le bonus ne s'applique que lorsque le compartiment principal et le tiroir à glace sont fermés, alors vérifiez bien ces portes !<br><br><strong>Paniers pour la décoration et la conservation</strong><br>Les paniers sont principalement décoratifs et ne sont pas destinés au stockage en vrac. Cependant, lorsqu'ils sont placés à l'intérieur d'une <a href=\"handbook://block-foodshelves:coolingcabinet-normal-east\">Armoire réfrigérée</a>, ils héritent de ses bonus de fraîcheur (avec glace ou non), ce qui en fait un moyen élégant de conserver les aliments un peu plus longtemps. <br><br><strong>Informations complémentaires</strong><br>Tous les conteneurs n'acceptent pas tous les objets. Chaque bloc dispose d'une entrée dédiée dans le manuel qui répertorie les types d'objets valides et, le cas échéant, les mods dont ces objets proviennent.<br><br><strong>Interactions</strong><br>La plupart des interactions sont affichées via les <i>interactions du monde</i> (astuces flottantes dans le jeu). Par exemple : ajouter des articles dans des paniers, fermer les portes des armoires ou remplir les tiroirs de glace.<br>Certaines interactions ne sont <strong>pas</strong> affichées, en particulier lorsque les paniers se trouvent à l'intérieur des armoires. Vous pouvez toujours placer des objets directement dans un panier (cliquez avec le bouton droit sur l'objet souhaité ou maintenez la touche <strong>CTRL</strong> enfoncée pour en insérer plusieurs). Si vous avez les mains vides, maintenez la touche <strong>CTRL</strong> enfoncée pour retirer un objet à la fois. <br><br><i>Profitez de vos cuisines décorées et fonctionnelles !</i>",
- 
+
   "item-cutice": "Glace pilée",
 
   "block-shortshelf-*": "Petite étagère",
@@ -92,7 +92,11 @@
   "helddesc-floursack": "La farine placée dans ce sac reste fraîche 4 fois plus longtemps.",
   "helddesc-fruitcooler": "Les fruits placés dans ce réfrigérateur restent frais 30 % plus longtemps, ou jusqu'à 3 fois plus longtemps si de la glace est ajoutée.<br>Assurez-vous de le garder fermé !",
   "helddesc-seedbins": "Affiche le type de nutriment et la température de pousse idéale pour les graines conservées à l'intérieur.",
+<<<<<<< HEAD
+
+=======
   
+>>>>>>> master
   "This item cannot be placed in this container.": "Cet objet ne peut pas être placé dans ce contenant.",
   "Only pies or cheese can be placed on this shelf.": "Seuls des tartes ou du fromage peuvent être placés sur cette étagère.",
   "Only bread, muffins, dumplings, pacoca, halva or marzipam can be placed on this shelf.": "Seuls du pain, des muffins, des boulettes, du pacoca, du halva ou du massepain peuvent être placés sur cette étagère.",
@@ -124,6 +128,11 @@
   
   "Displaying segment": "<font color=\"#a3a3a3\">Segment affiché : </font>",
 
+<<<<<<< HEAD
+  "Displaying segment": "<font color=\"#a3a3a3\">Segment affiché : </font>",
+
+=======
+>>>>>>> master
   "Contents": "<font color=\"orange\">Contient : </font>",
   "Soonest": "Bientôt : ",
   "Empty.": "Vide.",
@@ -159,4 +168,8 @@
   "segmentnum-6": "En haut à gauche",
   "segmentnum-7": "En haut au centre",
   "segmentnum-8": "En haut à droite"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

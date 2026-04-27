@@ -69,13 +69,13 @@
   "tpHandTransformByType": {
     "tunrack-normal*": {
       "translation": { "x": -1.8, "y": -0.91, "z": -0.8 },
-	    "rotation": { "x": 88, "y": 25, "z": -78 },
-	    "scale": 0.25
+      "rotation": { "x": 88, "y": 25, "z": -78 },
+      "scale": 0.25
     },
     "tunrack-top*": {
-	    "translation": { "x": -1.2, "y": -0.6, "z": -1.2 },
-	    "rotation": { "x": 93, "y": -15, "z": 0 },
-	    "scale": 0.25
+      "translation": { "x": -1.2, "y": -0.6, "z": -1.2 },
+      "rotation": { "x": 93, "y": -15, "z": 0 },
+      "scale": 0.25
     }
   },
   "sounds": {

@@ -7,7 +7,7 @@
     { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
   ],
   "attributes": {
-	  "pieFormingSurface": true,
+    "pieFormingSurface": true,
     "handbook": {
       "groupBy": [ "tablewshelf-*" ],
       "extraSections": [
@@ -39,10 +39,10 @@
       "top": { "base": "game:block/stone/polishedrock/{type}-inside" },
       "wood": { "base": "game:block/wood/debarked/oak" }
     },
-	  "*": {
-	    "top": { "base": "game:block/wood/table/normal/top" },
+    "*": {
+      "top": { "base": "game:block/wood/table/normal/top" },
       "wood": { "base": "game:block/wood/debarked/oak" }
-	  }
+    }
   },
   "heldTpIdleAnimation": "holdunderarm",
   "blockmaterial": "Wood",
@@ -53,21 +53,21 @@
   "faceCullMode": "NeverCull",
   "emitSideAo": { "all": false },
   "sidesolid": {
-	  "up": true,
-	  "all": false
+    "up": true,
+    "all": false
   },
   "sideopaque": {
-	  "up": true,
-	  "all": false
+    "up": true,
+    "all": false
   },
   "combustibleProps": {
     "burnTemperature": 600,
     "burnDuration": 41
   },
   "tpHandTransform": {
-	  "translation": { "x": -0.9, "y": -0.6, "z": -0.8 },
-	  "rotation": { "x": 80, "y": 0, "z": 0 },
-	  "scale": 0.56
+    "translation": { "x": -0.9, "y": -0.6, "z": -0.8 },
+    "rotation": { "x": 80, "y": 0, "z": 0 },
+    "scale": 0.56
   },
   "sounds": {
     "place": "game:block/planks",
@@ -76,7 +76,7 @@
   },
   "collisionbox": { "x1": 0.125, "y1": 0, "z1": 0, "x2": 0.875, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
   "selectionBoxes": [
-	  { "x1": 0, "y1": 0.125, "z1": 0.28, "x2": 0.975, "y2": 0.5625, "z2": 0.72, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+    { "x1": 0, "y1": 0.125, "z1": 0.28, "x2": 0.975, "y2": 0.5625, "z2": 0.72, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
     { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
   ]
 }

@@ -759,6 +759,7 @@
 			"name": "sackicon",
 			"from": [ 4.0, 3.0, 12.35 ],
 			"to": [ 12.0, 11.0, 13.35 ],
+			"renderPass": 3,
 			"rotationOrigin": [ 4.0, 3.0, 12.0 ],
 			"faces": {
 				"south": { "texture": "#seed", "uv": [ 0.0, 0.0, 8.0, 8.0 ] }

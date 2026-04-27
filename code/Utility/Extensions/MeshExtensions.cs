@@ -7,20 +7,20 @@ public static class MeshExtensions {
     /// Rotates the mesh around the Y-axis based on the block's predefined <c>rotateY</c> value.<br/>
     /// Useful for aligning meshes with the block's in-world orientation.
     /// </summary>
-    public static MeshData BlockYRotation(this MeshData mesh, Block block)
-        => mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, block.Shape.rotateY * GameMath.DEG2RAD, 0);
+    public static MeshData? BlockYRotation(this MeshData? mesh, Block? block)
+        => mesh?.Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, (block?.Shape.rotateY ?? 0) * GameMath.DEG2RAD, 0);
 
     /// <summary>
     /// Updates the texture key for all faces in the shape’s root element and its children.
     /// </summary>
     public static void ChangeTextureKey(this Shape shape, string key) {
-        foreach (var face in shape.Elements[0].FacesResolved) {
+        foreach (var face in shape.Elements[0].FacesResolved!) {
             face.Texture = key;
         }
 
-        foreach (var child in shape.Elements[0].Children) {
-            foreach (var face in child.FacesResolved) {
-                if (face != null) face.Texture = key;
+        foreach (var child in shape.Elements[0].Children!) {
+            foreach (var face in child.FacesResolved!) {
+                face?.Texture = key;
             }
         }
     }
@@ -29,13 +29,13 @@ public static class MeshExtensions {
     /// Replaces the texture key of all resolved faces in the first <see cref="ShapeElement"/> and its child elements within the given <see cref="Shape"/>.
     /// </summary>
     public static void ChangeShapeTextureKey(this Shape shape, string key) {
-        foreach (var face in shape.Elements[0].FacesResolved) {
+        foreach (var face in shape.Elements[0].FacesResolved!) {
             face.Texture = key;
         }
 
-        foreach (var child in shape.Elements[0].Children) {
-            foreach (var face in child.FacesResolved) {
-                if (face != null) face.Texture = key;
+        foreach (var child in shape.Elements[0].Children!) {
+            foreach (var face in child.FacesResolved!) {
+                face?.Texture = key;
             }
         }
     }
@@ -43,7 +43,7 @@ public static class MeshExtensions {
     /// <summary>
     /// Recursively removes elements and their children whose names are in skipElements.
     /// </summary>
-    public static ShapeElement[] RemoveElements(ShapeElement[] elementArray, string[] skipElements) {
+    public static ShapeElement[] RemoveElements(ShapeElement[] elementArray, string?[] skipElements) {
         var remainingElements = elementArray.Where(e => !skipElements.Contains(e.Name)).ToArray();
         foreach (var element in remainingElements) {
             if (element.Children != null && element.Children.Length > 0) {
@@ -57,28 +57,20 @@ public static class MeshExtensions {
     /// <summary>
     /// Returns a pie texture source based on the 'inPieProperties' attribute.
     /// </summary>
-    public static ITexPositionSource GetPieTexture(ICoreClientAPI capi, ItemStack[] contents, Shape shape, string itemPath) {
-        if (capi == null || shape == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetPieTexture(ICoreClientAPI capi, ItemStack? stack, Shape? shape) {
+        if (capi == null || shape == null || stack == null) 
             return null;
 
-        var item = contents[0];
-        var pieProps = item.ItemAttributes?["inPieProperties"];
+        var pieProps = stack?.ItemAttributes?["inPieProperties"];
         if (pieProps?.Exists != true)
             return null;
 
-        // Exception for WC:FN
-        var texturePath = itemPath.EndsWith("-beachalmondwhole")
-            ? "wildcraftfruit:block/food/pie/fill-beachalmond"
-            : pieProps["texture"]?.ToString();
+        var texturePath = pieProps["texture"]?.ToString();
 
         if (string.IsNullOrEmpty(texturePath))
             return null;
 
         var textureLoc = new AssetLocation(texturePath);
-
-        // Exception for WC:FN
-        if (textureLoc.ToString().Contains("peanutground"))
-            textureLoc = new AssetLocation(textureLoc.ToString().Replace("ground", ""));
 
         // Apply to shape
         shape.Textures.Clear();
@@ -90,31 +82,37 @@ public static class MeshExtensions {
     /// <summary>
     /// Returns a texture source defined by the item's 'inContainerTexture' attribute.
     /// </summary>
-    public static ITexPositionSource GetContainerTextureSource(ICoreClientAPI capi, ItemStack[] contents) {
-        if (capi == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetContainerTextureSource(ICoreClientAPI capi, ItemStack? stack) {
+        if (capi == null || stack == null)
             return null;
 
-        var item = contents[0];
-        var texAttr = item.ItemAttributes?["inContainerTexture"];
+        var texAttr = stack?.ItemAttributes?["inContainerTexture"];
         if (texAttr?.Exists != true) 
             return null;
 
         var texture = texAttr.AsObject<CompositeTexture>();
-        return new ContainerTextureSource(capi, item, texture);
+        return new ContainerTextureSource(capi, stack, texture);
     }
 
     /// <summary>
     /// Returns a texture source using the item's first available texture.
     /// </summary>
-    public static ITexPositionSource GetItemTextureSource(ICoreClientAPI capi, ItemStack[] contents) {
-        if (capi == null || contents == null || contents.Length == 0) 
+    public static ITexPositionSource? GetItemTextureSource(ICoreClientAPI capi, ItemStack? stack) {
+        if (capi == null || stack == null)
             return null;
 
-        var item = contents[0];
-        var firstTexture = contents[0].Item?.Textures?.Values?.FirstOrDefault();
+        var firstTexture = stack?.Item?.Textures?.Values?.FirstOrDefault();
         if (firstTexture == null) 
             return null;
 
-        return new ContainerTextureSource(capi, item, firstTexture);
+        return new ContainerTextureSource(capi, stack, firstTexture);
+    }
+
+    /// <summary>
+    /// Returns the Fill Height of utilCube content height. Used for the GenPartialContentMesh() method.
+    /// </summary>
+    public static float GetFillHeight(float content, float capacity, float maxHeight) {
+        if (capacity <= 0) return 0;
+        return maxHeight * GameMath.Clamp(content / capacity, 0f, 1f);
     }
 }

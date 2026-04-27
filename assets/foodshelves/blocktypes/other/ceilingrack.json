@@ -1,0 +1,68 @@
+{
+  "code": "ceilingrack",
+  "class": "FoodShelves.BlockCeilingRack",
+  "entityclass": "FoodShelves.BECeilingRack",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ]
+    },
+    "handbook": {
+      "groupBy": [ "ceilingrack-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-ceilingrack-text"
+        }
+      ]
+    },
+    "worldInteractionAttributeCheck": "fsLiquidyStuff",
+    "hintType": "bulk"
+  },
+  "behaviors": [
+    { "name": "Unstable", "properties": { "attachedToFaces": ["up"] } }
+  ],
+  "shape": {
+    "base": "block/other/ceilingrack"
+  },
+  "heldTpIdleAnimation": "holdbothhandslarge",
+  "heldRightReadyAnimation": "heldblockready", 
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 1,
+  "maxStackSize": 16,
+  "replaceable": 900,
+  "faceCullMode": "NeverCull",
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "drawtype": "json",
+  "emitSideAo": { "all": false },
+  "sideao": { "all": true },
+  "sidesolid": {
+    "up": true,
+    "all": false
+  },
+  "sideopaque": {
+    "up": true,
+    "all": false
+  },
+  "guiTransform": {
+    "origin": { "x": 0.5, "y": 1, "z": 0.5 }
+  },
+  "tpHandTransform": {
+    "translation": { "x": -0.7, "y": -1, "z": -0.7 },
+    "rotation": { "x": -2, "y": 25, "z": -78 },
+    "scale": 0.5
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionSelectionBoxes": [ 
+    { "x1": 0, "y1": 0.78, "z1": 0, "x2": 1, "y2": 1, "z2": 1 }
+  ]
+}

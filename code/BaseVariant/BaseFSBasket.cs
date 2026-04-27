@@ -3,14 +3,14 @@
 namespace FoodShelves;
 
 public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
-    private WorldInteraction[] interactions;
+    private WorldInteraction[]? interactions;
 
-    protected virtual Dictionary<string, ModelTransform> Transformations { get; set; }
+    protected virtual Dictionary<string, ModelTransform> Transformations { get; set; } = null!;
     protected virtual string InteractionsName => GetType().Name.Replace("Block", "");
 
     public virtual int InnerSlotCount { get; protected set; } // Separate property since stuff can be put inside when within a Cooling Cabinet
 
-    public override void OnLoaded(ICoreAPI api) {;
+    public override void OnLoaded(ICoreAPI api) {
         base.OnLoaded(api);
 
         Transformations ??= api.LoadAsset<Dictionary<string, ModelTransform>>($"foodshelves:config/transformations/baskets/{InteractionsName.ToLower()}.json");
@@ -42,17 +42,23 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         });
     }
 
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+    public abstract ExplicitTransform GetTransformationMatrix(string? path = null);
+    
+    public virtual Action<TransformationData>? GetTransformationModifier() {
+        return null;
+    }
+
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer)
             .Append(interactions);
     }
 
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
-        BEBaseFSBasket be = GetBlockEntity<BEBaseFSBasket>(pos);
+        BEBaseFSBasket? be = GetBlockEntity<BEBaseFSBasket>(pos);
         if (be != null) {
-            BlockBehaviorCanCeilingAttachFalling beh = GetBehavior<BlockBehaviorCanCeilingAttachFalling>();
-            beh.CanBlockStay(world, pos, out bool isCeilingAttached);
-            be.IsCeilingAttached = isCeilingAttached;
+            Block upBlock = world.BlockAccessor.GetBlock(pos.UpCopy());
+            be.IsCeilingAttached = upBlock.SideSolid[BlockFacing.DOWN.Index];
+
             be.MarkDirty(true);
         }
 
@@ -62,16 +68,17 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     // Rotation logic
     public override bool DoPlaceBlock(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel, ItemStack byItemStack) {
         bool val = base.DoPlaceBlock(world, byPlayer, blockSel, byItemStack);
-        BEBaseFSBasket block = world.BlockAccessor.GetBlockEntity(blockSel.Position) as BEBaseFSBasket;
-        block.MeshAngle = GetBlockMeshAngle(byPlayer, blockSel, val);
+        BEBaseFSBasket? block = world.BlockAccessor.GetBlockEntity<BEBaseFSBasket>(blockSel.Position);
+        block?.MeshAngle = GetBlockMeshAngle(byPlayer, blockSel, val);
 
         return val;
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
         if (byPlayer.Entity.Controls.ShiftKey) {
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BEBaseFSBasket frbasket)
+            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BEBaseFSBasket frbasket) {
                 return frbasket.OnInteract(byPlayer, blockSel);
+            }
         }
 
         return BaseOnBlockInteractStart(world, byPlayer, blockSel);
@@ -82,44 +89,41 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
 
         dsc.Append(Lang.Get("foodshelves:Contents"));
 
-        if (inSlot.Itemstack == null) {
-            dsc.AppendLine(Lang.Get("foodshelves:Empty."));
-            return;
+        if (!inSlot.Empty) {
+            ItemStack[] contents = GetContents(world, inSlot.Itemstack);
+            dsc.Append(PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world));
         }
-
-        ItemStack[] contents = GetContents(world, inSlot.Itemstack);
-        dsc.Append(PerishableInfoAverageAndSoonest(contents.ToDummySlots(), world));
     }
 
-    public abstract float[,] GetTransformationMatrix(string path = null);
-
-    public override MeshData GenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        MeshData basketMesh = base.GenMesh(itemstack, targetAtlas, atBlockPos);
-        MeshData contentMesh = GenBasketContents(itemstack, targetAtlas);
+    public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
+        MeshData? basketMesh = base.GenMesh(slot, targetAtlas, atBlockPos);
+        MeshData? contentMesh = GenBasketContents(slot.Itemstack, targetAtlas);
 
         if (contentMesh != null) {
             contentMesh.Translate(0, 0.02f, 0);
-            basketMesh.AddMeshData(contentMesh);
+            basketMesh?.AddMeshData(contentMesh);
         }
 
         return basketMesh;
     }
 
-    protected virtual MeshData GenBasketContents(ItemStack itemstack, ITextureAtlasAPI targetAtlas) {
+    protected virtual MeshData? GenBasketContents(ItemStack? itemstack, ITextureAtlasAPI targetAtlas) {
+        if (itemstack == null) return null;
+
         ItemStack[] contents = GetContents(api.World, itemstack);
-        MeshData contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), 1f, Transformations);
+        MeshData? contentMesh = GenContentMesh(api as ICoreClientAPI, contents, GetTransformationMatrix(), Transformations, GetTransformationModifier());
 
         return contentMesh;
     }
 
-    protected MeshData BaseGenMesh(ItemStack itemstack, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
-        return base.GenMesh(itemstack, targetAtlas, atBlockPos);
+    protected MeshData? BaseGenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos atBlockPos) {
+        return base.GenMesh(slot, targetAtlas, atBlockPos);
     }
 
-    public override string GetMeshCacheKey(ItemStack itemstack) {
-        string blockKey = base.GetMeshCacheKey(itemstack);
+    public override string GetMeshCacheKey(ItemSlot slot) {
+        string blockKey = base.GetMeshCacheKey(slot);
 
-        ItemStack[] contents = GetContents(api.World, itemstack);
+        ItemStack[] contents = GetContents(api.World, slot.Itemstack);
         int hashcode = contents.GetStackCacheHashCodeFNV();
 
         return $"{blockKey}-{hashcode}";
@@ -174,7 +178,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
             Array.Resize(ref contents, contents.Length - 1);
 
             if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true))
-                api.World.SpawnItemEntity(taken, byPlayer.Entity.ServerPos.XYZ);
+                api.World.SpawnItemEntity(taken, byPlayer.Entity.Pos.XYZ);
 
             InventoryExtensions.SetContents(slot.Itemstack, contents);
             be.MarkDirty();
@@ -184,11 +188,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         return false;
     }
 
-    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
-        return false;
-    }
-
-    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {
-        // Do nothing
-    }
+    public WorldInteraction[] GetContainedInteractionHelp(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => [];
+    public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => false;
+    public void OnContainedInteractStop(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) {}
 }

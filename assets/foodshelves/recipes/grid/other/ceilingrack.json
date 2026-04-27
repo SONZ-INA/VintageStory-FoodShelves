@@ -1,0 +1,30 @@
+[
+  {
+    "ingredientPattern": "PPP,SRS",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-*", "name": "wood" },
+      "R": { "type": "item", "code": "game:rope" },
+      "S": { "type": "item", "code": "game:stick" }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "ceilingrack-normal",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "PPP,SRS",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*" },
+      "R": { "type": "item", "code": "game:rope" },
+      "S": { "type": "item", "code": "game:stick" }
+    },
+    "width": 3, "height": 2, "recipeGroup": 1,
+    "output": { "type": "block", "code": "ceilingrack-normal" }
+  }
+]

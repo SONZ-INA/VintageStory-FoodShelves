@@ -16,7 +16,7 @@
     "dependsOn": [ { "modid": "carryon" } ]
   },
   {
-    "file": "foodshelves:blocktypes/glassware/ceilingjar.json",
+    "file": "foodshelves:blocktypes/glassware/jarlarge.json",
     "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",
@@ -32,6 +32,36 @@
   },
   {
     "file": "foodshelves:blocktypes/glassware/fooddisplay*",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+  {
+    "file": "foodshelves:blocktypes/glassware/seedbins.json",
+    "op": "addmerge", "path": "/behaviors/-", "side": "server",
+    "value": {
+      "name": "Carryable",
+      "properties": {
+        "translation": [ 0.0625, 0, 0 ],
+        "rotation": [ 0, 180, 0 ],
+        "slots": {
+          "Hands": {}
+        }
+      }
+    },
+    "dependsOn": [ { "modid": "carryon" } ]
+  },
+    {
+    "file": "foodshelves:blocktypes/glassware/wallcabinet.json",
     "op": "addmerge", "path": "/behaviors/-", "side": "server",
     "value": {
       "name": "Carryable",

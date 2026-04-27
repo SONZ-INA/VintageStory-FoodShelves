@@ -1,7 +1,7 @@
 ﻿namespace FoodShelves;
 
 public class BEBarrelRack : BEBaseFSContainer {
-    protected new BlockBarrelRack block;
+    protected new BlockBarrelRack block = null!;
 
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
@@ -19,24 +19,24 @@ public class BEBarrelRack : BEBaseFSContainer {
     }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockBarrelRack;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockBarrelRack)!;
         InitMesh();
 
         base.Initialize(api);
 
-        (inv[1] as ItemSlotLiquidOnly).CapacityLitres = capacityLitres;
+        (inv[1] as ItemSlotLiquidOnly)?.CapacityLitres = capacityLitres;
     }
 
     protected override void InitMesh() {
         var stack = new ItemStack(block);
         if (VariantAttributes.Count != 0) {
-            stack.Attributes[BaseFSContainer.FSAttributes] = VariantAttributes;
+            stack.Attributes[FSAttributes] = VariantAttributes;
         }
 
         blockMesh = GenBlockVariantMesh(Api, stack);
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
         if (slot.Empty) { // Take barrel
@@ -44,7 +44,7 @@ public class BEBarrelRack : BEBaseFSContainer {
                 return TryTake(byPlayer);
             }
             else {
-                ItemStack owncontentStack = block.GetContent(blockSel.Position);
+                ItemStack? owncontentStack = block.GetContent(blockSel.Position);
                 if (owncontentStack?.Collectible?.Code.Path.StartsWith("rot") == true) {
                     return TryTake(byPlayer, 1);
                 }
@@ -55,12 +55,8 @@ public class BEBarrelRack : BEBaseFSContainer {
         }
         else {
             if (inv.Empty && slot.CanStoreInSlot(AttributeCheck)) { // Put barrel in rack
-                AssetLocation sound = slot.Itemstack?.Block?.Sounds?.Place;
-
                 if (TryPut(slot)) {
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
-                    MarkDirty();
-                    return true;
+                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
                 }
             }
             else if (!inv.Empty) { // Put/Take liquid
@@ -87,17 +83,15 @@ public class BEBarrelRack : BEBaseFSContainer {
         for (int i = rotTakeout; i < SlotCount; i++) {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
+                
                 if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                    AssetLocation sound = stack.Block?.Sounds?.Place;
-                    Api.World.PlaySoundAt(sound ?? new AssetLocation("sounds/player/build"), byPlayer.Entity, byPlayer, true, 16);
+                    this.HandlePlacementEffects(stack, byPlayer);
                 }
 
                 if (stack.StackSize > 0) {
                     Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
                 }
 
-                (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
-                MarkDirty();
                 return true;
             }
         }
@@ -108,17 +102,17 @@ public class BEBarrelRack : BEBaseFSContainer {
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         InitMesh();
 
-        MeshData currentMesh = blockMesh.Clone();
+        MeshData? currentMesh = blockMesh?.Clone();
 
         ItemStack[] stack = GetContentStacks();
         if (stack[0]?.Block != null) {
-            MeshData substituteBarrelShape = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
-            currentMesh.AddMeshData(substituteBarrelShape.BlockYRotation(block));
+            MeshData? substituteBarrelShape = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
+            currentMesh?.AddMeshData(substituteBarrelShape?.BlockYRotation(block));
         }
 
         mesher.AddMeshData(currentMesh);
         return true;
     }
 
-    protected override float[][] genTransformationMatrices() { return null; } // Unneeded
+    protected override float[][]? genTransformationMatrices() { return null; } // Unneeded
 }

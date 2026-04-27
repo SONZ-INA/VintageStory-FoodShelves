@@ -1,0 +1,95 @@
+{
+  "code": "coolingcabinet",
+  "class": "FoodShelves.BlockCoolingCabinet",
+  "entityclass": "FoodShelves.BECoolingCabinet",
+  "variantgroups": [
+    { "code": "type", "states": ["normal"] },
+    { "code": "side", "loadFromProperties": "abstract/horizontalorientation" }
+  ],
+  "attributes": {
+    "materials": { "loadFromProperties": "block/wood" },
+    "variantTextures": {
+      "surface": [ "game:block/wood/debarked/{wood}", "foodshelves:variants/wood/{wood}" ],
+      "surface_long": [ "game:block/wood/debarked/{wood}" ],
+      "glass": [ "game:block/glass/{glass}" ],
+      "rock": [ "game:block/stone/polishedrock/{rock}" ]
+    },
+    "handbook": {
+      "groupBy": [ "coolingcabinet-*" ],
+      "extraSections": [
+        {
+          "title": "foodshelves:blockdesc-canhold-title",
+          "text": "foodshelves:blockdesc-holderuniversal-text"
+        }
+      ]
+    }
+  },
+  "behaviors": [
+    { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },
+    { "name": "Multiblock",
+      "propertiesByType": {
+        "*-north": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 0 } },
+        "*-east":  { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 0 } },
+        "*-south": { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 1, "y": 0, "z": 1 } },
+        "*-west":  { "sizex": 2, "sizey": 2, "sizez": 2, "cposition": { "x": 0, "y": 0, "z": 1 } }
+      }
+    }
+  ],
+  "shape": {
+    "base": "block/coolers/coolingcabinet",
+    "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 }
+  },
+  "heldTpIdleAnimation": "holdbothhandslarge",
+  "heldRightReadyAnimation": "heldblockready", 
+  "heldTpUseAnimation": "twohandplaceblock",
+  "blockmaterial": "Wood",
+  "lightAbsorption": 2,
+  "maxStackSize": 8,
+  "replaceable": 900,
+  "resistance": 1.5,
+  "materialDensity": 400,
+  "faceCullMode": "NeverCull",
+  "emitSideAo": { "all": false },
+  "sidesolidByType": {
+    "*-north": { "verticals": true, "north": true, "horizontals": false },
+    "*-east": { "verticals": true, "east": true, "horizontals": false },
+    "*-west": { "verticals": true, "west": true, "horizontals": false },
+    "*-south": { "verticals": true, "south": true, "horizontals": false }
+  },
+  "sideopaque": { "all": false },
+  "guiTransform": {
+    "origin": { "x": 0.5, "y": 1, "z": 1 },
+    "scale": 0.6
+  },
+  "tpHandTransform": {
+    "translation": { "x": -0.7, "y": -2.18, "z": -1.11 },
+    "rotation": { "x": 99, "y": -15, "z": -76 },
+    "scale": 0.35
+  },
+  "sounds": {
+    "place": "game:block/planks",
+    "hit": "game:block/planks",
+    "break": "game:block/planks"
+  },
+  "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+  "selectionBoxes": [
+    { "x1": 0.0625, "y1": 0.5625, "z1": 0.125, "x2": 0.6875, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.6875, "y1": 0.5625, "z1": 0.125, "x2": 1.3125, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.3125, "y1": 0.5625, "z1": 0.125, "x2": 1.9375, "y2": 1.0325, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
+    { "x1": 0.0625, "y1": 1.0325, "z1": 0.125, "x2": 0.6875, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.6875, "y1": 1.0325, "z1": 0.125, "x2": 1.3125, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.3125, "y1": 1.0325, "z1": 0.125, "x2": 1.9375, "y2": 1.5, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
+    { "x1": 0.0625, "y1": 1.5, "z1": 0.125, "x2": 0.6875, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.6875, "y1": 1.5, "z1": 0.125, "x2": 1.3125, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.3125, "y1": 1.5, "z1": 0.125, "x2": 1.9375, "y2": 1.9375, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
+    { "x1": 0.0625, "y1": 0.5, "z1": 0.875, "x2": 0.125, "y2": 1.9375, "z2": 1.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 1.875, "y1": 0.5, "z1": 0.875, "x2": 1.9375, "y2": 1.9375, "z2": 1.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+
+    { "x1": 0.0625, "y1": 0, "z1": 0, "x2": 1.9375, "y2": 0.5, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.0625, "y1": 0.5, "z1": 0, "x2": 1.9375, "y2": 1.9375, "z2": 0.9375, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
+
+  ]
+}

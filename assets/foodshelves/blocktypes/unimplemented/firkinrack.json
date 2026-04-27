@@ -61,13 +61,13 @@
   "tpHandTransformByType": {
     "firkinrack-normal*": {
       "translation": { "x": -1.23, "y": -0.91, "z": -0.8 },
-	    "rotation": { "x": 88, "y": 25, "z": -78 },
-	    "scale": 0.4
+      "rotation": { "x": 88, "y": 25, "z": -78 },
+      "scale": 0.4
     },
     "firkinrack-top*": {
-	    "translation": { "x": -1.2, "y": -0.6, "z": -0.5 },
-	    "rotation": { "x": 93, "y": -15, "z": 0 },
-	    "scale": 0.45
+      "translation": { "x": -1.2, "y": -0.6, "z": -0.5 },
+      "rotation": { "x": 93, "y": -15, "z": 0 },
+      "scale": 0.45
     }
   },
   "sounds": {
@@ -82,14 +82,14 @@
   },
   "selectionBoxesByType": {
     "firkinrack-normal*": [
-	    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
-	    { "x1": 0, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+      { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
+      { "x1": 0, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
       { "x1": 0, "y1": 0.5, "z1": 0, "x2": 1, "y2": 1, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
       { "x1": 0, "y1": 0.5, "z1": 0.5, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
     ],
     "firkinrack-top*": [
       { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.5, "z2": 0.5, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } },
-	    { "x1": 0, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
+      { "x1": 0, "y1": 0, "z1": 0.5, "x2": 1, "y2": 0.5, "z2": 1, "rotateYByType": { "*-north": 90, "*-east": 0, "*-west": 180, "*-south": 270 } }
     ]
   }
 }

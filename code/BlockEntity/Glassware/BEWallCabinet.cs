@@ -1,7 +1,7 @@
 ﻿namespace FoodShelves;
 
 public class BEWallCabinet : BEBaseFSAnimatable {
-    protected new BlockWallCabinet block;
+    protected new BlockWallCabinet block = null!;
 
     public override string InventoryClassName => "shelf";
     public override string AttributeTransformCode => "onshelfTransform";
@@ -9,41 +9,48 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     public override string AttributeCheck => "shelvable";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
-    public override int SlotCount => 4;
+    public override int ShelfCount => 2;
+    public override int SegmentsPerShelf => 2;
 
-    [TreeSerializable(false)] public bool CabinetOpen { get; set; }
+    [TreeSerializable(false)] public bool DoorOpen { get; set; }
     
-    private float perishMultiplierUnBuffed = 0.75f;
+    private float perishMultiplierUnBuffed = 0.74f;
+
+    private enum SlotType {
+        Door = 4,
+        Cabinet = 5
+    }
 
     public BEWallCabinet() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     public override void Initialize(ICoreAPI api) {
-        block = api.World.BlockAccessor.GetBlock(Pos) as BlockWallCabinet;
+        block = (api.World.BlockAccessor.GetBlock(Pos) as BlockWallCabinet)!;
         base.Initialize(api);
 
         perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
     }
 
-    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel) {
-        // Open/Close cabinet
-        if (byPlayer.Entity.Controls.ShiftKey) {
-            if (!CabinetOpen) ToggleCabinetDoor(true, byPlayer);
-            else ToggleCabinetDoor(false, byPlayer);
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
+        switch ((SlotType)blockSel.SelectionBoxIndex) {
+            case SlotType.Cabinet:
+                ToggleDoor(true, byPlayer);
+                MarkDirty(true);
+                return true;
             
-            MarkDirty(true);
-            return true;
+            case SlotType.Door:
+                ToggleDoor(false, byPlayer);
+                MarkDirty(true);
+                return true;
+
+            default:
+                bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+                ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
+
+                if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel))
+                    return true;
+
+                return base.OnInteract(byPlayer, blockSel);
         }
-
-        if (!CabinetOpen) return false;
-
-        // Crock sealing interactions
-        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
-        ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel)) {
-            return true;
-        }
-
-        return base.OnInteract(byPlayer, blockSel);
     }
 
     protected bool TryUse(IPlayer player, BlockSelection blockSel) {
@@ -60,57 +67,41 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     #region Animations
 
     protected override void HandleAnimations() {
-        if (animUtil != null) {
-            if (CabinetOpen) ToggleCabinetDoor(true);
-            else ToggleCabinetDoor(false);
-        }
+        if (AnimUtil == null)
+            return;
+
+        if (DoorOpen) ToggleDoor(true);
+        else ToggleDoor(false);
     }
 
-    private void ToggleCabinetDoor(bool open, IPlayer byPlayer = null) {
+    private void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == false) {
-                animUtil.StartAnimation(new AnimationMetaData() {
-                    Animation = "cabinetopen",
-                    Code = "cabinetopen",
-                    AnimationSpeed = 3f,
-                    EaseOutSpeed = 1,
-                    EaseInSpeed = 2
-                });
-            }
-
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetOpen, byPlayer.Entity, byPlayer, true, 16);
+            AnimUtil.TryStartAnimation("dooropen", 3f);
             PerishMultiplier = 1f;
+
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(SoundReferences.WallCabinetOpen, byPlayer, byPlayer, true, 16);
+            }
         }
         else {
-            if (animUtil.activeAnimationsByAnimCode.ContainsKey("cabinetopen") == true)
-                animUtil.StopAnimation("cabinetopen");
-
+            AnimUtil.TryStopAnimation("dooropen");
             PerishMultiplier = perishMultiplierUnBuffed;
 
-            if (byPlayer != null) Api.World.PlaySoundAt(block.soundCabinetClose, byPlayer.Entity, byPlayer, true, 16, 0.3f);
+            if (byPlayer != null) {
+                Api.World.PlaySoundAt(SoundReferences.WallCabinetClose, byPlayer, byPlayer, true, 16, 0.3f);
+            }
         }
 
-        CabinetOpen = open;
+        DoorOpen = open;
     }
 
     #endregion
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
-
-        for (int index = 0; index < SlotCount; index++) {
-            float x = index % 2 == 0 ? 0.275f : 0.725f;
-            float y = index >= 2 ? 0.5625f : 0.0625f;
-            float z = 0.25f;
-
-            tfMatrices[index] = new Matrixf()
-                .Translate(0.5f, 0, 0.5f)
-                .RotateYDeg(block.Shape.rotateY)
-                .Translate(x - 0.5f, y, z - 0.5f)
-                .Translate(-0.5f, 0, -0.5f)
-                .Values;
-        }
-
-        return tfMatrices;
+        return TransformationGenerator.GenerateLayout(this, td => {
+            td.x = td.segment * 0.43f - 0.215f;
+            td.y = td.shelf * 0.5f + 0.065f;
+            td.z = -0.2f;
+        });
     }
 }
