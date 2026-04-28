@@ -1,6 +1,6 @@
 [
   {
-    "file": "foodshelves:config/restrictions/glassware/meatfreezer.json",
+    "file": "foodshelves:config/restrictions/coolers/meatfreezer.json",
     "op": "addmerge", "path": "/CollectibleCodes", "side": "server",
     "value": [
       "butchering:primemeat-raw",

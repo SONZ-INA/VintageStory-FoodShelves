@@ -56,7 +56,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
         contentMeshes[0] = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
         contentMeshes[1] = GenLiquidyMesh(capi, inv[1], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
         contentMeshes[2] = GenLiquidyMesh(capi, inv[2], ShapeReferences.utilMeatFreezer, 13f)?.BlockYRotation(block);
-        contentMeshes[3] = GenLiquidyMesh(capi, inv[3], ShapeReferences.utilMeatFreezer, 9f)?.BlockYRotation(block)?.Translate(new(0, 0.25f, 0)).BlockYRotation(block);
+        contentMeshes[3] = GenLiquidyMesh(capi, inv[3], ShapeReferences.utilMeatFreezer, 9f)?.BlockYRotation(block)?.Translate(new(0, 0.25f, 0));
     }
 
     #region Interactions

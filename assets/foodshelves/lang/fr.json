@@ -92,11 +92,7 @@
   "helddesc-floursack": "La farine placée dans ce sac reste fraîche 4 fois plus longtemps.",
   "helddesc-fruitcooler": "Les fruits placés dans ce réfrigérateur restent frais 30 % plus longtemps, ou jusqu'à 3 fois plus longtemps si de la glace est ajoutée.<br>Assurez-vous de le garder fermé !",
   "helddesc-seedbins": "Affiche le type de nutriment et la température de pousse idéale pour les graines conservées à l'intérieur.",
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> master
   "This item cannot be placed in this container.": "Cet objet ne peut pas être placé dans ce contenant.",
   "Only pies or cheese can be placed on this shelf.": "Seuls des tartes ou du fromage peuvent être placés sur cette étagère.",
   "Only bread, muffins, dumplings, pacoca, halva or marzipam can be placed on this shelf.": "Seuls du pain, des muffins, des boulettes, du pacoca, du halva ou du massepain peuvent être placés sur cette étagère.",
@@ -125,14 +121,9 @@
   "Missing tun.": "<font color=\"orange\">Cuve manquante.</font>",
 
   "placefailure-requireceilingattachable": "Impossible de placer ce bloc ici. Il doit être fixé au plafond sur un bloc non ciselé.",
-  
+
   "Displaying segment": "<font color=\"#a3a3a3\">Segment affiché : </font>",
 
-<<<<<<< HEAD
-  "Displaying segment": "<font color=\"#a3a3a3\">Segment affiché : </font>",
-
-=======
->>>>>>> master
   "Contents": "<font color=\"orange\">Contient : </font>",
   "Soonest": "Bientôt : ",
   "Empty.": "Vide.",
@@ -168,8 +159,4 @@
   "segmentnum-6": "En haut à gauche",
   "segmentnum-7": "En haut au centre",
   "segmentnum-8": "En haut à droite"
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> master
