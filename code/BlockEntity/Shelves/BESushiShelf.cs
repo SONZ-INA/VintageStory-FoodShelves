@@ -21,27 +21,18 @@ public class BESushiShelf : BEBaseFSContainer {
     }
 
     protected override float[][] genTransformationMatrices() {
-        float[][] tfMatrices = new float[SlotCount][];
+        return TransformationGenerator.GenerateLayout(this, (t) => {
+            t.scaleX = t.scaleY = 0.9f;
 
-        for (int shelf = 0; shelf < ShelfCount; shelf++) {
-            for (int segment = 0; segment < SegmentsPerShelf; segment++) {
-                for (int item = 0; item < ItemsPerSegment; item++) {
-                    int index = shelf * (SegmentsPerShelf * ItemsPerSegment) + segment * ItemsPerSegment + item;
+            t.offsetX = -0.3875f;
+            t.offsetY = 0.05f;
+            t.offsetZ = -0.255f;
 
-                    float x = -(segment * 0.5f) - (item % 3) * 0.15f;
-                    float y = shelf * 0.28f;
-                    float z = -(item / 3) * 0.37f;
+            t.offsetRotY = 180;
 
-                    tfMatrices[index] = new Matrixf()
-                        .Translate(0.5f, 0, 0.5f)
-                        .RotateYDeg((block?.Shape.rotateY ?? 0) - 180f)
-                        .Scale(0.9f, 0.9f, 1f)
-                        .Translate(x - 0.07f, y + 0.05f, z - 0.24875f)
-                        .Values;
-                }
-            }
-        }
-
-        return tfMatrices;
+            t.x = t.segment * 0.4525f + (t.item % 3) * 0.1325f;
+            t.y = t.shelf * 0.25f;
+            t.z = (t.item / 3) * 0.375f;
+        });
     }
 }

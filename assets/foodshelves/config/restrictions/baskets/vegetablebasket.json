@@ -2,7 +2,7 @@
   "GroupingCodes": {
     "large": [ "game:vegetable-cabbage" ],
     "medium": [ "game:vegetable-bellpepper" ],
-    "standard": [ "game:vegetable-avocado", "game:vegetable-onion", "game:vegetable-turnip" ],
+    "standard": [ "game:vegetable-avocado", "game:vegetable-onion", "game:vegetable-turnip", "game:vegetable-fennel" ],
     "long": [ "game:vegetable-carrot", "game:vegetable-parsnip", "game:vegetable-cassava" ]
   }
 }

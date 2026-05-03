@@ -1,7 +1,7 @@
 [
   {
     "file": "foodshelves:recipes/grid/cutice.json",
-    "op": "addmerge", "path": "/1/enabled", "side": "server",
+    "op": "addmerge", "path": "/4/enabled", "side": "server",
     "value": true,
     "condition": { "when": "FoodShelves.LakeIceToCutIce", "isValue": true }
   }

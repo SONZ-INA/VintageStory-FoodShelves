@@ -9,10 +9,9 @@
     "output": { "type": "item", "code": "cutice", "quantity": 8 }
   },
   {
-    "enabled": false,
     "ingredientPattern": "IS",
     "ingredients": {
-      "I": { "type": "block", "code": "game:lakeice" },
+      "I": { "type": "block", "code": "game:ice-glacier" },
       "S": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
     "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
@@ -22,6 +21,25 @@
     "ingredientPattern": "IS",
     "ingredients": {
       "I": { "type": "block", "code": "game:packedglacierice" },
+      "S": { "type": "item", "code": "game:saw-*", "isTool": true }
+    },
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
+    "output": { "type": "item", "code": "cutice", "quantity": 8 }
+  },
+  {
+    "ingredientPattern": "IS",
+    "ingredients": {
+      "I": { "type": "block", "code": "game:ice-packedglacier" },
+      "S": { "type": "item", "code": "game:saw-*", "isTool": true }
+    },
+    "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,
+    "output": { "type": "item", "code": "cutice", "quantity": 8 }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "IS",
+    "ingredients": {
+      "I": { "type": "block", "code": "game:lakeice" },
       "S": { "type": "item", "code": "game:saw-*", "isTool": true }
     },
     "width": 2, "height": 1, "recipeGroup": 1, "shapeless": true,

@@ -21,7 +21,6 @@ public class BEJarStand : BEBaseFSContainer {
 
         ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
-        bool shift = byPlayer.Entity.Controls.ShiftKey;
 
         ItemSlot jarSlotInStand = inv[blockSel.SelectionBoxIndex];
 

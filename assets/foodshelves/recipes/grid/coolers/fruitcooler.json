@@ -2,12 +2,16 @@
   {
     "ingredientPattern": "GPH,RCR,PZP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
-      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
+      "G": { "type": "block", "code": "game:glassslab-{glass}-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ],
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -28,9 +32,13 @@
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
-      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
+      "G": { "type": "block", "code": "game:glassslab-{glass}-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ],
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -50,9 +58,12 @@
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
       "G": { "type": "block", "code": "*:glassslab-*-down-free" },
       "C": { "type": "block", "code": "*:rockpolished-*" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "fruitcooler-normal-east" }
@@ -63,12 +74,16 @@
     "enabled": false,
     "ingredientPattern": "GPH,RCR,PZP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
-      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
+      "G": { "type": "block", "code": "game:glassslab-{glass}-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ],
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -90,9 +105,13 @@
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
-      "G": { "type": "block", "code": "game:glassslab-*-down-free", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
-      "C": { "type": "block", "code": "game:rockpolished-*", "name": "rock" }
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
+      "G": { "type": "block", "code": "game:glassslab-{glass}-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ],
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -113,9 +132,12 @@
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "R": { "type": "item", "code": "game:resin", "quantity": 2 },
       "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
-      "Z": { "type": "item", "code": "game:ingot-*", "name": "metal", "allowedVariants": [ "zinc", "tin" ] },
+      "Z": { "type": "item", "code": "game:ingot-{metal}" },
       "G": { "type": "block", "code": "*:glassslab-*-down-free" },
       "C": { "type": "block", "code": "*:rockpolished-*" }
+    },
+    "allowedVariants": {
+      "metal": [ "zinc", "tin" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": { "type": "block", "code": "fruitcooler-normal-east" }

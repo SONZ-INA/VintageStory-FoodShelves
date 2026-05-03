@@ -21,13 +21,31 @@ public class BETableWShelf : BEBaseFSContainer {
         if (blockSel.SelectionBoxIndex != (int)TableWShelfPart.Shelf)
             return false;
 
+        if (slot.Itemstack?.IsLargeItem() == true)
+            return false;
+
+        if (!inv[0].Empty && inv[0].Itemstack?.IsMediumItem() == true)
+            return false;
+
         return base.TryPut(byPlayer, slot, blockSel);
     }
 
-    protected override float[][] genTransformationMatrices() {
+    protected override float[][] genTransformationMatrices() {  
         return TransformationGenerator.GenerateLayout(this, td => {
             td.z = td.item * 0.4f - 0.175f;
             td.y = 0.185f;
+
+            if (!inv[td.index].Empty) {
+                string itemPath = inv[td.index].Itemstack!.Collectible.Code.Path;
+
+                if (itemPath.StartsWith("dirtyclaypot-") || itemPath.StartsWith("claypot-")) {
+                    td.scaleX = td.scaleY = td.scaleZ = 0.85f;
+                }
+
+                if (itemPath.StartsWith("rollingpin-")) {
+                    td.z = 0;
+                }
+            }
         });
     }
 }

@@ -16,10 +16,9 @@ public class BEPieShelf : BEBaseFSContainer {
 
     protected override float[][] genTransformationMatrices() {
         return TransformationGenerator.GenerateLayout(this, td => {
-            td.x = 0.0375f;
-            td.y = td.shelf * 0.313f + 0.0525f;
-            td.z = -0.05f;
-            td.rotY = 45;
+            td.offsetOriginZ = -0.025f;
+            td.y = td.shelf * 0.313f;
+            td.offsetY = 0.0525f;
         }, true);
     }
 }

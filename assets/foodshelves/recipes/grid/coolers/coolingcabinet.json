@@ -2,11 +2,14 @@
   {
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
+      "G": { "type": "block", "code": "game:glass-{glass}" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
+      "C": { "type": "block", "code": "game:rockpolished-{rock}", "quantity": 2 }
+    },
+    "allowedVariants": {
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -24,11 +27,11 @@
   {
     "ingredientPattern": "PNP,GSG,PCP",
     "ingredients": {
-      "P": { "type": "item", "code": "game:plank-*", "quantity": 4, "name": "wood" },
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
       "G": { "type": "block", "code": "*:glass-*" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
+      "C": { "type": "block", "code": "game:rockpolished-{rock}", "quantity": 2 }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -47,9 +50,12 @@
     "ingredients": {
       "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
-      "G": { "type": "block", "code": "game:glass-*", "name": "glass", "allowedVariants": [ "plain", "quartz" ] },
+      "G": { "type": "block", "code": "game:glass-{glass}" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
+      "C": { "type": "block", "code": "game:rockpolished-{rock}", "quantity": 2 }
+    },
+    "allowedVariants": {
+      "glass": [ "plain", "quartz" ]
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {
@@ -70,7 +76,7 @@
       "N": { "type": "item", "code": "game:metalnailsandstrips-*", "quantity": 2 },
       "G": { "type": "block", "code": "*:glass-*" },
       "S": { "type": "block", "code": "game:shelf-*", "quantity": 3 },
-      "C": { "type": "block", "code": "game:rockpolished-*", "quantity": 2, "name": "rock" }
+      "C": { "type": "block", "code": "game:rockpolished-{rock}", "quantity": 2 }
     },
     "width": 3, "height": 3, "recipeGroup": 1,
     "output": {

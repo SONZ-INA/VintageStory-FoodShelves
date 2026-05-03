@@ -1,6 +1,19 @@
 ﻿namespace FoodShelves;
 
 public class ItemSlotFSUniversal : ItemSlot {
+    public override int MaxSlotStackSize {
+        get {
+            if (!isBulk) return stackCountLimit;
+
+            if (!Empty) {
+                return (itemstack.Collectible?.MaxStackSize ?? 64) * stackCountLimit;
+            }
+            
+            return 64 * stackCountLimit;
+        }
+        set => base.MaxSlotStackSize = value;
+    }
+
     public readonly bool isBulk;
 
     private readonly string attributeCheck;
@@ -20,7 +33,8 @@ public class ItemSlotFSUniversal : ItemSlot {
 
         return capacity - StackSize;
     }
-    
+
+
     public override bool CanTakeFrom(ItemSlot slot, EnumMergePriority priority = EnumMergePriority.AutoMerge) {
         return slot.CanStoreInSlot(attributeCheck) && base.CanTakeFrom(slot, priority);
     }

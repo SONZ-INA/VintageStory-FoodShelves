@@ -259,7 +259,8 @@ public static class InfoDisplay {
             sb.Append(BasketInfo(inv, slot, stack));
         }
         else {
-            sb.Append(GenericItemInfo(slot, stack));
+            bool withRegex = inv.ClassName != "jarstand"; // I love hardcoding shit :D
+            sb.Append(GenericItemInfo(slot, stack, withRegex));
         }
 
         return true;
@@ -331,7 +332,7 @@ public static class InfoDisplay {
         return sb.ToString();
     }
 
-    private static string GenericItemInfo(ItemSlot slot, ItemStack stack) {
+    private static string GenericItemInfo(ItemSlot slot, ItemStack stack, bool withRegex = false) {
         StringBuilder sb = new();
 
         var customNameInterface = stack.Collectible.GetCollectibleInterface<IContainedCustomName>();
@@ -339,10 +340,11 @@ public static class InfoDisplay {
         if (customNameInterface != null) {
             string contents = customNameInterface.GetContainedInfo(slot)?.Trim() ?? "";
 
-            if (!string.IsNullOrEmpty(contents)) {
+            if (withRegex && !string.IsNullOrEmpty(contents)) {
                 contents = Regex.Replace(contents, @"\([^()]*\)(?!.*\()", "<font color=\"#989898\">$0</font>");
-                sb.AppendLine(contents);
             }
+
+            sb.AppendLine(contents);
         }
 
         return sb.ToString();
