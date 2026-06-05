@@ -346,6 +346,9 @@ public static class InfoDisplay {
 
             sb.AppendLine(contents);
         }
+        else {
+            sb.AppendLine(GetNameAndStackSize(stack));
+        }
 
         return sb.ToString();
     }

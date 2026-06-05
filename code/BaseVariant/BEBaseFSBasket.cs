@@ -28,54 +28,41 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        bool shift = byPlayer.Entity.Controls.ShiftKey;
-
-        if (!shift && slot.Empty) // Take basket
+        if (!byPlayer.Entity.Controls.ShiftKey)
             return false;
 
-        if (shift) {
-            if (!slot.Empty) {
-                if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck) && TryPut(byPlayer, slot, blockSel)) {
-                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
-                }
-
-                if (CantPlaceMessage != "") {
-                    (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
-                }
-
-                return true;
-            }
-
+        if (slot.Empty)
             return TryTake(byPlayer, blockSel);
-        }
 
-        return false;
+        if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck) && TryPut(byPlayer, slot, blockSel))
+            return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+
+        if (CantPlaceMessage != "")
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+
+        return true;
     }
 
     protected override ItemStack? TryTakeFromSegment(IPlayer byPlayer, int startIndex) {
         ItemStack? stack = null;
+        bool takeAllMatching = byPlayer.Entity.Controls.CtrlKey;
 
-        if (byPlayer.Entity.Controls.CtrlKey) {
-            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
-                int idx = startIndex + i;
-                if (inv[idx].Empty) continue;
+        for (int i = ItemsPerSegment - 1; i >= 0; i--) {
+            int idx = startIndex + i;
+            if (inv[idx].Empty) continue;
 
-                if (stack == null) {
-                    stack = inv[idx].TakeOut(1);
-                }
-                else if (inv[idx].Itemstack?.Collectible?.Code == stack.Collectible?.Code) {
-                    inv[idx].TakeOut(1);
-                    stack.StackSize += 1;
-                }
-            }
-        }
-        else {
-            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
-                int idx = startIndex + i;
-                if (inv[idx].Empty) continue;
-
+            if (stack == null) {
                 stack = inv[idx].TakeOut(1);
-                break;
+
+                if (!takeAllMatching)
+                    break;
+
+                continue;
+            }
+
+            if (inv[idx].Itemstack?.Collectible?.Code == stack.Collectible?.Code) {
+                inv[idx].TakeOut(1);
+                stack.StackSize++;
             }
         }
 
@@ -94,21 +81,18 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
 
         return TransformationGenerator.GenerateExplicit(transformationMatrix, (t) => {
             t.preRotate = blockRotation + MeshAngle * GameMath.RAD2DEG;
-
             modifier?.Invoke(t);
         });
     }
 
     private MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
-        MeshData? ropeMesh = null;
+        Shape? basketRope = (Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>())
+            ?? throw new InvalidOperationException($"No shape util found for {CeilingAttachedUtil}");
+        
+        tesselator.TesselateShape(block, basketRope, out MeshData ropeMesh);
 
-        Shape? basketRope = Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>();
-        if (basketRope != null) {
-            tesselator.TesselateShape(block, basketRope, out ropeMesh);
-
-            float scale = block?.Shape.Scale ?? 0;
-            ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
-        }
+        float scale = block?.Shape.Scale ?? 0;
+        ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
 
         return ropeMesh;
     }

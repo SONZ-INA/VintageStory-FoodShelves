@@ -97,8 +97,9 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (itemSlottableInteractions?.Length > 0)
+        if (itemSlottableInteractions?.Length > 0) {
             return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer).Append(itemSlottableInteractions);
+        }
         
         return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
     }
@@ -108,9 +109,10 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is IFoodShelvesContainer fsContainer) {
-            if (fsContainer.OnInteract(byPlayer, blockSel))
-                return true;
+        BlockEntity? be = world.BlockAccessor.GetBlockEntity(blockSel.Position);
+
+        if (be is IFoodShelvesContainer fsContainer && fsContainer.OnInteract(byPlayer, blockSel)) {
+            return true;
         }
 
         // Handle block behaviors
@@ -146,30 +148,26 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos) {
         var stack = base.OnPickBlock(world, pos);
+        BlockEntity? be = world.BlockAccessor.GetBlockEntity(pos);
 
-        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
-            if (bec.Inventory.Empty) {
-                stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
-            }
+        if (be is BlockEntityContainer bec && bec.Inventory.Empty) {
+            stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
         }
 
-        if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            if (fscontainer.VariantAttributes?.Count > 0) {
-                stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
-            }
+        if (be is IFoodShelvesContainer fscontainer && fscontainer.VariantAttributes?.Count > 0) {
+            stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
         }
 
         return stack;
     }
 
     public override bool TryPlaceBlock(IWorldAccessor world, IPlayer byPlayer, ItemStack itemstack, BlockSelection blockSel, ref string failureCode) {
-        if (preventPlacing) {
-            (api as ICoreClientAPI)!.TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
-            failureCode = "__ignore__";
-            return false;
-        }
-
-        return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
+        if (!preventPlacing)
+            return base.TryPlaceBlock(world, byPlayer, itemstack, blockSel, ref failureCode);
+        
+        (api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(placingMessage));
+        failureCode = "__ignore__";
+        return false;
     }
 
     public override ItemStack[] GetDrops(IWorldAccessor world, BlockPos pos, IPlayer byPlayer, float dropQuantityMultiplier = 1) {
@@ -199,7 +197,8 @@ public class BaseFSContainer : BlockContainer, IContainedMeshSource {
     }
 
     public override void OnBeforeRender(ICoreClientAPI capi, ItemStack itemstack, EnumItemRenderTarget target, ref ItemRenderInfo renderinfo) {
-        if (api.Side == EnumAppSide.Server) return;
+        if (api.Side == EnumAppSide.Server) 
+            return;
         
         string meshCacheKey = GetMeshCacheKey(renderinfo.InSlot);
         var meshrefs = GetCacheDictionary(capi, meshCacheKey);

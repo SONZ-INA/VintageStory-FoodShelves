@@ -48,6 +48,9 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     protected virtual void InitMesh() {
+        if (Api == null || Api.Side == EnumAppSide.Server)
+            return;
+
         blockMesh = GenBlockVariantMesh(Api, this.GetVariantStack());
     }
 
@@ -67,17 +70,24 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
     public virtual float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt) {
-            if (!globalBlockBuffs) return container.Room?.ExitCount == 0 ? 2f : 0.5f;
-            return container.Room?.ExitCount == 0 ? DryingMultiplier * 2f : DryingMultiplier * 0.5f;
+            if (!globalBlockBuffs) {
+                return container.Room?.ExitCount == 0 ? 2f : 0.5f;
+            }
+
+            return container.Room?.ExitCount == 0
+                ? DryingMultiplier * 2f
+                : DryingMultiplier * 0.5f;
         }
 
-        if (transType == EnumTransitionType.Cure)
+        if (transType == EnumTransitionType.Cure) {
             return globalBlockBuffs ? CuringMultiplier : 1f;
+        }
 
         if (Api == null) return 0;
 
-        if (RipeningSpot && transType == EnumTransitionType.Ripen)
+        if (RipeningSpot && transType == EnumTransitionType.Ripen) {
             return GameMath.Clamp((1 - container.GetPerishRate() - 0.5f) * 3, 0, 1);
+        }
 
         return globalPerishMultiplier * (globalBlockBuffs ? PerishMultiplier : 1);
     }
@@ -85,7 +95,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     public virtual bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        // Check if slot is bulk
         int segmentIndex = blockSel.SelectionBoxIndex;
         int startIndex = segmentIndex * ItemsPerSegment;
 
@@ -94,14 +103,13 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
             isBulkSlot = fsSlot.isBulk;
         }
 
-        // Determine if it's 'place' interaction
         bool shift = byPlayer.Entity.Controls.ShiftKey;
 
-        bool placeBulk = isBulkSlot && shift;
-        bool placeSingle = !isBulkSlot && !shift && !slot.Empty;
+        bool isPlaceAction = isBulkSlot
+            ? shift
+            : !shift && !slot.Empty;
 
-        // Place interaction check
-        if (placeBulk || placeSingle) {
+        if (isPlaceAction) {
             if (slot.Empty) return false;
 
             if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck)) {
@@ -145,7 +153,6 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         int moved = TryPutIntoSegment(slot, startIndex, ctrl);
 
         if (moved > 0) {
-            InitMesh();
             MarkDirty();
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
             return true;
@@ -156,26 +163,24 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
     protected virtual int TryPutIntoSegment(ItemSlot slot, int startIndex, bool ctrl) {
         int moved = 0;
+        var source = slot.Itemstack!;
 
         for (int i = 0; i < ItemsPerSegment; i++) {
-            int idx = startIndex + i;
-            ItemSlot target = inv[idx];
+            var target = inv[startIndex + i];
 
-            if (target.Empty || target.Itemstack!.Collectible == slot.Itemstack!.Collectible) {
-                var fsSlot = (ItemSlotFSUniversal)target;
-                int available = fsSlot.GetRemainingSlotSpace(slot.Itemstack!);
-                if (available == 0) continue;
+            if (!target.Empty && target.Itemstack!.Collectible != source.Collectible)
+                continue;
 
-                moved = slot.TryPutIntoBulk(Api.World, target, ctrl ? available : 1);
-                if (moved > 0) {
-                    // If it's bulk, continue placing items iteratively
-                    if (moved <= slot.StackSize && ctrl) {
-                        continue;
-                    }
+            var fsSlot = (ItemSlotFSUniversal)target;
+            int available = fsSlot.GetRemainingSlotSpace(source);
 
-                    break;
-                }
-            }
+            if (available == 0)
+                continue;
+
+            moved += slot.TryPutIntoBulk(Api.World, target, ctrl ? available : 1);
+
+            if (!ctrl || slot.Empty)
+                break;
         }
 
         return moved;
@@ -188,15 +193,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         ItemStack? stack = TryTakeFromSegment(byPlayer, startIndex);
         if (stack == null) return false;
 
-        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-            this.HandlePlacementEffects(stack, byPlayer);
-        }
+        DropAndHandleEffects(byPlayer, stack);
 
-        if (stack.StackSize > 0) {
-            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-        }
-
-        InitMesh();
         return true;
     }
 
@@ -215,22 +213,20 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     protected virtual bool TryTakeFromSlot(IPlayer byPlayer, ItemSlot slot, int quantity = 1) {
-        if (!slot.Empty) {
-            ItemStack stack = slot.TakeOut(quantity);
+        if (slot.Empty) return false;
 
-            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                this.HandlePlacementEffects(stack, byPlayer);
-            }
+        ItemStack stack = slot.TakeOut(quantity);
+        DropAndHandleEffects(byPlayer, stack);
 
-            if (stack.StackSize > 0) {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
+        return true;
+    }
 
-            InitMesh();
-            return true;
-        }
+    protected virtual void DropAndHandleEffects(IPlayer player, ItemStack stack) {
+        if (player.InventoryManager.TryGiveItemstack(stack))
+            this.HandlePlacementEffects(stack, player);
 
-        return false;
+        if (stack.StackSize > 0)
+            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
     }
 
     protected virtual int GetSegmentLimit(ItemStack? stack) {
@@ -250,8 +246,8 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        mesher.AddMeshData(blockMesh);
         base.OnTesselation(mesher, tesselator);
+        mesher.AddMeshData(blockMesh);
         return true;
     }
 

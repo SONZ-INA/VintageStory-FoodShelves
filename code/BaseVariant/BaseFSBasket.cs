@@ -56,6 +56,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     public override void OnNeighbourBlockChange(IWorldAccessor world, BlockPos pos, BlockPos neibpos) {
         if (neibpos.Equals(pos.UpCopy())) {
             BEBaseFSBasket? be = GetBlockEntity<BEBaseFSBasket>(pos);
+
             if (be != null) {
                 Block upBlock = world.BlockAccessor.GetBlock(pos.UpCopy());
 
@@ -84,10 +85,11 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
     }
 
     public override bool OnBlockInteractStart(IWorldAccessor world, IPlayer byPlayer, BlockSelection blockSel) {
-        if (byPlayer.Entity.Controls.ShiftKey) {
-            if (world.BlockAccessor.GetBlockEntity(blockSel.Position) is BEBaseFSBasket frbasket) {
-                return frbasket.OnInteract(byPlayer, blockSel);
-            }
+        BlockEntity? be = world.BlockAccessor.GetBlockEntity(blockSel.Position);
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+
+        if (shift && be is BEBaseFSBasket frbasket) {
+            return frbasket.OnInteract(byPlayer, blockSel);
         }
 
         return BaseOnBlockInteractStart(world, byPlayer, blockSel);
@@ -191,6 +193,7 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
 
             InventoryExtensions.SetContents(slot.Itemstack, contents);
             be.MarkDirty();
+
             return true;
         }
 
