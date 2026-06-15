@@ -55,23 +55,24 @@ public class BlockFruitCooler : BaseFSContainer {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
+        var baseHelp = BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer);
+
         switch (selection.SelectionBoxIndex) {
-            case 0: case 1: case 2: case 3:
-                return itemSlottableInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
+            case 0 or 1 or 2 or 3:
+                return itemSlottableInteractions.Append(baseHelp);
 
             case 4:
-                return freezerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer));
-            
+                return freezerInteractions.Append(baseHelp);
+
             case 5:
-                if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEFruitCooler bemf) {
-                    if (bemf.DrawerOpen) {
-                        return drawerOpenClose.Append(drawerInteractions.Append(BaseGetPlacedBlockInteractionHelp(world, selection, forPlayer)));
-                    }
-                    else {
-                        return drawerOpenClose;
-                    }
+                if (world.BlockAccessor.GetBlockEntity(selection.Position)
+                    is not BEFruitCooler be) {
+                    return drawerOpenClose;
                 }
-                break;
+
+                return be.DrawerOpen
+                    ? drawerOpenClose.Append(drawerInteractions.Append(baseHelp))
+                    : drawerOpenClose;
         }
 
         return null;
@@ -89,44 +90,46 @@ public class BlockFruitCooler : BaseFSContainer {
 
         if (be == null) return boxes;
 
-        List<Cuboidf> sections = [];
+        Cuboidf[] sections = new Cuboidf[7];
 
-        for (int i = 0; i < 7; i++) {
-            sections.Add(boxes[i].Clone());
+        for (int i = 0; i < sections.Length; i++) {
+            sections[i] = boxes[i].Clone();
         }
 
         if (be.DoorOpen) {
-            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
-
-            switch (rotAngle) {
-                case BlockDirection.North:
-                    sections[4].Z2 += 0.225f;
-                    sections[4].Z1 += 0.835f;
-                    break;
-
-                case BlockDirection.West:
-                    sections[4].X2 += 0.225f;
-                    sections[4].X1 += 0.835f;
-                    break;
-
-                case BlockDirection.South:
-                    sections[4].Z2 -= 0.835f;
-                    sections[4].Z1 -= 0.225f;
-                    break;
-
-                case BlockDirection.East:
-                    sections[4].X2 -= 0.835f;
-                    sections[4].X1 -= 0.225f;
-                    break;
-            }
-
-            sections[4].Y1 -= 0.75f;
-            sections[4].Y2 -= 0.05f;
+            OffsetDoorBox(sections[4]);
             sections[6].Y2 -= 0.1875f;
 
             return [sections[0], sections[1], sections[2], sections[3], sections[4], Skip, sections[6]];
         }
 
         return [Skip, Skip, Skip, Skip, sections[4], sections[5], sections[6]];
+    }
+
+    private void OffsetDoorBox(Cuboidf box) {
+        switch ((BlockDirection)this.GetRotationAngle()) {
+            case BlockDirection.North:
+                box.Z2 += 0.225f;
+                box.Z1 += 0.835f;
+                break;
+
+            case BlockDirection.West:
+                box.X2 += 0.225f;
+                box.X1 += 0.835f;
+                break;
+
+            case BlockDirection.South:
+                box.Z2 -= 0.835f;
+                box.Z1 -= 0.225f;
+                break;
+
+            case BlockDirection.East:
+                box.X2 -= 0.835f;
+                box.X1 -= 0.225f;
+                break;
+        }
+
+        box.Y1 -= 0.75f;
+        box.Y2 -= 0.05f;
     }
 }

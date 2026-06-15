@@ -22,28 +22,23 @@ public class BEJarStand : BEBaseFSContainer {
         ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
 
-        ItemSlot jarSlotInStand = inv[blockSel.SelectionBoxIndex];
+        ItemSlot jarSlot = inv[blockSel.SelectionBoxIndex];
 
-        if (!jarSlotInStand.Empty) {
-            if (!hotbarSlot.Empty || ctrl) {
-                if (TryUse(byPlayer, hotbarSlot, blockSel)) {
-                    return true;
-                }
-
-                return false;
-            }
+        if (!jarSlot.Empty && (!hotbarSlot.Empty || ctrl)) {
+            return TryUse(byPlayer, blockSel);
         }
 
         return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
     }
 
-    protected bool TryUse(IPlayer player, ItemSlot hotbarSlot, BlockSelection blockSel) {
+    protected bool TryUse(IPlayer player, BlockSelection blockSel) {
         int segmentIndex = blockSel.SelectionBoxIndex;
         if (segmentIndex >= inv.Count || inv[segmentIndex].Empty) return false;
 
         ItemSlot jarSlot = inv[segmentIndex];
 
         if (jarSlot.Itemstack?.Collectible is IContainedInteractable ici) {
+            MarkDirty();
             return ici.OnContainedInteractStart(this, jarSlot, player, blockSel);
         }
 

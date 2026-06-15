@@ -98,16 +98,15 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = base.BaseRenderContents(mesher, tesselator);
+        if (base.BaseRenderContents(mesher, tesselator))
+            return true;
 
-        if (!skipmesh) {
-            if (IsCeilingAttached) {
-                ropeMesh ??= GenerateRopeMesh(tesselator);
-                mesher.AddMeshData(ropeMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
-            }
-
-            mesher.AddMeshData(blockMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
+        if (IsCeilingAttached) {
+            ropeMesh ??= GenerateRopeMesh(tesselator);
+            mesher.AddMeshData(ropeMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
         }
+
+        mesher.AddMeshData(blockMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
 
         return true;
     }

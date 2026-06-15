@@ -3,7 +3,7 @@
 public class BlockMushroomBasket : BaseFSBasket {
     public override int InnerSlotCount => 18;
 
-    private static readonly ExplicitTransform BasketTransformations = new (
+    protected static readonly ExplicitTransform BasketTransformations = new (
         X:  [ -.1f, .07f, .15f,-.16f,  .25f,-.15f,  .18f,    0,-.02f, -.2f,    0, .13f,-.13f, .05f,    0,  .2f,-.05f, .12f ],  
         Y:  [    0,    0,    0,    0,  .04f, .06f,  .07f, .04f, .07f, .07f, .08f, .07f, .07f, .12f, .13f, .09f, .13f, .14f ],
         Z:  [ -.1f, .07f, -.2f, .18f,  .23f,    0, -.05f, .15f,-.16f, -.2f,    0, .13f, .13f,-.05f, .13f, -.2f,-.05f,    0 ],

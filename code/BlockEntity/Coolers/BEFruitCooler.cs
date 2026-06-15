@@ -2,7 +2,6 @@
 
 public class BEFruitCooler : BEBaseFSCooler {
     protected new BlockFruitCooler block = null!;
-    private readonly MeshData?[] contentMeshes = new MeshData[4];
 
     // Base-Specific ----------------------------
     protected override string CantPlaceMessage => "foodshelves:Only fruit can be placed in this cooler.";
@@ -34,7 +33,7 @@ public class BEFruitCooler : BEBaseFSCooler {
         Segment2 = 1,
         Segment3 = 2,
         Segment4 = 3,
-        FreezerDoor = 4,
+        CoolerDoor = 4,
         IceDrawer = 5,
         FruitCooler = 6
     }
@@ -53,16 +52,6 @@ public class BEFruitCooler : BEBaseFSCooler {
         base.Initialize(api);
     }
 
-    protected override void InitMesh() {
-        base.InitMesh();
-
-        for (int i = 0; i < 4; i++) {
-            contentMeshes[i] = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilFruitCooler, 8.9f).BlockYRotation(block);
-        }
-    }
-
-    #region Interactions
-
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
@@ -70,23 +59,18 @@ public class BEFruitCooler : BEBaseFSCooler {
         bool shift = byPlayer.Entity.Controls.ShiftKey;
 
         switch (aimedAt) {
-            case SlotType.Segment1:
-            case SlotType.Segment2:
-            case SlotType.Segment3:
-            case SlotType.Segment4:
+            case SlotType.Segment1 or SlotType.Segment2 or SlotType.Segment3 or SlotType.Segment4:
                 if (!DoorOpen) return false;
                 return base.OnInteract(byPlayer, blockSel);
             
-            case SlotType.FreezerDoor:
-                if (!DoorOpen) ToggleDoor(true, byPlayer);
-                else ToggleDoor(false, byPlayer);
+            case SlotType.CoolerDoor:
+                ToggleDoor(!DoorOpen, byPlayer);
                 MarkDirty(true);
                 return true;
             
             case SlotType.IceDrawer:
                 if (shift) {
-                    if (!DrawerOpen) ToggleDrawer(true, byPlayer);
-                    else ToggleDrawer(false, byPlayer);
+                    ToggleDrawer(!DrawerOpen, byPlayer);
                     MarkDirty(true);
                     return true;
                 }
@@ -108,34 +92,26 @@ public class BEFruitCooler : BEBaseFSCooler {
         return false;
     }
 
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex > (int)SlotType.Segment4)
-            return false; // If it's freezer or drawer selection box, return
-        
-        return base.TryPut(byPlayer, slot, blockSel);
-    }
-
-    protected override bool TryPutIce(IPlayer byPlayer, ItemSlot slot, BlockSelection selection) {
-        if (selection.SelectionBoxIndex != (int)SlotType.IceDrawer)
-            return false;
-
-        return base.TryPutIce(byPlayer, slot, selection);
-    }
-
-    #endregion
-
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         base.OnTesselation(mesher, tesselator);
 
-        for (int i = 0; i < 4; i++) {
-            if (contentMeshes[i] == null) continue;
+        BlockDirection rot = (BlockDirection)block.GetRotationAngle();
 
-            MeshData? contentMesh = contentMeshes[i]?.Clone();
-            switch ((BlockDirection)block.GetRotationAngle()) {
-                case BlockDirection.North: contentMesh?.Translate(i%2 * 0.4065f, 0, -i/2 * 0.4065f); break;
-                case BlockDirection.West: contentMesh?.Translate(-i/2 * 0.4065f, 0, -i%2 * 0.4065f); break;
-                case BlockDirection.South: contentMesh?.Translate(-i%2 * 0.4065f, 0, i/2 * 0.4065f); break;
-                case BlockDirection.East: contentMesh?.Translate(i/2 * 0.4065f, 0, i%2 * 0.4065f); break;
+        for (int i = 0; i < 4; i++) {
+            MeshData? contentMesh = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilFruitCooler, 8.9f)?.BlockYRotation(block);
+
+            if (contentMesh == null)
+                continue;
+
+            const float offset = 0.4065f;
+            int col = i % 2;
+            int row = i / 2;
+
+            switch (rot) {
+                case BlockDirection.North: contentMesh.Translate(col * offset, 0, -row * offset); break;
+                case BlockDirection.West: contentMesh.Translate(-row * offset, 0, -col * offset); break;
+                case BlockDirection.South: contentMesh.Translate(-col * offset, 0, row * offset); break;
+                case BlockDirection.East: contentMesh.Translate(row * offset, 0, col * offset); break;
             }
 
             mesher.AddMeshData(contentMesh);

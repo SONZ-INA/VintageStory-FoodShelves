@@ -35,7 +35,9 @@ public class BEDoubleShelf : BEBaseFSContainer {
         if (inv[endIndex - 1].Empty) endIndex--;
         if (inv[endIndex - 1].Empty) endIndex--;
 
-        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic)
+        var collectible = inv[startIndex].Itemstack?.Collectible;
+
+        if (collectible is BaseFSBasket && collectible is IContainedInteractable ic)
             return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
 
         // Only check last 2 slots (visually front crocks)

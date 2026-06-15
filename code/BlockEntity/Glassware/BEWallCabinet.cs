@@ -54,10 +54,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (slot.Itemstack?.IsLargeItem() == true)
-            return false;
-
-        if (slot.Itemstack?.IsMediumItem() == true)
+        if (slot.Itemstack?.IsLargeItem() == true || slot.Itemstack?.IsMediumItem() == true)
             return false;
 
         return base.TryPut(byPlayer, slot, blockSel);

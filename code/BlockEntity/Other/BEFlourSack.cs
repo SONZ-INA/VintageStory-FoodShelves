@@ -22,7 +22,7 @@ public class BEFlourSack : BEBaseFSContainer {
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        InitMesh(); // Re-meshing the falling block
+        InitMesh(); // Re-meshing the falling block, and multiplayer icon sync
 
         mesher.AddMeshData(blockMesh);
 

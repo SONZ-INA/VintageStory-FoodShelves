@@ -50,25 +50,25 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
 
         if (!inSlot.Empty) {
             ItemStack[] contents = GetContents(api.World, inSlot.Itemstack);
-            
-            if (contents != null && contents.Length > 0) {
-                dsc.Append(Lang.Get("foodshelves:Contents"));
+            if (contents.Length == 0) return;
 
-                DummySlot dummySlot = new(contents[0]);
-                dsc.Append(PerishableInfoCompact(world, dummySlot, 0));
-                dsc.Append(TransitionInfoCompact(world, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage));
-            }
+            dsc.Append(Lang.Get("foodshelves:Contents"));
+
+            DummySlot dummySlot = new(contents[0]);
+            dsc.Append(PerishableInfoCompact(world, dummySlot, 0));
+            dsc.Append(TransitionInfoCompact(world, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage));
         }
     }
 
     public override MeshData? GenMesh(ItemSlot slot, ITextureAtlasAPI targetAtlas, BlockPos? atBlockPos) {
+        // Rendered passes aren't accounted for in the hotbar, so remove it if this block is in the hotbar inventory.
         MeshData? blockMesh = slot.Inventory?.ClassName == "hotbar"
             ? GenBlockVariantMesh(api, slot.Itemstack, ["Glass1"])
             : base.GenMesh(slot, targetAtlas, atBlockPos);
 
         ItemStack[] contents = GetContents(api.World, slot.Itemstack);
         
-        if (contents != null && contents.Length > 0) {
+        if (contents.Length > 0) {
             MeshData? contentMesh = GenLiquidyMesh(api as ICoreClientAPI, contents[0], ShapeReferences.utilJar, (contents[0].Item?.MaxStackSize * 2) ?? 128, 7.3f);
             if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
         }
@@ -85,7 +85,7 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         if (contents.Length == 0) return blockKey;
 
         string code = contents[0].Item?.Code ?? "unknown";
-        float amount = contents[0].StackSize;
+        int amount = contents[0].StackSize;
 
         return $"{blockKey}-{code}-{amount}-{hotbarSlot}";
     }
@@ -94,8 +94,8 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         string jarName = GetContainedName(inSlot, 1);
 
         ItemStack[] contents = GetContents(api.World, inSlot.Itemstack);
-        if (contents != null && contents.Length > 0) {
-            return jarName + "<font color=\"#989898\">(" + GetNameAndStackSize(contents[0]) + ")</font>";
+        if (contents.Length > 0) {
+            return $"{jarName}<font color=\"#989898\">({GetNameAndStackSize(contents[0])})</font>";
         }
 
         return jarName;
@@ -117,57 +117,68 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         bool shift = byPlayer.Entity.Controls.ShiftKey;
 
         ItemStack[] contents = GetContents(api.World, slot.Itemstack);
+        DummySlot internalSlot = CreateInternalSlot(be, hotbarSlot, contents);
 
-        // Determine capacity
-        int referenceMaxStack = 64;
-        if (!hotbarSlot.Empty) referenceMaxStack = hotbarSlot.Itemstack.Collectible.MaxStackSize;
-        else if (contents.Length > 0 && contents[0] != null) referenceMaxStack = contents[0].Collectible.MaxStackSize;
+        bool changed = !hotbarSlot.Empty
+            ? TryPutIntoJar(api, hotbarSlot, internalSlot, ctrl)
+            : TryTakeFromJar(api, be, byPlayer, internalSlot, ctrl, shift);
 
-        int jarCapacity = referenceMaxStack * InnerStackCount;
+        if (!changed)
+            return false;
 
-        DummySlot internalSlot = new(contents.Length > 0 ? contents[0] : null, be.Inventory) {
-            MaxSlotStackSize = jarCapacity
+        SetContents(slot.Itemstack, internalSlot.Itemstack != null ? [internalSlot.Itemstack] : []);
+
+        slot.MarkDirty();
+        be.MarkDirty();
+
+        api.World.PlaySoundAt(GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+
+        return true;
+    }
+
+    private DummySlot CreateInternalSlot(BlockEntityContainer be, ItemSlot hotbarSlot, ItemStack[] contents) {
+        int referenceMaxStack = !hotbarSlot.Empty
+            ? hotbarSlot.Itemstack.Collectible.MaxStackSize
+            : contents.Length > 0
+                ? contents[0].Collectible.MaxStackSize
+                : 64;
+
+        return new DummySlot(contents.Length > 0 ? contents[0] : null, be.Inventory) {
+            MaxSlotStackSize = referenceMaxStack * InnerStackCount
         };
+    }
 
-        bool changed = false;
+    private bool TryPutIntoJar(ICoreAPI api, ItemSlot hotbarSlot, DummySlot internalSlot, bool ctrl) {
+        if (!hotbarSlot.CanStoreInSlot("fsLiquidyStuff"))
+            return false;
 
-        // Putting stuff in
-        if (!hotbarSlot.Empty) {
-            if (hotbarSlot.CanStoreInSlot("fsLiquidyStuff")) {
-                int moved = hotbarSlot.TryPutIntoBulk(api.World, internalSlot, ctrl ? hotbarSlot.StackSize : 1);
-                if (moved > 0) changed = true;
-            }
-        }
-        // Taking stuff out
-        else if (ctrl && !internalSlot.Empty) {
-            int naturalMax = internalSlot.Itemstack.Collectible.MaxStackSize;
-            int amountToTake = shift ? Math.Min(internalSlot.StackSize, naturalMax) : 1;
+        int moved = hotbarSlot.TryPutIntoBulk(api.World, internalSlot, ctrl ? hotbarSlot.StackSize : 1);
+        return moved > 0;
+    }
 
-            ItemStack taken = internalSlot.Itemstack.Clone();
-            taken.StackSize = amountToTake;
+    private bool TryTakeFromJar(ICoreAPI api, BlockEntityContainer be, IPlayer byPlayer, DummySlot internalSlot, bool ctrl, bool shift) {
+        if (!ctrl || internalSlot.Empty)
+            return false;
 
-            internalSlot.Itemstack.StackSize -= amountToTake;
+        int naturalMax = internalSlot.Itemstack.Collectible.MaxStackSize;
 
-            if (internalSlot.Itemstack.StackSize <= 0) {
-                internalSlot.Itemstack = null;
-            }
+        int amount = shift
+            ? Math.Min(internalSlot.StackSize, naturalMax)
+            : 1;
 
-            if (!byPlayer.InventoryManager.TryGiveItemstack(taken)) {
-                api.World.SpawnItemEntity(taken, be.Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
-            changed = true;
-        }
+        ItemStack taken = internalSlot.Itemstack.Clone();
+        taken.StackSize = amount;
 
-        if (changed) {
-            SetContents(slot.Itemstack, [internalSlot.Itemstack]);
+        internalSlot.Itemstack.StackSize -= amount;
 
-            slot.MarkDirty();
-            be.MarkDirty();
+        if (internalSlot.Itemstack.StackSize <= 0)
+            internalSlot.Itemstack = null;
 
-            api.World.PlaySoundAt(GlobalConstants.DefaultBuildSound, byPlayer, byPlayer);
+        if (!byPlayer.InventoryManager.TryGiveItemstack(taken)) {
+            api.World.SpawnItemEntity(taken, be.Pos.ToVec3d().Add(0.5, 0.5, 0.5));
         }
 
-        return changed;
+        return true;
     }
 
     public bool OnContainedInteractStep(float secondsUsed, BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => false;

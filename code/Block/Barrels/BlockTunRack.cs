@@ -1,4 +1,6 @@
-﻿namespace FoodShelves;
+﻿using System.Linq;
+
+namespace FoodShelves;
 
 public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     private bool globalBlockBuffs = true;
@@ -39,8 +41,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
     }
 
     public override string GetHeldItemName(ItemStack itemStack) {
-        string itemName = base.GetHeldItemName(itemStack);
-        return itemName + " " + itemStack.GetMaterialNameLocalized();
+        return $"{base.GetHeldItemName(itemStack)} {itemStack.GetMaterialNameLocalized()}";
     }
 
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo) {
@@ -67,16 +68,11 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
         // Drop barrel
         BETunRack? be = GetBlockEntity<BETunRack>(pos);
-        be?.Inventory.DropAll(pos.ToVec3d());
+        be?.Inventory.DropAll(pos.ToVec3d().Add(0.5f, 0.5f, 0.5f));
 
-        // Spawn liquid particles
+        // Spawn block in survival
         if (world.Side == EnumAppSide.Server && (byPlayer == null || byPlayer.WorldData.CurrentGameMode != EnumGameMode.Creative)) {
-            ItemStack[] array = [OnPickBlock(world, pos)];
-            for (int j = 0; j < array.Length; j++) {
-                world.SpawnItemEntity(array[j], new Vec3d(pos.X + 0.5, pos.Y + 0.5, pos.Z + 0.5));
-            }
-
-            world.PlaySoundAt(Sounds.GetBreakSound(byPlayer), pos, 0, byPlayer);
+            world.SpawnItemEntity(OnPickBlock(world, pos), pos.ToVec3d().Add(0.5f, 0.5f, 0.5f));
         }
 
         world.BlockAccessor.SetBlock(0, pos);
@@ -115,13 +111,13 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
         if (be?.Inventory.Empty == true) {
             dsc.Append(Lang.Get("foodshelves:Missing tun."));
+            return dsc.ToString();
         }
-        else {
-            dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
 
-            if (be?.inv[1].Empty == false) {
-                dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure, TransitionDisplayMode.Percentage));
-            }
+        dsc.Append(base.GetPlacedBlockInfo(world, pos, forPlayer));
+
+        if (be?.inv[1].Empty == false) {
+            dsc.Append(TransitionInfoCompact(world, be.inv[1], EnumTransitionType.Cure, TransitionDisplayMode.Percentage));
         }
 
         return dsc.ToString();
@@ -129,17 +125,14 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
 
     public override ItemStack OnPickBlock(IWorldAccessor world, BlockPos pos) {
         var stack = base.OnPickBlock(world, pos);
+        BlockEntity be = world.BlockAccessor.GetBlockEntity(pos);
 
-        if (world.BlockAccessor.GetBlockEntity(pos) is BlockEntityContainer bec) {
-            if (bec.Inventory.Empty) {
-                stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
-            }
+        if (be is BlockEntityContainer bec && bec.Inventory.Empty) {
+            stack.Attributes.RemoveAttribute("contents"); // To prevent stupid BlockContainer empty attributes
         }
 
-        if (world.BlockAccessor.GetBlockEntity(pos) is IFoodShelvesContainer fscontainer) {
-            if (fscontainer?.VariantAttributes?.Count > 0) {
-                stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
-            }
+        if (be is IFoodShelvesContainer fscontainer && fscontainer?.VariantAttributes?.Count > 0) {
+            stack.Attributes[FSAttributes] = fscontainer.VariantAttributes;
         }
 
         return stack;
@@ -170,7 +163,7 @@ public class BlockTunRack : BlockLiquidContainerBase, IMultiBlockColSelBoxes {
             return Code;
 
         List<string> parts = [];
-        foreach (var pair in tree) {
+        foreach (var pair in tree.OrderBy(p => p.Key)) {
             parts.Add($"{pair.Key}-{pair.Value}");
         }
 
