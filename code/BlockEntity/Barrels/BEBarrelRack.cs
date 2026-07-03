@@ -99,8 +99,18 @@ public class BEBarrelRack : BEBaseFSContainer {
 
         ItemStack[] stack = GetContentStacks();
         if (stack[0]?.Block != null) {
-            MeshData? substituteBarrelShape = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
-            currentMesh?.AddMeshData(substituteBarrelShape?.BlockYRotation(block));
+            MeshData? barrelMesh = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
+            currentMesh?.AddMeshData(barrelMesh?.BlockYRotation(block));
+
+            if (!inv[1].Empty) {
+                try {
+                    MeshData? labelMesh = GenBarrelLabelMesh(Api as ICoreClientAPI, inv[1], ShapeReferences.utilBarrelLabel);
+                    currentMesh?.AddMeshData(labelMesh?.BlockYRotation(block));
+                }
+                catch (Exception e) {
+                    Api?.Logger.Warning("[FoodShelves] BarrelRack label mesh failed: " + e.Message);
+                }
+            }
         }
 
         mesher.AddMeshData(currentMesh);
