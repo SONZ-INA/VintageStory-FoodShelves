@@ -10,6 +10,7 @@ public class ConfigServer : IModConfig {
     public float GlobalPerishMultiplier { get; set; } = 1f;
     public float CooledBuff { get; set; } = 0.3f;
     public float IceMeltRate { get; set; } = 1f;
+    public bool ShowBarrelLiquidLabel { get; set; } = true;
 
     public ConfigServer(ICoreAPI api, ConfigServer? previousConfig = null) {
         if (previousConfig == null) return;
@@ -19,6 +20,7 @@ public class ConfigServer : IModConfig {
         CooledBuff = previousConfig.CooledBuff;
         GlobalBlockBuffs = previousConfig.GlobalBlockBuffs;
         IceMeltRate = previousConfig.IceMeltRate;
+        ShowBarrelLiquidLabel = previousConfig.ShowBarrelLiquidLabel;
     }
 
     public static void Initialize(ICoreAPI api) {
@@ -31,5 +33,6 @@ public class ConfigServer : IModConfig {
         api.World.Config.SetFloat("FoodShelves.GlobalPerishMultiplier", Instance.GlobalPerishMultiplier);
         api.World.Config.SetFloat("FoodShelves.CooledBuff", Instance.CooledBuff);
         api.World.Config.SetFloat("FoodShelves.IceMeltRate", Instance.IceMeltRate);
+        api.World.Config.SetBool("FoodShelves.ShowBarrelLiquidLabel", Instance.ShowBarrelLiquidLabel);
     }
 }

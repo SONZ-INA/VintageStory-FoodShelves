@@ -10,6 +10,7 @@ public class BEBarrelRack : BEBaseFSContainer {
 
     public override int SlotCount => 2;
     private readonly int capacityLitres = 50;
+    private bool showBarrelLiquidLabel = true;
 
     public BEBarrelRack() {
         inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (id, inv) => {
@@ -20,6 +21,7 @@ public class BEBarrelRack : BEBaseFSContainer {
 
     public override void Initialize(ICoreAPI api) {
         block = (api.World.BlockAccessor.GetBlock(Pos) as BlockBarrelRack)!;
+        showBarrelLiquidLabel = api.World.Config.GetBool("FoodShelves.ShowBarrelLiquidLabel", true);
         InitMesh();
 
         base.Initialize(api);
@@ -102,7 +104,7 @@ public class BEBarrelRack : BEBaseFSContainer {
             MeshData? barrelMesh = SubstituteBlockShape(Api, tesselator, ShapeReferences.HorizontalBarrel, stack[0].Block);
             currentMesh?.AddMeshData(barrelMesh?.BlockYRotation(block));
 
-            if (!inv[1].Empty) {
+            if (showBarrelLiquidLabel && !inv[1].Empty) {
                 try {
                     MeshData? labelMesh = GenBarrelLabelMesh(Api as ICoreClientAPI, inv[1], ShapeReferences.utilBarrelLabel);
                     currentMesh?.AddMeshData(labelMesh?.BlockYRotation(block));

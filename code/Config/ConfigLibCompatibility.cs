@@ -24,6 +24,7 @@ public class ConfigLibCompatibility {
         config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0, 10);
         config.CooledBuff = OnInputFloat(id, config.CooledBuff, nameof(config.CooledBuff), 0, 1);
         config.IceMeltRate = OnInputFloat(id, config.IceMeltRate, nameof(config.IceMeltRate), 0.001f, 10);
+        config.ShowBarrelLiquidLabel = OnCheckBox(id, config.ShowBarrelLiquidLabel, nameof(config.ShowBarrelLiquidLabel));
     }
 
     private static bool OnCheckBox(string id, bool value, string name) {
