@@ -165,19 +165,38 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         int moved = 0;
         var source = slot.Itemstack!;
 
+        bool isBulkSlot = inv[startIndex] is ItemSlotFSUniversal fsBase && fsBase.isBulk;
+
+        int segmentLimit = isBulkSlot ? ItemsPerSegment : GetSegmentLimit(source);
+        int currentCount = isBulkSlot ? 0 : CountItemsInSegment(startIndex);
+
         for (int i = 0; i < ItemsPerSegment; i++) {
             var target = inv[startIndex + i];
 
             if (!target.Empty && target.Itemstack!.Collectible != source.Collectible)
                 continue;
 
+            if (!isBulkSlot && target.Empty && currentCount >= segmentLimit) {
+                continue;
+            }
+
             var fsSlot = (ItemSlotFSUniversal)target;
             int available = fsSlot.GetRemainingSlotSpace(source);
 
-            if (available == 0)
+            int maxSlotCapacity = isBulkSlot ? fsSlot.MaxSlotStackSize : 1;
+            int currentStack = target.Empty ? 0 : target.StackSize;
+            available = Math.Min(available, maxSlotCapacity - currentStack);
+
+            if (available <= 0)
                 continue;
 
-            moved += slot.TryPutIntoBulk(Api.World, target, ctrl ? available : 1);
+            int putQty = ctrl ? available : 1;
+            int movedNow = slot.TryPutIntoBulk(Api.World, target, putQty);
+            moved += movedNow;
+
+            if (!isBulkSlot && movedNow > 0 && currentStack == 0) {
+                currentCount++;
+            }
 
             if (!ctrl || slot.Empty)
                 break;

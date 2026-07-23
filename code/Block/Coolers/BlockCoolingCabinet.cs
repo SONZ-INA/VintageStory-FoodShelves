@@ -158,7 +158,7 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         }
     }
 
-    private void OffsetDrawerBox(Cuboidf box) {
+    protected void OffsetDrawerBox(Cuboidf box) {
         switch ((BlockDirection)this.GetRotationAngle()) {
             case BlockDirection.North: box.Z2 += .3125f; break;
             case BlockDirection.West: box.X2 += .3125f; break;

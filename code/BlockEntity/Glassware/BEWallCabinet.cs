@@ -16,7 +16,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     
     private float perishMultiplierUnBuffed = 0.74f;
 
-    private enum SlotType {
+    protected enum SlotType {
         Door = 4,
         Cabinet = 5
     }
@@ -81,7 +81,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
         else ToggleDoor(false);
     }
 
-    private void ToggleDoor(bool open, IPlayer? byPlayer = null) {
+    protected void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
             AnimUtil.TryStartAnimation("dooropen", 3f);
             PerishMultiplier = 1f;

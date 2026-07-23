@@ -25,7 +25,7 @@ public class BEMeatFreezer : BEBaseFSCooler {
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
     
-    private enum SlotType {
+    protected enum SlotType {
         Segment1 = 0,
         Segment2 = 1,
         Segment3 = 2,

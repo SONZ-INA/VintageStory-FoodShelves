@@ -136,7 +136,7 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         return true;
     }
 
-    private DummySlot CreateInternalSlot(BlockEntityContainer be, ItemSlot hotbarSlot, ItemStack[] contents) {
+    protected DummySlot CreateInternalSlot(BlockEntityContainer be, ItemSlot hotbarSlot, ItemStack[] contents) {
         int referenceMaxStack = !hotbarSlot.Empty
             ? hotbarSlot.Itemstack.Collectible.MaxStackSize
             : contents.Length > 0
@@ -148,7 +148,7 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         };
     }
 
-    private bool TryPutIntoJar(ICoreAPI api, ItemSlot hotbarSlot, DummySlot internalSlot, bool ctrl) {
+    protected bool TryPutIntoJar(ICoreAPI api, ItemSlot hotbarSlot, DummySlot internalSlot, bool ctrl) {
         if (!hotbarSlot.CanStoreInSlot("fsLiquidyStuff"))
             return false;
 
@@ -156,7 +156,7 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         return moved > 0;
     }
 
-    private bool TryTakeFromJar(ICoreAPI api, BlockEntityContainer be, IPlayer byPlayer, DummySlot internalSlot, bool ctrl, bool shift) {
+    protected bool TryTakeFromJar(ICoreAPI api, BlockEntityContainer be, IPlayer byPlayer, DummySlot internalSlot, bool ctrl, bool shift) {
         if (!ctrl || internalSlot.Empty)
             return false;
 

@@ -79,6 +79,22 @@ public static class MeshExtensions {
     }
 
     /// <summary>
+    /// Returns a texture source defined by the item's 'fsTextureOverride' attribute as a string path.
+    /// </summary>
+    public static ITexPositionSource? GetTextureOverrideSource(ICoreClientAPI capi, ItemStack? stack) {
+        if (capi == null || stack == null)
+            return null;
+
+        string? texPath = stack.ItemAttributes?["fsTextureOverride"]?.AsString();
+
+        if (string.IsNullOrEmpty(texPath))
+            return null;
+
+        var compTex = new CompositeTexture(new AssetLocation(texPath));
+        return new ContainerTextureSource(capi, stack, compTex);
+    }
+
+    /// <summary>
     /// Returns a pie texture source based on the 'inPieProperties' attribute.
     /// </summary>
     public static ITexPositionSource? GetPieTexture(ICoreClientAPI capi, ItemStack? stack, Shape? shape) {

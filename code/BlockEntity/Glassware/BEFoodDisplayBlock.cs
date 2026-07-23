@@ -9,7 +9,7 @@ public class BEFoodDisplayBlock : BEBaseFSContainer {
 
     protected override float PerishMultiplier => 0.75f;
 
-    private enum SlotNumber {
+    protected enum SlotNumber {
         BottomSlot = 0,
         TopSlot = 1
     }

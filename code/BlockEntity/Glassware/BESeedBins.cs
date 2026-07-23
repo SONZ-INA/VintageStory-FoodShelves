@@ -2,7 +2,6 @@
 
 public class BESeedBins : BEBaseFSContainer {
     protected new BaseFSContainer block = null!;
-    private readonly MeshData[] contentMeshes = new MeshData[4];
 
     protected override string CantPlaceMessage => "foodshelves:Only seeds can be placed in these jars.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegmentGrouped;

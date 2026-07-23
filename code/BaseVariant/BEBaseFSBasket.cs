@@ -44,29 +44,76 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     }
 
     protected override ItemStack? TryTakeFromSegment(IPlayer byPlayer, int startIndex) {
-        ItemStack? stack = null;
         bool takeAllMatching = byPlayer.Entity.Controls.CtrlKey;
 
-        for (int i = ItemsPerSegment - 1; i >= 0; i--) {
+        int bestIdx = -1;
+        double lowestFreshHours = double.MaxValue;
+        float highestRotLevel = -1f;
+        bool activelyRotting = false;
+
+        // Find the slot index with the item closest to perishing
+        for (int i = 0; i < ItemsPerSegment; i++) {
             int idx = startIndex + i;
             if (inv[idx].Empty) continue;
 
-            if (stack == null) {
-                stack = inv[idx].TakeOut(1);
+            // Default to the first item we find, if not perishable
+            if (bestIdx == -1) bestIdx = idx;
 
-                if (!takeAllMatching)
-                    break;
+            ItemStack stack = inv[idx].Itemstack!;
 
-                continue;
+            // Rotted items
+            if (stack.Collectible.Code.Path.StartsWith("rot")) {
+                bestIdx = idx;
+                break;
             }
 
-            if (inv[idx].Itemstack?.Collectible?.Code == stack.Collectible?.Code) {
-                inv[idx].TakeOut(1);
-                stack.StackSize++;
+            TransitionState[]? states = stack.Collectible.UpdateAndGetTransitionStates(Api.World, inv[idx]);
+            if (states != null) {
+                foreach (var state in states) {
+                    if (state.Props.Type == EnumTransitionType.Perish) {
+
+                        // Items actively spoiling
+                        if (state.TransitionLevel > 0) {
+                            if (state.TransitionLevel > highestRotLevel) {
+                                highestRotLevel = state.TransitionLevel;
+                                bestIdx = idx;
+                                activelyRotting = true;
+                            }
+                        }
+                        // Still fresh, check timers
+                        else if (!activelyRotting) {
+                            float rate = stack.Collectible.GetTransitionRateMul(Api.World, inv[idx], EnumTransitionType.Perish);
+                            double effectiveFreshness = rate > 0 ? state.FreshHoursLeft / rate : state.FreshHoursLeft;
+
+                            if (effectiveFreshness < lowestFreshHours) {
+                                lowestFreshHours = effectiveFreshness;
+                                bestIdx = idx;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        return stack;
+        if (bestIdx == -1) return null;
+
+        // Take the most perishable item out of its slot
+        ItemStack stackToTake = inv[bestIdx].TakeOut(1);
+
+        // If holding CTRL, take out identical items from the rest of the basket
+        if (takeAllMatching) {
+            for (int i = 0; i < ItemsPerSegment; i++) {
+                int idx = startIndex + i;
+                if (inv[idx].Empty || idx == bestIdx) continue;
+
+                if (inv[idx].Itemstack!.Collectible.Code == stackToTake.Collectible.Code) {
+                    inv[idx].TakeOut(1);
+                    stackToTake.StackSize++;
+                }
+            }
+        }
+
+        return stackToTake;
     }
 
     protected virtual string? GetTransformationPath() {
@@ -85,7 +132,7 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
         });
     }
 
-    private MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
+    protected MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
         Shape? basketRope = (Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>())
             ?? throw new InvalidOperationException($"No shape util found for {CeilingAttachedUtil}");
         

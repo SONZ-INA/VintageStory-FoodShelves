@@ -57,7 +57,7 @@ public class BECeilingRack : BEBaseFSContainer {
         });
     }
 
-    private MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
+    protected MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
         Shape? rackRope = Api.Assets.TryGet(ShapeReferences.utilCeilingRack)?.ToObject<Shape>();
         if (rackRope == null) return null;
 

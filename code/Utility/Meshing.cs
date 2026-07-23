@@ -141,7 +141,8 @@ public static class Meshing {
 
         // Handle textureSource
         ITexPositionSource? texSource = inheritTextures
-            ? GetPieTexture(capi, stack, shape)
+            ? GetTextureOverrideSource(capi, stack)
+                ?? GetPieTexture(capi, stack, shape)
                 ?? GetContainerTextureSource(capi, stack)
                 ?? GetItemTextureSource(capi, stack)
             : new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
@@ -186,9 +187,10 @@ public static class Meshing {
             return null;
 
         // Handle textureSource
-        ITexPositionSource? texSource = GetPieTexture(capi, stack, shape)
-                ?? GetContainerTextureSource(capi, stack)
-                ?? GetItemTextureSource(capi, stack);
+        ITexPositionSource? texSource = GetTextureOverrideSource(capi, stack)
+            ?? GetPieTexture(capi, stack, shape)
+            ?? GetContainerTextureSource(capi, stack)
+            ?? GetItemTextureSource(capi, stack);
 
         // Height calculation
         float contentAmount = stack.StackSize;

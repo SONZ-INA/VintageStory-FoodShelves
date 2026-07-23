@@ -30,7 +30,7 @@ public class BECoolingCabinet : BEBaseFSCooler {
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
     
-    private enum SlotType {
+    protected enum SlotType {
         LastSegment = 8,
         LDoor = 9,
         RDoor = 10,

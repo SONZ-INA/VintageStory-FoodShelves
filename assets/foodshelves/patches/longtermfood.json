@@ -21,6 +21,7 @@
       "pemmican:pemmican-salt",
       "pemmican:pemmican-cooked",
       "pemmican:rusks-*",
+      "pemmican:ruskspack-*",
       "pemmican:*-pack",
       "pemmican:mushroompatebar",
       "pemmican:nutribar-*"
@@ -112,6 +113,12 @@
   },
   {
     "file": "pemmican:itemtypes/food/nutribar-pack.json",
+    "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
+    "value": "packedpemmican",
+    "dependsOn": [ { "modid": "longtermfood" } ]
+  },
+  {
+    "file": "pemmican:itemtypes/food/rusks-pack.json",
     "op": "addmerge", "path": "/attributes/fsGroup", "side": "server",
     "value": "packedpemmican",
     "dependsOn": [ { "modid": "longtermfood" } ]

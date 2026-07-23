@@ -28,7 +28,7 @@ public class BEFruitCooler : BEBaseFSCooler {
     protected override AnimationData DrawerOpenAnim => new ("draweropen", 4f);
     // ------------------------------------------
 
-    private enum SlotType {
+    protected enum SlotType {
         Segment1 = 0,
         Segment2 = 1,
         Segment3 = 2,

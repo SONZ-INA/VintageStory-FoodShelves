@@ -150,14 +150,49 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
         var targetSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
         if (targetSlot == null) return false;
 
+        // Itemslot cleanup
+        // When an item rots into nothing within a basket, while it's within the Cabinet / Double Shelf, it will still "occupy" the slot, so a cleanup is needed.
+        ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
+        List<ItemStack> validContents = [];
+        bool contentsChanged = false;
+
+        foreach (var stack in contents) {
+            if (stack == null || stack.StackSize <= 0) {
+                contentsChanged = true;
+                continue;
+            }
+
+            DummySlot dummy = new(stack, be.Inventory);
+
+            stack.Collectible.UpdateAndGetTransitionStates(api.World, dummy);
+
+            if (dummy.Empty || dummy.Itemstack == null || dummy.Itemstack.StackSize <= 0) {
+                contentsChanged = true; // It rotted into nothing
+            }
+            else {
+                if (dummy.Itemstack.Collectible.Code != stack.Collectible.Code) {
+                    contentsChanged = true;
+                }
+                validContents.Add(dummy.Itemstack);
+            }
+        }
+
+        // Save the cleaned up array
+        if (contentsChanged) {
+            contents = [.. validContents];
+            InventoryExtensions.SetContents(slot.Itemstack, contents);
+            be.MarkDirty();
+        }
+
+
         // Putting stuff in
-        if (!targetSlot.Empty && targetSlot.CanStoreInSlot("fs" + InteractionsName)) {
-            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
+        if (!targetSlot.Empty) {
+            if (!targetSlot.CanStoreInSlot("fs" + InteractionsName))
+                return false;
 
             if (!CanAddToContents(contents, targetSlot.Itemstack, out int capacity) || contents.Length >= capacity)
                 return false;
 
-            // CTRL behavior to fill the basket
             int maxAdd = capacity - contents.Length;
             int amountToMove = byPlayer.Entity.Controls.CtrlKey ? Math.Min(maxAdd, targetSlot.StackSize) : 1;
 
@@ -170,34 +205,69 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
                 moved++;
             }
 
-            if (moved > 0) {
-                InventoryExtensions.SetContents(slot.Itemstack, contents);
-                targetSlot.MarkDirty();
-                be.MarkDirty();
-                return true;
-            }
-
-            return false;
-        }
-
-        // Taking stuff out
-        if (targetSlot.Empty) {
-            ItemStack[] contents = InventoryExtensions.GetContents(api.World, slot.Itemstack) ?? [];
-            if (contents.Length == 0) return false;
-
-            ItemStack taken = contents[^1];
-            Array.Resize(ref contents, contents.Length - 1);
-
-            if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true))
-                api.World.SpawnItemEntity(taken, byPlayer.Entity.Pos.XYZ);
+            if (moved == 0) return false;
 
             InventoryExtensions.SetContents(slot.Itemstack, contents);
+            targetSlot.MarkDirty();
             be.MarkDirty();
-
             return true;
         }
 
-        return false;
+
+        // Taking stuff out
+        if (contents.Length == 0) return false;
+
+        int bestIdx = 0;
+        double lowestFreshHours = double.MaxValue;
+        float highestRotLevel = -1f;
+        bool activelyRotting = false;
+
+        for (int i = 0; i < contents.Length; i++) {
+            ItemStack stack = contents[i];
+
+            if (stack.Collectible.Code.Path.StartsWith("rot")) {
+                bestIdx = i;
+                break;
+            }
+
+            DummySlot dummySlot = new(stack, be.Inventory);
+            TransitionState[]? states = stack.Collectible.UpdateAndGetTransitionStates(api.World, dummySlot);
+            if (states == null) continue;
+
+            foreach (var state in states) {
+                if (state.Props.Type != EnumTransitionType.Perish) continue;
+
+                // Actively rotting check
+                if (state.TransitionLevel > 0 && state.TransitionLevel > highestRotLevel) {
+                    highestRotLevel = state.TransitionLevel;
+                    bestIdx = i;
+                    activelyRotting = true;
+                    continue;
+                }
+
+                // Fresh food check
+                if (!activelyRotting && state.TransitionLevel <= 0) {
+                    float rate = stack.Collectible.GetTransitionRateMul(api.World, dummySlot, EnumTransitionType.Perish);
+                    double effectiveFreshness = rate > 0 ? state.FreshHoursLeft / rate : state.FreshHoursLeft;
+
+                    if (effectiveFreshness < lowestFreshHours) {
+                        lowestFreshHours = effectiveFreshness;
+                        bestIdx = i;
+                    }
+                }
+            }
+        }
+
+        ItemStack taken = contents[bestIdx];
+        contents = contents.Where((_, index) => index != bestIdx).ToArray();
+
+        if (!byPlayer.InventoryManager.TryGiveItemstack(taken, true))
+            api.World.SpawnItemEntity(taken, byPlayer.Entity.Pos.XYZ);
+
+        InventoryExtensions.SetContents(slot.Itemstack, contents);
+        be.MarkDirty();
+
+        return true;
     }
 
     public WorldInteraction[] GetContainedInteractionHelp(BlockEntityContainer be, ItemSlot slot, IPlayer byPlayer, BlockSelection blockSel) => [];

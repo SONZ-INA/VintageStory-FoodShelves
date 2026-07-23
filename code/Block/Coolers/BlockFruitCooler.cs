@@ -106,7 +106,7 @@ public class BlockFruitCooler : BaseFSContainer {
         return [Skip, Skip, Skip, Skip, sections[4], sections[5], sections[6]];
     }
 
-    private void OffsetDoorBox(Cuboidf box) {
+    protected void OffsetDoorBox(Cuboidf box) {
         switch ((BlockDirection)this.GetRotationAngle()) {
             case BlockDirection.North:
                 box.Z2 += 0.225f;

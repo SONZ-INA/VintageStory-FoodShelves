@@ -8,7 +8,7 @@ public class BEJarStand : BEBaseFSContainer {
 
     public override int SegmentsPerShelf => 2;
 
-    private enum SlotType {
+    protected enum SlotType {
         LeftSegment = 0,
         RightSegment = 1,
         Stand = 2
@@ -60,11 +60,28 @@ public class BEJarStand : BEBaseFSContainer {
 
         int segment = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
         if (segment is (int)SlotType.LeftSegment or (int)SlotType.RightSegment) {
-            var contents = GetContents(Api.World, inv[segment].Itemstack);
+
+            ItemSlot jarSlot = inv[segment];
+            if (jarSlot.Empty) return;
+
+            var contents = GetContents(Api.World, jarSlot.Itemstack);
 
             if (contents != null && contents.Length > 0) {
                 DummySlot dummySlot = new(contents[0], inv);
-                sb.AppendLine(TransitionInfoCompact(Api.World, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage));
+
+                string perishInfo = PerishableInfoCompact(Api.World, dummySlot, 0f, false, false).Trim();
+                if (perishInfo.StartsWith(",")) {
+                    perishInfo = perishInfo.Substring(1).Trim();
+                }
+
+                if (!string.IsNullOrEmpty(perishInfo)) {
+                    sb.Replace(")</font>", ", " + perishInfo + ")</font>");
+                }
+
+                string dryInfo = TransitionInfoCompact(Api.World, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage);
+                if (!string.IsNullOrEmpty(dryInfo)) {
+                    sb.AppendLine(dryInfo);
+                }
             }
         }
     }
