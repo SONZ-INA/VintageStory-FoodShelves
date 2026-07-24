@@ -21,6 +21,8 @@ public static class ShapeReferences {
     public const string utilMeatFreezer = "foodshelves:shapes/util/meatfreezercontentcube.json";
     public const string utilSeedBins = "foodshelves:shapes/util/seedbinscontentcube.json";
     public const string utilFruitCooler = "foodshelves:shapes/util/fruitcoolercontentcube.json";
+
+    public const string utilBarrelLabel = "foodshelves:shapes/util/barrelracklabel.json";
 }
 
 public static class SoundReferences {
