@@ -19,16 +19,24 @@ public class BEJarStand : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         if (blockSel.SelectionBoxIndex == (int)SlotType.Stand) return false;
 
-        ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
-
         ItemSlot jarSlot = inv[blockSel.SelectionBoxIndex];
 
-        if (!jarSlot.Empty && (!hotbarSlot.Empty || ctrl)) {
-            return TryUse(byPlayer, blockSel);
+        if (jarSlot.Empty) {
+            return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
         }
 
-        return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
+        ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+
+        if (TryUse(byPlayer, blockSel)) {
+            return true;
+        }
+
+        if (shift && hotbarSlot.Empty) {
+            return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
+        }
+
+        return false;
     }
 
     protected bool TryUse(IPlayer player, BlockSelection blockSel) {

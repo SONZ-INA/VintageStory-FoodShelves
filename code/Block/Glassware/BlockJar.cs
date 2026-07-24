@@ -17,30 +17,26 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
 
         itemSlottableInteractions = [
             new() {
-                ActionLangCode = "blockhelp-toolrack-take",
-                MouseButton = EnumMouseButton.Right,
-                Itemstacks = null
-            },
-            new() {
                 ActionLangCode = "blockhelp-groundstorage-add",
                 MouseButton = EnumMouseButton.Right,
-                Itemstacks = stackArray,
+                HotKeyCode = "shift",
+                Itemstacks = stackArray
             },
             new() {
                 ActionLangCode = "blockhelp-groundstorage-addbulk",
                 MouseButton = EnumMouseButton.Right,
-                Itemstacks = stackArray,
-                HotKeyCode = "ctrl"
+                HotKeyCodes = ["shift", "ctrl"],
+                Itemstacks = stackArray
             },
             new() {
                 ActionLangCode = "blockhelp-groundstorage-remove",
                 MouseButton = EnumMouseButton.Right,
-                HotKeyCode = "ctrl"
+                HotKeyCode = null
             },
             new() {
                 ActionLangCode = "blockhelp-groundstorage-removebulk",
                 MouseButton = EnumMouseButton.Right,
-                HotKeyCodes = ["shift", "ctrl"]
+                HotKeyCode = "ctrl"
             }
         ];
     }
@@ -116,12 +112,22 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         bool ctrl = byPlayer.Entity.Controls.CtrlKey;
         bool shift = byPlayer.Entity.Controls.ShiftKey;
 
+        if (shift && hotbarSlot.Empty) {
+            return false;
+        }
+
         ItemStack[] contents = GetContents(api.World, slot.Itemstack);
         DummySlot internalSlot = CreateInternalSlot(be, hotbarSlot, contents);
 
-        bool changed = !hotbarSlot.Empty
-            ? TryPutIntoJar(api, hotbarSlot, internalSlot, ctrl)
-            : TryTakeFromJar(api, be, byPlayer, internalSlot, ctrl, shift);
+        bool changed;
+
+        if (shift) {
+            if (hotbarSlot.Empty) return false;
+            changed = TryPutIntoJar(api, hotbarSlot, internalSlot, ctrl);
+        }
+        else {
+            changed = TryTakeFromJar(api, be, byPlayer, internalSlot, ctrl);
+        }
 
         if (!changed)
             return false;
@@ -148,7 +154,7 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         };
     }
 
-    protected bool TryPutIntoJar(ICoreAPI api, ItemSlot hotbarSlot, DummySlot internalSlot, bool ctrl) {
+    protected static bool TryPutIntoJar(ICoreAPI api, ItemSlot hotbarSlot, DummySlot internalSlot, bool ctrl) {
         if (!hotbarSlot.CanStoreInSlot("fsLiquidyStuff"))
             return false;
 
@@ -156,13 +162,13 @@ public class BlockJar : BaseFSContainer, IContainedCustomName, IContainedInterac
         return moved > 0;
     }
 
-    protected bool TryTakeFromJar(ICoreAPI api, BlockEntityContainer be, IPlayer byPlayer, DummySlot internalSlot, bool ctrl, bool shift) {
-        if (!ctrl || internalSlot.Empty)
+    protected static bool TryTakeFromJar(ICoreAPI api, BlockEntityContainer be, IPlayer byPlayer, DummySlot internalSlot, bool ctrl) {
+        if (internalSlot.Empty)
             return false;
 
         int naturalMax = internalSlot.Itemstack.Collectible.MaxStackSize;
 
-        int amount = shift
+        int amount = ctrl
             ? Math.Min(internalSlot.StackSize, naturalMax)
             : 1;
 

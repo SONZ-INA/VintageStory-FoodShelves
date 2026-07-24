@@ -1,10 +1,20 @@
 ﻿namespace FoodShelves;
 
 public class BlockJarStand : BaseFSContainer {
-    public override WorldInteraction[] GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        WorldInteraction[] baseHelp = base.GetPlacedBlockInteractionHelp(world, selection, forPlayer) 
-            ?? [];
+    public override void OnLoaded(ICoreAPI api) {
+        base.OnLoaded(api);
 
+        itemSlottableInteractions = [
+            new() {
+                ActionLangCode = "game:blockhelp-behavior-rightclickpickup",
+                MouseButton = EnumMouseButton.Right,
+                HotKeyCode = "shift",
+                RequireFreeHand = true
+            },
+        ];
+    }
+
+    public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
         if (world.BlockAccessor.GetBlockEntity(selection.Position) is BEJarStand be) {
             int segmentIndex = selection.SelectionBoxIndex;
 
@@ -12,15 +22,15 @@ public class BlockJarStand : BaseFSContainer {
                 ItemSlot jarSlot = be.inv[segmentIndex];
 
                 if (jarSlot.Itemstack?.Collectible is IContainedInteractable ici) {
-                    WorldInteraction[] jarHelp = ici.GetContainedInteractionHelp(be, jarSlot, forPlayer, selection);
+                    WorldInteraction[] jarHelp = itemSlottableInteractions.Append(ici.GetContainedInteractionHelp(be, jarSlot, forPlayer, selection));
 
                     if (jarHelp != null && jarHelp.Length > 0) {
-                        return [..baseHelp, ..jarHelp];
+                        return jarHelp;
                     }
                 }
             }
         }
 
-        return baseHelp;
+        return null;
     }
 }

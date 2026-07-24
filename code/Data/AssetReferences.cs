@@ -23,6 +23,7 @@ public static class ShapeReferences {
     public const string utilFruitCooler = "foodshelves:shapes/util/fruitcoolercontentcube.json";
 
     public const string utilBarrelLabel = "foodshelves:shapes/util/barrelracklabel.json";
+    public const string utilRackLabelHolder = "foodshelves:shapes/util/utilracklabelholder.json";
 }
 
 public static class SoundReferences {

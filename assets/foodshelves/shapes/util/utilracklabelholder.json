@@ -1,0 +1,28 @@
+{
+	"editor": {
+		"collapsedPaths": "Root/origin holder/Lfence1,Root/origin upper ring,Root/origin holder/holder1,Root/origin holder,Root/Origin lid,Root/origin holder/Tfence1,Root/origin lower ring,Root/origin holder/holder8,Root/origin barrel,Root/origin side tap",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+		"surface": "game:block/wood/shelf/surface"
+	},
+	"elements": [
+		{
+			"name": "rackLabelHolder",
+			"from": [ 7.25, 11.6, 13.7 ],
+			"to": [ 8.75, 12.1, 14.0 ],
+			"rotationOrigin": [ 7.25, 11.6, 13.7 ],
+			"faces": {
+				"east": { "texture": "#surface", "uv": [ 8.0, 3.0, 8.5, 3.5 ] },
+				"south": { "texture": "#surface", "uv": [ 5.5, 3.0, 7.0, 3.5 ] },
+				"west": { "texture": "#surface", "uv": [ 8.5, 3.0, 9.0, 3.5 ] },
+				"up": { "texture": "#surface", "uv": [ 3.5, 3.0, 5.0, 3.5 ] },
+				"down": { "texture": "#surface", "uv": [ 12.5, 3.0, 14.0, 3.5 ] }
+			}
+		}
+	]}
