@@ -16,7 +16,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     
     private float perishMultiplierUnBuffed = 0.74f;
 
-    private enum SlotType {
+    protected enum SlotType {
         Door = 4,
         Cabinet = 5
     }
@@ -54,10 +54,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
     }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (slot.Itemstack?.IsLargeItem() == true)
-            return false;
-
-        if (slot.Itemstack?.IsMediumItem() == true)
+        if (slot.Itemstack?.IsLargeItem() == true || slot.Itemstack?.IsMediumItem() == true)
             return false;
 
         return base.TryPut(byPlayer, slot, blockSel);
@@ -84,7 +81,7 @@ public class BEWallCabinet : BEBaseFSAnimatable {
         else ToggleDoor(false);
     }
 
-    private void ToggleDoor(bool open, IPlayer? byPlayer = null) {
+    protected void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
             AnimUtil.TryStartAnimation("dooropen", 3f);
             PerishMultiplier = 1f;

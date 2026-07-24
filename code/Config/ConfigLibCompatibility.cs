@@ -6,6 +6,7 @@ namespace FoodShelves;
 public class ConfigLibCompatibility {
     public ConfigLibCompatibility(ICoreAPI api) {
         api.ModLoader.GetModSystem<ConfigLibModSystem>().RegisterCustomConfig(Lang.Get("foodshelves:foodshelvesserver"), (id, buttons) => EditConfigServer(id, buttons, api));
+        api.ModLoader.GetModSystem<ConfigLibModSystem>().RegisterCustomConfig(Lang.Get("foodshelves:foodshelvesclient"), (id, buttons) => EditConfigClient(id, buttons, api));
     }
 
     private static void EditConfigServer(string id, ControlButtons buttons, ICoreAPI api) {
@@ -16,6 +17,14 @@ public class ConfigLibCompatibility {
         BuildSettingsServer(ConfigServer.Instance, id);
     }
 
+    private static void EditConfigClient(string id, ControlButtons buttons, ICoreAPI api) {
+        if (buttons.Save) ModConfig.WriteConfig(api, ConfigClient.ConfigClientName, ConfigClient.Instance);
+        if (buttons.Restore) ConfigClient.Instance = ModConfig.ReadConfig<ConfigClient>(api, ConfigClient.ConfigClientName);
+        if (buttons.Defaults) ConfigClient.Instance = new(api);
+
+        BuildSettingsClient(ConfigClient.Instance, id);
+    }
+
     private static void BuildSettingsServer(ConfigServer config, string id) {
         if (config == null) return;
 
@@ -24,6 +33,12 @@ public class ConfigLibCompatibility {
         config.GlobalPerishMultiplier = OnInputFloat(id, config.GlobalPerishMultiplier, nameof(config.GlobalPerishMultiplier), 0, 10);
         config.CooledBuff = OnInputFloat(id, config.CooledBuff, nameof(config.CooledBuff), 0, 1);
         config.IceMeltRate = OnInputFloat(id, config.IceMeltRate, nameof(config.IceMeltRate), 0.001f, 10);
+    }
+
+    private static void BuildSettingsClient(ConfigClient config, string id) {
+        if (config == null) return;
+
+        config.ShowBarrelLabel = OnCheckBox(id, config.ShowBarrelLabel, nameof(config.ShowBarrelLabel));
     }
 
     private static bool OnCheckBox(string id, bool value, string name) {

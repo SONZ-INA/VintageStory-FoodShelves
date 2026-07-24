@@ -30,8 +30,8 @@ public class BECoolingCabinet : BEBaseFSCooler {
     protected override AssetLocation DrawerCloseSound => SoundReferences.IceDrawerClose;
     // ------------------------------------------
     
-    private enum SlotType {
-        Segments = 8,
+    protected enum SlotType {
+        LastSegment = 8,
         LDoor = 9,
         RDoor = 10,
         IceDrawer = 11,
@@ -57,36 +57,15 @@ public class BECoolingCabinet : BEBaseFSCooler {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        bool shift = byPlayer.Entity.Controls.ShiftKey;
-        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
-
         // Open/Close cabinet or drawer
-        switch ((SlotType)blockSel.SelectionBoxIndex) {
-            case SlotType.IceDrawer:
-                if (shift) {
-                    if (!DrawerOpen) ToggleDrawer(true, byPlayer);
-                    else ToggleDrawer(false, byPlayer);
-                    MarkDirty(true);
-                    return true;
-                }
-                break;
-
-            case SlotType.ClosedCabinet:
-                ToggleDoor(true, byPlayer);
-                MarkDirty(true);
-                return true;
-
-            case SlotType.LDoor:
-            case SlotType.RDoor:
-                ToggleDoor(false, byPlayer);
-                MarkDirty(true);
-                return true;
-        }
+        if (HandleOpenCloseInteraction(byPlayer, blockSel))
+            return true;
 
         // Take/Put items
         if (slot.Empty) {
-            if (DoorOpen && blockSel.SelectionBoxIndex <= (int)SlotType.Segments) {
+            if (DoorOpen && blockSel.SelectionBoxIndex <= (int)SlotType.LastSegment) {
                 // In-container interactions
+                bool ctrl = byPlayer.Entity.Controls.CtrlKey;
                 if (ctrl && TryUse(byPlayer, slot, blockSel))
                     return true;
 
@@ -120,8 +99,33 @@ public class BECoolingCabinet : BEBaseFSCooler {
         }
     }
 
+    protected bool HandleOpenCloseInteraction(IPlayer byPlayer, BlockSelection blockSel) {
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+
+        switch ((SlotType)blockSel.SelectionBoxIndex) {
+            case SlotType.IceDrawer:
+                if (!shift) return false;
+                
+                ToggleDrawer(!DrawerOpen, byPlayer);
+                MarkDirty(true);
+                return true;
+
+            case SlotType.ClosedCabinet:
+                ToggleDoor(true, byPlayer);
+                MarkDirty(true);
+                return true;
+
+            case SlotType.LDoor or SlotType.RDoor:
+                ToggleDoor(false, byPlayer);
+                MarkDirty(true);
+                return true;
+        }
+
+        return false;
+    }
+
     protected bool TryUse(IPlayer player, ItemSlot slot, BlockSelection blockSel) {
-        if (blockSel.SelectionBoxIndex > (int)SlotType.Segments) return false; // If it's cabinet or drawer selection box, return
+        if (blockSel.SelectionBoxIndex > (int)SlotType.LastSegment) return false; // If it's cabinet or drawer selection box, return
 
         int segmentIndex = blockSel.SelectionBoxIndex;
         int startIndex = segmentIndex * ItemsPerSegment;
@@ -131,7 +135,9 @@ public class BECoolingCabinet : BEBaseFSCooler {
         if (inv[endIndex - 1].Empty) endIndex--;
         if (inv[endIndex - 1].Empty) endIndex--;
 
-        if (inv[startIndex].Itemstack?.Collectible is BaseFSBasket && inv[startIndex].Itemstack?.Collectible is IContainedInteractable ic)
+        var collectible = inv[startIndex].Itemstack?.Collectible;
+
+        if (collectible is BaseFSBasket && collectible is IContainedInteractable ic)
             return ic.OnContainedInteractStart(this, inv[startIndex], player, blockSel);
 
         // Only check last 2 slots (visually front crocks)
@@ -157,14 +163,6 @@ public class BECoolingCabinet : BEBaseFSCooler {
         }
 
         return false;
-    }
-
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        int segmentIndex = blockSel.SelectionBoxIndex;
-        if (segmentIndex > (int)SlotType.Segments)
-            return false;
-
-        return base.TryPut(byPlayer, slot, blockSel);
     }
 
     protected override bool TryTake(IPlayer byPlayer, BlockSelection blockSel) {

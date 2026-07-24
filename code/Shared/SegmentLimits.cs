@@ -17,9 +17,7 @@ public static class SegmentLimits {
         if (stack == null) return 0;
 
         string itemCode = stack.Collectible?.Code.Path ?? "";
-
-        string[] collectibleCodes = ["pemmican-pack", "chips-pack", "mushroom-pack", "nutri-pack"];
-        if (collectibleCodes.Contains(itemCode)) return 5;
+        if (WildcardUtil.Match("*pack*", itemCode)) return 5;
 
         if (stack.IsLargeItem()) return 1;
         if (stack.IsMediumItem()) return 2;

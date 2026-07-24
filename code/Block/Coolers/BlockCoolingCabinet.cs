@@ -77,21 +77,16 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (world.BlockAccessor.GetBlockEntity(selection.Position) is BECoolingCabinet becc) {
-            if (selection.SelectionBoxIndex < 9) {
-                if (becc.DoorOpen) {
-                    return itemSlottableInteractions;
-                }
-            }
+        if (world.BlockAccessor.GetBlockEntity(selection.Position) is not BECoolingCabinet be)
+            return doorOpenClose;
 
-            if (selection.SelectionBoxIndex == 11) {
-                if (becc.DrawerOpen) {
-                    return drawerOpenClose.Append(drawerInteractions);
-                }
-                else {
-                    return drawerOpenClose;
-                }
-            }
+        if (selection.SelectionBoxIndex < 9 && be.DoorOpen)
+            return itemSlottableInteractions;
+
+        if (selection.SelectionBoxIndex == 11) {
+            return be.DrawerOpen
+                ? drawerOpenClose.Append(drawerInteractions)
+                : drawerOpenClose;
         }
 
         return doorOpenClose;
@@ -109,16 +104,8 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
         Cuboidf drawerSelBox = boxes[11].Clone();
         Cuboidf cabinetSelBox = boxes[12].Clone();
 
-        if (be.DrawerOpen) {
-            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
-
-            switch (rotAngle) {
-                case BlockDirection.North: drawerSelBox.Z2 += .3125f; break;
-                case BlockDirection.West: drawerSelBox.X2 += .3125f; break;
-                case BlockDirection.South: drawerSelBox.Z1 -= .3125f; break;
-                case BlockDirection.East: drawerSelBox.X1 -= .3125f; break;
-            }
-        }
+        if (be.DrawerOpen)
+            OffsetDrawerBox(drawerSelBox);
 
         if (be.DoorOpen) {
             Cuboidf bottomShelfL = boxes[0].Clone();
@@ -148,16 +135,8 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
 
         drawerSelBox.MBNormalizeSelectionBox(offset);
 
-        if (be.DrawerOpen) {
-            BlockDirection rotAngle = (BlockDirection)this.GetRotationAngle();
-
-            switch (rotAngle) {
-                case BlockDirection.North: drawerSelBox.Z2 += .3125f; break;
-                case BlockDirection.West: drawerSelBox.X2 += .3125f; break;
-                case BlockDirection.South: drawerSelBox.Z1 -= .3125f; break;
-                case BlockDirection.East: drawerSelBox.X1 -= .3125f; break;
-            }
-        }
+        if (be.DrawerOpen)
+            OffsetDrawerBox(drawerSelBox);
 
         if (!be.DoorOpen) {
             Cuboidf cabinetSelBox = boxes[12].Clone();
@@ -166,15 +145,25 @@ public class BlockCoolingCabinet : BaseFSContainer, IMultiBlockColSelBoxes {
             return [Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, Skip, drawerSelBox, cabinetSelBox];
         }
         else {
-            List<Cuboidf> sBs = [];
+            Cuboidf[] sBs = new Cuboidf[12];
 
             for (int i = 0; i < 11; i++) {
-                sBs.Add(boxes[i].Clone());
+                sBs[i] = boxes[i].Clone();
                 sBs[i].MBNormalizeSelectionBox(offset);
             }
-            sBs.Add(drawerSelBox);
 
-            return [sBs[0], sBs[1], sBs[2], sBs[3], sBs[4], sBs[5], sBs[6], sBs[7], sBs[8], sBs[9], sBs[10], sBs[11]];
+            sBs[11] = drawerSelBox;
+
+            return sBs;
+        }
+    }
+
+    protected void OffsetDrawerBox(Cuboidf box) {
+        switch ((BlockDirection)this.GetRotationAngle()) {
+            case BlockDirection.North: box.Z2 += .3125f; break;
+            case BlockDirection.West: box.X2 += .3125f; break;
+            case BlockDirection.South: box.Z1 -= .3125f; break;
+            case BlockDirection.East: box.X1 -= .3125f; break;
         }
     }
 

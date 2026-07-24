@@ -36,8 +36,11 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
         perishMultiplierBuffed = api.World.Config.GetFloat("FoodShelves.CooledBuff", BuffedPerishMultiplier);
         perishMultiplierUnBuffed = globalBlockBuffs ? UnbuffedPerishMultiplier : 1f;
 
-        if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly)) PerishMultiplier = perishMultiplierBuffed;
-        if (DoorOpen) PerishMultiplier = 1f;
+        if (!DrawerOpen && !inv[CutIceSlot].Empty && inv[CutIceSlot].CanStoreInSlot(FSCoolingOnly))
+            PerishMultiplier = perishMultiplierBuffed;
+        
+        if (DoorOpen)
+            PerishMultiplier = 1f;
     }
 
     protected override float GetPerishRate() {
@@ -76,23 +79,22 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
     }
 
     protected virtual bool TryTakeIceOrSlush(IPlayer byPlayer) {
-        if (!inv[CutIceSlot].Empty) {
-            ItemStack stack = inv[CutIceSlot].TakeOutWhole();
-            if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
-                this.HandlePlacementEffects(stack, byPlayer, true);
-            }
+        if (inv[CutIceSlot].Empty)
+            return false;
 
-            if (stack.StackSize > 0) {
-                Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
-            }
-
-            SetIceHeight(false);
-            SetWaterHeight(false);
-
-            return true;
+        ItemStack stack = inv[CutIceSlot].TakeOutWhole();
+        if (byPlayer.InventoryManager.TryGiveItemstack(stack)) {
+            this.HandlePlacementEffects(stack, byPlayer, true);
         }
 
-        return false;
+        if (stack.StackSize > 0) {
+            Api.World.SpawnItemEntity(stack, Pos.ToVec3d().Add(0.5, 0.5, 0.5));
+        }
+
+        SetIceHeight(false);
+        SetWaterHeight(false);
+
+        return true;
     }
 
     #endregion

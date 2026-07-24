@@ -28,58 +28,92 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
 
-        bool shift = byPlayer.Entity.Controls.ShiftKey;
-
-        if (!shift && slot.Empty) // Take basket
+        if (!byPlayer.Entity.Controls.ShiftKey)
             return false;
 
-        if (shift) {
-            if (!slot.Empty) {
-                if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck) && TryPut(byPlayer, slot, blockSel)) {
-                    return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
-                }
-
-                if (CantPlaceMessage != "") {
-                    (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
-                }
-
-                return true;
-            }
-
+        if (slot.Empty)
             return TryTake(byPlayer, blockSel);
-        }
 
-        return false;
+        if (slot.CanStoreInSlot(overrideAttrCheck ?? AttributeCheck) && TryPut(byPlayer, slot, blockSel))
+            return this.HandlePlacementEffects(slot.Itemstack, byPlayer);
+
+        if (CantPlaceMessage != "")
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(CantPlaceMessage));
+
+        return true;
     }
 
     protected override ItemStack? TryTakeFromSegment(IPlayer byPlayer, int startIndex) {
-        ItemStack? stack = null;
+        bool takeAllMatching = byPlayer.Entity.Controls.CtrlKey;
 
-        if (byPlayer.Entity.Controls.CtrlKey) {
-            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
-                int idx = startIndex + i;
-                if (inv[idx].Empty) continue;
+        int bestIdx = -1;
+        double lowestFreshHours = double.MaxValue;
+        float highestRotLevel = -1f;
+        bool activelyRotting = false;
 
-                if (stack == null) {
-                    stack = inv[idx].TakeOut(1);
-                }
-                else if (inv[idx].Itemstack?.Collectible?.Code == stack.Collectible?.Code) {
-                    inv[idx].TakeOut(1);
-                    stack.StackSize += 1;
-                }
-            }
-        }
-        else {
-            for (int i = ItemsPerSegment - 1; i >= 0; i--) {
-                int idx = startIndex + i;
-                if (inv[idx].Empty) continue;
+        // Find the slot index with the item closest to perishing
+        for (int i = 0; i < ItemsPerSegment; i++) {
+            int idx = startIndex + i;
+            if (inv[idx].Empty) continue;
 
-                stack = inv[idx].TakeOut(1);
+            // Default to the first item we find, if not perishable
+            if (bestIdx == -1) bestIdx = idx;
+
+            ItemStack stack = inv[idx].Itemstack!;
+
+            // Rotted items
+            if (stack.Collectible.Code.Path.StartsWith("rot")) {
+                bestIdx = idx;
                 break;
             }
+
+            TransitionState[]? states = stack.Collectible.UpdateAndGetTransitionStates(Api.World, inv[idx]);
+            if (states != null) {
+                foreach (var state in states) {
+                    if (state.Props.Type == EnumTransitionType.Perish) {
+
+                        // Items actively spoiling
+                        if (state.TransitionLevel > 0) {
+                            if (state.TransitionLevel > highestRotLevel) {
+                                highestRotLevel = state.TransitionLevel;
+                                bestIdx = idx;
+                                activelyRotting = true;
+                            }
+                        }
+                        // Still fresh, check timers
+                        else if (!activelyRotting) {
+                            float rate = stack.Collectible.GetTransitionRateMul(Api.World, inv[idx], EnumTransitionType.Perish);
+                            double effectiveFreshness = rate > 0 ? state.FreshHoursLeft / rate : state.FreshHoursLeft;
+
+                            if (effectiveFreshness < lowestFreshHours) {
+                                lowestFreshHours = effectiveFreshness;
+                                bestIdx = idx;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        return stack;
+        if (bestIdx == -1) return null;
+
+        // Take the most perishable item out of its slot
+        ItemStack stackToTake = inv[bestIdx].TakeOut(1);
+
+        // If holding CTRL, take out identical items from the rest of the basket
+        if (takeAllMatching) {
+            for (int i = 0; i < ItemsPerSegment; i++) {
+                int idx = startIndex + i;
+                if (inv[idx].Empty || idx == bestIdx) continue;
+
+                if (inv[idx].Itemstack!.Collectible.Code == stackToTake.Collectible.Code) {
+                    inv[idx].TakeOut(1);
+                    stackToTake.StackSize++;
+                }
+            }
+        }
+
+        return stackToTake;
     }
 
     protected virtual string? GetTransformationPath() {
@@ -94,36 +128,32 @@ public abstract class BEBaseFSBasket : BEBaseFSContainer {
 
         return TransformationGenerator.GenerateExplicit(transformationMatrix, (t) => {
             t.preRotate = blockRotation + MeshAngle * GameMath.RAD2DEG;
-
             modifier?.Invoke(t);
         });
     }
 
-    private MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
-        MeshData? ropeMesh = null;
+    protected MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
+        Shape? basketRope = (Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>())
+            ?? throw new InvalidOperationException($"No shape util found for {CeilingAttachedUtil}");
+        
+        tesselator.TesselateShape(block, basketRope, out MeshData ropeMesh);
 
-        Shape? basketRope = Api.Assets.TryGet(CeilingAttachedUtil)?.ToObject<Shape>();
-        if (basketRope != null) {
-            tesselator.TesselateShape(block, basketRope, out ropeMesh);
-
-            float scale = block?.Shape.Scale ?? 0;
-            ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
-        }
+        float scale = block?.Shape.Scale ?? 0;
+        ropeMesh.Scale(new Vec3f(0.5f, 0, 0.5f), scale, scale, scale);
 
         return ropeMesh;
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = base.BaseRenderContents(mesher, tesselator);
+        if (base.BaseRenderContents(mesher, tesselator))
+            return true;
 
-        if (!skipmesh) {
-            if (IsCeilingAttached) {
-                ropeMesh ??= GenerateRopeMesh(tesselator);
-                mesher.AddMeshData(ropeMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
-            }
-
-            mesher.AddMeshData(blockMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
+        if (IsCeilingAttached) {
+            ropeMesh ??= GenerateRopeMesh(tesselator);
+            mesher.AddMeshData(ropeMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
         }
+
+        mesher.AddMeshData(blockMesh?.Clone().Rotate(new Vec3f(0.5f, 0.5f, 0.5f), 0, MeshAngle, 0));
 
         return true;
     }

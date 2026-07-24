@@ -18,7 +18,7 @@ public static class LayoutRegistry {
     static LayoutRegistry() {
         Register(new PieLayout(), "game:pie-*");
         Register(new CheeseLayout(), "game:cheese-*");
-        Register(new PackLayout(), "pemmican:*-pack");
+        Register(new PackLayout(), "pemmican:*pack*");
     }
 
     private static void Register(ICollectibleLayout layout, params string[] wildcards) {

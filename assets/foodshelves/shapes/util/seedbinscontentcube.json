@@ -12,8 +12,8 @@
 	"elements": [
 		{
 			"name": "Cube",
-			"from": [ 1.002, 0.5, 2.001 ],
-			"to": [ 7.4995, 0.8, 9.201 ],
+			"from": [ 1.002, 0.8, 2.001 ],
+			"to": [ 7.4995, 1.1, 9.201 ],
 			"rotationOrigin": [ 1.0, 0.5, 2.0 ],
 			"faces": {
 				"north": { "texture": "#sunflower", "uv": [ 0.0, 0.0, 11.0, 1.25 ], "autoUv": false },

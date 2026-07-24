@@ -1,6 +1,7 @@
 {
   "game:tabname-foodshelves": "Food Shelves",
   "foodshelvesserver": "Сервер Food Shelves",
+  "foodshelvesclient": "FoodShelves Client",
   "item-cutice": "Розрізаний лід",
   "block-shortshelf-*": "Коротка полиця",
   "block-pieshelf-*": "Полиця для пирогів/сиру",

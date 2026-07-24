@@ -1,7 +1,8 @@
 {
   "game:tabname-foodshelves": "Полице за храну",
 
-  "foodshelvesserver": "Сервер за полице за храну",
+  "foodshelvesserver": "FoodShelves Сервер",
+  "foodshelvesclient": "FoodShelves Клијент",
 
   "item-cutice": "Сечени лед",
 

@@ -8,6 +8,7 @@ public class Core : ModSystem {
 
     public override void StartPre(ICoreAPI api) {
         ConfigServer.Initialize(api);
+        ConfigClient.Initialize(api);
 
         if (api.ModLoader.IsModEnabled("configlib")) {
             _ = new ConfigLibCompatibility(api);

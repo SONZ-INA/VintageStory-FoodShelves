@@ -50,23 +50,17 @@ public class BlockBehaviorShiftRightClickPickup(Block block) : BlockBehavior(blo
             }
         }
 
-        if (!heldSlotSuitable ||
-            !world.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak)) {
+        if (!heldSlotSuitable || !world.Claims.TryAccess(byPlayer, blockSel.Position, EnumBlockAccessFlags.BuildOrBreak))
             return false;
-        }
 
-        if (world.Side == EnumAppSide.Server &&
-            BlockBehaviorReinforcable.AllowRightClickPickup(world, blockSel.Position, byPlayer)) {
+        if (world.Side == EnumAppSide.Server && BlockBehaviorReinforcable.AllowRightClickPickup(world, blockSel.Position, byPlayer)) {
             bool blockToBreak = true;
 
             foreach (var stack in dropStacks) {
                 var origStack = stack.Clone();
 
                 if (!byPlayer.InventoryManager.TryGiveItemstack(stack, true)) {
-                    world.SpawnItemEntity(
-                        stack,
-                        blockSel.Position.ToVec3d().AddCopy(0.5, 0.1, 0.5)
-                    );
+                    world.SpawnItemEntity(stack, blockSel.Position.ToVec3d().AddCopy(0.5, 0.1, 0.5));
                 }
 
                 TreeAttribute tree = new();

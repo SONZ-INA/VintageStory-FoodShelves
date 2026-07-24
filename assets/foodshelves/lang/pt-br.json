@@ -2,12 +2,13 @@
   "game:tabname-foodshelves": "Prateleiras de Alimentos",
 
   "foodshelvesserver": "Servidor Food Shelves",
+  "foodshelvesclient": "FoodShelves Client",
 
   "foodshelvesguide-title": "Guia das Prateleiras de Alimentos",
   "foodshelvesguide-text": "<strong>Prateleiras de Alimentos: Guia do Jogador</strong><br><br><strong>Introdução</strong><br>Este mod adiciona várias opções de armazenamento, como prateleiras para exposição, cestas para decoração e outros recipientes especializados. Alguns blocos também fornecem <strong>efeitos mecânicos</strong>, como bônus na conservação, na cura ou na taxa de secagem.<br><br><strong>Observação</strong><br>Este mod foi feito pensando no <a href=\"https://mods.vintagestory.at/expandedfoods\">Expanded Foods</a>. Certos blocos, como os Suportes para Barris, só irão <strong>curar líquidos</strong> se o Expanded Foods estiver instalado. Sem ele, eles ainda aplicam bônus relacionados à conservação, mas nenhuma cura ocorrerá.<br><br><strong>Bônus dos Blocos</strong><br>Alguns blocos oferecem bônus à <i>taxa de deterioração</i>, <i>taxa de cura</i> ou <i>taxa de secagem</i>. Se um bloco possuir esse tipo de bônus, ele será mostrado diretamente na dica do bloco quando você passar o cursor sobre ele. Essas dicas também podem exibir recursos úteis de <i>qualidade de vida</i>. Por exemplo, as <a href=\"handbook://block-foodshelves:seedbins-normal-east\">Caixas de Sementes</a> mostram o tipo de nutriente exigido pelas sementes que contêm.<br><br><strong>Mecânica de Resfriamento com Gelo</strong><br>Blocos como o <a href=\"handbook://block-foodshelves:coolingcabinet-normal-east\">Armário Refrigerado</a> e o <a href=\"handbook://block-foodshelves:meatfreezer-normal-east\">Freezer de Carnes</a> fornecem um pequeno bônus de conservação sem aprimoramento enquanto suas portas estão <strong>fechadas</strong>. Deixá-las abertas anula esse benefício, então mantenha-as sempre fechadas!<br>Esses blocos podem ser aprimorados com <a href=\"handbook://item-foodshelves:cutice\">Gelo Cortado</a>. O gelo é colocado em uma gaveta dedicada, derrete com o tempo e precisa ser substituído regularmente. O bônus só se aplica quando o compartimento principal e a gaveta de gelo estão fechados, então confira bem essas portas!<br><br><strong>Cestas para Decoração e Conservação</strong><br>As cestas são principalmente decorativas e não foram feitas para armazenamento em massa. Porém, quando colocadas dentro de um <a href=\"handbook://block-foodshelves:coolingcabinet-normal-east\">Armário Refrigerado</a>, elas herdam seus bônus de conservação, com ou sem gelo, tornando-se uma forma elegante de conservar comida por um pouco mais de tempo.<br><br><strong>Mais Informações</strong><br>Nem todos os recipientes aceitam todos os itens. Cada bloco tem uma entrada própria no manual que lista os tipos de itens válidos e, quando relevante, os mods de onde esses itens vêm.<br><br><strong>Interações</strong><br>A maioria das interações é mostrada pelas <i>Interações do Mundo</i>, dicas flutuantes dentro do jogo. Por exemplo: adicionar itens às cestas, fechar portas de armários ou encher gavetas com gelo.<br>Algumas interações <strong>não</strong> são exibidas, principalmente quando as cestas estão dentro de armários. Você ainda pode colocar itens diretamente em uma cesta usando o botão direito com o item correto, ou segurando <strong>CTRL</strong> para inserir vários. Com a mão vazia, segurar <strong>CTRL</strong> retirará um item por vez.<br><br><i>Aproveite suas cozinhas decoradas e funcionais!</i>",
-  
+
   "item-cutice": "Gelo Cortado",
-  
+
   "block-shortshelf-*": "Prateleira Baixa",
   "block-pieshelf-*": "Prateleira para Tortas e Queijos",
   "block-breadshelf-normal-*": "Prateleira de Pães",
@@ -145,7 +146,7 @@
   "Will dry in {0} years": "Secará em {0} anos",
   "Will dry in {0} days": "Secará em {0} dias",
   "Will dry in {0} hours": "Secará em {0} horas",
-  
+
   "Average freshness {0} years": "Frescor médio: {0} anos",
   "Average freshness {0} days": "Frescor médio: {0} dias",
   "Average freshness {0} hours": "Frescor médio: {0} horas",

@@ -48,15 +48,6 @@ public class BECeilingRack : BEBaseFSContainer {
         return base.OnInteract(byPlayer, blockSel, "fsLiquidyStuff");
     }
 
-    protected override void InitMesh() {
-        base.InitMesh();
-
-        if (capi == null) return;
-
-        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 8.5f);
-        if (contentMesh != null) blockMesh?.AddMeshData(contentMesh);
-    }
-
     protected override float[][]? genTransformationMatrices() {
         return TransformationGenerator.GenerateLayout(this, td => {
             // Hide original contents, can't bother to mesh it out
@@ -66,28 +57,27 @@ public class BECeilingRack : BEBaseFSContainer {
         });
     }
 
-    private MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
-        MeshData? ropeMesh = null;
-
+    protected MeshData? GenerateRopeMesh(ITesselatorAPI tesselator) {
         Shape? rackRope = Api.Assets.TryGet(ShapeReferences.utilCeilingRack)?.ToObject<Shape>();
-        if (rackRope != null) {
-            tesselator.TesselateShape(block, rackRope, out ropeMesh);
-        }
+        if (rackRope == null) return null;
 
+        tesselator.TesselateShape(block, rackRope, out MeshData? ropeMesh);
         return ropeMesh;
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = base.BaseRenderContents(mesher, tesselator);
+        if (base.BaseRenderContents(mesher, tesselator))
+            return true;
 
-        if (!skipmesh) {
-            if (!inv[1].Empty) {
-                ropeMesh ??= GenerateRopeMesh(tesselator);
-                mesher.AddMeshData(ropeMesh);
-            }
-
-            mesher.AddMeshData(blockMesh);
+        if (!inv[1].Empty) {
+            ropeMesh ??= GenerateRopeMesh(tesselator);
+            mesher.AddMeshData(ropeMesh);
         }
+
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 8.5f);
+        if (contentMesh != null) mesher.AddMeshData(contentMesh);
+
+        mesher.AddMeshData(blockMesh);
 
         return true;
     }

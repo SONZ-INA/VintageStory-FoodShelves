@@ -141,7 +141,8 @@ public static class Meshing {
 
         // Handle textureSource
         ITexPositionSource? texSource = inheritTextures
-            ? GetPieTexture(capi, stack, shape)
+            ? GetTextureOverrideSource(capi, stack)
+                ?? GetPieTexture(capi, stack, shape)
                 ?? GetContainerTextureSource(capi, stack)
                 ?? GetItemTextureSource(capi, stack)
             : new ShapeTextureSource(capi, shape, "FS-LiquidyTextureSource");
@@ -186,9 +187,10 @@ public static class Meshing {
             return null;
 
         // Handle textureSource
-        ITexPositionSource? texSource = GetPieTexture(capi, stack, shape)
-                ?? GetContainerTextureSource(capi, stack)
-                ?? GetItemTextureSource(capi, stack);
+        ITexPositionSource? texSource = GetTextureOverrideSource(capi, stack)
+            ?? GetPieTexture(capi, stack, shape)
+            ?? GetContainerTextureSource(capi, stack)
+            ?? GetItemTextureSource(capi, stack);
 
         // Height calculation
         float contentAmount = stack.StackSize;
@@ -246,5 +248,92 @@ public static class Meshing {
         fillMesh.Translate(0, shapeHeight, 0);
 
         return fillMesh;
+    }
+
+    /// <summary>
+    /// Generates a paper label + liquid icon mesh shown on the front face of a racked barrel.
+    /// Only returns a label if there is a liquid in the barrel.
+    /// </summary>
+    public static MeshData? GenLabelMesh(ICoreClientAPI? capi, ItemSlot liquidSlot, string labelShapePath) {
+        if (capi == null) return null;
+        if (liquidSlot == null) return null;
+        if (liquidSlot.Empty) return null;
+
+        // Label paper
+        AssetLocation labelLoc = new(labelShapePath);
+        Shape? labelShape = capi.Assets.TryGet(labelLoc)?.ToObject<Shape>()?.Clone();
+        if (labelShape == null)
+            return null;
+
+        var texSource = new ShapeTextureSource(capi, labelShape, "FS-BarrelLabelTexSource");
+        foreach (var kvp in labelShape.Textures) {
+            CompositeTexture cTex = new(kvp.Value);
+            cTex.Bake(capi.Assets);
+            texSource.textures[kvp.Key] = cTex;
+        }
+
+        capi.Tesselator.TesselateShape("FS-BarrelLabel", labelShape, out MeshData labelMesh, texSource);
+
+        // Label holder
+        Shape? holderShape = capi.Assets.TryGet(ShapeReferences.utilRackLabelHolder)?.ToObject<Shape>()?.Clone();
+        if (holderShape != null) {
+            var holderTexSource = new ShapeTextureSource(capi, holderShape, "FS-BarrelLabelHolderTex");
+
+            foreach (var kvp in holderShape.Textures) {
+                CompositeTexture cTex = new(kvp.Value);
+                cTex.Bake(capi.Assets);
+                holderTexSource.textures[kvp.Key] = cTex;
+            }
+
+            capi.Tesselator.TesselateShape("FS-BarrelLabelHolder", holderShape, out MeshData holderMesh, holderTexSource);
+            labelMesh.AddMeshData(holderMesh);
+        }
+
+        // Liquid shape
+        ItemStack liquidStack = liquidSlot.Itemstack;
+        string? iconShapeLoc = liquidStack.Item?.Shape?.Base?.ToString()
+            ?? liquidStack.ItemAttributes?["displayedShape"]?.Token?.ToObject<CompositeShape>()?.Base.ToString()
+            ?? liquidStack.Block?.Shape.Base.ToString();
+
+        Shape? iconShape = iconShapeLoc != null
+            ? capi.TesselatorManager.GetCachedShape(iconShapeLoc)?.Clone()
+            : null;
+
+        if (iconShape != null) {
+            CompositeTexture? liquidTex = liquidStack.Item?.Textures?.Values.FirstOrDefault()
+                ?? liquidStack.Block?.Textures?.Values.FirstOrDefault();
+
+            iconShape.TransferItemtypeTextures(liquidStack);
+
+            var iconTexSource = new ShapeTextureSource(capi, iconShape, "FS-BarrelLabelIconTex");
+            if (liquidTex != null) {
+                CompositeTexture iconTex = new(liquidTex.Base);
+                iconTex.Bake(capi.Assets);
+                
+                foreach (var kvp in iconShape.Textures) {
+                    iconTexSource.textures[kvp.Key] = iconTex;
+                }
+
+                foreach (string key in new[] { "material" }) {
+                    iconTexSource.textures[key] = iconTex;
+                }
+            }
+
+            capi.Tesselator.TesselateShape("FS-BarrelLabelIcon", iconShape, out MeshData iconMesh, iconTexSource);
+
+            ExplicitTransform iconTransform = new(
+                X: [0.003f], Y: [0.541f], Z: [0.37f],
+                RX: [-90f], RY: [0f], RZ: [180f]
+            );
+
+            float[][] matrices = TransformationGenerator.GenerateExplicit(iconTransform, td => {
+                td.scaleX = td.scaleY = td.scaleZ = 0.19f;
+            });
+
+            iconMesh.MatrixTransform(matrices[0]);
+            labelMesh.AddMeshData(iconMesh);
+        }
+
+        return labelMesh;
     }
 }

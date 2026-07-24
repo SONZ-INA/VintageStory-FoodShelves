@@ -1,6 +1,7 @@
 {
   "game:tabname-foodshelves": "Food Shelves",
   "foodshelvesserver": "Serwer FoodShelves",
+  "foodshelvesclient": "FoodShelves Client",
   "item-cutice": "Cięty lód",
   "block-shortshelf-*": "Krótka półka",
   "block-pieshelf-*": "Półka na placki/sery",

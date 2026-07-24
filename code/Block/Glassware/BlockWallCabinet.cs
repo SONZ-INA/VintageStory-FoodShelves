@@ -27,9 +27,9 @@ public class BlockWallCabinet : BaseFSContainer {
         // Cabinet - 5
         // Door    - 4
         // Shelves - 0 1 2 3
-        BEWallCabinet? be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
         var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
+        BEWallCabinet? be = blockAccessor.GetBlockEntityExt<BEWallCabinet>(pos);
         if (be == null) return boxes;
         
         if (be.DoorOpen) {

@@ -2,12 +2,11 @@
 
 public class BESeedBins : BEBaseFSContainer {
     protected new BaseFSContainer block = null!;
-    private readonly MeshData[] contentMeshes = new MeshData[4];
 
     protected override string CantPlaceMessage => "foodshelves:Only seeds can be placed in these jars.";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegmentGrouped;
 
-    protected override float PerishMultiplier => 0.75f; // AoG Compatibility
+    protected override float PerishMultiplier => 0.65f; // Compatibility with mods that add perish rate to seeds
 
     public override int ShelfCount => 4;
 
@@ -19,22 +18,11 @@ public class BESeedBins : BEBaseFSContainer {
     }
 
     protected override void InitMesh() {
-        base.InitMesh();
-
+        // Check which icons to avoid rendering
         List<string> dontRender = [];
 
         for (int i = 0; i < 4; i++) {
-            ItemSlot slot = inv[i];
-
-            // Content
-            contentMeshes[i] = GenLiquidyMesh(capi, slot, ShapeReferences.utilSeedBins, 6f, false)?
-                .Translate(0, .04f, 0)
-                .BlockYRotation(block)!;
-
-            // Icon
-            if (capi == null) continue;
-
-            ItemStack? stack = slot.Itemstack;
+            ItemStack? stack = inv[i].Itemstack;
 
             if (stack?.Collectible != null) {
                 string seedtype = stack.Collectible.Variant["type"];
@@ -48,20 +36,33 @@ public class BESeedBins : BEBaseFSContainer {
         blockMesh = GenBlockVariantMesh(capi, this.GetVariantStack(), [.. dontRender]);
     }
 
+    public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
+        MarkDirty(true);
+        return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
+    }
+
     protected override float[][]? genTransformationMatrices() => null; // Unneeded
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        InitMesh();
+
         base.OnTesselation(mesher, tesselator);
 
-        for (int i = 0; i < 4; i++) {
-            if (contentMeshes[i] == null) continue;
-            MeshData contentMesh = contentMeshes[i].Clone();
+        BlockDirection rot = (BlockDirection)block.GetRotationAngle();
 
-            switch ((BlockDirection)block.GetRotationAngle()) {
-                case BlockDirection.North: contentMesh.Translate(i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
-                case BlockDirection.West: contentMesh.Translate(0, i / 2 * 0.4695f, -i % 2 * 0.4695f); break;
-                case BlockDirection.South: contentMesh.Translate(-i % 2 * 0.4695f, i / 2 * 0.4695f, 0); break;
-                case BlockDirection.East: contentMesh.Translate(0, i / 2 * 0.4695f, i % 2 * 0.4695f); break;
+        for (int i = 0; i < 4; i++) {
+            MeshData? contentMesh = GenLiquidyMesh(capi, inv[i], ShapeReferences.utilSeedBins, 6f, false)?.BlockYRotation(block);
+            if (contentMesh == null) continue;
+
+            const float offset = 0.4695f;
+            int col = i % 2;
+            int row = i / 2;
+
+            switch (rot) {
+                case BlockDirection.North: contentMesh.Translate(col * offset, row * offset, 0); break;
+                case BlockDirection.West: contentMesh.Translate(0, row * offset, -col * offset); break;
+                case BlockDirection.South: contentMesh.Translate(-col * offset, row * offset, 0); break;
+                case BlockDirection.East: contentMesh.Translate(0, row * offset, col * offset); break;
             }
 
             mesher.AddMeshData(contentMesh);

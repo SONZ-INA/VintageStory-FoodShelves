@@ -10,7 +10,7 @@ public class BETableWShelf : BEBaseFSContainer {
 
     public override int ItemsPerSegment => 2;
 
-    private enum TableWShelfPart {
+    protected enum TableWShelfPart {
         Table = 1,
         Shelf = 0
     }

@@ -1,0 +1,17 @@
+{
+	"textureWidth": 12,
+	"textureHeight": 16,
+	"textures": {
+		"paper": "foodshelves:block/barrels/barrel-label"
+	},
+	"elements": [
+		{
+			"name": "paper_main",
+			"from": [ 5.8, 5.9, 13.8 ],
+			"to":   [ 10.3, 11.9, 13.9 ],
+			"faces": {
+				"south": { "texture": "#paper", "uv": [ 0.0, 0.0, 12.0, 16.0 ] }
+			}
+		}
+	]
+}

@@ -8,7 +8,7 @@ public class BEJarStand : BEBaseFSContainer {
 
     public override int SegmentsPerShelf => 2;
 
-    private enum SlotType {
+    protected enum SlotType {
         LeftSegment = 0,
         RightSegment = 1,
         Stand = 2
@@ -19,31 +19,34 @@ public class BEJarStand : BEBaseFSContainer {
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         if (blockSel.SelectionBoxIndex == (int)SlotType.Stand) return false;
 
-        ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
-        bool ctrl = byPlayer.Entity.Controls.CtrlKey;
+        ItemSlot jarSlot = inv[blockSel.SelectionBoxIndex];
 
-        ItemSlot jarSlotInStand = inv[blockSel.SelectionBoxIndex];
-
-        if (!jarSlotInStand.Empty) {
-            if (!hotbarSlot.Empty || ctrl) {
-                if (TryUse(byPlayer, hotbarSlot, blockSel)) {
-                    return true;
-                }
-
-                return false;
-            }
+        if (jarSlot.Empty) {
+            return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
         }
 
-        return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
+        ItemSlot hotbarSlot = byPlayer.InventoryManager.ActiveHotbarSlot;
+        bool shift = byPlayer.Entity.Controls.ShiftKey;
+
+        if (TryUse(byPlayer, blockSel)) {
+            return true;
+        }
+
+        if (shift && hotbarSlot.Empty) {
+            return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
+        }
+
+        return false;
     }
 
-    protected bool TryUse(IPlayer player, ItemSlot hotbarSlot, BlockSelection blockSel) {
+    protected bool TryUse(IPlayer player, BlockSelection blockSel) {
         int segmentIndex = blockSel.SelectionBoxIndex;
         if (segmentIndex >= inv.Count || inv[segmentIndex].Empty) return false;
 
         ItemSlot jarSlot = inv[segmentIndex];
 
         if (jarSlot.Itemstack?.Collectible is IContainedInteractable ici) {
+            MarkDirty();
             return ici.OnContainedInteractStart(this, jarSlot, player, blockSel);
         }
 
@@ -65,11 +68,28 @@ public class BEJarStand : BEBaseFSContainer {
 
         int segment = forPlayer.CurrentBlockSelection.SelectionBoxIndex;
         if (segment is (int)SlotType.LeftSegment or (int)SlotType.RightSegment) {
-            var contents = GetContents(Api.World, inv[segment].Itemstack);
+
+            ItemSlot jarSlot = inv[segment];
+            if (jarSlot.Empty) return;
+
+            var contents = GetContents(Api.World, jarSlot.Itemstack);
 
             if (contents != null && contents.Length > 0) {
                 DummySlot dummySlot = new(contents[0], inv);
-                sb.AppendLine(TransitionInfoCompact(Api.World, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage));
+
+                string perishInfo = PerishableInfoCompact(Api.World, dummySlot, 0f, false, false).Trim();
+                if (perishInfo.StartsWith(",")) {
+                    perishInfo = perishInfo.Substring(1).Trim();
+                }
+
+                if (!string.IsNullOrEmpty(perishInfo)) {
+                    sb.Replace(")</font>", ", " + perishInfo + ")</font>");
+                }
+
+                string dryInfo = TransitionInfoCompact(Api.World, dummySlot, EnumTransitionType.Dry, TransitionDisplayMode.Percentage);
+                if (!string.IsNullOrEmpty(dryInfo)) {
+                    sb.AppendLine(dryInfo);
+                }
             }
         }
     }

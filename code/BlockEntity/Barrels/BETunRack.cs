@@ -1,5 +1,4 @@
-﻿
-namespace FoodShelves;
+﻿namespace FoodShelves;
 
 public class BETunRack : BEBaseFSContainer {
     protected new BlockTunRack block = null!;
@@ -10,7 +9,6 @@ public class BETunRack : BEBaseFSContainer {
     protected override float CuringMultiplier => 0.74f;
 
     public override int SlotCount => 2;
-
     private readonly int capacityLitres = 500;
 
     public BETunRack() {
@@ -27,17 +25,6 @@ public class BETunRack : BEBaseFSContainer {
         base.Initialize(api);
 
         (inv[1] as ItemSlotLiquidOnly)?.CapacityLitres = capacityLitres;
-        inv.SlotModified += Inventory_SlotModified;
-    }
-
-    private void Inventory_SlotModified(int slotId) {
-        if (slotId != 0) return;
-
-        if (Api?.Side == EnumAppSide.Client) {
-            InitMesh();
-        }
-
-        MarkDirty(true);
     }
 
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
@@ -72,7 +59,7 @@ public class BETunRack : BEBaseFSContainer {
         return false;
     }
 
-    private bool TryPut(ItemSlot slot) {
+    protected bool TryPut(ItemSlot slot) {
         if (inv[0].Empty) {
             int moved = slot.TryPutInto(Api.World, inv[0]);
             (Api as ICoreClientAPI)?.World.Player.TriggerFpAnimation(EnumHandInteract.HeldItemInteract);
@@ -83,7 +70,7 @@ public class BETunRack : BEBaseFSContainer {
         return false;
     }
 
-    private bool TryTake(IPlayer byPlayer, int rotTakeout = 0) {
+    protected bool TryTake(IPlayer byPlayer, int rotTakeout = 0) {
         for (int i = rotTakeout; i < SlotCount; i++) {
             if (!inv[i].Empty) {
                 ItemStack stack = inv[i].TakeOut(1);
@@ -111,7 +98,17 @@ public class BETunRack : BEBaseFSContainer {
         ItemStack[] stack = GetContentStacks();
         if (stack[0]?.Block != null) {
             MeshData? woodtypedTunMesh = GenBlockVariantMesh(Api, inv[0].Itemstack);
-            mesher.AddMeshData(woodtypedTunMesh.BlockYRotation(block));
+            mesher.AddMeshData(woodtypedTunMesh?.BlockYRotation(block));
+
+            if (ConfigClient.ShowBarrelLabelEnabled && !inv[1].Empty) {
+                try {
+                    MeshData? labelMesh = GenLabelMesh(Api as ICoreClientAPI, inv[1], ShapeReferences.utilBarrelLabel);
+                    mesher.AddMeshData(labelMesh?.Translate(0.5f, 0.2f, -0.04f).BlockYRotation(block));
+                }
+                catch (Exception e) {
+                    Api?.Logger.Warning("[FoodShelves] BarrelRack label mesh failed: " + e.Message);
+                }
+            }
         }
 
         mesher.AddMeshData(blockMesh);

@@ -5,7 +5,7 @@ public class BlockVegetableBasket : BaseFSBasket {
     
     public override int InnerSlotCount => 36;
 
-    private static readonly ExplicitTransform LargeTransformations = new (
+    protected static readonly ExplicitTransform LargeTransformations = new (
         X:  [ .17f,   0f,-.15f,  .1f,-.15f, .17f,-.15f,   0 ],
         Y:  [ .03f, .03f, .03f, .15f, .15f, .17f, .18f, .2f ],
         Z:  [ -.1f,  .1f,-.11f,  .1f,  .1f,-.11f,-.11f,   0 ],
@@ -15,7 +15,7 @@ public class BlockVegetableBasket : BaseFSBasket {
         RZ: [    1,   -1,    0,  -45,   25,  -20,   10,   3 ]
     );
 
-    private static readonly ExplicitTransform MediumTransformations = new (
+    protected static readonly ExplicitTransform MediumTransformations = new (
         X:  [    0,  .3f, .11f, .04f,-.22f,  .3f, -.11f, -.1f, .07f, .13f,-.07f,    0 ],
         Y:  [-.03f,-.03f,-.03f, .14f,    0, .11f,  .02f,  .1f, .38f,  .1f, .12f, .12f ],
         Z:  [-.15f,    0, .11f, .14f, .22f,-.25f, -.03f, -.1f,    0, .15f, .02f,    0 ],
@@ -25,7 +25,7 @@ public class BlockVegetableBasket : BaseFSBasket {
         RZ: [    1,  -1,    0,  -120,    1,    0,   -90,    1,  180,   -3,   -3,   -2 ]
     );
 
-    private static readonly ExplicitTransform StandardTransformations = new(
+    protected static readonly ExplicitTransform StandardTransformations = new(
         X:  [ .24f, .24f, .24f, .09f, .09f, .09f, -.09f,-.09f,-.09f,-.24f,-.24f,-.24f, .17f, .02f,-.07f, .12f, .17f,-.12f, -.3f,-.38f ],
         Y:  [-.04f,-.04f,-.04f,-.04f,-.04f,-.04f, -.04f,-.04f,-.04f,-.04f,-.04f,-.04f, .23f, .18f,  .1f, .23f, .23f, .16f, .18f, .23f ],
         Z:  [-.15f,    0, .15f,-.17f,    0, .15f, -.15f,    0, .15f,-.15f,    0, .15f, -.3f,  .1f,    0,-.17f, .12f,-.13f, .01f, .16f ],
@@ -35,7 +35,7 @@ public class BlockVegetableBasket : BaseFSBasket {
         RZ: [    1,  -1,    0,    -1,    1,    0,     0,    1,    0,   -3,   -3,   -2,   -4,  -91,  -40,   90,   78,   45,  -85,  -90 ]
     );
 
-    private static readonly ExplicitTransform LongTransformations = new(
+    protected static readonly ExplicitTransform LongTransformations = new(
         X:  [ .18f,  .18f, .18f, .18f, .18f, .18f,-.12f,-.12f,-.12f,-.12f,-.12f,-.12f,  .18f,  .18f,  .18f,  .18f,  .18f,  .18f,-.12f,-.12f,-.12f,-.12f,-.12f,-.12f, .18f, .18f, .18f, .18f, .18f, .18f,-.12f,-.12f,-.12f,-.12f,-.12f,-.12f ],
         Y:  [    0,     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, .065f, .065f, .065f, .065f, .065f, .065f,.065f,.065f,.065f,.065f,.065f,.065f, .13f, .13f, .13f, .13f, .13f, .13f, .13f, .13f, .13f, .13f, .13f, .13f ],
         Z:  [-.19f, -.12f,-.05f, .02f, .09f, .16f,-.18f,-.11f,-.04f, .03f,  .1f, .17f, -.18f, -.11f, -.04f,  .03f,   .1f,  .17f,-.18f,-.11f,-.04f, .03f,  .1f, .17f,-.18f,-.11f,-.04f, .03f,  .1f, .17f,-.18f,-.11f,-.04f, .03f,  .1f, .17f ],
@@ -46,7 +46,9 @@ public class BlockVegetableBasket : BaseFSBasket {
     );
 
     public override ExplicitTransform GetTransformationMatrix(string? path) {
-        if (path == null) return new([0], [0], [0], [0], [0], [0]);
+        // Renderer expects that all rendered items inside have a position, so we return the maximum possible length instead of just an empty array.
+        // This can happen if the basket is filled with items, and then the whitelisted items are removed from the whitelist in the meantime.
+        if (path == null) return LongTransformations; 
 
         foreach (var group in VegetableBasketData.GroupingCodes!) {
             foreach (var code in group.Value) {
@@ -56,13 +58,13 @@ public class BlockVegetableBasket : BaseFSBasket {
                         "medium" => MediumTransformations,
                         "standard" => StandardTransformations,
                         "long" => LongTransformations,
-                        _ => new([0], [0], [0], [0], [0], [0])
+                        _ => LongTransformations
                     };
                 }
             }
         }
 
-        return new([0], [0], [0], [0], [0], [0]);
+        return LongTransformations;
     }
 
     public override Action<TransformationData>? GetTransformationModifier() {

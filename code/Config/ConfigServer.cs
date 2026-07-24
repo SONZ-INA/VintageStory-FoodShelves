@@ -6,7 +6,7 @@ public class ConfigServer : IModConfig {
     public static ConfigServer Instance { get; set; } = null!;
 
     public bool GlobalBlockBuffs { get; set; } = true;
-    public bool LakeIceToCutIce{ get; set; } = false;
+    public bool LakeIceToCutIce { get; set; } = false;
     public float GlobalPerishMultiplier { get; set; } = 1f;
     public float CooledBuff { get; set; } = 0.3f;
     public float IceMeltRate { get; set; } = 1f;

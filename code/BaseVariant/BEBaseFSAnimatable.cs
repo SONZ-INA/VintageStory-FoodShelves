@@ -74,17 +74,16 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
     }
 
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
-        bool skipmesh = BaseRenderContents(mesher, tesselator);
+        if (BaseRenderContents(mesher, tesselator))
+            return true;
 
-        if (!skipmesh) {
-            if (ownMesh == null) {
-                ownMesh = GenMesh();
-                if (ownMesh == null) return false;
-            }
-
-            mesher.AddMeshData(ownMesh.Clone().BlockYRotation(block));
-            HandleAnimations();
+        if (ownMesh == null) {
+            ownMesh = GenMesh();
+            if (ownMesh == null) return false;
         }
+
+        mesher.AddMeshData(ownMesh.Clone().BlockYRotation(block));
+        HandleAnimations();
 
         return true;
     }
