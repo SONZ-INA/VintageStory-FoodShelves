@@ -1,18 +1,15 @@
 ﻿namespace FoodShelves;
 
-// TODO
 public class BEIceKeeper : BEBaseFSAnimatable {
     protected new BlockIceKeeper block = null!;
-    public override string AttributeCheck => "shelvable";
+    public override string AttributeCheck => FSCoolingOnly;
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     [TreeSerializable(false)] public bool DoorOpen { get; set; }
-    
-    private float perishMultiplierUnBuffed = 0.74f;
 
     protected enum SlotType {
         Door = 0,
-        Cabinet = 1
+        Keeper = 1
     }
 
     public BEIceKeeper() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
@@ -20,46 +17,13 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     public override void Initialize(ICoreAPI api) {
         block = (api.World.BlockAccessor.GetBlock(Pos) as BlockIceKeeper)!;
         base.Initialize(api);
-
-        perishMultiplierUnBuffed = globalBlockBuffs ? 0.75f : 1f;
     }
 
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
-        switch ((SlotType)blockSel.SelectionBoxIndex) {
-            case SlotType.Cabinet:
-                ToggleDoor(true, byPlayer);
-                MarkDirty(true);
-                return true;
-            
-            case SlotType.Door:
-                ToggleDoor(false, byPlayer);
-                MarkDirty(true);
-                return true;
-
-            default:
-                bool ctrl = byPlayer.Entity.Controls.CtrlKey;
-                ItemSlot slot = byPlayer.InventoryManager.ActiveHotbarSlot;
-
-                if ((!slot.Empty || ctrl) && TryUse(byPlayer, blockSel))
-                    return true;
-
-                return base.OnInteract(byPlayer, blockSel);
-        }
-    }
-
-    protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        if (slot.Itemstack?.IsLargeItem() == true || slot.Itemstack?.IsMediumItem() == true)
-            return false;
-
-        return base.TryPut(byPlayer, slot, blockSel);
-    }
-
-    protected bool TryUse(IPlayer player, BlockSelection blockSel) {
-        int index = blockSel.SelectionBoxIndex;
-
-        if (inv[index].Itemstack?.Collectible is IContainedInteractable ic) {
-            MarkDirty();
-            return ic.OnContainedInteractStart(this, inv[index], player, blockSel);
+        if ((SlotType)blockSel.SelectionBoxIndex == SlotType.Door) {
+            ToggleDoor(!DoorOpen, byPlayer);
+            MarkDirty(true);
+            return true;
         }
 
         return false;
@@ -78,7 +42,7 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     protected void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
             AnimUtil.TryStartAnimation("dooropen", 3f);
-            PerishMultiplier = 1f;
+            PerishMultiplier = 1;
 
             if (byPlayer != null) {
                 Api.World.PlaySoundAt(SoundReferences.WallCabinetOpen, byPlayer, byPlayer, true, 16);
@@ -86,7 +50,7 @@ public class BEIceKeeper : BEBaseFSAnimatable {
         }
         else {
             AnimUtil.TryStopAnimation("dooropen");
-            PerishMultiplier = perishMultiplierUnBuffed;
+            PerishMultiplier = 0;
 
             if (byPlayer != null) {
                 Api.World.PlaySoundAt(SoundReferences.WallCabinetClose, byPlayer, byPlayer, true, 16, 0.3f);
@@ -98,11 +62,14 @@ public class BEIceKeeper : BEBaseFSAnimatable {
 
     #endregion
 
-    protected override float[][] genTransformationMatrices() {
-        return TransformationGenerator.GenerateLayout(this, td => {
-            td.x = td.segment * 0.43f - 0.215f;
-            td.y = td.shelf * 0.5f + 0.065f;
-            td.z = -0.2f;
-        });
+    public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
+        base.OnTesselation(mesher, tesselator);
+
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 9f);
+        if (contentMesh != null) mesher.AddMeshData(contentMesh);
+
+        return true;
     }
+
+    protected override float[][]? genTransformationMatrices() => null; // Unneeded
 }

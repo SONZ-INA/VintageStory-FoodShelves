@@ -26,7 +26,9 @@
     "hintType": "bulk"
   },
   "behaviors": [
-    { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } }
+    { "name": "HorizontalOrientable", "properties": { "dropBlockFace": "east" } },
+    { "name": "Multiblock", "properties": { "sizex": 1, "sizey": 2, "sizez": 1, "cposition": { "x": 0, "y": 0, "z": 0 } }
+    }
   ],
   "shape": {
     "base": "block/coolers/icekeeper",
@@ -50,6 +52,10 @@
     "rotation": { "x": -163, "y": -11, "z": -102 },
     "scale": 0.35
   },
+  "guiTransform": {
+		"origin": { "x": 0.5, "y": 0.6, "z": 0.5 },
+		"scale": 0.95
+	},
   "sounds": {
     "place": "game:block/planks",
     "hit": "game:block/planks",
@@ -57,8 +63,8 @@
   },
   "collisionbox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
   "selectionBoxes": [
-    { "x1": 0.0625, "y1": 0.75, "z1": 0.0625, "x2": 0.9375, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
-    { "x1": 0.0625, "y1": 0.0625, "z1": 0.0625, "x2": 0.9375, "y2": 0.3125, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
-    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
+    { "x1": 0.0625, "y1": 1, "z1": 0.0625, "x2": 0.9375, "y2": 1.25, "z2": 0.8125, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0.0625, "y1": 1.1, "z1": 0.0625, "x2": 0.9375, "y2": 1.95, "z2": 0.2, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } },
+    { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 1.25, "z2": 1, "rotateYByType": { "*-north": 0, "*-east": 270, "*-west": 90, "*-south": 180 } }
   ]
 }

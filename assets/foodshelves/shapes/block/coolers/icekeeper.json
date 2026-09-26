@@ -231,9 +231,9 @@
 							"to": [ 2.0, 17.0, 15.0 ],
 							"rotationOrigin": [ 1.0, 1.0, 1.0 ],
 							"faces": {
-								"east": { "texture": "#chalk", "uv": [ 0.0, 0.0, 14.0, 16.0 ] },
-								"south": { "texture": "#chalk", "uv": [ 0.0, 0.0, 1.0, 16.0 ] },
-								"up": { "texture": "#chalk", "uv": [ 0.0, 0.0, 1.0, 14.0 ] }
+								"east": { "texture": "#rock", "uv": [ 0.0, 0.0, 14.0, 16.0 ] },
+								"south": { "texture": "#rock", "uv": [ 0.0, 0.0, 1.0, 16.0 ] },
+								"up": { "texture": "#rock", "uv": [ 0.0, 0.0, 1.0, 14.0 ] }
 							}
 						},
 						{
@@ -242,8 +242,8 @@
 							"to": [ 15.0, 17.0, 2.0 ],
 							"rotationOrigin": [ 2.0, 1.0, 1.0 ],
 							"faces": {
-								"south": { "texture": "#chalk", "uv": [ 0.5, 0.0, 13.5, 16.0 ] },
-								"up": { "texture": "#chalk", "uv": [ 0.0, 0.0, 13.0, 1.0 ] }
+								"south": { "texture": "#rock", "uv": [ 0.5, 0.0, 13.5, 16.0 ] },
+								"up": { "texture": "#rock", "uv": [ 0.0, 0.0, 13.0, 1.0 ] }
 							}
 						},
 						{
@@ -252,9 +252,9 @@
 							"to": [ 14.0, 17.0, 15.0 ],
 							"rotationOrigin": [ 2.0, 1.0, 14.0 ],
 							"faces": {
-								"north": { "texture": "#chalk", "uv": [ 1.0, 0.0, 13.0, 16.0 ] },
-								"south": { "texture": "#chalk", "uv": [ 0.0, 0.0, 12.0, 16.0 ] },
-								"up": { "texture": "#chalk", "uv": [ 0.0, 0.0, 12.0, 1.0 ] }
+								"north": { "texture": "#rock", "uv": [ 1.0, 0.0, 13.0, 16.0 ] },
+								"south": { "texture": "#rock", "uv": [ 0.0, 0.0, 12.0, 16.0 ] },
+								"up": { "texture": "#rock", "uv": [ 0.0, 0.0, 12.0, 1.0 ] }
 							}
 						},
 						{
@@ -263,9 +263,9 @@
 							"to": [ 15.0, 17.0, 15.0 ],
 							"rotationOrigin": [ 13.0, 1.0, 2.0 ],
 							"faces": {
-								"south": { "texture": "#chalk", "uv": [ 0.0, 0.0, 1.0, 16.0 ] },
-								"west": { "texture": "#chalk", "uv": [ 0.0, 0.0, 13.0, 16.0 ] },
-								"up": { "texture": "#chalk", "uv": [ 0.0, 0.0, 1.0, 13.0 ] }
+								"south": { "texture": "#rock", "uv": [ 0.0, 0.0, 1.0, 16.0 ] },
+								"west": { "texture": "#rock", "uv": [ 0.0, 0.0, 13.0, 16.0 ] },
+								"up": { "texture": "#rock", "uv": [ 0.0, 0.0, 1.0, 13.0 ] }
 							}
 						},
 						{
@@ -274,7 +274,7 @@
 							"to": [ 16.0, 1.01, 15.0 ],
 							"rotationOrigin": [ 1.0, 0.0, 1.0 ],
 							"faces": {
-								"up": { "texture": "#chalk", "uv": [ 0.0, 0.0, 15.0, 14.0 ] }
+								"up": { "texture": "#rock", "uv": [ 0.0, 0.0, 15.0, 14.0 ] }
 							}
 						},
 						{
@@ -284,12 +284,12 @@
 							"rotationOrigin": [ 1.0, 19.0, 13.0 ],
 							"rotationX": 45.0,
 							"faces": {
-								"north": { "texture": "#chalk", "uv": [ 0.0, 0.0, 14.0, 1.0 ] },
-								"east": { "texture": "#chalk", "uv": [ 2.0, 3.0, 6.0, 4.0 ] },
-								"south": { "texture": "#chalk", "uv": [ 0.0, 3.0, 14.0, 4.0 ] },
-								"west": { "texture": "#chalk", "uv": [ 1.5, 3.0, 5.5, 4.0 ] },
-								"up": { "texture": "#chalk", "uv": [ 0.0, 12.0, 14.0, 16.0 ] },
-								"down": { "texture": "#chalk", "uv": [ 1.5, 12.0, 15.5, 16.0 ] }
+								"north": { "texture": "#rock", "uv": [ 0.0, 0.0, 14.0, 1.0 ] },
+								"east": { "texture": "#rock", "uv": [ 2.0, 3.0, 6.0, 4.0 ] },
+								"south": { "texture": "#rock", "uv": [ 0.0, 3.0, 14.0, 4.0 ] },
+								"west": { "texture": "#rock", "uv": [ 1.5, 3.0, 5.5, 4.0 ] },
+								"up": { "texture": "#rock", "uv": [ 0.0, 12.0, 14.0, 16.0 ] },
+								"down": { "texture": "#rock", "uv": [ 1.5, 12.0, 15.5, 16.0 ] }
 							}
 						}
 					]
@@ -436,8 +436,8 @@
 									"renderPass": 3,
 									"rotationOrigin": [ 3.0, 19.0, 3.0 ],
 									"faces": {
-										"up": { "texture": "#plain", "uv": [ 0.0, 0.0, 16.0, 9.5 ], "autoUv": false },
-										"down": { "texture": "#plain", "uv": [ 0.0, 0.0, 16.0, 9.5 ], "autoUv": false }
+										"up": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 9.5 ], "autoUv": false },
+										"down": { "texture": "#glass", "uv": [ 0.0, 0.0, 16.0, 9.5 ], "autoUv": false }
 									}
 								}
 							]
@@ -464,13 +464,13 @@
 				{
 					"frame": 20,
 					"elements": {
-						"originDoor": { "rotationX": -60.0, "rotationY": 0.0, "rotationZ": 0.0 }
+						"originDoor": { "rotationX": -67.5, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				},
 				{
 					"frame": 29,
 					"elements": {
-						"originDoor": { "rotationX": -67.5, "rotationY": 0.0, "rotationZ": 0.0 }
+						"originDoor": { "rotationX": -85.0, "rotationY": 0.0, "rotationZ": 0.0 }
 					}
 				}
 			]

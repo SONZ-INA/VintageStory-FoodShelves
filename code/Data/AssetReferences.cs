@@ -5,6 +5,7 @@ public static class ShapeReferences {
     public const string CoolingCabinet = "foodshelves:shapes/block/coolers/coolingcabinet.json";
     public const string MeatFreezer = "foodshelves:shapes/block/coolers/meatfreezer.json";
     public const string FruitCooler = "foodshelves:shapes/block/coolers/fruitcooler.json";
+    public const string IceKeeper = "foodshelves:shapes/block/coolers/icekeeper.json";
     public const string WallCabinet = "foodshelves:shapes/block/glassware/wallcabinet.json";
     public const string SeedBins = "foodshelves:shapes/block/glassware/seedbins.json";
 
