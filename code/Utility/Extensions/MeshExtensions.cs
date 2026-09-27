@@ -90,6 +90,10 @@ public static class MeshExtensions {
         if (string.IsNullOrEmpty(texPath))
             return null;
 
+        var variants = stack.Item?.VariantStrict ?? stack.Block?.VariantStrict;
+
+        texPath = RegistryObject.FillPlaceHolder(texPath, variants);
+
         var compTex = new CompositeTexture(new AssetLocation(texPath));
         return new ContainerTextureSource(capi, stack, compTex);
     }

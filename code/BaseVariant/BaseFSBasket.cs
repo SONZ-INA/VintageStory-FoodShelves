@@ -242,11 +242,9 @@ public abstract class BaseFSBasket : BaseFSContainer, IContainedInteractable {
                     highestRotLevel = state.TransitionLevel;
                     bestIdx = i;
                     activelyRotting = true;
-                    continue;
                 }
-
                 // Fresh food check
-                if (!activelyRotting && state.TransitionLevel <= 0) {
+                else if (!activelyRotting && state.TransitionLevel <= 0) {
                     float rate = stack.Collectible.GetTransitionRateMul(api.World, dummySlot, EnumTransitionType.Perish);
                     double effectiveFreshness = rate > 0 ? state.FreshHoursLeft / rate : state.FreshHoursLeft;
 

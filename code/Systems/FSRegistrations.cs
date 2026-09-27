@@ -24,6 +24,7 @@ public static class FSRegistrations {
         // Coolers
         api.RegisterBlockClass("FoodShelves.BlockCoolingCabinet", typeof(BlockCoolingCabinet));
         api.RegisterBlockClass("FoodShelves.BlockFruitCooler", typeof(BlockFruitCooler));
+        api.RegisterBlockClass("FoodShelves.BlockIceKeeper", typeof(BlockIceKeeper));
         api.RegisterBlockClass("FoodShelves.BlockMeatFreezer", typeof(BlockMeatFreezer));
 
         // Glassware
@@ -55,6 +56,7 @@ public static class FSRegistrations {
         // Coolers
         api.RegisterBlockEntityClass("FoodShelves.BECoolingCabinet", typeof(BECoolingCabinet));
         api.RegisterBlockEntityClass("FoodShelves.BEFruitCooler", typeof(BEFruitCooler));
+        api.RegisterBlockEntityClass("FoodShelves.BEIceKeeper", typeof(BEIceKeeper));
         api.RegisterBlockEntityClass("FoodShelves.BEMeatFreezer", typeof(BEMeatFreezer));
 
         // Glassware

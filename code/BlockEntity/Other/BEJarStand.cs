@@ -1,10 +1,13 @@
 ﻿namespace FoodShelves;
 
 public class BEJarStand : BEBaseFSContainer {
+    protected override string CantPlaceMessage => "foodshelves:Only Jars can be placed on this stand.";
+
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.BySegment;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
+    protected override float MeltingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public override int SegmentsPerShelf => 2;
 
@@ -15,6 +18,14 @@ public class BEJarStand : BEBaseFSContainer {
     }
 
     public BEJarStand() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
+
+    public override void Initialize(ICoreAPI api) {
+        inv.PerishableFactorByFoodCategory = new Dictionary<EnumFoodCategory, float>() {
+            [EnumFoodCategory.Grain] = 0.5f
+        };
+
+        base.Initialize(api);
+    }
 
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
         if (blockSel.SelectionBoxIndex == (int)SlotType.Stand) return false;

@@ -3,10 +3,14 @@
 public class BECeilingRack : BEBaseFSContainer {
     protected MeshData? ropeMesh;
 
+    protected const string LargeJarMissing = "foodshelves:A Large Jar must be placed on this rack first.";
+    protected override string CantPlaceMessage => "foodshelves:This item cannot be placed in this container.";
+
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
+    protected override float MeltingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public override int AdditionalSlots => 1;
 
@@ -42,6 +46,7 @@ public class BECeilingRack : BEBaseFSContainer {
                 }
             }
 
+            (Api as ICoreClientAPI)?.TriggerIngameError(this, "cantplace", Lang.Get(LargeJarMissing));
             return false;
         }
 
