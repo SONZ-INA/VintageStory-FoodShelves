@@ -1,6 +1,8 @@
 ﻿namespace FoodShelves;
 
 public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContainer {
+    protected bool receivedInitialSync = false;
+
     protected float globalPerishMultiplier = 1f;
     protected bool globalBlockBuffs = true;
 
@@ -24,6 +26,7 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
     protected virtual float PerishMultiplier { get; set; } = 1;
     protected virtual float CuringMultiplier { get; set; } = 1;
     protected virtual float DryingMultiplier { get; set; } = 1;
+    protected virtual float MeltingMultiplier { get; set; } = 1;
 
     public virtual int ShelfCount { get; set; } = 1;
     public virtual int SegmentsPerShelf { get; set; } = 1;
@@ -70,13 +73,15 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
 
     public virtual float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
         if (transType == EnumTransitionType.Dry || transType == EnumTransitionType.Melt) {
-            if (!globalBlockBuffs) {
-                return container.Room?.ExitCount == 0 ? 2f : 0.5f;
+            float multiplier = 1f;
+
+            if (globalBlockBuffs) {
+                multiplier = transType == EnumTransitionType.Dry
+                    ? DryingMultiplier
+                    : MeltingMultiplier;
             }
 
-            return container.Room?.ExitCount == 0
-                ? DryingMultiplier * 2f
-                : DryingMultiplier * 0.5f;
+            return multiplier * (container.Room?.ExitCount == 0 ? 2f : 0.5f);
         }
 
         if (transType == EnumTransitionType.Cure) {
@@ -282,6 +287,11 @@ public abstract class BEBaseFSContainer : BlockEntityDisplay, IFoodShelvesContai
         VariantAttributes = tree[FSAttributes] is ITreeAttribute fsTree 
             ? fsTree 
             : new TreeAttribute();
+
+        if (worldForResolving.Side == EnumAppSide.Client && !receivedInitialSync) {
+            receivedInitialSync = true;
+            InitMesh();
+        }
 
         RedrawAfterReceivingTreeAttributes(worldForResolving);
     }

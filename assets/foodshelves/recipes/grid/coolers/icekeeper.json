@@ -1,0 +1,113 @@
+[
+  {
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "icekeeper-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "icekeeper-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "game:chisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "*:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "*:rockpolished-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "icekeeper-normal-east" }
+  },
+
+
+  {
+    "enabled": false,
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "game:plank-{wood}", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "icekeeper-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "wood": "{wood}",
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "game:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "game:rockpolished-{rock}" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": {
+      "type": "block",
+      "code": "icekeeper-normal-east",
+      "attributes": {
+        "FSAttributes": {
+          "rock": "{rock}"
+        }
+      }
+    }
+  },
+  {
+    "enabled": false,
+    "ingredientPattern": "RGR,PCP,PHP",
+    "ingredients": {
+      "P": { "type": "item", "code": "*:plank-*", "quantity": 4 },
+      "R": { "type": "item", "code": "game:resin", "quantity": 2 },
+      "H": { "type": "item", "code": "chiseltools:truechisel-*", "isTool": true, "toolDurabilityCost": 10 },
+      "G": { "type": "block", "code": "*:glassslab-*-down-free" },
+      "C": { "type": "block", "code": "*:rockpolished-*" }
+    },
+    "width": 3, "height": 3, "recipeGroup": 1,
+    "output": { "type": "block", "code": "icekeeper-normal-east" }
+  }
+]

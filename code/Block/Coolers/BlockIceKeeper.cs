@@ -15,23 +15,28 @@ public class BlockIceKeeper : BaseFSContainer, IMultiBlockColSelBoxes {
     }
 
     public override WorldInteraction[]? GetPlacedBlockInteractionHelp(IWorldAccessor world, BlockSelection selection, IPlayer forPlayer) {
-        if (selection.SelectionBoxIndex is 4 or 5) {
+        if (selection.SelectionBoxIndex is 0) {
+            return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+        }
+
+        if (selection.SelectionBoxIndex is 1) {
             return [openCloseDoor!];
         }
 
-        return base.GetPlacedBlockInteractionHelp(world, selection, forPlayer);
+        return null;
     }
 
     public override Cuboidf[] GetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos) {
         // Selection Box indexes:
         // Cabinet - 2
-        // Door    - 0, 1
+        // Door - 1
+        // Cut Ice - 0
         var boxes = base.GetSelectionBoxes(blockAccessor, pos);
 
         BEIceKeeper? be = blockAccessor.GetBlockEntityExt<BEIceKeeper>(pos);
         if (be == null) return boxes;
 
-        return [Skip, boxes[2].Clone()]; // Door is at the multiblock part
+        return [Skip, Skip, boxes[3].Clone()]; // Door is at the multiblock part
     }
 
     public Cuboidf[] MBGetSelectionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {
@@ -40,19 +45,21 @@ public class BlockIceKeeper : BaseFSContainer, IMultiBlockColSelBoxes {
         BEIceKeeper? be = blockAccessor.GetBlockEntityExt<BEIceKeeper>(pos);
         if (be == null) return boxes;
 
-        var doorBoxClosed = boxes[0].Clone();
-        var doorBoxOpen = boxes[1].Clone();
-        var iceKeeperBox = boxes[2].Clone();
+        var cutIceBox = boxes[0].Clone();
+        var doorBoxClosed = boxes[1].Clone();
+        var doorBoxOpen = boxes[2].Clone();
+        var iceKeeperBox = boxes[3].Clone();
 
+        cutIceBox.MBNormalizeSelectionBox(offset);
         doorBoxClosed.MBNormalizeSelectionBox(offset);
         doorBoxOpen.MBNormalizeSelectionBox(offset);
         iceKeeperBox.MBNormalizeSelectionBox(offset);
 
         if (be.DoorOpen) {
-            return [doorBoxOpen, Skip];
+            return [cutIceBox, doorBoxOpen, Skip];
         }
 
-        return [doorBoxClosed, Skip];
+        return [Skip, doorBoxClosed, iceKeeperBox];
     }
 
     public Cuboidf[] MBGetCollisionBoxes(IBlockAccessor blockAccessor, BlockPos pos, Vec3i offset) {

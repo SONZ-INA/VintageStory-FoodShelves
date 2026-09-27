@@ -1,13 +1,12 @@
 ﻿namespace FoodShelves;
 
 public class BEJar : BEBaseFSContainer {
-    protected override string CantPlaceMessage => "foodshelves:Only Jars can be placed on this shelf.";
-
     public override string AttributeCheck => "fsLiquidyStuff";
     protected override InfoDisplayOptions InfoDisplay => InfoDisplayOptions.ByBlock;
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
+    protected override float MeltingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public BEJar() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, "fsLiquidyStuff", 2, true)); }
 

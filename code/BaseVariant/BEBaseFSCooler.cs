@@ -132,7 +132,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
             PerishMultiplier = 1f;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(DoorOpenSound, byPlayer, byPlayer, true, 16, 0.3f);
+                Api.World.PlaySoundAt(DoorOpenSound, byPlayer, byPlayer, true, 16, 0.6f);
             }
         }
         else {
@@ -143,7 +143,7 @@ public abstract class BEBaseFSCooler : BEBaseFSAnimatable {
                 : perishMultiplierUnBuffed;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(DoorCloseSound, byPlayer, byPlayer, true, 16, 0.3f);
+                Api.World.PlaySoundAt(DoorCloseSound, byPlayer, byPlayer, true, 16, 0.6f);
             }
         }
 

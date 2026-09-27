@@ -89,9 +89,15 @@ public abstract class BEBaseFSAnimatable : BEBaseFSContainer {
     }
 
     public override void FromTreeAttributes(ITreeAttribute tree, IWorldAccessor worldForResolving) {
+        bool isFirstSync = !receivedInitialSync; // Read before base flips it
+
         base.FromTreeAttributes(tree, worldForResolving);
 
         TreeAttributeSerializer.DeserializeFromTree(this, tree);
+
+        if (worldForResolving.Side == EnumAppSide.Client && isFirstSync) {
+            ownMesh = null;
+        }
 
         HandleAnimations();
         RedrawAfterReceivingTreeAttributes(worldForResolving);

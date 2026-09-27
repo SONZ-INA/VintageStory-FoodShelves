@@ -64,15 +64,18 @@ public static class InfoDisplay {
         if (state == null) return "";
 
         float rateMul = contentSlot.Itemstack!.Collectible.GetTransitionRateMul(world, contentSlot, transitionType);
-        if (rateMul <= 0) return "";
+        if (rateMul < 0) return "";
 
         if (displayMode == TransitionDisplayMode.Percentage && state.TransitionLevel > 0) {
             return GetTransitionPercentageText(transitionType, state.TransitionLevel);
         }
 
-        double hoursLeft = state.TransitionLevel > 0
-            ? state.TransitionHours / rateMul * (1 - state.TransitionLevel)
-            : state.FreshHoursLeft / rateMul;
+        double hoursLeft = rateMul == 0
+            ? 0
+            : state.TransitionLevel > 0
+                ? state.TransitionHours / rateMul * (1 - state.TransitionLevel)
+                : state.FreshHoursLeft / rateMul;
+
 
         return GetTimeRemainingText(world, hoursLeft, transitionType);
     }
@@ -488,6 +491,15 @@ public static class InfoDisplay {
             EnumTransitionType.Dry => "<font color=\"#d6ba7a\">" + Lang.Get("Drying") + "</font>: ",
             _ => ""
         };
+
+        if (hoursLeft <= 0) {
+            return transitionType switch {
+                EnumTransitionType.Cure => Lang.Get("foodshelves:Will never cure"),
+                EnumTransitionType.Dry => Lang.Get("foodshelves:Will never dry"),
+                EnumTransitionType.Melt => Lang.Get("foodshelves:Will never melt"),
+                _ => ""
+            };
+        }
 
         if (string.IsNullOrEmpty(actionVerb)) {
             actionVerb = transitionType switch {

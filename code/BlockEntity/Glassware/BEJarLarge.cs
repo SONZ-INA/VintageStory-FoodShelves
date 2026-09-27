@@ -6,6 +6,7 @@ public class BEJarLarge : BEBaseFSContainer {
 
     protected override float PerishMultiplier => 0.74f;
     protected override float DryingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
+    protected override float MeltingMultiplier => 4.5f; // Vanilla transition calculations are so fucked
 
     public BEJarLarge() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 12, true)); }
 

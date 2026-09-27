@@ -22,6 +22,7 @@ public static class ShapeReferences {
     public const string utilMeatFreezer = "foodshelves:shapes/util/meatfreezercontentcube.json";
     public const string utilSeedBins = "foodshelves:shapes/util/seedbinscontentcube.json";
     public const string utilFruitCooler = "foodshelves:shapes/util/fruitcoolercontentcube.json";
+    public const string utilIceKeeper = "foodshelves:shapes/util/icekeepercontentcube.json";
 
     public const string utilBarrelLabel = "foodshelves:shapes/util/barrelracklabel.json";
     public const string utilRackLabelHolder = "foodshelves:shapes/util/utilracklabelholder.json";
@@ -45,4 +46,7 @@ public static class SoundReferences {
 
     public const string FruitDrawerOpen = "foodshelves:sounds/block/fruitdraweropen.ogg";
     public const string FruitDrawerClose = "foodshelves:sounds/block/fruitdrawerclose.ogg";
+
+    public const string IceKeeperOpen = "foodshelves:sounds/block/icekeeperopen.ogg";
+    public const string IceKeeperClose = "foodshelves:sounds/block/icekeeperclose.ogg";
 }

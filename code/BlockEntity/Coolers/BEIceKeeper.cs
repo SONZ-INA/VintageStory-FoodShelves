@@ -8,11 +8,11 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     [TreeSerializable(false)] public bool DoorOpen { get; set; }
 
     protected enum SlotType {
-        Door = 0,
-        Keeper = 1
+        Keeper = 0,
+        Door = 1
     }
 
-    public BEIceKeeper() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
+    public BEIceKeeper() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck, 16, true)); }
 
     public override void Initialize(ICoreAPI api) {
         block = (api.World.BlockAccessor.GetBlock(Pos) as BlockIceKeeper)!;
@@ -26,7 +26,7 @@ public class BEIceKeeper : BEBaseFSAnimatable {
             return true;
         }
 
-        return false;
+        return base.OnInteract(byPlayer, blockSel, overrideAttrCheck);
     }
 
     #region Animations
@@ -42,18 +42,18 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     protected void ToggleDoor(bool open, IPlayer? byPlayer = null) {
         if (open) {
             AnimUtil.TryStartAnimation("dooropen", 3f);
-            PerishMultiplier = 1;
+            MeltingMultiplier = 1;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(SoundReferences.WallCabinetOpen, byPlayer, byPlayer, true, 16);
+                Api.World.PlaySoundAt(SoundReferences.IceKeeperOpen, byPlayer, byPlayer, true, 16, 0.5f);
             }
         }
         else {
             AnimUtil.TryStopAnimation("dooropen");
-            PerishMultiplier = 0;
+            MeltingMultiplier = 0;
 
             if (byPlayer != null) {
-                Api.World.PlaySoundAt(SoundReferences.WallCabinetClose, byPlayer, byPlayer, true, 16, 0.3f);
+                Api.World.PlaySoundAt(SoundReferences.IceKeeperClose, byPlayer, byPlayer, true, 16, 0.7f);
             }
         }
 
@@ -65,11 +65,17 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     public override bool OnTesselation(ITerrainMeshPool mesher, ITesselatorAPI tesselator) {
         base.OnTesselation(mesher, tesselator);
 
-        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilJarLarge, 9f);
+        MeshData? contentMesh = GenLiquidyMesh(capi, inv[0], ShapeReferences.utilIceKeeper, 15.75f);
         if (contentMesh != null) mesher.AddMeshData(contentMesh);
 
         return true;
     }
 
     protected override float[][]? genTransformationMatrices() => null; // Unneeded
+
+    public override void GetBlockInfo(IPlayer forPlayer, StringBuilder sb) {
+        base.GetBlockInfo(forPlayer, sb);
+
+        sb.AppendLine(TransitionInfoCompact(Api.World, inv[0], EnumTransitionType.Melt, TransitionDisplayMode.TimeLeft));
+    }
 }

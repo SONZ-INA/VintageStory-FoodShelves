@@ -1,0 +1,28 @@
+{
+	"editor": {
+		"collapsedPaths": "Root/origin holder/Lfence1,Root/origin upper ring,Root/origin holder/holder1,Root/origin holder,Root/Origin lid,Root/origin holder/Tfence1,Root/origin lower ring,Root/origin holder/holder8,Root/origin barrel,Root/origin side tap",
+		"allAngles": false,
+		"entityTextureMode": false
+	},
+	"textureWidth": 16,
+	"textureHeight": 16,
+	"textureSizes": {
+	},
+	"textures": {
+	},
+	"elements": [
+		{
+			"name": "rackLabelHolder",
+			"from": [ 7.25, 10.0, 14.0 ],
+			"to": [ 8.75, 10.5, 14.5 ],
+			"rotationOrigin": [ 7.25, 10.0, 14.0 ],
+			"faces": {
+				"north": { "texture": "#null", "uv": [ 0.0, 0.0, 1.5, 0.5 ] },
+				"east": { "texture": "#null", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
+				"south": { "texture": "#null", "uv": [ 0.0, 0.0, 1.5, 0.5 ] },
+				"west": { "texture": "#null", "uv": [ 0.0, 0.0, 0.5, 0.5 ] },
+				"up": { "texture": "#null", "uv": [ 0.0, 0.0, 1.5, 0.5 ] },
+				"down": { "texture": "#null", "uv": [ 0.0, 0.0, 1.5, 0.5 ] }
+			}
+		}
+	]}
