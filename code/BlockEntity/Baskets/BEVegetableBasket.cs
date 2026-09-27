@@ -10,8 +10,9 @@ public class BEVegetableBasket : BEBaseFSBasket {
     public BEVegetableBasket() { inv = new InventoryGeneric(SlotCount, InventoryClassName + "-0", Api, (_, inv) => new ItemSlotFSUniversal(inv, AttributeCheck)); }
 
     protected override bool TryPut(IPlayer byPlayer, ItemSlot slot, BlockSelection blockSel) {
-        ExplicitTransform transformationMatrix = block.GetTransformationMatrix(inv[0]?.Itemstack?.Collectible?.Code);
-        
+        string? itemCode = inv[0]?.Itemstack?.Collectible?.Code ?? slot.Itemstack?.Collectible?.Code;
+        ExplicitTransform transformationMatrix = block.GetTransformationMatrix(itemCode);
+
         int moved = 0;
         int offset = transformationMatrix.Length;
 
