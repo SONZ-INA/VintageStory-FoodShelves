@@ -17,6 +17,16 @@ public class BEIceKeeper : BEBaseFSAnimatable {
     public override void Initialize(ICoreAPI api) {
         block = (api.World.BlockAccessor.GetBlock(Pos) as BlockIceKeeper)!;
         base.Initialize(api);
+
+        MeltingMultiplier = DoorOpen ? 1f : 0f;
+    }
+
+    public override float Inventory_OnAcquireTransitionSpeed(EnumTransitionType transType, ItemStack stack, float baseMul) {
+        if (transType == EnumTransitionType.Melt) {
+            return MeltingMultiplier;
+        }
+
+        return base.Inventory_OnAcquireTransitionSpeed(transType, stack, baseMul);
     }
 
     public override bool OnInteract(IPlayer byPlayer, BlockSelection blockSel, string? overrideAttrCheck = null) {
