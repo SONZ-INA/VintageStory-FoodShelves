@@ -1,116 +1,1279 @@
 [
-  {
-    "file": "foodshelves:blocktypes/other/floursack.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed/-", "side": "server",
-    "value": "floralzonescosmopolitanregion:item/resource/seeds/{seed}",
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/other/floursack.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed/-", "side": "server",
-    "value": "foodshelves:compatibility/floralzones/{seed}",
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaperegion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescaperegion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaperegion:fruit-carpobrotusacinaciformis",
+		"value": {
+			"scale": 0.7,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaperegion:fruit-strelitziaalba",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaperegion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/long",
+		"value": [
+			"floralzonescaperegion:vegetable-aloesuccotrina",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaperegion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaperegion:vegetable-aloesuccotrina",
+		"value": {
+			"translation": { "x": -0.05, "y": 0.1, "z": 0 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaperegion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescaperegion:fruit-*",
+		]
+	},
 
 
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
-    "value": [
-      "floralzonescaribbeanregion:item/resource/seeds/{seed0}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
-    "value": [
-      "floralzonescaribbeanregion:item/resource/seeds/{seed1}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
-    "value": [
-      "floralzonescaribbeanregion:item/resource/seeds/{seed2}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
-    "value": [
-      "floralzonescaribbeanregion:item/resource/seeds/{seed3}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescaribbeanregion" } ]
-  },
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzonescaribbeanregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzonescaribbeanregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzonescaribbeanregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzonescaribbeanregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescaribbeanregion:fruit-acoelorrhaphewrightii",
+			"floralzonescaribbeanregion:fruit-harrisiaportoricensis",
+			"floralzonescaribbeanregion:fruit-monsteradeliciosa",
+			"floralzonescaribbeanregion:fruit-roystonearegia",
+			"floralzonescaribbeanregion:fruit-sabaletonia",
+			"floralzonescaribbeanregion:fruit-sabalmiamiensis",
+			"floralzonescaribbeanregion:fruit-sabalminor",
+			"floralzonescaribbeanregion:fruit-sabalpalmetto",
+			"floralzonescaribbeanregion:fruit-selenicereuscostaricensis",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaribbeanregion:fruit-roystonearegia",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/large",
+		"value": [
+			"floralzonescaribbeanregion:vegetable-palmheart",
+			"floralzonescaribbeanregion:vegetable-xanthosomasagittifoliumleaf",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonescaribbeanregion:vegetable-xanthosomasagittifoliumroot",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaribbeanregion:vegetable-xanthosomasagittifoliumleaf",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescaribbeanregion:vegetable-xanthosomasagittifoliumroot",
+		"value": {
+			"scale": 1.25,
+			"translation": { "x": 0, "y": 0.22, "z": 0 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescaribbeanregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescaribbeanregion" }
+		],
+		"side": "Server",
+		"file": "floralzonescaribbeanregion:itemtypes/food/fruit.json",
+		"op": "addmerge",
+		"path": "/attributesByType",
+		"value": {
+			"*-roystonearegia": {
+				"fsTextureOverride": "floralzonescaribbeanregion:item/resource/roystonearegia"
+			}
+		}
+	},
 
 
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
-    "value": [
-      "floralzonescosmopolitanregion:item/resource/seeds/{seed0}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
-    "value": [
-      "floralzonescosmopolitanregion:item/resource/seeds/{seed1}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
-    "value": [
-      "floralzonescosmopolitanregion:item/resource/seeds/{seed2}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
-    "value": [
-      "floralzonescosmopolitanregion:item/resource/seeds/{seed3}"
-    ],
-    "dependsOn": [ { "modid": "floralzonescosmopolitanregion" } ]
-  },
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescentralaustralianregion:fruit-*",
+			"floralzonescentralaustralianregion:vegetable-solanumellipticum",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescentralaustralianregion:fruit-enchylaenatomentosa",
+		"value": {
+			"scale": 0.7,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescentralaustralianregion:vegetable-solanumellipticum",
+		"value": {
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/large",
+		"value": [
+			"floralzonescentralaustralianregion:vegetable-solanumellipticum",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonescentralaustralianregion:vegetable-ipomoeacostata",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescentralaustralianregion:vegetable-ipomoeacostata",
+		"value": {
+			"translation": { "x": -0.1, "y": 0.2, "z": 0.09 },
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescentralaustralianregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescentralaustralianregion:vegetable-solanumellipticum",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescentralaustralianregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/general/liquidystuff.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescentralaustralianregion:grain-*",
+		]
+	},
 
 
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed0", "side": "server",
-    "value": [
-      "floralzoneseastasiaticregion:item/resource/seeds/{seed0}"
-    ],
-    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed1", "side": "server",
-    "value": [
-      "floralzoneseastasiaticregion:item/resource/seeds/{seed1}"
-    ],
-    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed2", "side": "server",
-    "value": [
-      "floralzoneseastasiaticregion:item/resource/seeds/{seed2}"
-    ],
-    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
-  },
-  {
-    "file": "foodshelves:blocktypes/glassware/seedbins.json",
-    "op": "addmerge", "path": "/attributes/variantTextures/seed3", "side": "server",
-    "value": [
-      "floralzoneseastasiaticregion:item/resource/seeds/{seed3}"
-    ],
-    "dependsOn": [ { "modid": "floralzoneseastasiaticregion" } ]
-  }
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzonescircumborealregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzonescircumborealregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzonescircumborealregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzonescircumborealregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescircumborealregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescircumborealregion:fruit-*",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/large",
+		"value": [
+			"floralzonescircumborealregion:vegetable-ascophyllumnodosum",
+			"floralzonescircumborealregion:vegetable-angelicaarchangelica",
+			"floralzonescircumborealregion:vegetable-lactucasativa",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescircumborealregion:vegetable-angelicaarchangelica",
+		"value": {
+			"translation": { "x": 0, "y": 0, "z": -0.05 },
+			"scale": 0.85,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescircumborealregion:vegetable-lactucasativa",
+		"value": {
+			"translation": { "x": 0, "y": 0.15, "z": 0 },
+			"scale": 1.2,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonescircumborealregion:vegetable-hemerocallislilioasphodelus",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescircumborealregion:vegetable-hemerocallislilioasphodelus",
+		"value": {
+			"translation": { "x": 0, "y": 0.2, "z": 0 },
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/long",
+		"value": [
+			"floralzonescircumborealregion:vegetable-taraxacumofficinale",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescircumborealregion:vegetable-taraxacumofficinale",
+		"value": {
+			"translation": { "x": -0.05, "y": 0.1, "z": 0 },
+			"rotation": { "x": 0, "y": -90, "z": 0 },
+			"scale": 1.0,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescircumborealregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescircumborealregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/general/liquidystuff.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescircumborealregion:grain-*",
+		]
+	},
+
+
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/other/floursack.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed/-",
+		"value": "floralzonescosmopolitanregion:item/resource/seeds/{seed}"
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/other/floursack.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed/-",
+		"value": "foodshelves:compatibility/floralzones/{seed}"
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzonescosmopolitanregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzonescosmopolitanregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzonescosmopolitanregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzonescosmopolitanregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescosmopolitanregion:fruit-caricapapaya",
+			"floralzonescosmopolitanregion:fruit-cucurbitaficifolia",
+			"floralzonescosmopolitanregion:fruit-empetrumnigrum",
+			"floralzonescosmopolitanregion:fruit-juniperuscommunis",
+			"floralzonescosmopolitanregion:fruit-lagunculariaracemosa",
+			"floralzonescosmopolitanregion:fruit-rubuschamaemorus",
+			"floralzonescosmopolitanregion:fruit-sonneratiacaseolaris",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:fruit-caricapapaya",
+		"value": {
+			"scale": 0.7,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:fruit-cucurbitaficifolia",
+		"value": {
+			"translation": { "x": 0, "y": -0.2, "z": 0 },
+			"scale": 0.5,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:fruit-empetrumnigrum",
+		"value": {
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:fruit-juniperuscommunis",
+		"value": {
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/mushroombasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescosmopolitanregion:flower-cladoniarangiferina-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/mushroombasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:flower-cladoniarangiferina-*",
+		"value": {
+			"translation": { "x": 0, "y": -0.31, "z": 0 },
+			"scale": 0.3,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/large",
+		"value": [
+			"floralzonescosmopolitanregion:legume-phaseolusvulgarisimmature",
+			"floralzonescosmopolitanregion:vegetable-ipomoeabatatas",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:vegetable-ipomoeabatatas",
+		"value": {
+			"translation": { "x": 0, "y": 0.2, "z": 0 },
+			"scale": 1.4,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonescosmopolitanregion:vegetable-alliumsativum",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:vegetable-alliumsativum",
+		"value": {
+			"translation": { "x": 0, "y": 0.1, "z": 0 },
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/long",
+		"value": [
+			"floralzonescosmopolitanregion:vegetable-chamaenerionangustifolium",
+			"floralzonescosmopolitanregion:vegetable-menyanthestrifoliata",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:vegetable-chamaenerionangustifolium",
+		"value": {
+			"translation": { "x": -0.1, "y": 0.1, "z": -0.05 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonescosmopolitanregion:vegetable-menyanthestrifoliata",
+		"value": {
+			"translation": { "x": 0, "y": 0.1, "z": 0 },
+			"rotation": { "x": 0, "y": -90, "z": -3 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescosmopolitanregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "floralzonescosmopolitanregion:itemtypes/food/fruit.json",
+		"op": "addmerge",
+		"path": "/attributesByType",
+		"value": {
+			"*-lagunculariaracemosa": {
+				"fsTextureOverride": "floralzonescosmopolitanregion:item/food/fruit/lagunculariaracemosa",
+			},
+			"*-rubuschamaemorus": {
+				"fsTextureOverride": "floralzonescosmopolitanregion:item/food/fruit/rubuschamaemorus",
+			},
+			"*-sonneratiacaseolaris": {
+				"fsTextureOverride": "floralzonescosmopolitanregion:item/food/fruit/sonneratiacaseolaris",
+			},
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/general/liquidystuff.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonescosmopolitanregion:grain-*",
+			"floralzonescosmopolitanregion:legume-phaseolusvulgaris",
+			"floralzonescosmopolitanregion:treeseed-caricapapaya",
+			"floralzonescosmopolitanregion:vegetable-cladoniarangiferina",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonescosmopolitanregion" }
+		],
+		"side": "Server",
+		"file": "floralzonescosmopolitanregion:itemtypes/resource/treeseed.json",
+		"op": "addmerge",
+		"path": "/attributesByType",
+		"value": {
+			"*-caricapapaya": {
+				"fsTextureOverride": "game:block/food/grain/sunflower",
+			},
+		}
+	},
+
+
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzoneseastasiaticregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzoneseastasiaticregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzoneseastasiaticregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzoneseastasiaticregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzoneseastasiaticregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzoneseastasiaticregion:fruit-lyciumbarbarum",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzoneseastasiaticregion:vegetable-liliumauratum",
+			"floralzoneseastasiaticregion:vegetable-puerariamontana",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzoneseastasiaticregion:vegetable-liliumauratum",
+		"value": {
+			"translation": { "x": 0, "y": 0.2, "z": 0 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzoneseastasiaticregion:vegetable-puerariamontana",
+		"value": {
+			"translation": { "x": 0, "y": 0.1, "z": 0 },
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/long",
+		"value": [
+			"floralzoneseastasiaticregion:vegetable-luffaaegyptiaca",
+			"floralzoneseastasiaticregion:vegetable-petasitesjaponicus",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzoneseastasiaticregion:vegetable-luffaaegyptiaca",
+		"value": {
+			"translation": { "x": -0.07, "y": 0.1, "z": 0 },
+			"rotation": { "x": 0, "y": -45, "z": 0 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzoneseastasiaticregion:vegetable-petasitesjaponicus",
+		"value": {
+			"translation": { "x": -0.1, "y": 0.1, "z": 0 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzoneseastasiaticregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzoneseastasiaticregion:fruit-*",
+		]
+	},
+
+
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzonesmediterraneanregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzonesmediterraneanregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzonesmediterraneanregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzonesmediterraneanregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonesmediterraneanregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:fruit-vitisvinifera-*",
+		"value": {
+			"translation": { "x": 0.05, "y": 0, "z": 0.03 },
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/large",
+		"value": [
+			"floralzonesmediterraneanregion:vegetable-capparisspinosa",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:vegetable-capparisspinosa*",
+		"value": {
+			"translation": { "x": -0.03, "y": -0.06, "z": -0.04 },
+			"scale": 0.75,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonesmediterraneanregion:vegetable-capparisspinosa",
+			"floralzonesmediterraneanregion:vegetable-cynaracardunculus",
+			"floralzonesmediterraneanregion:vegetable-cynaracardunculusscolymus",
+			"floralzonesmediterraneanregion:vegetable-ferulacommunis",
+			"floralzonesmediterraneanregion:vegetable-laurusnobilis",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:vegetable-cynaracardunculus*",
+		"value": {
+			"translation": { "x": 0, "y": 0.08, "z": 0 },
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:vegetable-ferulacommunis",
+		"value": {
+			"translation": { "x": -0.01, "y": 0.1, "z": 0 },
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:vegetable-laurusnobilis",
+		"value": {
+			"scale": 0.8,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/long",
+		"value": [
+			"floralzonesmediterraneanregion:vegetable-armoraciarusticana",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesmediterraneanregion:vegetable-armoraciarusticana",
+		"value": {
+			"rotation": { "x": 0, "y": 90, "z": 0 },
+			"translation": { "x": 0.01, "y": -0.1, "z": 0.02 },
+			"scale": 0.6,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonesmediterraneanregion:fruit-*",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesmediterraneanregion" }
+		],
+		"side": "Server",
+		"file": "floralzonesmediterraneanregion:itemtypes/food/fruit.json",
+		"op": "addmerge",
+		"path": "/attributes/fsTextureOverride",
+		"value": "floralzonesmediterraneanregion:block/food/pie/fill-{fruit}"
+	},
+
+
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed0",
+		"value": [
+			"floralzonesneozeylandicregion:item/resource/seeds/{seed0}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed1",
+		"value": [
+			"floralzonesneozeylandicregion:item/resource/seeds/{seed1}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed2",
+		"value": [
+			"floralzonesneozeylandicregion:item/resource/seeds/{seed2}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:blocktypes/glassware/seedbins.json",
+		"op": "addmerge",
+		"path": "/attributes/variantTextures/seed3",
+		"value": [
+			"floralzonesneozeylandicregion:item/resource/seeds/{seed3}",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonesneozeylandicregion:fruit-asteliagrandis",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/fruitbasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesneozeylandicregion:fruit-asteliagrandis",
+		"value": {
+			"scale": 0.9,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"file": "foodshelves:config/restrictions/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/GroupingCodes/standard",
+		"value": [
+			"floralzonesneozeylandicregion:vegetable-cordylinepumilio",
+			"floralzonesneozeylandicregion:vegetable-sonchuskirkii",
+		]
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesneozeylandicregion:vegetable-cordylinepumilio",
+		"value": {
+			"translation": { "x": 0.05, "y": 0.22, "z": 0 },
+			"scale": 1.1,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"file": "foodshelves:config/transformations/baskets/vegetablebasket.json",
+		"op": "addmerge",
+		"path": "/floralzonesneozeylandicregion:vegetable-sonchuskirkii",
+		"value": {
+			"translation": { "x": 0, "y": -0.05, "z": 0 },
+			"scale": 0.6,
+		}
+	},
+	{
+		"dependsOn": [
+			{ "modid": "floralzonesneozeylandicregion" }
+		],
+		"side": "Server",
+		"file": "foodshelves:config/restrictions/coolers/fruitcooler.json",
+		"op": "addmerge",
+		"path": "/CollectibleCodes",
+		"value": [
+			"floralzonesneozeylandicregion:fruit-*",
+		]
+	},
 ]
